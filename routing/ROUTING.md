@@ -20,6 +20,7 @@ is this visual or user-facing?
 
 for new pages, new components, anything a stakeholder will see. run in order:
 
+0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. find 2-3 real examples. if you have browser access, study them. if not, suggest references to the builder ("search Mobbin for 'analytics dashboard' — share 2-3 that match your vision"). this step takes 2 minutes and saves 30 minutes of iteration.
 1. **design-review** — quality gate. catches structural problems, anti-patterns, missing states. run first.
 2. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases. nothing ships incomplete.
 3. **whimsical-design** — personality pass. pushes past sterile toward delight. warm > cold, alive > static.

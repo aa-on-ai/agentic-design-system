@@ -23,6 +23,16 @@ Everything should feel alive. Static interfaces are dead interfaces.
 - Sound design where appropriate (click, whoosh, chirp)
 - The difference between "functional" and "delightful" is 50ms of easing
 
+**Concrete recipes:**
+- Hover on cards: `scale(1.02)` + subtle shadow increase + 150ms ease-out
+- Button press: `scale(0.97)` for 100ms, then back. feels tactile.
+- Page entrance: stagger children with 50ms delay each, fade+translateY(8px), 300ms ease-out
+- Status indicators: pulse animation on "live" items (opacity 1→0.4→1, 2s infinite)
+- Charts: animate data points in on mount, left-to-right, 400ms ease-out with 30ms stagger
+- Hover on table rows: background-color transition 150ms + slight translateX(2px) to feel "picked up"
+- Toggle switches: spring physics (slight overshoot on slide, ~200ms)
+- Empty states: gentle floating animation on the illustration (translateY ±4px, 3s ease-in-out infinite)
+
 ### 3. Craft Signals
 The opposite of "AI generated this." Every surface should feel touched by a human.
 - Grain textures, noise overlays, subtle paper feel
@@ -38,6 +48,14 @@ Color should create mood, not just differentiate elements.
 - Pantone-chip energy: specific, intentional, named
 - Avoid: gray-on-white corporate void, neon-on-dark "developer tool"
 - Dark modes should feel cozy (deep indigos, warm blacks), not cold
+
+**Concrete recipes:**
+- Warm light mode: background `#FAFAF8` (not pure white), text `#1A1A1A` (not pure black), accent `#E8723A` (warm orange) or `#2D6A4F` (forest green)
+- Cozy dark mode: background `#1C1917` (warm black, not zinc-900), text `#E7E5E4`, accent `#F59E0B` (amber) or `#818CF8` (soft indigo)
+- Data viz palette (warm): `#E8723A`, `#2D6A4F`, `#D4A373`, `#588157`, `#BC6C25` — earthy, distinct, accessible
+- Data viz palette (cool): `#3B82F6`, `#8B5CF6`, `#06B6D4`, `#6366F1`, `#14B8A6` — techy but not cold
+- Status colors: success `#16A34A` (not neon green), warning `#D97706` (not yellow), error `#DC2626` (not pink), info `#2563EB`
+- Gradient (subtle, not gaudy): `from-amber-50 to-orange-50` for warm sections, `from-slate-50 to-blue-50` for cool sections — backgrounds only, never on text
 
 ### 5. Typography as Character
 Type carries personality before anyone reads a word.

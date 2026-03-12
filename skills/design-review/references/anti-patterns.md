@@ -29,6 +29,13 @@
 - Equal spacing everywhere, so nothing groups or leads.
 - Heavy borders and separators where whitespace would be stronger.
 - Hero metric layouts that scream template.
+- 4 equal-width stat cards across the top of every dashboard (the #1 agent layout cliche).
+- Every page using the same card-in-grid structure regardless of content type.
+- Dark mode as the default because "it's a dashboard" — light mode is equally valid.
+- Sidebar navigation on pages with fewer than 5 sections.
+- Every section having the same visual weight — nothing hero'd, nothing secondary.
+- rounded-lg on every surface creating a puffy, toy-like feel.
+- zinc/slate as the only background palette — agents default to this every time.
 
 ## Interaction Mistakes
 - Missing hover, focus, or active states.
