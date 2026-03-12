@@ -49,6 +49,19 @@ run:
 
 examples: adjusting spacing, updating copy, minor layout tweaks, checking a screen before merge.
 
+## agent-friendly pass
+
+for any web project shipping to production where agents may consume or interact with the site. runs independently from the visual quality chain.
+
+1. **agent-friendly-design** — semantic HTML, ARIA, structured data, llms.txt, API-first patterns, crawlability
+
+routing within the skill:
+- every project: semantic HTML + ARIA + machine-readable state (non-negotiable)
+- public-facing: add structured data, llms.txt, crawlability
+- products/SaaS: add predictable interactions, API-first, content optimization
+
+this skill runs alongside the visual chain, not instead of it. a page can need both whimsical-design (for humans) and agent-friendly-design (for agents).
+
 ## skip
 
 don't run the design chain for non-visual work:

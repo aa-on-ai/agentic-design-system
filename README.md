@@ -38,10 +38,11 @@ drop these into your agent's context. each one is a self-contained skill file wi
 | [whimsical-design](./skills/whimsical-design/) | pushes past sterile toward personality and delight | any user-facing work that should feel alive |
 | [web-animation-design](./skills/web-animation-design/) | easing, springs, timing, transitions, accessibility | anything that moves |
 | [world-build](./skills/world-build/) | creative direction for immersive sites that feel like places | landing pages, portfolios, launches, game UI |
+| [agent-friendly-design](./skills/agent-friendly-design/) | make your site consumable and interactable by AI agents — semantic HTML, ARIA, structured data, llms.txt, MCP, API-first patterns | any web project shipping to production |
 
 ### routing
 
-not every task needs every skill. the [routing doc](./routing/ROUTING.md) tells agents when to apply the full chain, when to do a light review, and when to skip entirely. includes a decision tree, token budget guidance, and the divergent exploration pattern.
+not every task needs every skill. the [routing doc](./routing/ROUTING.md) tells agents when to apply the full chain, when to do a light review, and when to skip entirely. includes a decision tree, token budget guidance, the divergent exploration pattern, and the agent-friendly pass for sites that need to serve AI consumers.
 
 ### templates
 
