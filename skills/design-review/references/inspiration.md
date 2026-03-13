@@ -4,6 +4,28 @@
 
 before building anything visual, study how the best version of it already exists. don't invent from scratch. don't approximate from memory. find 2-3 real examples, understand what makes them work, then build with that knowledge.
 
+## Reference Priority Order
+
+1. **the named company/product itself** — if the prompt says "OpenAI dashboard," study OpenAI's actual dashboard. not Stripe's. not Linear's.
+2. **direct competitors / adjacent products** in the same category
+3. **generic best-in-class UI references** (Stripe, Linear, Vercel, etc.)
+4. **conceptual mood references** (Dribbble, Godly, etc.)
+
+context-appropriate design > beautiful design. an OpenAI dashboard should look like OpenAI, not like Stripe. a Meta admin panel should look like Meta's internal tools, not like Notion.
+
+never let Dribbble/Mobbin mood override a real product's existing design language.
+
+## When the Prompt References a Known Company
+
+research in this order:
+- their official product UI (screenshots, docs, blog posts showing the product)
+- their marketing site (typography, color, illustration style)
+- their admin/dashboard surfaces if visible
+- their mobile app patterns if relevant
+- their brand system (color temperature, density, seriousness level)
+
+then build something that would feel at home in that product's ecosystem.
+
 ## Research Tools
 
 suggest these to the builder (human or agent) before starting:

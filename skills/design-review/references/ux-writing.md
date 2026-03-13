@@ -182,6 +182,28 @@ match tone to context. not everything needs to be funny.
 - **sycophantic copy** — "Great choice!" "Awesome!" "You're doing amazing!" — unless the brand genuinely talks like this, it reads as AI-generated
 - **lorem ipsum left in place** — always use realistic mock data, never placeholder text
 
+## Premise-Aware Copy
+
+when the prompt establishes a world (a specific company, a satirical tool, an internal product), the copy must live in that world.
+
+### rules
+- internal tools should sound internal — abbreviated labels, insider jargon, casual status messages
+- consumer products should sound consumer — friendly, clear, no jargon
+- enterprise tools should sound enterprise — precise, formal where needed, never cute
+- satirical/parody tools should look completely real — the humor is in the CONTENT, not the UI chrome
+- if referencing a real company, match their communication style (OpenAI is measured and corporate, Anthropic is precise and understated, Meta is direct and utilitarian)
+
+### where humor goes (for satirical premises)
+- data labels and row names (the things you read IN the table)
+- status messages and alerts
+- internal tags and annotations
+- tooltip content and secondary text
+- empty state messages
+- NOT in button labels, nav items, page titles, or chart axes
+
+### the test
+read just the text content with no visual design. does it sound like it came from the world the prompt describes? if you stripped the layout and just read the words, would you know what product/company this belongs to?
+
 ## Writing Checklist
 
 before shipping any UI:

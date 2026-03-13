@@ -16,11 +16,26 @@ is this visual or user-facing?
         └── review only
 ```
 
+## context pass (run first if applicable)
+
+if the prompt names a real company, product, founder, or public figure:
+
+0. **contextual grounding** — BEFORE anything else, research the named entity. study their actual product's visual language (layout, nav, typography, color, density, interaction style). identify 10-20 real nouns from their domain. determine the premise's tone (satirical? deadpan? earnest?). write a brief: "this should feel like [company]'s actual product, with [tone] energy, using [real nouns]."
+
+rules:
+- the named company's product IS the primary visual reference. not Stripe. not Linear. not "best in class SaaS."
+- generic references (Mobbin, Godly) are secondary — use them only to fill gaps the source product doesn't cover
+- if the prompt is satirical or parodic, the humor should live in the DATA (row names, statuses, labels, timestamps) not in the visual design. the UI should look real; the content should be funny.
+- mock data must be current: real model names, real agencies, real features, plausible scenarios
+- ask: "would someone who works at this company recognize this as their tool?" if no, you're building the wrong thing.
+
+skip this step only if the prompt is generic (no named entities).
+
 ## full chain
 
 for new pages, new components, anything a stakeholder will see. run in order:
 
-0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. find 2-3 real examples. if you have browser access, study them. if not, suggest references to the builder ("search Mobbin for 'analytics dashboard' — share 2-3 that match your vision"). this step takes 2 minutes and saves 30 minutes of iteration.
+0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. if you already ran the context pass above, your primary reference is set — use pattern benchmarking only for gaps. if the prompt is generic, find 2-3 real examples via Mobbin/Godly. this step takes 2 minutes and saves 30 minutes of iteration.
 1. **design-review** — quality gate. catches structural problems, anti-patterns, missing states. run first.
 2. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases. nothing ships incomplete.
 3. **whimsical-design** — personality pass. pushes past sterile toward delight. warm > cold, alive > static.

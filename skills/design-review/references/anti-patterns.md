@@ -53,6 +53,28 @@
 - Rogue spacing values and near-miss alignments.
 - New CSS tokens invented instead of using the system that's already there.
 
+## Context Mistakes
+- Using Stripe/Linear/Vercel as default visual references when the prompt names a different company.
+- Treating a named company as mere theming (slap a logo on a generic layout) instead of a visual source.
+- Screens that could swap company names and still "work" — no visual specificity to the premise.
+- Generic AI model names or outdated model lists (GPT-3.5, Claude 1, etc. when current models exist).
+- Fake agency/company/user names with no domain grounding ("Agency X," "User A," "Model B").
+- Dashboard nouns that could apply to anything: "users," "revenue," "metrics," "performance" with no domain flavor.
+- Satirical premises rendered as bland enterprise software — missing the joke entirely.
+- Humor injected as headlines or one-liners instead of embedded in the data model (row names, statuses, tags).
+- "Professional" used as an excuse to strip all personality from a premise that demands it.
+- Multiple pages built with the same system looking indistinguishable from each other.
+- Borrowing visual language from a product unrelated to the one named in the prompt.
+
+## Responsive Mistakes
+- Desktop table simply squeezed onto mobile with tiny text.
+- Sidebar still occupying width on small screens instead of collapsing to hamburger/bottom nav.
+- Chips, tags, or badges overflowing their containers on narrow widths.
+- Long model names or agency names causing horizontal overflow.
+- Fixed-width elements that don't adapt below 640px.
+- Touch targets under 44px on mobile.
+- Nav that disappears on mobile with no replacement (hamburger, bottom tabs, etc.).
+
 ## Aaron-Specific Red Flags
 - Anything that feels like AI slop.
 - Anything crowded.

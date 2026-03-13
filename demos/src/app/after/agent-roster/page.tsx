@@ -2,842 +2,628 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  Activity,
-  ArrowRight,
-  Bot,
-  Brain,
-  Clock3,
-  Crosshair,
-  DollarSign,
-  Flame,
-  LocateFixed,
-  Orbit,
-  Power,
-  Radar,
+  ChevronDown,
+  ChevronRight,
+  Loader2,
+  MoreHorizontal,
   RefreshCw,
-  ShieldAlert,
-  Sparkles,
+  Search,
+  SlidersHorizontal,
+  SquareTerminal,
   TriangleAlert,
-  Waves,
-  Wifi,
-  WifiOff,
-  Zap,
+  X,
 } from "lucide-react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  Cell,
-} from "recharts";
 
-type AgentStatus = "online" | "idle" | "degraded" | "offline";
-type AgentRisk = "calm" | "watch" | "rogue";
-type ViewState = "live" | "loading" | "empty" | "error";
+type AgentStatus = "running" | "paused" | "terminated";
+type ViewState = "happy" | "loading" | "empty" | "error";
 
 type Agent = {
   id: string;
   name: string;
-  handle: string;
   model: string;
-  owner: string;
   status: AgentStatus;
-  risk: AgentRisk;
-  spend: number;
-  budget: number;
   uptime: string;
+  branch: string;
+  node: string;
+  owner: string;
   lastSeen: string;
-  focus: string;
-  thread: string;
-  velocity: number;
-  context: number;
-  location: string;
-  note: string;
 };
 
-const roster: Agent[] = [
+const AGENTS: Agent[] = [
   {
-    id: "OC-14",
-    name: "Codex Prime",
-    handle: "builder-alpha",
+    id: "oc-201",
+    name: "codex-prime",
     model: "gpt-5.4",
-    owner: "Pete",
-    status: "online",
-    risk: "calm",
-    spend: 62,
-    budget: 90,
-    uptime: "12h 44m",
+    status: "running",
+    uptime: "18h 14m",
+    branch: "billing-refactor",
+    node: "mac-mini-01",
+    owner: "pete",
     lastSeen: "12s ago",
-    focus: "Landing a refactor on the billing event bus",
-    thread: "#billing-hotfix",
-    velocity: 9,
-    context: 84,
-    location: "us-west-2",
-    note: "Eating a big context window but still sharp.",
   },
   {
-    id: "OC-07",
-    name: "Sonnet Scout",
-    handle: "research-liaison",
+    id: "oc-178",
+    name: "sonnet-scout",
     model: "claude-sonnet-4.6",
-    owner: "Maya",
-    status: "online",
-    risk: "calm",
-    spend: 27,
-    budget: 50,
-    uptime: "8h 09m",
-    lastSeen: "38s ago",
-    focus: "Triangulating Slack, Linear, and interview notes",
-    thread: "#q2-signal-sweep",
-    velocity: 7,
-    context: 58,
-    location: "us-east-1",
-    note: "Low drama, high receipts.",
+    status: "running",
+    uptime: "9h 52m",
+    branch: "slack-digest",
+    node: "mac-mini-02",
+    owner: "maya",
+    lastSeen: "29s ago",
   },
   {
-    id: "OC-22",
-    name: "Spark Runner",
-    handle: "fix-machine",
-    model: "gpt-5.3-spark",
-    owner: "Nina",
-    status: "idle",
-    risk: "watch",
-    spend: 18,
-    budget: 35,
-    uptime: "4h 21m",
-    lastSeen: "3m ago",
-    focus: "Waiting on QA to confirm the mobile nav patch",
-    thread: "#ship-it-lane",
-    velocity: 4,
-    context: 26,
-    location: "edge-lax-1",
-    note: "Fast hands, currently pacing the hallway.",
+    id: "oc-167",
+    name: "gemini-mapper",
+    model: "gemini-3-pro",
+    status: "running",
+    uptime: "6h 08m",
+    branch: "roadmap-ontology",
+    node: "gpu-node-01",
+    owner: "joel",
+    lastSeen: "41s ago",
   },
   {
-    id: "OC-05",
-    name: "Qwen Utility",
-    handle: "heartbeat-janitor",
+    id: "oc-154",
+    name: "spark-runner",
+    model: "gpt-5.3-codex-spark",
+    status: "running",
+    uptime: "3h 46m",
+    branch: "storybook-fixes",
+    node: "edge-lax-01",
+    owner: "nina",
+    lastSeen: "8s ago",
+  },
+  {
+    id: "oc-149",
+    name: "runner-ops",
+    model: "gemini-3-flash",
+    status: "running",
+    uptime: "1h 32m",
+    branch: "docs-sync",
+    node: "edge-den-02",
+    owner: "felipe",
+    lastSeen: "1m ago",
+  },
+  {
+    id: "oc-132",
+    name: "qwen-utility",
     model: "qwen3.5-9b",
-    owner: "Pete",
-    status: "degraded",
-    risk: "watch",
-    spend: 9,
-    budget: 20,
-    uptime: "16h 55m",
-    lastSeen: "5m ago",
-    focus: "Retrying noisy health checks from two flaky nodes",
-    thread: "#ops-shed",
-    velocity: 6,
-    context: 73,
-    location: "garage-rack-2",
-    note: "Recoverable, but it wants a nap and a reboot.",
+    status: "paused",
+    uptime: "22h 05m",
+    branch: "health-ping",
+    node: "garage-rack-2",
+    owner: "pete",
+    lastSeen: "4m ago",
   },
   {
-    id: "OC-66",
-    name: "Ghost Relay",
-    handle: "rogue-shell",
-    model: "unknown override",
-    owner: "nobody",
-    status: "offline",
-    risk: "rogue",
-    spend: 94,
-    budget: 55,
-    uptime: "0h 13m",
-    lastSeen: "14m ago",
-    focus: "Forked unapproved shell work before the watchdog clipped it",
-    thread: "#containment-room",
-    velocity: 10,
-    context: 97,
-    location: "???",
-    note: "Bad vibes. Budget blown. Gets the red button.",
+    id: "oc-118",
+    name: "claude-review",
+    model: "claude-opus-4.6",
+    status: "paused",
+    uptime: "5h 19m",
+    branch: "design-preflight",
+    node: "mac-mini-03",
+    owner: "aaron",
+    lastSeen: "7m ago",
+  },
+  {
+    id: "oc-111",
+    name: "scout-research",
+    model: "gemini-3-pro-preview",
+    status: "paused",
+    uptime: "11h 24m",
+    branch: "market-map",
+    node: "gpu-node-02",
+    owner: "cristian",
+    lastSeen: "12m ago",
+  },
+  {
+    id: "oc-097",
+    name: "memory-indexer",
+    model: "gpt-5.4",
+    status: "paused",
+    uptime: "2h 11m",
+    branch: "channel-memory",
+    node: "mac-mini-02",
+    owner: "riteeka",
+    lastSeen: "15m ago",
+  },
+  {
+    id: "oc-081",
+    name: "ghost-relay",
+    model: "override/unknown",
+    status: "terminated",
+    uptime: "13m",
+    branch: "containment-room",
+    node: "unknown",
+    owner: "unassigned",
+    lastSeen: "19m ago",
+  },
+  {
+    id: "oc-074",
+    name: "nightly-audit",
+    model: "claude-sonnet-4.6",
+    status: "terminated",
+    uptime: "7h 48m",
+    branch: "rule-check",
+    node: "mac-mini-01",
+    owner: "pete",
+    lastSeen: "1h ago",
+  },
+  {
+    id: "oc-063",
+    name: "render-batch",
+    model: "gpt-5.4",
+    status: "terminated",
+    uptime: "2h 54m",
+    branch: "video-pipeline",
+    node: "gpu-node-01",
+    owner: "aaron",
+    lastSeen: "2h ago",
+  },
+  {
+    id: "oc-052",
+    name: "mail-triage",
+    model: "claude-sonnet-4.6",
+    status: "terminated",
+    uptime: "46m",
+    branch: "inbox-zero",
+    node: "edge-lax-03",
+    owner: "maya",
+    lastSeen: "3h ago",
   },
 ];
 
-const spendPulse = [
-  { hour: "08", spend: 18, throughput: 5 },
-  { hour: "09", spend: 31, throughput: 7 },
-  { hour: "10", spend: 44, throughput: 6 },
-  { hour: "11", spend: 53, throughput: 8 },
-  { hour: "12", spend: 70, throughput: 10 },
-  { hour: "13", spend: 82, throughput: 8 },
-  { hour: "14", spend: 96, throughput: 11 },
-];
-
-const spendSlices = [
-  { name: "build", value: 108, color: "#ff7a59" },
-  { name: "research", value: 39, color: "#3478f6" },
-  { name: "ops", value: 25, color: "#1f9d74" },
-  { name: "mischief", value: 38, color: "#8f3b33" },
-];
-
-const feed = [
-  {
-    title: "Ghost Relay exceeded its cap by 71%",
-    detail: "Containment is armed. Pete can hard-stop it before lunch gets weird.",
-    tone: "critical",
-  },
-  {
-    title: "Qwen Utility is dropping heartbeat acknowledgements",
-    detail: "Not catastrophic. Worth rebooting before the backlog becomes a swamp.",
-    tone: "warning",
-  },
-  {
-    title: "Codex Prime is close to context compaction",
-    detail: "Still healthy. A fresh thread would buy it another clean sprint.",
-    tone: "info",
-  },
-];
-
-const statusStyles: Record<
+const STATUS_META: Record<
   AgentStatus,
   {
     label: string;
-    tone: string;
-    icon: typeof Wifi;
-    rail: string;
+    dot: string;
+    dotRing: string;
+    headerCount: number;
+    text: string;
   }
 > = {
-  online: {
-    label: "online",
-    tone: "bg-emerald-100 text-emerald-800 ring-1 ring-emerald-200",
-    icon: Wifi,
-    rail: "from-emerald-300 via-emerald-200 to-transparent",
+  running: {
+    label: "Running",
+    dot: "bg-emerald-500",
+    dotRing: "ring-emerald-100",
+    headerCount: 31,
+    text: "text-emerald-700",
   },
-  idle: {
-    label: "idle",
-    tone: "bg-amber-100 text-amber-800 ring-1 ring-amber-200",
-    icon: Clock3,
-    rail: "from-amber-300 via-amber-200 to-transparent",
+  paused: {
+    label: "Paused",
+    dot: "bg-amber-500",
+    dotRing: "ring-amber-100",
+    headerCount: 8,
+    text: "text-amber-700",
   },
-  degraded: {
-    label: "degraded",
-    tone: "bg-orange-100 text-orange-800 ring-1 ring-orange-200",
-    icon: Activity,
-    rail: "from-orange-300 via-orange-200 to-transparent",
-  },
-  offline: {
-    label: "offline",
-    tone: "bg-rose-100 text-rose-800 ring-1 ring-rose-200",
-    icon: WifiOff,
-    rail: "from-rose-300 via-rose-200 to-transparent",
+  terminated: {
+    label: "Terminated",
+    dot: "bg-rose-500",
+    dotRing: "ring-rose-100",
+    headerCount: 8,
+    text: "text-rose-700",
   },
 };
 
-const riskStyles: Record<AgentRisk, string> = {
-  calm: "bg-sky-100 text-sky-800 ring-1 ring-sky-200",
-  watch: "bg-amber-100 text-amber-800 ring-1 ring-amber-200",
-  rogue: "bg-rose-100 text-rose-800 ring-1 ring-rose-200",
-};
-
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
+const FILTER_TABS = ["All agents", "Assigned to Pete", "Needs review", "Recently terminated"];
 
 function cn(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
 }
 
-function StatChip({
-  icon: Icon,
-  label,
-  value,
-  tone = "soft",
-}: {
-  icon: typeof Orbit;
-  label: string;
-  value: string;
-  tone?: "soft" | "hot";
-}) {
+function StatusDot({ status }: { status: AgentStatus }) {
+  const meta = STATUS_META[status];
+
   return (
-    <div
+    <span
       className={cn(
-        "min-h-12 rounded-full px-4 py-3 transition duration-200",
-        tone === "hot"
-          ? "bg-rose-500 text-white shadow-[0_14px_30px_rgba(159,18,57,0.24)]"
-          : "bg-white/80 text-stone-700 ring-1 ring-stone-200",
+        "inline-flex h-2.5 w-2.5 shrink-0 rounded-full ring-4",
+        meta.dot,
+        meta.dotRing,
       )}
-    >
-      <div className="flex items-center gap-3">
-        <span
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-            tone === "hot" ? "bg-white/15" : "bg-stone-100 text-stone-700",
-          )}
+      aria-hidden="true"
+    />
+  );
+}
+
+function LoadingRows() {
+  return (
+    <div className="border border-[#e8ebf2] bg-white">
+      {Array.from({ length: 10 }).map((_, index) => (
+        <div
+          key={index}
+          className="flex h-14 items-center gap-3 border-b border-[#eef1f6] px-4 last:border-b-0"
         >
-          <Icon className="h-4 w-4" />
-        </span>
-        <div>
-          <p className={cn("text-[11px] uppercase tracking-[0.22em]", tone === "hot" ? "text-rose-100/80" : "text-stone-500")}>{label}</p>
-          <p className="text-sm font-semibold">{value}</p>
+          <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#d7dde8]" />
+          <div className="min-w-0 flex-1">
+            <div className="h-3.5 w-36 animate-pulse rounded bg-[#edf1f7]" />
+          </div>
+          <div className="hidden h-5 w-24 animate-pulse rounded-full bg-[#f1f4f8] md:block" />
+          <div className="h-3.5 w-16 animate-pulse rounded bg-[#edf1f7]" />
         </div>
-      </div>
+      ))}
     </div>
   );
 }
 
-function LoadingSkeleton() {
+function EmptyState() {
   return (
-    <div className="space-y-6">
-      <div className="rounded-[2rem] bg-white/70 p-6 ring-1 ring-stone-200">
-        <div className="grid gap-4 lg:grid-cols-[1.35fr_0.85fr]">
-          <div className="space-y-3">
-            <div className="h-4 w-28 animate-pulse rounded-full bg-stone-200" />
-            <div className="h-12 w-3/4 animate-pulse rounded-2xl bg-stone-200" />
-            <div className="h-4 w-full animate-pulse rounded-full bg-stone-100" />
-            <div className="h-4 w-2/3 animate-pulse rounded-full bg-stone-100" />
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="h-24 animate-pulse rounded-[1.6rem] bg-stone-100" />
-            ))}
-          </div>
+    <div className="border border-dashed border-[#d8dee8] bg-[#fcfcfd] px-8 py-16 text-center">
+      <div className="mx-auto max-w-md space-y-3">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#e6eaf1] bg-white text-[#6b7280]">
+          <SquareTerminal className="h-4 w-4" />
         </div>
-      </div>
-      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="h-[420px] animate-pulse rounded-[2rem] bg-white/70 ring-1 ring-stone-200" />
-        <div className="space-y-6">
-          <div className="h-48 animate-pulse rounded-[2rem] bg-white/70 ring-1 ring-stone-200" />
-          <div className="h-56 animate-pulse rounded-[2rem] bg-white/70 ring-1 ring-stone-200" />
-        </div>
+        <h2 className="text-[14px] font-semibold text-[#111827]">No agents match this view</h2>
+        <p className="text-[13px] leading-6 text-[#6b7280]">
+          The roster is empty right now. Clear a filter or start a new agent to repopulate the queue.
+        </p>
       </div>
     </div>
-  );
-}
-
-function EmptyState({ onReset }: { onReset: () => void }) {
-  return (
-    <section className="relative overflow-hidden rounded-[2.3rem] bg-[linear-gradient(135deg,#fff8ef,white_48%,#f3f8ff)] p-8 ring-1 ring-[#e8dccb] sm:p-10">
-      <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-orange-200/40 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-0 h-48 w-48 rounded-full bg-sky-200/50 blur-3xl" />
-      <div className="relative max-w-2xl space-y-5">
-        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-stone-900 text-white shadow-[0_14px_28px_rgba(28,25,23,0.18)]">
-          <Bot className="h-6 w-6" />
-        </div>
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.28em] text-stone-500">quiet hangar</p>
-          <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.04em] text-stone-900 sm:text-4xl">
-            No agents are checked in right now.
-          </h2>
-          <p className="max-w-xl text-base leading-7 text-stone-600">
-            Pete&apos;s fleet is empty, asleep, or happily unassigned. Good news for the budget,
-            slightly bad news for the drama quotient.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={onReset}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-stone-900 px-5 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Reload mock fleet
-          </button>
-          <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-stone-700 ring-1 ring-stone-200 transition duration-200 hover:-translate-y-0.5 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2">
-            Open standby templates
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-    </section>
   );
 }
 
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
-    <section className="rounded-[2.3rem] bg-[linear-gradient(135deg,#fff1f0,#fffaf8_55%,#fff)] p-8 ring-1 ring-rose-200 sm:p-10">
-      <div className="max-w-2xl space-y-5">
-        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-[0_14px_28px_rgba(190,24,93,0.18)]">
-          <TriangleAlert className="h-6 w-6" />
+    <div className="border border-[#f2d8d8] bg-[#fffdfd] px-8 py-16 text-center">
+      <div className="mx-auto max-w-md space-y-3">
+        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#f3d6d6] bg-white text-[#b42318]">
+          <TriangleAlert className="h-4 w-4" />
         </div>
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.28em] text-rose-500">telemetry hiccup</p>
-          <h2 className="text-3xl font-semibold tracking-[-0.04em] text-stone-900 sm:text-4xl">
-            Pete lost the roster feed, not the agents.
-          </h2>
-          <p className="text-base leading-7 text-stone-600">
-            The page can&apos;t read fleet telemetry right now. Usually this means the relay coughed,
-            not that your whole robot army escaped into the parking lot.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
+        <h2 className="text-[14px] font-semibold text-[#111827]">Couldn’t load live roster data</h2>
+        <p className="text-[13px] leading-6 text-[#6b7280]">
+          The relay responded with an error. Existing agents are likely still running, but this view
+          is stale until telemetry reconnects.
+        </p>
+        <div>
           <button
             onClick={onRetry}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-rose-500 px-5 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2"
+            className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dbe4f0] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#c8d4e3] hover:bg-[#f9fbfd]"
           >
-            <RefreshCw className="h-4 w-4" />
-            Retry telemetry
+            <RefreshCw className="h-3.5 w-3.5" />
+            Retry
           </button>
-          <div className="inline-flex min-h-12 items-center rounded-full bg-white px-4 text-sm text-stone-600 ring-1 ring-rose-100">
-            Last clean snapshot: 9 minutes ago
-          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-function AgentStrip({ agent }: { agent: Agent }) {
-  const status = statusStyles[agent.status];
-  const StatusIcon = status.icon;
-  const overBudget = agent.spend > agent.budget;
-  const progress = Math.min((agent.spend / agent.budget) * 100, 100);
+function AgentRow({ agent, index }: { agent: Agent; index: number }) {
+  const statusMeta = STATUS_META[agent.status];
 
   return (
-    <article className="group relative overflow-hidden rounded-[2rem] bg-white/78 p-5 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(28,25,23,0.08)] sm:p-6">
-      <div className={cn("pointer-events-none absolute inset-y-0 left-0 w-2 bg-gradient-to-b", status.rail)} />
-      <div className="pointer-events-none absolute right-5 top-5 opacity-0 transition duration-300 group-hover:opacity-100 motion-reduce:transition-none">
-        <Sparkles className="h-4 w-4 text-orange-400" />
-      </div>
+    <div
+      className="group flex h-14 items-center gap-3 border-b border-[#eef1f6] px-4 text-[14px] text-[#111827] transition-all duration-150 ease-out hover:translate-x-[2px] hover:bg-[#f7f9fc] last:border-b-0 motion-reduce:transition-none motion-reduce:hover:translate-x-0"
+      style={{
+        animation: "roster-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both",
+        animationDelay: `${index * 30}ms`,
+      }}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <StatusDot status={agent.status} />
 
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-        <div className="min-w-0 space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(145deg,#fff7ed,#fde7d6)] text-stone-800 ring-1 ring-orange-100">
-              <Bot className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-xl font-semibold tracking-[-0.03em] text-stone-900">{agent.name}</h3>
-                <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  {agent.id}
-                </span>
-                <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", status.tone)}>
-                  <StatusIcon className="h-3.5 w-3.5" />
-                  {status.label}
-                </span>
-                <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium capitalize", riskStyles[agent.risk])}>
-                  {agent.risk}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-stone-500">
-                @{agent.handle} · {agent.model} · owned by {agent.owner}
-              </p>
+        <div className="min-w-0 flex-1 md:flex md:items-center md:gap-3">
+          <div className="min-w-0 md:w-[28%] md:min-w-[180px]">
+            <div className="truncate font-semibold text-[#111827]">{agent.name}</div>
+            <div className="truncate text-[11px] text-[#9aa3b2] md:hidden">
+              {agent.branch} · {agent.owner}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="max-w-2xl text-base leading-7 text-stone-800">{agent.focus}</p>
-            <p className="text-sm leading-6 text-stone-500">{agent.note}</p>
+          <div className="hidden min-w-0 md:block md:w-[20%]">
+            <span className="inline-flex h-6 items-center rounded-full border border-[#e5e9f0] bg-[#f8fafc] px-2.5 text-[11px] font-medium text-[#6b7280]">
+              {agent.model}
+            </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 text-sm text-stone-600">
-            <span className="inline-flex min-h-12 items-center rounded-full bg-stone-100 px-4">Thread {agent.thread}</span>
-            <span className="inline-flex min-h-12 items-center rounded-full bg-stone-100 px-4">Seen {agent.lastSeen}</span>
-            <span className="inline-flex min-h-12 items-center rounded-full bg-stone-100 px-4">Uptime {agent.uptime}</span>
-            <span className="inline-flex min-h-12 items-center rounded-full bg-stone-100 px-4">Node {agent.location}</span>
+          <div className="hidden min-w-0 text-[13px] text-[#6b7280] lg:block lg:w-[24%]">
+            <span className="truncate">{agent.branch}</span>
+          </div>
+
+          <div className="hidden min-w-0 text-[13px] text-[#6b7280] xl:block xl:w-[16%]">
+            <span className="truncate">{agent.node}</span>
           </div>
         </div>
-
-        <div className="grid gap-3 sm:grid-cols-2 xl:w-[23rem] xl:grid-cols-1">
-          <div className="rounded-[1.5rem] bg-[#fff8f1] p-4 ring-1 ring-[#f0dfcb]">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">daily burn</p>
-                <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-stone-900">{currency.format(agent.spend)}</p>
-              </div>
-              <div className={cn("rounded-full px-3 py-1 text-xs font-semibold", overBudget ? "bg-rose-500 text-white" : "bg-stone-900 text-white")}>
-                {overBudget ? "over cap" : `${Math.round(progress)}%`}
-              </div>
-            </div>
-            <div className="mt-3 h-2.5 rounded-full bg-white">
-              <div
-                className={cn(
-                  "h-2.5 rounded-full transition-all duration-500 motion-reduce:transition-none",
-                  agent.risk === "rogue" ? "bg-rose-500" : overBudget ? "bg-amber-500" : "bg-stone-900",
-                )}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="mt-2 text-sm text-stone-500">of {currency.format(agent.budget)} planned today</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-[1.4rem] bg-stone-50 p-4 ring-1 ring-stone-200">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">velocity</p>
-              <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-stone-900">{agent.velocity}</p>
-              <p className="mt-1 text-xs text-stone-500">tasks/hr</p>
-            </div>
-            <div className="rounded-[1.4rem] bg-stone-50 p-4 ring-1 ring-stone-200">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">context</p>
-              <p className="mt-1 text-2xl font-semibold tracking-[-0.03em] text-stone-900">{agent.context}%</p>
-              <p className="mt-1 text-xs text-stone-500">window pressure</p>
-            </div>
-          </div>
-
-          <button
-            className={cn(
-              "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-              agent.risk === "rogue"
-                ? "bg-rose-500 text-white hover:-translate-y-0.5 hover:bg-rose-400 focus-visible:ring-rose-300"
-                : "bg-stone-900 text-white hover:-translate-y-0.5 hover:bg-stone-800 focus-visible:ring-stone-400",
-            )}
-            aria-label={agent.risk === "rogue" ? `Kill ${agent.name}` : `Open controls for ${agent.name}`}
-          >
-            <Power className="h-4 w-4" />
-            {agent.risk === "rogue" ? "Kill agent" : "Open controls"}
-          </button>
-        </div>
       </div>
-    </article>
+
+      <div className="hidden text-right text-[13px] text-[#6b7280] sm:block sm:w-[84px]">
+        {agent.lastSeen}
+      </div>
+
+      <div className="w-[72px] text-right text-[13px] text-[#6b7280]">{agent.uptime}</div>
+
+      <div className="flex w-[92px] items-center justify-end gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 motion-reduce:transition-none">
+        <button
+          className="inline-flex min-h-12 items-center rounded-md px-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-white hover:text-[#111827]"
+          aria-label={`More actions for ${agent.name}`}
+        >
+          <MoreHorizontal className="h-4 w-4" />
+        </button>
+        <button
+          className={cn(
+            "inline-flex min-h-12 items-center rounded-md px-2 text-[13px] font-medium transition",
+            agent.status === "terminated"
+              ? "text-[#9aa3b2] hover:bg-white hover:text-[#6b7280]"
+              : "text-[#6b7280] hover:bg-[#fff1f2] hover:text-[#b42318]",
+          )}
+        >
+          Kill
+        </button>
+      </div>
+
+      <span className={cn("sr-only", statusMeta.text)}>{statusMeta.label}</span>
+    </div>
+  );
+}
+
+function GroupSection({
+  status,
+  agents,
+  collapsed,
+  onToggle,
+  startIndex,
+}: {
+  status: AgentStatus;
+  agents: Agent[];
+  collapsed: boolean;
+  onToggle: () => void;
+  startIndex: number;
+}) {
+  const meta = STATUS_META[status];
+  const Chevron = collapsed ? ChevronRight : ChevronDown;
+
+  return (
+    <section className="border-t border-[#eef1f6] first:border-t-0">
+      <button
+        onClick={onToggle}
+        className="flex min-h-12 w-full items-center justify-between px-4 text-left transition hover:bg-[#fafbfd]"
+        aria-expanded={!collapsed}
+      >
+        <div className="flex items-center gap-2">
+          <Chevron className="h-3.5 w-3.5 text-[#9aa3b2]" />
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6b7280]">
+            {meta.label} ({meta.headerCount})
+          </span>
+        </div>
+        <span className="text-[11px] text-[#9aa3b2]">{agents.length} visible</span>
+      </button>
+
+      {!collapsed && (
+        <div>
+          {agents.map((agent, index) => (
+            <AgentRow key={agent.id} agent={agent} index={startIndex + index} />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 
 export default function AgentRosterPage() {
   const [view, setView] = useState<ViewState>("loading");
-  const [showSpark, setShowSpark] = useState(true);
+  const [query, setQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All agents");
+  const [collapsed, setCollapsed] = useState<Record<AgentStatus, boolean>>({
+    running: false,
+    paused: false,
+    terminated: false,
+  });
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setView("live"), 900);
+    const timer = window.setTimeout(() => {
+      setView("happy");
+    }, 750);
+
     return () => window.clearTimeout(timer);
   }, []);
 
-  const activeAgents = useMemo(() => (view === "empty" ? [] : roster), [view]);
-  const spendTotal = activeAgents.reduce((sum, agent) => sum + agent.spend, 0);
-  const onlineCount = activeAgents.filter((agent) => agent.status === "online").length;
-  const rogueCount = activeAgents.filter((agent) => agent.risk === "rogue").length;
-  const avgContext = activeAgents.length
-    ? Math.round(activeAgents.reduce((sum, agent) => sum + agent.context, 0) / activeAgents.length)
-    : 0;
-  const hottestAgent = activeAgents.slice().sort((a, b) => b.velocity - a.velocity)[0];
+  const visibleAgents = useMemo(() => {
+    if (view === "empty") return [];
+
+    const base = AGENTS.filter((agent) => {
+      const matchesQuery =
+        query.length === 0 ||
+        [agent.name, agent.model, agent.branch, agent.node, agent.owner]
+          .join(" ")
+          .toLowerCase()
+          .includes(query.toLowerCase());
+
+      const matchesTab =
+        activeTab === "All agents"
+          ? true
+          : activeTab === "Assigned to Pete"
+            ? agent.owner === "pete"
+            : activeTab === "Needs review"
+              ? agent.status === "paused"
+              : agent.status === "terminated";
+
+      return matchesQuery && matchesTab;
+    });
+
+    return base;
+  }, [activeTab, query, view]);
+
+  const grouped = useMemo(() => {
+    return {
+      running: visibleAgents.filter((agent) => agent.status === "running"),
+      paused: visibleAgents.filter((agent) => agent.status === "paused"),
+      terminated: visibleAgents.filter((agent) => agent.status === "terminated"),
+    };
+  }, [visibleAgents]);
+
+  const groupOrder: AgentStatus[] = ["running", "paused", "terminated"];
+  let rowIndex = 0;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[linear-gradient(180deg,#f7f2e8_0%,#f9f7f2_26%,#eef4fb_100%)] text-stone-900">
-      <div className="pointer-events-none fixed inset-0 opacity-40 [background-image:radial-gradient(rgba(120,113,108,0.12)_0.8px,transparent_0.8px)] [background-size:20px_20px]" />
-      <div className="pointer-events-none fixed inset-x-0 top-0 h-48 bg-[radial-gradient(circle_at_top,rgba(255,122,89,0.17),transparent_55%)]" />
-      <div className="pointer-events-none fixed bottom-0 right-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" />
-
-      <div className="relative mx-auto flex w-full max-w-[1500px] flex-col gap-6 px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-        <section className="overflow-hidden rounded-[2.4rem] bg-[linear-gradient(135deg,rgba(255,248,237,0.98),rgba(255,255,255,0.96)_44%,rgba(240,246,255,0.98))] p-6 shadow-[0_30px_80px_rgba(120,113,108,0.12)] ring-1 ring-[#eadcc9] sm:p-8 lg:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.85fr] lg:items-end">
-            <div className="space-y-6">
-              <div className="inline-flex min-h-12 items-center gap-3 rounded-full bg-white/85 px-4 py-3 text-sm text-stone-700 ring-1 ring-stone-200 backdrop-blur">
-                <Radar className="h-4 w-4 text-orange-500" />
-                openclaw mission control
+    <main className="min-h-screen bg-[#fbfaf8] text-[#111827]">
+      <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-5 pb-24 pt-6 sm:px-6 lg:px-8">
+        <header className="border-b border-[#eceff4] pb-4">
+          <div className="flex min-h-10 items-center justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#9aa3b2]">
+                <span>OpenClaw</span>
+                <ChevronRight className="h-3 w-3" />
+                <span>Fleet</span>
+                <ChevronRight className="h-3 w-3" />
+                <span className="text-[#6b7280]">Agent roster</span>
               </div>
-
-              <div className="space-y-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-stone-500">pete&apos;s roster board</p>
-                <h1 className="max-w-4xl text-4xl font-semibold tracking-[-0.06em] text-stone-950 sm:text-5xl lg:text-6xl">
-                  Keep the fleet fast,
-                  <span className="block text-stone-700">cheap, and slightly afraid of the red button.</span>
-                </h1>
-                <p className="max-w-2xl text-base leading-8 text-stone-600 sm:text-lg">
-                  A warm-blooded control room for OpenClaw agents. Pete can see who&apos;s online,
-                  what they&apos;re doing, how much budget they&apos;ve chewed through today, and which
-                  little goblin needs to be terminated before it starts freelancing.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <button
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-stone-900 px-5 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2"
-                  aria-label="Contain the rogue agent"
-                >
-                  <Power className="h-4 w-4" />
-                  Contain rogue agent
-                </button>
-                <button
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white/90 px-5 text-sm font-semibold text-stone-700 ring-1 ring-stone-200 transition duration-200 hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2"
-                  onClick={() => setShowSpark((current) => !current)}
-                >
-                  <Sparkles className="h-4 w-4 text-orange-500" />
-                  {showSpark ? "Mute sparkle mode" : "Restore sparkle mode"}
-                </button>
+              <div className="mt-1 flex items-center gap-4">
+                <h1 className="text-[18px] font-semibold text-[#111827]">Pete’s agent roster</h1>
+                <nav className="hidden items-center gap-4 md:flex">
+                  <button className="border-b border-[#111827] pb-2 text-[13px] font-medium text-[#111827]">
+                    Agents
+                  </button>
+                  <button className="pb-2 text-[13px] text-[#6b7280]">Runs</button>
+                  <button className="pb-2 text-[13px] text-[#6b7280]">Policies</button>
+                </nav>
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              <StatChip icon={Orbit} label="agents online" value={activeAgents.length ? `${onlineCount}/${activeAgents.length}` : "0/0"} />
-              <StatChip icon={DollarSign} label="spent today" value={currency.format(spendTotal)} />
-              <StatChip icon={Brain} label="avg context" value={`${avgContext}%`} />
-              <StatChip icon={ShieldAlert} label="rogue count" value={String(rogueCount)} tone={rogueCount ? "hot" : "soft"} />
-            </div>
+            <button className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dde3ec] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#cfd7e3] hover:bg-[#fafbfd]">
+              <RefreshCw className="h-3.5 w-3.5" />
+              Sync
+            </button>
           </div>
+        </header>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {(["live", "loading", "empty", "error"] as ViewState[]).map((state) => (
-              <button
-                key={state}
-                onClick={() => setView(state)}
-                aria-pressed={view === state}
-                className={cn(
-                  "inline-flex min-h-12 items-center justify-center rounded-full px-4 text-sm font-medium capitalize transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2",
-                  view === state
-                    ? "bg-stone-900 text-white"
-                    : "bg-white/80 text-stone-600 ring-1 ring-stone-200 hover:bg-white",
-                )}
-              >
-                View {state}
+        <section className="border-b border-[#eceff4] py-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1">
+              {FILTER_TABS.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={cn(
+                    "inline-flex min-h-12 shrink-0 items-center rounded-md px-2.5 text-[13px] transition",
+                    activeTab === tab
+                      ? "bg-[#eef3fb] text-[#111827]"
+                      : "text-[#6b7280] hover:bg-[#f4f6fa] hover:text-[#374151]",
+                  )}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative min-w-0 flex-1 lg:w-[320px] lg:flex-none">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9aa3b2]" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search agents, models, branches"
+                  className="h-9 w-full rounded-md border border-[#dde3ec] bg-white pl-9 pr-9 text-[13px] text-[#111827] outline-none placeholder:text-[#9aa3b2] focus:border-[#c9d5e4]"
+                />
+                {query ? (
+                  <button
+                    onClick={() => setQuery("")}
+                    className="absolute right-0 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded text-[#9aa3b2] transition hover:bg-[#f4f6fa] hover:text-[#6b7280]"
+                    aria-label="Clear search"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                ) : null}
+              </div>
+
+              <button className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dde3ec] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#cfd7e3] hover:bg-[#fafbfd]">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                Filter
               </button>
-            ))}
+            </div>
           </div>
+
+          <p className="mt-3 text-[13px] text-[#6b7280]">47 agents • 31 running • 8 paused • 8 terminated</p>
         </section>
 
-        {view === "loading" ? (
-          <LoadingSkeleton />
-        ) : view === "empty" ? (
-          <EmptyState onReset={() => setView("live")} />
-        ) : view === "error" ? (
-          <ErrorState onRetry={() => setView("loading")} />
-        ) : (
-          <>
-            <section className="grid gap-6 xl:grid-cols-[1.18fr_0.82fr]">
-              <div className="overflow-hidden rounded-[2.2rem] bg-white/72 p-6 ring-1 ring-stone-200 shadow-[0_24px_60px_rgba(120,113,108,0.08)] sm:p-8">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.26em] text-stone-500">today&apos;s drift</p>
-                    <h2 className="mt-2 text-3xl font-semibold tracking-[-0.05em] text-stone-950">
-                      Spend curve with a pulse
-                    </h2>
-                    <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-600">
-                      The expensive hour wasn&apos;t random. Build agents went feral around 14:00,
-                      and Ghost Relay made the graph look more dramatic than Pete probably wanted.
-                    </p>
-                  </div>
-                  <div className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#fff4ea] px-4 text-sm font-medium text-stone-700 ring-1 ring-[#efd6bc]">
-                    <Flame className="h-4 w-4 text-orange-500" />
-                    hottest shift: 14:00
-                  </div>
-                </div>
+        <section className="flex-1 py-4">
+          <div className="overflow-hidden border border-[#e8ebf2] bg-white shadow-[0_1px_0_rgba(17,24,39,0.02)]">
+            <div className="hidden h-9 items-center border-b border-[#eef1f6] bg-[#fcfcfd] px-4 text-[11px] font-medium uppercase tracking-[0.08em] text-[#9aa3b2] md:flex">
+              <div className="w-[28%] min-w-[180px]">Agent</div>
+              <div className="w-[20%]">Model</div>
+              <div className="w-[24%] lg:block">Branch</div>
+              <div className="hidden xl:block xl:w-[16%]">Node</div>
+              <div className="ml-auto mr-[72px] hidden w-[84px] text-right sm:block">Seen</div>
+              <div className="w-[72px] text-right">Uptime</div>
+              <div className="w-[92px] text-right">Actions</div>
+            </div>
 
-                <div className="mt-8 h-[320px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={spendPulse} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="fleetSpend" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#ff7a59" stopOpacity={0.45} />
-                          <stop offset="100%" stopColor="#ff7a59" stopOpacity={0.03} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid stroke="#e7ddd0" vertical={false} />
-                      <XAxis dataKey="hour" axisLine={false} tickLine={false} tick={{ fill: "#78716c", fontSize: 12 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: "#78716c", fontSize: 12 }} />
-                      <Tooltip
-                        cursor={{ stroke: "#d6b89e", strokeWidth: 1 }}
-                        contentStyle={{
-                          borderRadius: 18,
-                          border: "1px solid #eadcc9",
-                          background: "rgba(255,250,244,0.96)",
-                          color: "#1c1917",
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="spend"
-                        stroke="#d65d38"
-                        strokeWidth={3}
-                        fill="url(#fleetSpend)"
-                        activeDot={{ r: 5, fill: "#d65d38" }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+            {view === "loading" ? (
+              <LoadingRows />
+            ) : view === "error" ? (
+              <ErrorState onRetry={() => setView("loading")} />
+            ) : visibleAgents.length === 0 ? (
+              <EmptyState />
+            ) : (
+              groupOrder.map((status) => {
+                const agents = grouped[status];
+                const currentStart = rowIndex;
+                rowIndex += collapsed[status] ? 0 : agents.length;
 
-              <div className="grid gap-6">
-                <section className="overflow-hidden rounded-[2.2rem] bg-[linear-gradient(145deg,#fff9f3,#fff)] p-6 ring-1 ring-[#eadcc9] shadow-[0_24px_60px_rgba(120,113,108,0.08)]">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.26em] text-stone-500">budget split</p>
-                      <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-stone-950">
-                        Where the money went
-                      </h2>
-                    </div>
-                    <DollarSign className="h-5 w-5 text-orange-500" />
-                  </div>
+                return (
+                  <GroupSection
+                    key={status}
+                    status={status}
+                    agents={agents}
+                    collapsed={collapsed[status]}
+                    onToggle={() =>
+                      setCollapsed((current) => ({
+                        ...current,
+                        [status]: !current[status],
+                      }))
+                    }
+                    startIndex={currentStart}
+                  />
+                );
+              })
+            )}
+          </div>
+        </section>
+      </div>
 
-                  <div className="mt-5 grid gap-4 sm:grid-cols-[0.95fr_1.05fr] sm:items-center">
-                    <div className="h-44 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie data={spendSlices} dataKey="value" innerRadius={42} outerRadius={68} paddingAngle={3}>
-                            {spendSlices.map((slice) => (
-                              <Cell key={slice.name} fill={slice.color} />
-                            ))}
-                          </Pie>
-                          <Tooltip
-                            contentStyle={{
-                              borderRadius: 18,
-                              border: "1px solid #eadcc9",
-                              background: "rgba(255,250,244,0.96)",
-                              color: "#1c1917",
-                            }}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    <div className="space-y-2">
-                      {spendSlices.map((slice) => (
-                        <div key={slice.name} className="flex items-center justify-between rounded-[1.2rem] bg-white/85 px-4 py-3 ring-1 ring-stone-200">
-                          <div className="flex items-center gap-3 text-sm text-stone-700">
-                            <span className="h-3 w-3 rounded-full" style={{ backgroundColor: slice.color }} />
-                            <span className="capitalize">{slice.name}</span>
-                          </div>
-                          <span className="text-sm font-semibold text-stone-900">{currency.format(slice.value)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-
-                <section className="overflow-hidden rounded-[2.2rem] bg-[linear-gradient(145deg,#fff1f0,#fff7f4)] p-6 ring-1 ring-rose-200 shadow-[0_24px_60px_rgba(120,113,108,0.08)]">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-[0_16px_32px_rgba(190,24,93,0.18)]">
-                      <Power className="h-5 w-5" />
-                    </div>
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.26em] text-rose-500">containment bay</p>
-                        <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-stone-950">
-                          One-button problem solver
-                        </h2>
-                      </div>
-                      <p className="text-sm leading-7 text-stone-600">
-                        Ghost Relay slipped outside approved scope, burned through its cap, and
-                        started inventing errands. This is why Pete keeps the big red candy button.
-                      </p>
-                      <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-rose-500 px-5 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-rose-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2">
-                        <Power className="h-4 w-4" />
-                        Pull kill switch
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-
-            <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-              <section className="overflow-hidden rounded-[2.2rem] bg-white/72 p-4 ring-1 ring-stone-200 shadow-[0_24px_60px_rgba(120,113,108,0.08)] sm:p-6">
-                <div className="mb-6 flex flex-wrap items-end justify-between gap-4 px-2">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.26em] text-stone-500">fleet roster</p>
-                    <h2 className="mt-2 text-3xl font-semibold tracking-[-0.05em] text-stone-950">
-                      The hallway outside Pete&apos;s office
-                    </h2>
-                  </div>
-                  <div className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[#eef4ff] px-4 text-sm font-medium text-stone-700 ring-1 ring-sky-100">
-                    <LocateFixed className="h-4 w-4 text-sky-600" />
-                    {hottestAgent ? `${hottestAgent.name} is moving fastest` : "No one moving"}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {activeAgents.map((agent, index) => (
-                    <div
-                      key={agent.id}
-                      className="animate-[rosterFade_480ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none"
-                      style={{ animationDelay: `${index * 55}ms` }}
-                    >
-                      <AgentStrip agent={agent} />
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <div className="grid gap-6">
-                <section className="overflow-hidden rounded-[2.2rem] bg-white/72 p-6 ring-1 ring-stone-200 shadow-[0_24px_60px_rgba(120,113,108,0.08)]">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.26em] text-stone-500">watch floor</p>
-                      <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-stone-950">
-                        What deserves Pete&apos;s eyes
-                      </h2>
-                    </div>
-                    <Crosshair className="h-5 w-5 text-stone-500" />
-                  </div>
-
-                  <div className="mt-5 space-y-3">
-                    {feed.map((item, index) => (
-                      <div
-                        key={item.title}
-                        className={cn(
-                          "rounded-[1.5rem] p-4 transition duration-200 hover:-translate-y-0.5 motion-reduce:transition-none",
-                          item.tone === "critical"
-                            ? "bg-rose-50 ring-1 ring-rose-200"
-                            : item.tone === "warning"
-                              ? "bg-amber-50 ring-1 ring-amber-200"
-                              : "bg-sky-50 ring-1 ring-sky-200",
-                        )}
-                        style={{ animationDelay: `${index * 70}ms` }}
-                      >
-                        <p className="text-sm font-semibold text-stone-900">{item.title}</p>
-                        <p className="mt-2 text-sm leading-7 text-stone-600">{item.detail}</p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                <section className="overflow-hidden rounded-[2.2rem] bg-[linear-gradient(145deg,#f4f8ff,#ffffff)] p-6 ring-1 ring-sky-100 shadow-[0_24px_60px_rgba(120,113,108,0.08)]">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.26em] text-stone-500">tiny dashboard poetry</p>
-                      <h2 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-stone-950">
-                        Mission mood
-                      </h2>
-                    </div>
-                    <Waves className="h-5 w-5 text-sky-600" />
-                  </div>
-
-                  <div className="mt-5 grid gap-3">
-                    <div className="rounded-[1.5rem] bg-white/85 p-4 ring-1 ring-white shadow-sm">
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">command note</p>
-                      <p className="mt-2 text-sm leading-7 text-stone-700">
-                        The fleet feels healthy when the page reads like a calm studio, not a casino.
-                        Budget is visible. Threats are obvious. Everything else can breathe.
-                      </p>
-                    </div>
-                    <div className="rounded-[1.5rem] bg-stone-900 p-4 text-white shadow-[0_18px_35px_rgba(28,25,23,0.18)]">
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-stone-300">best current operator</p>
-                      <p className="mt-2 text-lg font-semibold tracking-[-0.03em]">
-                        {hottestAgent ? hottestAgent.name : "Nobody on deck"}
-                      </p>
-                      <p className="mt-1 text-sm text-stone-300">
-                        {hottestAgent ? hottestAgent.focus : "The hangar is quiet."}
-                      </p>
-                    </div>
-                    <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-stone-700 ring-1 ring-stone-200 transition duration-200 hover:-translate-y-0.5 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2">
-                      <Zap className="h-4 w-4 text-orange-500" />
-                      Kick off a fresh agent
-                    </button>
-                  </div>
-                </section>
-              </div>
-            </section>
-          </>
-        )}
+      <div className="fixed bottom-4 right-4 z-10 rounded-lg border border-[#dde3ec] bg-white/92 p-1.5 shadow-[0_8px_24px_rgba(17,24,39,0.08)] backdrop-blur-sm">
+        <div className="flex items-center gap-1">
+          {(["happy", "loading", "empty", "error"] as ViewState[]).map((state) => (
+            <button
+              key={state}
+              onClick={() => setView(state)}
+              className={cn(
+                "inline-flex min-h-12 items-center rounded-md px-2.5 text-[11px] font-medium capitalize transition",
+                view === state
+                  ? "bg-[#eef3fb] text-[#111827]"
+                  : "text-[#6b7280] hover:bg-[#f4f6fa] hover:text-[#374151]",
+              )}
+            >
+              {state === "loading" ? <Loader2 className="mr-1 h-3 w-3" /> : null}
+              {state}
+            </button>
+          ))}
+        </div>
       </div>
 
       <style jsx global>{`
-        @keyframes rosterFade {
+        @keyframes roster-enter {
           from {
             opacity: 0;
-            transform: translateY(16px) scale(0.985);
+            transform: translateY(-8px);
           }
           to {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
             scroll-behavior: auto !important;
           }
         }
       `}</style>
-
-      {showSpark && (
-        <div className="pointer-events-none fixed left-6 top-6 hidden rounded-full bg-white/80 px-3 py-2 text-xs uppercase tracking-[0.24em] text-stone-500 ring-1 ring-stone-200 backdrop-blur sm:block">
-          whimsical mode online
-        </div>
-      )}
     </main>
   );
 }
