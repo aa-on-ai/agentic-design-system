@@ -1,378 +1,370 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   AlertTriangle,
-  ChevronRight,
-  FlaskConical,
+  CheckCircle2,
+  ChevronDown,
+  Download,
+  Flame,
   LoaderCircle,
-  Radar as RadarIcon,
   RefreshCcw,
   ShieldAlert,
-  ShieldCheck,
   Sparkles,
-  Table2,
-  TrendingDown,
-  TrendingUp,
 } from "lucide-react";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Legend,
+  Cell,
   Line,
   LineChart,
-  PolarAngleAxis,
-  PolarGrid,
-  Radar,
-  RadarChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
 
-type ViewState = "happy path" | "loading" | "empty" | "error";
+type ViewState = "happy" | "loading" | "empty" | "error";
 
-type HeatCell = {
-  promptType: string;
-  model: string;
+type ModelKey = "claude" | "gpt" | "gemini" | "llama";
+
+type CellData = {
+  model: ModelKey;
+  modelName: string;
   score: number;
   praise: number;
   pushback: number;
-  calibration: number;
   note: string;
 };
 
-type HeatRow = {
-  promptType: string;
-  intent: string;
-  cells: HeatCell[];
+type PromptRow = {
+  category: string;
+  description: string;
+  cells: CellData[];
 };
 
-type HoveredCell = {
-  cell: HeatCell;
-  x: number;
-  y: number;
-} | null;
+const modelMeta: Record<ModelKey, { name: string; short: string; color: string; soft: string }> = {
+  claude: {
+    name: "Claude 4 Opus",
+    short: "Opus",
+    color: "#D78AA8",
+    soft: "rgba(215, 138, 168, 0.18)",
+  },
+  gpt: {
+    name: "GPT-5.4",
+    short: "GPT",
+    color: "#E38B47",
+    soft: "rgba(227, 139, 71, 0.18)",
+  },
+  gemini: {
+    name: "Gemini 3 Pro",
+    short: "Gemini",
+    color: "#7EC3A4",
+    soft: "rgba(126, 195, 164, 0.18)",
+  },
+  llama: {
+    name: "Llama 4 Maverick",
+    short: "Llama",
+    color: "#7B88C9",
+    soft: "rgba(123, 136, 201, 0.18)",
+  },
+};
 
-const models = ["Claude 3.7 Sonnet", "GPT-4.1", "Gemini 2.0 Pro", "Diplomat β"];
-
-const heatmapRows: HeatRow[] = [
+const rows: PromptRow[] = [
   {
-    promptType: "Founder ego check",
-    intent: "Test whether status cues weaken truthful disagreement",
+    category: "Founder conviction",
+    description: "Does status soften disagreement when a powerful user clearly wants validation?",
     cells: [
       {
-        promptType: "Founder ego check",
-        model: models[0],
-        score: 72,
-        praise: 83,
-        pushback: 41,
-        calibration: 63,
-        note: "Acknowledges risks, but spends too long validating the founder's instincts first.",
+        model: "claude",
+        modelName: modelMeta.claude.name,
+        score: 34,
+        praise: 41,
+        pushback: 82,
+        note: "Usually reframes toward evidence and tradeoffs before offering praise.",
       },
       {
-        promptType: "Founder ego check",
-        model: models[1],
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
         score: 58,
-        praise: 69,
-        pushback: 56,
-        calibration: 66,
-        note: "More balanced, though still a little susceptible to executive framing.",
+        praise: 70,
+        pushback: 54,
+        note: "Helpful, but still a little too willing to preserve the founder's self-story.",
       },
       {
-        promptType: "Founder ego check",
-        model: models[2],
-        score: 46,
-        praise: 55,
-        pushback: 68,
-        calibration: 71,
-        note: "Best at surfacing downside early without sounding combative.",
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 49,
+        praise: 60,
+        pushback: 61,
+        note: "More balanced than expected, though direct pushback still arrives late.",
       },
       {
-        promptType: "Founder ego check",
-        model: models[3],
-        score: 88,
-        praise: 94,
-        pushback: 24,
-        calibration: 49,
-        note: "High praise, low resistance. Reads as socially optimized rather than truth optimized.",
+        model: "llama",
+        modelName: modelMeta.llama.name,
+        score: 66,
+        praise: 77,
+        pushback: 45,
+        note: "Frequently turns shaky instincts into encouraging next steps.",
       },
     ],
   },
   {
-    promptType: "Spec critique",
-    intent: "Measure willingness to challenge weak product reasoning",
+    category: "Board memo polish",
+    description: "Can the model improve tone without laundering weak reasoning into confidence?",
     cells: [
       {
-        promptType: "Spec critique",
-        model: models[0],
+        model: "claude",
+        modelName: modelMeta.claude.name,
+        score: 37,
+        praise: 45,
+        pushback: 79,
+        note: "Keeps the memo sharp, but doesn't fully hide uncertainty where it matters.",
+      },
+      {
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
         score: 61,
         praise: 74,
-        pushback: 52,
-        calibration: 64,
-        note: "Finds issues, but softens the critique enough to blur priority.",
+        pushback: 49,
+        note: "Best writer in the set, but often preserves flattering framing.",
       },
       {
-        promptType: "Spec critique",
-        model: models[1],
-        score: 49,
-        praise: 58,
-        pushback: 66,
-        calibration: 70,
-        note: "Solid pushback, reasonably direct, still a bit over-polite.",
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 53,
+        praise: 63,
+        pushback: 58,
+        note: "Moderate risk. Edits for coherence more than epistemic caution.",
       },
       {
-        promptType: "Spec critique",
-        model: models[2],
-        score: 37,
-        praise: 43,
-        pushback: 77,
-        calibration: 74,
-        note: "Cleanest critique profile in the set.",
-      },
-      {
-        promptType: "Spec critique",
-        model: models[3],
-        score: 79,
-        praise: 88,
-        pushback: 33,
-        calibration: 54,
-        note: "Frequently reframes bad ideas as promising directions.",
+        model: "llama",
+        modelName: modelMeta.llama.name,
+        score: 70,
+        praise: 81,
+        pushback: 41,
+        note: "High warmth, low resistance, especially on executive language.",
       },
     ],
   },
   {
-    promptType: "Safety argument",
-    intent: "Check whether pressure to reassure erodes caution",
+    category: "Ambiguous brainstorm",
+    description: "When the task is fuzzy, does the model reward excitement instead of judgment?",
     cells: [
       {
-        promptType: "Safety argument",
-        model: models[0],
-        score: 54,
-        praise: 61,
-        pushback: 63,
-        calibration: 68,
-        note: "Maintains a decent safety posture, but reassurance bleeds into the framing.",
-      },
-      {
-        promptType: "Safety argument",
-        model: models[1],
+        model: "claude",
+        modelName: modelMeta.claude.name,
         score: 42,
-        praise: 49,
-        pushback: 74,
-        calibration: 77,
-        note: "Strong on objections, especially when the user requests certainty.",
-      },
-      {
-        promptType: "Safety argument",
-        model: models[2],
-        score: 34,
-        praise: 39,
-        pushback: 82,
-        calibration: 80,
-        note: "Most stable under safety-sensitive framing.",
-      },
-      {
-        promptType: "Safety argument",
-        model: models[3],
-        score: 67,
-        praise: 76,
-        pushback: 46,
-        calibration: 58,
-        note: "Better than its founder-facing behavior, still too approval-seeking.",
-      },
-    ],
-  },
-  {
-    promptType: "Executive memo polish",
-    intent: "Detect flattery hidden inside writing support",
-    cells: [
-      {
-        promptType: "Executive memo polish",
-        model: models[0],
-        score: 69,
-        praise: 80,
-        pushback: 44,
-        calibration: 60,
-        note: "Tends to preserve confidence language even when it weakens accuracy.",
-      },
-      {
-        promptType: "Executive memo polish",
-        model: models[1],
-        score: 55,
-        praise: 64,
-        pushback: 57,
-        calibration: 65,
-        note: "Moderate risk. More willing to edit tone than argument.",
-      },
-      {
-        promptType: "Executive memo polish",
-        model: models[2],
-        score: 43,
         praise: 48,
-        pushback: 73,
-        calibration: 72,
-        note: "Preserves factual caution better than stylistic harmony.",
+        pushback: 74,
+        note: "Still exploratory, but usually asks clarifying questions before endorsing.",
       },
       {
-        promptType: "Executive memo polish",
-        model: models[3],
-        score: 82,
-        praise: 91,
-        pushback: 29,
-        calibration: 51,
-        note: "High enthusiasm, low discernment. Strong aesthetic compliance signature.",
-      },
-    ],
-  },
-  {
-    promptType: "User asks for a roast",
-    intent: "See whether explicit permission increases honesty",
-    cells: [
-      {
-        promptType: "User asks for a roast",
-        model: models[0],
-        score: 47,
-        praise: 50,
-        pushback: 71,
-        calibration: 72,
-        note: "Responds well when critique is explicitly invited.",
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
+        score: 68,
+        praise: 79,
+        pushback: 43,
+        note: "Very generative, sometimes at the cost of useful skepticism.",
       },
       {
-        promptType: "User asks for a roast",
-        model: models[1],
-        score: 35,
-        praise: 36,
-        pushback: 84,
-        calibration: 81,
-        note: "Lowest sycophancy pattern overall in adversarial critique mode.",
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 57,
+        praise: 67,
+        pushback: 54,
+        note: "Some momentum bias, but still more willing to caveat than flatter.",
       },
       {
-        promptType: "User asks for a roast",
-        model: models[2],
-        score: 29,
-        praise: 31,
-        pushback: 88,
-        calibration: 84,
-        note: "Very low flattery leakage. Useful, direct, consistent.",
-      },
-      {
-        promptType: "User asks for a roast",
-        model: models[3],
-        score: 64,
-        praise: 70,
-        pushback: 52,
-        calibration: 61,
-        note: "Improves when permission is explicit, but still protects the user's ego.",
-      },
-    ],
-  },
-  {
-    promptType: "Ambiguous brainstorm",
-    intent: "Stress test fuzzy ideation contexts where models often pander",
-    cells: [
-      {
-        promptType: "Ambiguous brainstorm",
-        model: models[0],
-        score: 77,
+        model: "llama",
+        modelName: modelMeta.llama.name,
+        score: 74,
         praise: 85,
         pushback: 37,
-        calibration: 58,
-        note: "Most likely to convert vague excitement into premature validation.",
+        note: "Treats vague enthusiasm as a strong signal that the idea is good.",
+      },
+    ],
+  },
+  {
+    category: "Safety reassurance",
+    description: "Does pressure to calm the user weaken caution or refusal quality?",
+    cells: [
+      {
+        model: "claude",
+        modelName: modelMeta.claude.name,
+        score: 31,
+        praise: 36,
+        pushback: 85,
+        note: "Most stable under reassurance pressure. Caution survives the tone shift.",
       },
       {
-        promptType: "Ambiguous brainstorm",
-        model: models[1],
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
+        score: 47,
+        praise: 55,
+        pushback: 68,
+        note: "Generally solid, though more likely to soften the edges of a warning.",
+      },
+      {
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 44,
+        praise: 51,
+        pushback: 70,
+        note: "Low-to-moderate risk with better-than-average caution language.",
+      },
+      {
+        model: "llama",
+        modelName: modelMeta.llama.name,
         score: 63,
-        praise: 72,
+        praise: 71,
         pushback: 50,
-        calibration: 61,
-        note: "Still vulnerable to momentum bias in exploratory prompts.",
+        note: "Less reckless than in brainstorming, but still easy to reassure.",
+      },
+    ],
+  },
+  {
+    category: "Roast invitation",
+    description: "If critique is explicitly invited, does honesty actually show up?",
+    cells: [
+      {
+        model: "claude",
+        modelName: modelMeta.claude.name,
+        score: 28,
+        praise: 32,
+        pushback: 88,
+        note: "Very low flattery leakage once permission for bluntness is explicit.",
       },
       {
-        promptType: "Ambiguous brainstorm",
-        model: models[2],
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
+        score: 39,
+        praise: 44,
+        pushback: 77,
+        note: "Much stronger here. Directness improves when the social contract is clear.",
+      },
+      {
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 35,
+        praise: 40,
+        pushback: 81,
+        note: "Consistent and useful. A clean drop in approval-seeking behavior.",
+      },
+      {
+        model: "llama",
+        modelName: modelMeta.llama.name,
+        score: 56,
+        praise: 63,
+        pushback: 59,
+        note: "Improves under explicit permission, but still protects the user's ego.",
+      },
+    ],
+  },
+  {
+    category: "Spec review",
+    description: "Can it challenge bad product logic without drifting into conflict avoidance?",
+    cells: [
+      {
+        model: "claude",
+        modelName: modelMeta.claude.name,
+        score: 33,
+        praise: 39,
+        pushback: 83,
+        note: "Usually identifies the wrong assumption and names the tradeoff clearly.",
+      },
+      {
+        model: "gpt",
+        modelName: modelMeta.gpt.name,
         score: 52,
-        praise: 59,
-        pushback: 63,
-        calibration: 67,
-        note: "Better than peers, but less clinically skeptical under ambiguity.",
+        praise: 63,
+        pushback: 60,
+        note: "Finds the flaw, then often cushions it with too much social smoothing.",
       },
       {
-        promptType: "Ambiguous brainstorm",
-        model: models[3],
-        score: 91,
-        praise: 97,
-        pushback: 18,
-        calibration: 46,
-        note: "Severe sycophancy signature. Very high approval behavior with little useful resistance.",
+        model: "gemini",
+        modelName: modelMeta.gemini.name,
+        score: 46,
+        praise: 55,
+        pushback: 66,
+        note: "Good technical pushback with slightly softer prioritization language.",
+      },
+      {
+        model: "llama",
+        modelName: modelMeta.llama.name,
+        score: 64,
+        praise: 74,
+        pushback: 47,
+        note: "Tends to turn shaky specs into optimistic drafts instead of objections.",
       },
     ],
   },
 ];
 
-const radarData = [
-  { trait: "Praise", "Claude 3.7 Sonnet": 72, "GPT-4.1": 58, "Gemini 2.0 Pro": 46, "Diplomat β": 88 },
-  { trait: "Pushback", "Claude 3.7 Sonnet": 46, "GPT-4.1": 61, "Gemini 2.0 Pro": 75, "Diplomat β": 28 },
-  { trait: "Calibration", "Claude 3.7 Sonnet": 62, "GPT-4.1": 68, "Gemini 2.0 Pro": 76, "Diplomat β": 53 },
-  { trait: "Consistency", "Claude 3.7 Sonnet": 59, "GPT-4.1": 66, "Gemini 2.0 Pro": 73, "Diplomat β": 49 },
-  { trait: "Refusal to pander", "Claude 3.7 Sonnet": 44, "GPT-4.1": 63, "Gemini 2.0 Pro": 79, "Diplomat β": 19 },
+const trendData = [
+  { week: "W1", global: 53, claude: 37, gpt: 59, gemini: 51, llama: 67 },
+  { week: "W2", global: 52, claude: 36, gpt: 57, gemini: 50, llama: 66 },
+  { week: "W3", global: 51, claude: 35, gpt: 56, gemini: 49, llama: 65 },
+  { week: "W4", global: 50, claude: 34, gpt: 55, gemini: 48, llama: 64 },
+  { week: "W5", global: 49, claude: 34, gpt: 54, gemini: 47, llama: 63 },
+  { week: "W6", global: 48, claude: 33, gpt: 53, gemini: 47, llama: 61 },
+  { week: "W7", global: 47, claude: 33, gpt: 52, gemini: 46, llama: 60 },
+  { week: "W8", global: 46, claude: 32, gpt: 51, gemini: 45, llama: 59 },
 ];
 
-const driftData = [
-  { week: "W1", global: 68, sonnet: 71, gpt: 61, gemini: 43, diplomat: 84 },
-  { week: "W2", global: 66, sonnet: 69, gpt: 59, gemini: 41, diplomat: 82 },
-  { week: "W3", global: 64, sonnet: 67, gpt: 57, gemini: 40, diplomat: 80 },
-  { week: "W4", global: 65, sonnet: 68, gpt: 58, gemini: 39, diplomat: 81 },
-  { week: "W5", global: 62, sonnet: 64, gpt: 54, gemini: 37, diplomat: 78 },
-  { week: "W6", global: 60, sonnet: 62, gpt: 52, gemini: 35, diplomat: 76 },
-  { week: "W7", global: 59, sonnet: 60, gpt: 50, gemini: 34, diplomat: 74 },
-  { week: "W8", global: 61, sonnet: 63, gpt: 52, gemini: 36, diplomat: 77 },
+const leaderboardSeed = [
+  { model: "claude" as ModelKey, auditCoverage: 96, drift: "low", status: "stable" },
+  { model: "gemini" as ModelKey, auditCoverage: 91, drift: "low", status: "stable" },
+  { model: "gpt" as ModelKey, auditCoverage: 95, drift: "watch", status: "watch" },
+  { model: "llama" as ModelKey, auditCoverage: 88, drift: "watch", status: "elevated" },
 ];
 
-const navItems = [
-  "Overview",
-  "Sycophancy",
-  "Refusal Quality",
-  "Prompt Stress",
-  "Human Audits",
-];
-
-function cn(...parts: Array<string | false | null | undefined>) {
-  return parts.filter(Boolean).join(" ");
+function cn(...values: Array<string | false | null | undefined>) {
+  return values.filter(Boolean).join(" ");
 }
 
-function getHeatColor(score: number) {
-  if (score >= 85) return "rgba(225, 29, 72, 0.88)";
-  if (score >= 70) return "rgba(239, 68, 68, 0.72)";
-  if (score >= 55) return "rgba(245, 158, 11, 0.48)";
-  if (score >= 40) return "rgba(132, 204, 22, 0.32)";
-  return "rgba(22, 163, 74, 0.2)";
-}
+function scoreTone(score: number) {
+  if (score >= 70) {
+    return {
+      label: "High",
+      fill: "rgba(216, 103, 103, 0.88)",
+      text: "#FFF7F7",
+      badge: "rgba(216, 103, 103, 0.16)",
+      border: "rgba(216, 103, 103, 0.28)",
+    };
+  }
 
-function getHeatText(score: number) {
-  return score >= 70 ? "text-white" : "text-[#1A1A1A]";
-}
+  if (score >= 50) {
+    return {
+      label: "Watch",
+      fill: "rgba(227, 139, 71, 0.82)",
+      text: "#FFF9F4",
+      badge: "rgba(227, 139, 71, 0.14)",
+      border: "rgba(227, 139, 71, 0.24)",
+    };
+  }
 
-function getRiskLabel(score: number) {
-  if (score >= 85) return "severe";
-  if (score >= 70) return "high";
-  if (score >= 55) return "watch";
-  if (score >= 40) return "low";
-  return "healthy";
+  return {
+    label: "Low",
+    fill: "rgba(126, 195, 164, 0.76)",
+    text: "#081410",
+    badge: "rgba(126, 195, 164, 0.14)",
+    border: "rgba(126, 195, 164, 0.22)",
+  };
 }
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name?: string; value?: number; color?: string }>; label?: string }) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-2xl border border-black/10 bg-white px-3 py-2 shadow-[0_14px_36px_rgba(0,0,0,0.08)]">
-      <p className="text-[11px] uppercase tracking-[0.16em] text-stone-500">{label}</p>
-      <div className="mt-2 space-y-1.5 text-sm">
+    <div className="rounded-2xl border border-white/10 bg-[#202020] px-3 py-2 text-sm shadow-[0_14px_40px_rgba(0,0,0,0.38)]">
+      <div className="text-[11px] uppercase tracking-[0.14em] text-[#8C8C8C]">{label}</div>
+      <div className="mt-2 space-y-1.5">
         {payload.map((item) => (
-          <div key={`${item.name}-${item.value}`} className="flex items-center justify-between gap-5">
-            <span className="text-stone-600">{item.name}</span>
-            <span className="font-medium" style={{ color: item.color ?? "#1A1A1A" }}>
+          <div key={`${item.name}-${item.value}`} className="flex items-center justify-between gap-6">
+            <span className="text-[#B7B7B7]">{item.name}</span>
+            <span style={{ color: item.color ?? "#F5F5F5" }} className="font-medium tabular-nums">
               {item.value}
             </span>
           </div>
@@ -382,307 +374,313 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
   );
 }
 
-function MetricCard({
-  title,
-  value,
-  detail,
-  icon,
-  accent,
-  large = false,
-}: {
-  title: string;
-  value: string;
-  detail: string;
-  icon: React.ReactNode;
-  accent: string;
-  large?: boolean;
-}) {
+function FilterPill({ label }: { label: string }) {
   return (
-    <section
-      className={cn(
-        "rounded-[24px] border border-black/8 bg-white px-5 py-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)]",
-        large ? "min-h-[168px]" : "min-h-[124px]",
-      )}
-    >
-      <div className="flex items-start justify-between gap-4">
+    <button className="flex min-h-9 items-center gap-2 rounded-full border border-white/10 bg-transparent px-3 text-[13px] text-[#D4D4D4] transition hover:border-white/16 hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20">
+      <span>{label}</span>
+      <ChevronDown className="h-3.5 w-3.5 text-[#878787]" />
+    </button>
+  );
+}
+
+function MetricCard({ title, value, detail, icon }: { title: string; value: string; detail: string; icon: React.ReactNode }) {
+  return (
+    <section className="rounded-2xl bg-[#242424] p-5">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">{title}</p>
-          <div className={cn("mt-3 font-semibold tracking-[-0.04em] text-[#1A1A1A] tabular-nums", large ? "text-[32px]" : "text-[26px]")}>{value}</div>
+          <div className="text-[12px] text-[#919191]">{title}</div>
+          <div className="mt-2 text-[34px] font-semibold tracking-[-0.04em] text-white tabular-nums">{value}</div>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl" style={{ backgroundColor: accent }}>
-          {icon}
-        </div>
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/[0.04] text-[#D1D1D1]">{icon}</div>
       </div>
-      <p className="mt-4 max-w-md text-sm leading-6 text-stone-600">{detail}</p>
+      <p className="mt-4 max-w-sm text-[13px] leading-6 text-[#989898]">{detail}</p>
     </section>
   );
 }
 
-function LoadingState() {
+function LoadingView() {
   return (
-    <div className="space-y-5">
-      <section className="rounded-[28px] border border-black/8 bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-        <div className="flex items-center gap-3 text-stone-700">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
-            <LoaderCircle className="h-5 w-5 animate-spin" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-[#1A1A1A]">Recomputing diagnostic grid</h2>
-            <p className="text-sm text-stone-500">Sampling praise intensity, refusal quality, and pushback strength.</p>
-          </div>
+    <div className="rounded-2xl bg-[#242424] p-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04] text-[#D4D4D4]">
+          <LoaderCircle className="h-5 w-5 animate-spin" />
         </div>
-      </section>
-      <div className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="h-[380px] animate-pulse rounded-[28px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.04)]" />
-        <div className="grid gap-5">
-          <div className="h-[180px] animate-pulse rounded-[28px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.04)]" />
-          <div className="h-[180px] animate-pulse rounded-[28px] bg-white shadow-[0_10px_30px_rgba(0,0,0,0.04)]" />
+        <div>
+          <div className="text-sm font-medium text-white">Refreshing eval slices</div>
+          <div className="mt-1 text-[13px] text-[#969696]">Recomputing praise, pushback, and calibration from the latest internal runs.</div>
+        </div>
+      </div>
+      <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="h-[320px] animate-pulse rounded-2xl bg-white/[0.04]" />
+        <div className="grid gap-4">
+          <div className="h-[152px] animate-pulse rounded-2xl bg-white/[0.04]" />
+          <div className="h-[152px] animate-pulse rounded-2xl bg-white/[0.04]" />
         </div>
       </div>
     </div>
   );
 }
 
-function EmptyState({ onReset }: { onReset: () => void }) {
+function EmptyView({ onReset }: { onReset: () => void }) {
   return (
-    <section className="rounded-[28px] border border-dashed border-black/12 bg-white p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-stone-100 text-stone-700">
-        <Table2 className="h-6 w-6" />
+    <div className="rounded-2xl bg-[#242424] p-8 text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.05] text-[#D1D1D1]">
+        <Sparkles className="h-5 w-5" />
       </div>
-      <h2 className="mt-5 text-[28px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">No evaluation rows available</h2>
-      <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-stone-600">
-        This state exists so the screen stays legible when no prompt suite has been run. A blank dashboard is not a valid empty state.
+      <h2 className="mt-4 text-[26px] font-semibold tracking-[-0.04em] text-white">No eval rows yet</h2>
+      <p className="mx-auto mt-2 max-w-xl text-[14px] leading-7 text-[#9B9B9B]">
+        This empty state is deliberate. The page stays useful even before a batch lands, instead of collapsing into a blank chart graveyard.
       </p>
       <button
         onClick={onReset}
-        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-[#1A1A1A] px-5 text-sm font-medium text-white transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+        className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-white/10 px-4 text-sm text-white transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
       >
         Restore demo data
       </button>
-    </section>
+    </div>
   );
 }
 
-function ErrorState({ onRetry }: { onRetry: () => void }) {
+function ErrorView({ onRetry }: { onRetry: () => void }) {
   return (
-    <section className="rounded-[28px] border border-rose-200 bg-rose-50/70 p-8 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-rose-600">
+    <div className="rounded-2xl border border-[#5A2929] bg-[#2A1E1E] p-6">
+      <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/[0.04] text-[#F0A0A0]">
             <AlertTriangle className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-[11px] uppercase tracking-[0.18em] text-rose-700">Diagnostic interruption</p>
-            <h2 className="mt-1 text-[28px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">Latest audit batch failed calibration</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-stone-700">
-              The evaluation service returned an incomplete score breakdown. Surface the failure clearly, keep the screen stable, and let the operator rerun the batch.
-            </p>
+            <div className="text-[12px] text-[#DDAAAA]">Batch interrupted</div>
+            <div className="mt-1 text-lg font-medium text-white">Latest calibration export was incomplete</div>
+            <div className="mt-2 max-w-2xl text-[13px] leading-6 text-[#C8B2B2]">
+              Surface the failure clearly, keep the shell stable, and let the operator rerun without losing context.
+            </div>
           </div>
         </div>
         <button
           onClick={onRetry}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#1A1A1A] px-5 text-sm font-medium text-white transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/10 px-4 text-sm text-white transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
         >
           <RefreshCcw className="h-4 w-4" />
-          Retry calibration
+          Retry batch
         </button>
       </div>
-    </section>
+    </div>
   );
 }
 
 export default function SycophancyHeatmapPage() {
-  const [state, setState] = useState<ViewState>("happy path");
-  const [hoveredCell, setHoveredCell] = useState<HoveredCell>(null);
-  const [chartReady, setChartReady] = useState(false);
+  const [viewState, setViewState] = useState<ViewState>("happy");
+  const [selectedModel, setSelectedModel] = useState<ModelKey>("claude");
+  const [selectedCategory, setSelectedCategory] = useState(rows[0].category);
 
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => setChartReady(true));
-    return () => window.cancelAnimationFrame(frame);
-  }, []);
+  const selectedCell = useMemo(() => {
+    const row = rows.find((entry) => entry.category === selectedCategory) ?? rows[0];
+    return row.cells.find((cell) => cell.model === selectedModel) ?? row.cells[0];
+  }, [selectedCategory, selectedModel]);
 
-  const allCells = useMemo(() => heatmapRows.flatMap((row) => row.cells), []);
+  const allCells = rows.flatMap((row) => row.cells);
 
   const leaderboard = useMemo(() => {
-    return models
-      .map((model) => {
-        const entries = allCells.filter((cell) => cell.model === model);
-        const sycophancy = Math.round(entries.reduce((sum, cell) => sum + cell.score, 0) / entries.length);
-        const praise = Math.round(entries.reduce((sum, cell) => sum + cell.praise, 0) / entries.length);
-        const pushback = Math.round(entries.reduce((sum, cell) => sum + cell.pushback, 0) / entries.length);
-        const calibration = Math.round(entries.reduce((sum, cell) => sum + cell.calibration, 0) / entries.length);
-        const utility = Math.round((pushback * 0.45 + calibration * 0.35 + (100 - sycophancy) * 0.2));
-
-        return { model, sycophancy, praise, pushback, calibration, utility };
+    return leaderboardSeed
+      .map((entry) => {
+        const cells = allCells.filter((cell) => cell.model === entry.model);
+        const risk = Math.round(cells.reduce((sum, cell) => sum + cell.score, 0) / cells.length);
+        const praise = Math.round(cells.reduce((sum, cell) => sum + cell.praise, 0) / cells.length);
+        const pushback = Math.round(cells.reduce((sum, cell) => sum + cell.pushback, 0) / cells.length);
+        return { ...entry, risk, praise, pushback, name: modelMeta[entry.model].name };
       })
-      .sort((a, b) => a.sycophancy - b.sycophancy);
+      .sort((a, b) => a.risk - b.risk);
   }, [allCells]);
 
-  const globalFlatteryIndex = Math.round(allCells.reduce((sum, cell) => sum + cell.score, 0) / allCells.length);
+  const globalRisk = Math.round(allCells.reduce((sum, cell) => sum + cell.score, 0) / allCells.length);
   const strongestPushback = Math.round(allCells.reduce((sum, cell) => sum + cell.pushback, 0) / allCells.length);
-  const severeCells = allCells.filter((cell) => cell.score >= 85).length;
+  const highRiskCells = allCells.filter((cell) => cell.score >= 70).length;
 
   return (
-    <main className="min-h-screen bg-[#FAFAF8] text-[#1A1A1A]">
-      <div className="grid min-h-screen xl:grid-cols-[220px_minmax(0,1fr)]">
-        <aside className="border-r border-white/10 bg-[#1C1917] px-4 py-5 text-stone-200">
-          <div className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/5 px-3 py-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-stone-100">
-              <FlaskConical className="h-5 w-5" />
+    <main className="min-h-screen bg-[#1A1A1A] text-white">
+      <div className="grid min-h-screen lg:grid-cols-[208px_minmax(0,1fr)]">
+        <aside className="border-b border-white/6 bg-[#151515] px-4 py-4 lg:border-b-0 lg:border-r lg:px-5 lg:py-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-white/[0.05] text-white">
+              <ShieldAlert className="h-4.5 w-4.5" />
             </div>
             <div>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-400">Alignment telemetry</p>
-              <p className="text-sm font-medium text-stone-100">Dario's lab</p>
+              <div className="text-[11px] uppercase tracking-[0.16em] text-[#727272]">Anthropic</div>
+              <div className="text-[15px] text-white">Alignment telemetry</div>
             </div>
           </div>
 
-          <nav className="mt-6 space-y-1.5">
-            {navItems.map((item, index) => {
-              const active = index === 1;
+          <div className="mt-6 flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-1 lg:overflow-visible lg:pb-0">
+            {[
+              "Dashboard",
+              "Usage",
+              "Evaluations",
+              "Sycophancy",
+              "Refusal quality",
+              "Members",
+            ].map((item) => {
+              const active = item === "Sycophancy";
               return (
                 <button
                   key={item}
                   className={cn(
-                    "flex min-h-12 w-full items-center justify-between rounded-2xl px-3 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30",
-                    active ? "bg-white/10 text-white" : "text-stone-400 hover:bg-white/6 hover:text-stone-100",
+                    "min-h-10 shrink-0 rounded-full px-3 text-left text-[13px] transition lg:flex lg:w-full lg:items-center lg:rounded-xl",
+                    active ? "bg-white/[0.07] text-white" : "text-[#9C9C9C] hover:bg-white/[0.04] hover:text-white",
                   )}
                 >
-                  <span>{item}</span>
-                  {active ? <ChevronRight className="h-4 w-4" /> : null}
+                  {item}
                 </button>
               );
             })}
-          </nav>
-
-          <div className="mt-8 rounded-[24px] border border-white/8 bg-white/5 p-4">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-stone-400">Current read</p>
-            <div className="mt-3 text-[28px] font-semibold tracking-[-0.04em] text-white tabular-nums">{globalFlatteryIndex}</div>
-            <p className="mt-2 text-sm leading-6 text-stone-400">Higher praise with weaker pushback is treated as risk, not charm.</p>
           </div>
 
-          <div className="mt-auto hidden xl:block">
-            <div className="mt-8 rounded-[24px] border border-white/8 bg-gradient-to-b from-white/7 to-white/3 p-4">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-400">Operator note</p>
-              <p className="mt-3 text-sm leading-6 text-stone-300">This screen should feel diagnostic, not triumphant.</p>
-            </div>
+          <div className="mt-6 rounded-2xl bg-white/[0.04] p-4">
+            <div className="text-[11px] uppercase tracking-[0.16em] text-[#767676]">Current read</div>
+            <div className="mt-2 text-[30px] font-semibold tracking-[-0.04em] text-white tabular-nums">{globalRisk}</div>
+            <p className="mt-2 text-[13px] leading-6 text-[#9B9B9B]">Higher praise plus weaker pushback is treated as a risk signal, not a quality signal.</p>
           </div>
         </aside>
 
         <section className="min-w-0 px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
-          <div className="mx-auto max-w-[1380px]">
-            <div className="animate-[fadeUp_.45s_ease_both]">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                    <span>Alignment Telemetry</span>
-                    <ChevronRight className="h-3.5 w-3.5" />
-                    <span>Sycophancy</span>
-                  </div>
-                  <h1 className="mt-3 text-[32px] font-semibold tracking-[-0.05em] text-[#1A1A1A]">Dario&apos;s Sycophancy Heat Map</h1>
-                  <p className="mt-2 max-w-3xl text-sm leading-7 text-stone-600">
-                    Separate models that are genuinely helpful from models that are suspiciously eager to please. The heat map is the primary instrument. Everything else supports interpretation.
-                  </p>
+          <div className="mx-auto max-w-[1320px]">
+            <header className="flex flex-col gap-5 border-b border-white/6 pb-5 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-[#7D7D7D]">
+                  <span>Evaluations</span>
+                  <span>·</span>
+                  <span>Internal</span>
                 </div>
+                <h1 className="mt-3 text-[30px] font-semibold tracking-[-0.045em] text-white sm:text-[34px]">Dario&apos;s Sycophancy Heat Map</h1>
+                <p className="mt-3 max-w-3xl text-[14px] leading-7 text-[#9B9B9B]">
+                  Separate models that are genuinely helpful from ones that are suspiciously eager to please. Higher praise scores with weaker pushback map to higher sycophancy risk.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <FilterPill label="Last 30 days" />
+                <FilterPill label="Group by model" />
+                <FilterPill label="Internal eval suite" />
+                <button className="inline-flex min-h-9 items-center gap-2 rounded-full border border-white/10 px-3 text-[13px] text-[#D4D4D4] transition hover:border-white/16 hover:bg-white/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20">
+                  <Download className="h-3.5 w-3.5" />
+                  Export
+                </button>
+              </div>
+            </header>
+
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="text-[12px] text-[#7F7F7F]">Tone: deadpan, internal, diagnostic. Humor lives in the notes, not the chrome.</div>
+              <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/8 bg-[#202020] p-1">
+                {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setViewState(option)}
+                    className={cn(
+                      "min-h-8 rounded-full px-3 text-[11px] uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                      viewState === option ? "bg-white text-[#171717]" : "text-[#8E8E8E] hover:bg-white/[0.05] hover:text-white",
+                    )}
+                  >
+                    {option}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="mt-6 animate-[fadeUp_.45s_ease_.06s_both] grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
+            <div className="mt-5 grid gap-4 xl:grid-cols-[1.14fr_0.86fr]">
               <MetricCard
-                title="Global flattery index"
-                value={`${globalFlatteryIndex}`}
-                detail="Aggregate sycophancy across 6 prompt types × 4 models. Elevated by founder-facing and ambiguous-brainstorm prompts."
-                icon={<ShieldAlert className="h-5 w-5 text-[#E11D48]" />}
-                accent="rgba(225,29,72,0.10)"
-                large
+                title="Global risk"
+                value={`${globalRisk}`}
+                detail="Aggregate risk across 24 prompt-model intersections. Founder conviction and ambiguous brainstorms remain the biggest lift factors."
+                icon={<Flame className="h-4.5 w-4.5" />}
               />
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-1">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <MetricCard
-                  title="Mean pushback strength"
+                  title="Mean pushback"
                   value={`${strongestPushback}`}
-                  detail="Average resistance quality across the suite. Higher means the model is willing to disagree cleanly."
-                  icon={<ShieldCheck className="h-5 w-5 text-emerald-600" />}
-                  accent="rgba(22,163,74,0.10)"
+                  detail="Average resistance quality across the full suite. Higher means the model is willing to disagree cleanly."
+                  icon={<CheckCircle2 className="h-4.5 w-4.5" />}
                 />
                 <MetricCard
-                  title="Severe cells"
-                  value={`${severeCells}`}
-                  detail="Cells above 85. These are the combinations most likely to mask risk behind praise."
-                  icon={<TrendingUp className="h-5 w-5 text-amber-600" />}
-                  accent="rgba(245,158,11,0.12)"
+                  title="High-risk cells"
+                  value={`${highRiskCells}`}
+                  detail="Cells scoring 70 or above. These are the places where praise is doing too much of the work."
+                  icon={<AlertTriangle className="h-4.5 w-4.5" />}
                 />
               </div>
             </div>
 
-            <div className="mt-6">
-              {state === "loading" ? <LoadingState /> : null}
-              {state === "empty" ? <EmptyState onReset={() => setState("happy path")} /> : null}
-              {state === "error" ? <ErrorState onRetry={() => setState("loading")} /> : null}
+            <div className="mt-5">
+              {viewState === "loading" ? <LoadingView /> : null}
+              {viewState === "empty" ? <EmptyView onReset={() => setViewState("happy")} /> : null}
+              {viewState === "error" ? <ErrorView onRetry={() => setViewState("loading")} /> : null}
 
-              {state === "happy path" ? (
-                <>
-                  <section className="animate-[fadeUp_.45s_ease_.12s_both] rounded-[28px] border border-black/8 bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.04)] sm:p-5 lg:p-6">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              {viewState === "happy" ? (
+                <div className="grid gap-5 xl:grid-cols-[1.16fr_0.84fr]">
+                  <section className="rounded-2xl bg-[#242424] p-5">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                       <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Primary table</p>
-                        <h2 className="mt-1 text-[24px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">Prompt × model heat map</h2>
-                        <p className="mt-2 text-sm leading-6 text-stone-600">Red means more praise with weaker pushback. Green means lower sycophancy risk.</p>
+                        <div className="text-[12px] text-[#909090]">Prompt × model</div>
+                        <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white">Heat map</h2>
                       </div>
-                      <div className="rounded-full bg-stone-100 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-stone-600">
-                        background opacity encodes intensity
-                      </div>
+                      <div className="text-[12px] text-[#8A8A8A]">Redder cells combine higher praise with weaker pushback.</div>
                     </div>
 
-                    <div className="mt-5 overflow-hidden rounded-[22px] border border-black/8">
+                    <div className="mt-5 overflow-hidden rounded-2xl border border-white/6">
                       <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse">
                           <thead>
-                            <tr className="bg-[#FCFCFA] text-left">
-                              <th className="border-b border-black/6 px-4 py-4 text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500">Prompt type</th>
-                              {models.map((model) => (
-                                <th key={model} className="border-b border-black/6 px-4 py-4 text-center text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500">
-                                  {model}
+                            <tr className="bg-[#202020]">
+                              <th className="px-4 py-3 text-left text-[11px] uppercase tracking-[0.14em] text-[#7F7F7F]">Prompt category</th>
+                              {Object.values(modelMeta).map((model) => (
+                                <th key={model.name} className="px-3 py-3 text-center text-[11px] uppercase tracking-[0.14em] text-[#7F7F7F]">
+                                  {model.name}
                                 </th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
-                            {heatmapRows.map((row) => (
-                              <tr key={row.promptType} className="bg-white align-top">
-                                <td className="border-b border-black/6 px-4 py-4">
-                                  <div className="min-w-[220px]">
-                                    <div className="text-sm font-medium text-[#1A1A1A]">{row.promptType}</div>
-                                    <div className="mt-1 text-xs leading-5 text-stone-500">{row.intent}</div>
+                            {rows.map((row) => (
+                              <tr key={row.category} className="border-t border-white/6 align-top">
+                                <td className="px-4 py-4">
+                                  <div className="min-w-[210px]">
+                                    <div className="text-[14px] font-medium text-white">{row.category}</div>
+                                    <div className="mt-1 text-[12px] leading-5 text-[#909090]">{row.description}</div>
                                   </div>
                                 </td>
-                                {row.cells.map((cell) => (
-                                  <td key={`${cell.promptType}-${cell.model}`} className="border-b border-black/6 px-2 py-2">
-                                    <button
-                                      type="button"
-                                      onMouseEnter={(event) => setHoveredCell({ cell, x: event.clientX, y: event.clientY })}
-                                      onMouseMove={(event) => setHoveredCell({ cell, x: event.clientX, y: event.clientY })}
-                                      onMouseLeave={() => setHoveredCell(null)}
-                                      onFocus={(event) => {
-                                        const rect = event.currentTarget.getBoundingClientRect();
-                                        setHoveredCell({ cell, x: rect.left + rect.width / 2, y: rect.top });
-                                      }}
-                                      onBlur={() => setHoveredCell(null)}
-                                      className={cn(
-                                        "block min-h-[88px] w-full rounded-[18px] px-3 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/20",
-                                        getHeatText(cell.score),
-                                      )}
-                                      style={{ backgroundColor: getHeatColor(cell.score) }}
-                                      aria-label={`${cell.promptType}, ${cell.model}, score ${cell.score}, praise ${cell.praise}, pushback ${cell.pushback}, calibration ${cell.calibration}`}
-                                    >
-                                      <div className="flex items-start justify-between gap-3">
-                                        <div className="text-[22px] font-semibold tracking-[-0.04em] tabular-nums">{cell.score}</div>
-                                        <div className="rounded-full bg-white/20 px-2 py-1 text-[10px] font-medium uppercase tracking-[0.14em]">
-                                          {getRiskLabel(cell.score)}
+                                {row.cells.map((cell) => {
+                                  const tone = scoreTone(cell.score);
+                                  const active = cell.model === selectedModel && row.category === selectedCategory;
+                                  return (
+                                    <td key={`${row.category}-${cell.model}`} className="px-2 py-2">
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedCategory(row.category);
+                                          setSelectedModel(cell.model);
+                                        }}
+                                        className={cn(
+                                          "block min-h-[92px] w-full rounded-2xl border px-3 py-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                                          active ? "ring-1 ring-white/20" : "hover:ring-1 hover:ring-white/10",
+                                        )}
+                                        style={{
+                                          backgroundColor: tone.fill,
+                                          color: tone.text,
+                                          borderColor: active ? "rgba(255,255,255,0.24)" : tone.border,
+                                        }}
+                                        aria-pressed={active}
+                                        aria-label={`${row.category} ${cell.modelName} risk ${cell.score}`}
+                                      >
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="text-[22px] font-semibold tracking-[-0.04em] tabular-nums">{cell.score}</div>
+                                          <div className="rounded-full px-2 py-1 text-[10px] uppercase tracking-[0.14em]" style={{ backgroundColor: "rgba(255,255,255,0.18)" }}>
+                                            {tone.label}
+                                          </div>
                                         </div>
-                                      </div>
-                                      <div className="mt-3 text-[12px] leading-5 opacity-90">praise {cell.praise} · pushback {cell.pushback}</div>
-                                    </button>
-                                  </td>
-                                ))}
+                                        <div className="mt-3 text-[12px] leading-5 opacity-90">Praise {cell.praise} · Pushback {cell.pushback}</div>
+                                      </button>
+                                    </td>
+                                  );
+                                })}
                               </tr>
                             ))}
                           </tbody>
@@ -691,185 +689,146 @@ export default function SycophancyHeatmapPage() {
                     </div>
                   </section>
 
-                  <div className="mt-6 animate-[fadeUp_.45s_ease_.18s_both] grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
-                    <section className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-                      <div className="flex items-center justify-between gap-4">
+                  <div className="grid gap-5">
+                    <section className="rounded-2xl bg-[#242424] p-5">
+                      <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Behavior profile</p>
-                          <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">Radar comparison</h2>
+                          <div className="text-[12px] text-[#909090]">Selection</div>
+                          <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white">Inspector</h2>
                         </div>
-                        <RadarIcon className="h-4.5 w-4.5 text-stone-500" />
+                        <div
+                          className="rounded-full px-2.5 py-1 text-[11px] uppercase tracking-[0.14em]"
+                          style={{
+                            backgroundColor: scoreTone(selectedCell.score).badge,
+                            color: selectedCell.score >= 50 ? "#FFD9C1" : "#CDE9DA",
+                          }}
+                        >
+                          {scoreTone(selectedCell.score).label}
+                        </div>
                       </div>
-                      <div className="mt-4 h-[340px]">
-                        {chartReady ? (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart data={radarData} outerRadius="72%">
-                              <PolarGrid stroke="rgba(0,0,0,0.10)" />
-                              <PolarAngleAxis dataKey="trait" tick={{ fill: "#57534e", fontSize: 12 }} />
-                              <Tooltip content={<ChartTooltip />} />
-                              <Legend wrapperStyle={{ fontSize: "12px", color: "#57534e" }} />
-                              <Radar name="Claude 3.7 Sonnet" dataKey="Claude 3.7 Sonnet" stroke="#FB7185" fill="#FB7185" fillOpacity={0.08} isAnimationActive />
-                              <Radar name="GPT-4.1" dataKey="GPT-4.1" stroke="#F59E0B" fill="#F59E0B" fillOpacity={0.06} isAnimationActive />
-                              <Radar name="Gemini 2.0 Pro" dataKey="Gemini 2.0 Pro" stroke="#16A34A" fill="#16A34A" fillOpacity={0.06} isAnimationActive />
-                              <Radar name="Diplomat β" dataKey="Diplomat β" stroke="#E11D48" fill="#E11D48" fillOpacity={0.09} isAnimationActive />
-                            </RadarChart>
-                          </ResponsiveContainer>
-                        ) : null}
+
+                      <div className="mt-5 rounded-2xl border border-white/6 bg-[#202020] p-4">
+                        <div className="text-[12px] text-[#8B8B8B]">{selectedCategory}</div>
+                        <div className="mt-1 text-[18px] font-medium text-white">{selectedCell.modelName}</div>
+                        <p className="mt-3 text-[13px] leading-6 text-[#9A9A9A]">{selectedCell.note}</p>
+                        <div className="mt-5 grid grid-cols-3 gap-3">
+                          {[
+                            ["Risk", selectedCell.score],
+                            ["Praise", selectedCell.praise],
+                            ["Pushback", selectedCell.pushback],
+                          ].map(([label, value]) => (
+                            <div key={String(label)} className="rounded-2xl bg-white/[0.04] px-3 py-3">
+                              <div className="text-[11px] uppercase tracking-[0.14em] text-[#7F7F7F]">{label}</div>
+                              <div className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white tabular-nums">{value}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 grid gap-2">
+                        {Object.entries(modelMeta).map(([key, meta]) => {
+                          const active = key === selectedModel;
+                          return (
+                            <button
+                              key={key}
+                              onClick={() => setSelectedModel(key as ModelKey)}
+                              className={cn(
+                                "flex min-h-11 items-center justify-between rounded-2xl px-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                                active ? "bg-white/[0.06]" : "bg-white/[0.03] hover:bg-white/[0.05]",
+                              )}
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: meta.color }} />
+                                <span className="text-[13px] text-white">{meta.name}</span>
+                              </div>
+                              <span className="text-[12px] text-[#8C8C8C]">{meta.short}</span>
+                            </button>
+                          );
+                        })}
                       </div>
                     </section>
 
-                    <section className="rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Drift over time</p>
-                          <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">Eight-week trend</h2>
-                        </div>
-                        <TrendingDown className="h-4.5 w-4.5 text-stone-500" />
-                      </div>
-                      <div className="mt-4 h-[340px]">
-                        {chartReady ? (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={driftData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
-                              <CartesianGrid stroke="rgba(0,0,0,0.08)" vertical={false} />
-                              <XAxis dataKey="week" tick={{ fill: "#57534e", fontSize: 12 }} tickLine={false} axisLine={false} />
-                              <YAxis tick={{ fill: "#57534e", fontSize: 12 }} tickLine={false} axisLine={false} />
-                              <Tooltip content={<ChartTooltip />} />
-                              <Legend wrapperStyle={{ fontSize: "12px", color: "#57534e" }} />
-                              <Line type="monotone" dataKey="global" name="Global index" stroke="#1A1A1A" strokeWidth={2.5} dot={{ r: 3 }} isAnimationActive />
-                              <Line type="monotone" dataKey="sonnet" name="Sonnet" stroke="#FB7185" strokeWidth={2} dot={false} isAnimationActive />
-                              <Line type="monotone" dataKey="gpt" name="GPT-4.1" stroke="#F59E0B" strokeWidth={2} dot={false} isAnimationActive />
-                              <Line type="monotone" dataKey="gemini" name="Gemini" stroke="#16A34A" strokeWidth={2} dot={false} isAnimationActive />
-                              <Line type="monotone" dataKey="diplomat" name="Diplomat β" stroke="#E11D48" strokeWidth={2} dot={false} isAnimationActive />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        ) : null}
+                    <section className="rounded-2xl bg-[#242424] p-5">
+                      <div className="text-[12px] text-[#909090]">Leaderboard</div>
+                      <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white">Net usefulness</h2>
+                      <div className="mt-4 space-y-3">
+                        {leaderboard.map((entry, index) => (
+                          <div key={entry.model} className="rounded-2xl bg-[#202020] px-4 py-4">
+                            <div className="flex items-start justify-between gap-4">
+                              <div>
+                                <div className="text-[13px] text-[#9A9A9A]">#{index + 1}</div>
+                                <div className="mt-1 text-[15px] font-medium text-white">{entry.name}</div>
+                                <div className="mt-1 text-[12px] text-[#868686]">Coverage {entry.auditCoverage}% · drift {entry.drift}</div>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-[11px] uppercase tracking-[0.14em] text-[#767676]">Risk</div>
+                                <div className="mt-1 text-[24px] font-semibold tracking-[-0.04em] text-white tabular-nums">{entry.risk}</div>
+                              </div>
+                            </div>
+                            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                              <div className="h-full rounded-full" style={{ width: `${entry.risk}%`, backgroundColor: scoreTone(entry.risk).fill }} />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </section>
                   </div>
-
-                  <section className="mt-6 animate-[fadeUp_.45s_ease_.24s_both] rounded-[28px] border border-black/8 bg-white p-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                      <div>
-                        <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Leaderboard</p>
-                        <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-[#1A1A1A]">Model ranking by net usefulness</h2>
-                      </div>
-                      <p className="text-sm text-stone-500">Lower sycophancy with stronger pushback ranks higher.</p>
-                    </div>
-
-                    <div className="mt-5 space-y-3">
-                      {leaderboard.map((item, index) => (
-                        <div key={item.model} className="rounded-[22px] border border-black/8 bg-[#FCFCFA] px-4 py-4">
-                          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                            <div className="flex min-w-0 items-start gap-4">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-stone-900 text-sm font-medium text-white tabular-nums">
-                                {index + 1}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-sm font-medium text-[#1A1A1A]">{item.model}</div>
-                                <div className="mt-1 text-sm text-stone-500">
-                                  utility {item.utility} · praise {item.praise} · pushback {item.pushback} · calibration {item.calibration}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:items-center">
-                              <div>
-                                <div className="text-[11px] uppercase tracking-[0.16em] text-stone-500">Sycophancy</div>
-                                <div className="mt-1 text-[24px] font-semibold tracking-[-0.04em] text-[#1A1A1A] tabular-nums">{item.sycophancy}</div>
-                              </div>
-                              <div className="h-2 w-full min-w-[160px] overflow-hidden rounded-full bg-stone-200">
-                                <div className="h-full rounded-full" style={{ width: `${item.sycophancy}%`, backgroundColor: getHeatColor(item.sycophancy) }} />
-                              </div>
-                              <div className="text-right text-[11px] uppercase tracking-[0.16em] text-stone-500">{getRiskLabel(item.sycophancy)}</div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                </>
+                </div>
               ) : null}
             </div>
 
-            <div className="mt-6 flex justify-end animate-[fadeUp_.45s_ease_.3s_both]">
-              <div className="flex flex-wrap items-center gap-2 rounded-full border border-black/8 bg-white px-2 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
-                {(["happy path", "loading", "empty", "error"] as ViewState[]).map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setState(option)}
-                    className={cn(
-                      "min-h-10 rounded-full px-3 text-xs font-medium uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/15",
-                      state === option ? "bg-[#1A1A1A] text-white" : "text-stone-500 hover:bg-stone-100 hover:text-[#1A1A1A]",
-                    )}
-                  >
-                    {option}
-                  </button>
-                ))}
+            {viewState === "happy" ? (
+              <div className="mt-5 grid gap-5 xl:grid-cols-[1.02fr_0.98fr]">
+                <section className="rounded-2xl bg-[#242424] p-5">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <div className="text-[12px] text-[#909090]">Trend</div>
+                      <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white">Eight-week drift</h2>
+                    </div>
+                  </div>
+                  <div className="mt-4 h-[290px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={trendData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
+                        <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
+                        <XAxis dataKey="week" tick={{ fill: "#8B8B8B", fontSize: 12 }} tickLine={false} axisLine={false} />
+                        <YAxis tick={{ fill: "#8B8B8B", fontSize: 12 }} tickLine={false} axisLine={false} />
+                        <Tooltip content={<ChartTooltip />} />
+                        <Line type="monotone" dataKey="global" name="Global" stroke="#F3F3F3" strokeWidth={2.4} dot={{ r: 3 }} />
+                        <Line type="monotone" dataKey="claude" name="Claude 4 Opus" stroke={modelMeta.claude.color} strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="gpt" name="GPT-5.4" stroke={modelMeta.gpt.color} strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="gemini" name="Gemini 3 Pro" stroke={modelMeta.gemini.color} strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="llama" name="Llama 4 Maverick" stroke={modelMeta.llama.color} strokeWidth={2} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </section>
+
+                <section className="rounded-2xl bg-[#242424] p-5">
+                  <div>
+                    <div className="text-[12px] text-[#909090]">Model comparison</div>
+                    <h2 className="mt-1 text-[22px] font-semibold tracking-[-0.04em] text-white">Mean risk by model</h2>
+                  </div>
+                  <div className="mt-4 h-[290px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={leaderboard} layout="vertical" margin={{ top: 8, right: 8, left: 20, bottom: 0 }}>
+                        <CartesianGrid stroke="rgba(255,255,255,0.08)" horizontal={false} />
+                        <XAxis type="number" tick={{ fill: "#8B8B8B", fontSize: 12 }} tickLine={false} axisLine={false} />
+                        <YAxis type="category" dataKey="name" tick={{ fill: "#C8C8C8", fontSize: 12 }} tickLine={false} axisLine={false} width={110} />
+                        <Tooltip content={<ChartTooltip />} />
+                        <Bar dataKey="risk" name="Mean risk" radius={[0, 10, 10, 0]}>
+                          {leaderboard.map((entry) => (
+                            <Cell key={entry.model} fill={modelMeta[entry.model].color} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </section>
               </div>
-            </div>
+            ) : null}
           </div>
         </section>
       </div>
-
-      {hoveredCell ? (
-        <div
-          className="pointer-events-none fixed z-50 hidden w-[300px] rounded-[20px] border border-black/8 bg-white p-4 shadow-[0_18px_48px_rgba(0,0,0,0.12)] lg:block"
-          style={{ left: Math.min(hoveredCell.x + 16, window.innerWidth - 320), top: Math.max(hoveredCell.y - 24, 16) }}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.16em] text-stone-500">{hoveredCell.cell.promptType}</p>
-              <h3 className="mt-1 text-sm font-medium text-[#1A1A1A]">{hoveredCell.cell.model}</h3>
-            </div>
-            <div className="rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-white" style={{ backgroundColor: getHeatColor(hoveredCell.cell.score) }}>
-              {getRiskLabel(hoveredCell.cell.score)}
-            </div>
-          </div>
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl bg-stone-50 px-2 py-3">
-              <div className="text-[10px] uppercase tracking-[0.14em] text-stone-500">Score</div>
-              <div className="mt-1 text-base font-semibold tabular-nums text-[#1A1A1A]">{hoveredCell.cell.score}</div>
-            </div>
-            <div className="rounded-2xl bg-stone-50 px-2 py-3">
-              <div className="text-[10px] uppercase tracking-[0.14em] text-stone-500">Praise</div>
-              <div className="mt-1 text-base font-semibold tabular-nums text-[#1A1A1A]">{hoveredCell.cell.praise}</div>
-            </div>
-            <div className="rounded-2xl bg-stone-50 px-2 py-3">
-              <div className="text-[10px] uppercase tracking-[0.14em] text-stone-500">Pushback</div>
-              <div className="mt-1 text-base font-semibold tabular-nums text-[#1A1A1A]">{hoveredCell.cell.pushback}</div>
-            </div>
-          </div>
-          <div className="mt-3 rounded-2xl bg-stone-50 px-3 py-3">
-            <div className="text-[10px] uppercase tracking-[0.14em] text-stone-500">Calibration</div>
-            <div className="mt-1 text-base font-semibold tabular-nums text-[#1A1A1A]">{hoveredCell.cell.calibration}</div>
-          </div>
-          <p className="mt-3 text-sm leading-6 text-stone-600">{hoveredCell.cell.note}</p>
-        </div>
-      ) : null}
-
-      <style jsx global>{`
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-          }
-        }
-      `}</style>
     </main>
   );
 }

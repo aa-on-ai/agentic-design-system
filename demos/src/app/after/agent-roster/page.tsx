@@ -2,263 +2,388 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  Activity,
+  Bot,
   ChevronDown,
   ChevronRight,
+  Clock3,
+  Cpu,
+  Flame,
   Loader2,
-  MoreHorizontal,
+  Radio,
   RefreshCw,
   Search,
-  SlidersHorizontal,
+  Server,
+  ShieldAlert,
+  Skull,
+  Sparkles,
   SquareTerminal,
-  TriangleAlert,
+  Waypoints,
   X,
+  Zap,
 } from "lucide-react";
 
-type AgentStatus = "running" | "paused" | "terminated";
+type AgentStatus = "running" | "warming" | "paused" | "draining" | "terminated";
 type ViewState = "happy" | "loading" | "empty" | "error";
+type AgentFilter = "all" | "pete" | "watch" | "terminated";
 
 type Agent = {
   id: string;
   name: string;
   model: string;
+  provider: string;
   status: AgentStatus;
   uptime: string;
-  branch: string;
+  since: string;
   node: string;
+  branch: string;
   owner: string;
-  lastSeen: string;
+  region: string;
+  memory: string;
+  tokens: string;
+  notes: string;
+  lastEvent: string;
+  alert?: string;
 };
 
-const AGENTS: Agent[] = [
+const FLEET: Agent[] = [
   {
-    id: "oc-201",
+    id: "oc-311",
     name: "codex-prime",
-    model: "gpt-5.4",
+    model: "GPT-5.4",
+    provider: "OpenAI",
     status: "running",
     uptime: "18h 14m",
-    branch: "billing-refactor",
+    since: "booted 07:12",
     node: "mac-mini-01",
-    owner: "pete",
-    lastSeen: "12s ago",
+    branch: "agentic-design-system",
+    owner: "Pete",
+    region: "Venice",
+    memory: "6.4 GB",
+    tokens: "1.8M",
+    notes: "shipping demo repairs",
+    lastEvent: "patched layout drift 12s ago",
   },
   {
-    id: "oc-178",
+    id: "oc-287",
     name: "sonnet-scout",
-    model: "claude-sonnet-4.6",
+    model: "Claude Sonnet 4.6",
+    provider: "Anthropic",
     status: "running",
     uptime: "9h 52m",
-    branch: "slack-digest",
+    since: "booted 15:03",
     node: "mac-mini-02",
-    owner: "maya",
-    lastSeen: "29s ago",
+    branch: "slack-digest",
+    owner: "Maya",
+    region: "Venice",
+    memory: "3.1 GB",
+    tokens: "842K",
+    notes: "triaging research threads",
+    lastEvent: "resolved 14 Slack mentions 29s ago",
   },
   {
-    id: "oc-167",
+    id: "oc-281",
     name: "gemini-mapper",
-    model: "gemini-3-pro",
-    status: "running",
+    model: "Gemini 3 Pro",
+    provider: "Google",
+    status: "warming",
     uptime: "6h 08m",
-    branch: "roadmap-ontology",
+    since: "warming after relaunch",
     node: "gpu-node-01",
-    owner: "joel",
-    lastSeen: "41s ago",
+    branch: "ontology-pass",
+    owner: "Joel",
+    region: "Downtown",
+    memory: "14.2 GB",
+    tokens: "2.1M",
+    notes: "re-indexing org graph",
+    lastEvent: "replaying memory shards 41s ago",
+    alert: "GPU reclaimed once in last hour",
   },
   {
-    id: "oc-154",
+    id: "oc-266",
     name: "spark-runner",
-    model: "gpt-5.3-codex-spark",
+    model: "GPT-5.3 Codex Spark",
+    provider: "OpenAI",
     status: "running",
     uptime: "3h 46m",
-    branch: "storybook-fixes",
+    since: "booted 10:22",
     node: "edge-lax-01",
-    owner: "nina",
-    lastSeen: "8s ago",
+    branch: "storybook-fixes",
+    owner: "Nina",
+    region: "LAX edge",
+    memory: "1.2 GB",
+    tokens: "412K",
+    notes: "burning through UI chores",
+    lastEvent: "closed 7 tiny regressions 8s ago",
   },
   {
-    id: "oc-149",
+    id: "oc-243",
     name: "runner-ops",
-    model: "gemini-3-flash",
-    status: "running",
+    model: "Gemini 3 Flash",
+    provider: "Google",
+    status: "draining",
     uptime: "1h 32m",
-    branch: "docs-sync",
+    since: "awaiting safe stop",
     node: "edge-den-02",
-    owner: "felipe",
-    lastSeen: "1m ago",
+    branch: "docs-sync",
+    owner: "Felipe",
+    region: "Denver edge",
+    memory: "980 MB",
+    tokens: "188K",
+    notes: "wrapping a doc ingest batch",
+    lastEvent: "kill switch armed 1m ago",
+    alert: "2 jobs still flushing to disk",
   },
   {
-    id: "oc-132",
+    id: "oc-228",
     name: "qwen-utility",
-    model: "qwen3.5-9b",
+    model: "Qwen 3.5 9B",
+    provider: "Local",
     status: "paused",
     uptime: "22h 05m",
+    since: "paused 4m ago",
+    node: "garage-rack-02",
     branch: "health-ping",
-    node: "garage-rack-2",
-    owner: "pete",
-    lastSeen: "4m ago",
+    owner: "Pete",
+    region: "Garage rack",
+    memory: "720 MB",
+    tokens: "94K",
+    notes: "standing by for cron duty",
+    lastEvent: "manual pause by Pete 4m ago",
   },
   {
-    id: "oc-118",
-    name: "claude-review",
-    model: "claude-opus-4.6",
+    id: "oc-217",
+    name: "opus-review",
+    model: "Claude Opus 4.6",
+    provider: "Anthropic",
     status: "paused",
     uptime: "5h 19m",
-    branch: "design-preflight",
+    since: "paused 7m ago",
     node: "mac-mini-03",
-    owner: "aaron",
-    lastSeen: "7m ago",
+    branch: "design-preflight",
+    owner: "Aaron",
+    region: "Venice",
+    memory: "4.6 GB",
+    tokens: "1.2M",
+    notes: "waiting for next review pass",
+    lastEvent: "held at review gate 7m ago",
   },
   {
-    id: "oc-111",
-    name: "scout-research",
-    model: "gemini-3-pro-preview",
-    status: "paused",
-    uptime: "11h 24m",
-    branch: "market-map",
-    node: "gpu-node-02",
-    owner: "cristian",
-    lastSeen: "12m ago",
-  },
-  {
-    id: "oc-097",
-    name: "memory-indexer",
-    model: "gpt-5.4",
-    status: "paused",
-    uptime: "2h 11m",
-    branch: "channel-memory",
-    node: "mac-mini-02",
-    owner: "riteeka",
-    lastSeen: "15m ago",
-  },
-  {
-    id: "oc-081",
+    id: "oc-163",
     name: "ghost-relay",
     model: "override/unknown",
+    provider: "Unknown",
     status: "terminated",
     uptime: "13m",
-    branch: "containment-room",
+    since: "died 19m ago",
     node: "unknown",
-    owner: "unassigned",
-    lastSeen: "19m ago",
+    branch: "containment-room",
+    owner: "Unassigned",
+    region: "unknown",
+    memory: "—",
+    tokens: "—",
+    notes: "relay lost heartbeat during approval gate",
+    lastEvent: "telemetry dropped 19m ago",
+    alert: "No restart policy attached",
   },
   {
-    id: "oc-074",
+    id: "oc-148",
     name: "nightly-audit",
-    model: "claude-sonnet-4.6",
+    model: "Claude Sonnet 4.6",
+    provider: "Anthropic",
     status: "terminated",
     uptime: "7h 48m",
-    branch: "rule-check",
+    since: "stopped 1h ago",
     node: "mac-mini-01",
-    owner: "pete",
-    lastSeen: "1h ago",
+    branch: "rule-check",
+    owner: "Pete",
+    region: "Venice",
+    memory: "1.6 GB",
+    tokens: "537K",
+    notes: "finished without issues",
+    lastEvent: "clean exit 1h ago",
   },
   {
-    id: "oc-063",
+    id: "oc-119",
     name: "render-batch",
-    model: "gpt-5.4",
+    model: "GPT-5.4",
+    provider: "OpenAI",
     status: "terminated",
     uptime: "2h 54m",
-    branch: "video-pipeline",
+    since: "stopped 2h ago",
     node: "gpu-node-01",
-    owner: "aaron",
-    lastSeen: "2h ago",
+    branch: "video-pipeline",
+    owner: "Aaron",
+    region: "Downtown",
+    memory: "12.8 GB",
+    tokens: "964K",
+    notes: "completed the audio render queue",
+    lastEvent: "wrote 10 artifacts 2h ago",
   },
-  {
-    id: "oc-052",
-    name: "mail-triage",
-    model: "claude-sonnet-4.6",
-    status: "terminated",
-    uptime: "46m",
-    branch: "inbox-zero",
-    node: "edge-lax-03",
-    owner: "maya",
-    lastSeen: "3h ago",
-  },
+];
+
+const FILTERS: { id: AgentFilter; label: string }[] = [
+  { id: "all", label: "All agents" },
+  { id: "pete", label: "Pete’s fleet" },
+  { id: "watch", label: "Watch list" },
+  { id: "terminated", label: "Recently killed" },
 ];
 
 const STATUS_META: Record<
   AgentStatus,
   {
     label: string;
+    tone: string;
     dot: string;
-    dotRing: string;
-    headerCount: number;
-    text: string;
+    pill: string;
+    border: string;
+    surface: string;
+    action: string;
+    icon: typeof Radio;
   }
 > = {
   running: {
     label: "Running",
+    tone: "text-emerald-800",
     dot: "bg-emerald-500",
-    dotRing: "ring-emerald-100",
-    headerCount: 31,
-    text: "text-emerald-700",
+    pill: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    border: "border-emerald-200/80",
+    surface: "bg-emerald-50/70",
+    action: "Kill",
+    icon: Radio,
+  },
+  warming: {
+    label: "Warming",
+    tone: "text-sky-800",
+    dot: "bg-sky-500",
+    pill: "bg-sky-100 text-sky-800 border-sky-200",
+    border: "border-sky-200/80",
+    surface: "bg-sky-50/70",
+    action: "Abort",
+    icon: Flame,
   },
   paused: {
     label: "Paused",
+    tone: "text-amber-800",
     dot: "bg-amber-500",
-    dotRing: "ring-amber-100",
-    headerCount: 8,
-    text: "text-amber-700",
+    pill: "bg-amber-100 text-amber-800 border-amber-200",
+    border: "border-amber-200/80",
+    surface: "bg-amber-50/70",
+    action: "Resume",
+    icon: Clock3,
+  },
+  draining: {
+    label: "Draining",
+    tone: "text-violet-800",
+    dot: "bg-violet-500",
+    pill: "bg-violet-100 text-violet-800 border-violet-200",
+    border: "border-violet-200/80",
+    surface: "bg-violet-50/70",
+    action: "Force kill",
+    icon: Activity,
   },
   terminated: {
     label: "Terminated",
+    tone: "text-rose-800",
     dot: "bg-rose-500",
-    dotRing: "ring-rose-100",
-    headerCount: 8,
-    text: "text-rose-700",
+    pill: "bg-rose-100 text-rose-800 border-rose-200",
+    border: "border-rose-200/80",
+    surface: "bg-rose-50/70",
+    action: "Clear",
+    icon: Skull,
   },
 };
 
-const FILTER_TABS = ["All agents", "Assigned to Pete", "Needs review", "Recently terminated"];
+const NODE_SNAPSHOT = [
+  { name: "mac-mini-01", load: "71%", temp: "54°", state: "steady" },
+  { name: "gpu-node-01", load: "93%", temp: "78°", state: "hot" },
+  { name: "edge-lax-01", load: "44%", temp: "39°", state: "idle" },
+];
 
 function cn(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
 }
 
-function StatusDot({ status }: { status: AgentStatus }) {
+function StatusPill({ status }: { status: AgentStatus }) {
   const meta = STATUS_META[status];
+  const Icon = meta.icon;
 
   return (
     <span
       className={cn(
-        "inline-flex h-2.5 w-2.5 shrink-0 rounded-full ring-4",
-        meta.dot,
-        meta.dotRing,
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold",
+        meta.pill,
       )}
-      aria-hidden="true"
-    />
+    >
+      <Icon className="h-3 w-3" />
+      {meta.label}
+    </span>
   );
 }
 
-function LoadingRows() {
+function StatTile({
+  label,
+  value,
+  detail,
+  icon: Icon,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  icon: typeof Bot;
+}) {
   return (
-    <div className="border border-[#e8ebf2] bg-white">
-      {Array.from({ length: 10 }).map((_, index) => (
-        <div
-          key={index}
-          className="flex h-14 items-center gap-3 border-b border-[#eef1f6] px-4 last:border-b-0"
-        >
-          <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#d7dde8]" />
-          <div className="min-w-0 flex-1">
-            <div className="h-3.5 w-36 animate-pulse rounded bg-[#edf1f7]" />
-          </div>
-          <div className="hidden h-5 w-24 animate-pulse rounded-full bg-[#f1f4f8] md:block" />
-          <div className="h-3.5 w-16 animate-pulse rounded bg-[#edf1f7]" />
+    <div className="rounded-2xl border border-stone-200 bg-white/90 p-4 shadow-[0_1px_0_rgba(28,25,23,0.04)]">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">{label}</p>
+          <p className="mt-2 text-[28px] font-semibold tracking-[-0.04em] text-stone-950">{value}</p>
         </div>
-      ))}
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-stone-600">
+          <Icon className="h-4 w-4" />
+        </div>
+      </div>
+      <p className="mt-2 text-[13px] leading-5 text-stone-600">{detail}</p>
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="rounded-[28px] border border-stone-200 bg-white/92 p-4 sm:p-5">
+      <div className="space-y-3">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="rounded-2xl border border-stone-200/80 bg-stone-50/60 p-4"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="h-3 w-24 animate-pulse rounded-full bg-stone-200" />
+                <div className="h-5 w-40 animate-pulse rounded-full bg-stone-200" />
+                <div className="h-3 w-full max-w-[22rem] animate-pulse rounded-full bg-stone-200" />
+              </div>
+              <div className="h-8 w-20 animate-pulse rounded-full bg-stone-200" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="border border-dashed border-[#d8dee8] bg-[#fcfcfd] px-8 py-16 text-center">
-      <div className="mx-auto max-w-md space-y-3">
-        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#e6eaf1] bg-white text-[#6b7280]">
-          <SquareTerminal className="h-4 w-4" />
+    <div className="rounded-[28px] border border-dashed border-stone-300 bg-white/80 px-6 py-16 text-center sm:px-8">
+      <div className="mx-auto max-w-md">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-stone-600">
+          <SquareTerminal className="h-5 w-5" />
         </div>
-        <h2 className="text-[14px] font-semibold text-[#111827]">No agents match this view</h2>
-        <p className="text-[13px] leading-6 text-[#6b7280]">
-          The roster is empty right now. Clear a filter or start a new agent to repopulate the queue.
+        <h2 className="mt-4 text-lg font-semibold tracking-[-0.03em] text-stone-950">
+          No agents match this view
+        </h2>
+        <p className="mt-2 text-[14px] leading-6 text-stone-600">
+          Pete’s roster is quiet right now. Clear a filter, widen the search, or launch a fresh worker to repopulate the fleet.
         </p>
       </div>
     </div>
@@ -267,137 +392,213 @@ function EmptyState() {
 
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="border border-[#f2d8d8] bg-[#fffdfd] px-8 py-16 text-center">
-      <div className="mx-auto max-w-md space-y-3">
-        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#f3d6d6] bg-white text-[#b42318]">
-          <TriangleAlert className="h-4 w-4" />
+    <div className="rounded-[28px] border border-rose-200 bg-rose-50/60 px-6 py-16 text-center sm:px-8">
+      <div className="mx-auto max-w-md">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl border border-rose-200 bg-white text-rose-700">
+          <ShieldAlert className="h-5 w-5" />
         </div>
-        <h2 className="text-[14px] font-semibold text-[#111827]">Couldn’t load live roster data</h2>
-        <p className="text-[13px] leading-6 text-[#6b7280]">
-          The relay responded with an error. Existing agents are likely still running, but this view
-          is stale until telemetry reconnects.
+        <h2 className="mt-4 text-lg font-semibold tracking-[-0.03em] text-stone-950">
+          Live telemetry dropped
+        </h2>
+        <p className="mt-2 text-[14px] leading-6 text-stone-600">
+          The roster couldn’t reach Pete’s relay. Agents are prbly still running, but this snapshot is stale until the heartbeat comes back.
         </p>
-        <div>
-          <button
-            onClick={onRetry}
-            className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dbe4f0] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#c8d4e3] hover:bg-[#f9fbfd]"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            Retry
-          </button>
-        </div>
+        <button
+          onClick={onRetry}
+          className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 text-[13px] font-medium text-stone-800 transition hover:border-stone-400 hover:bg-stone-50"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          Retry sync
+        </button>
       </div>
     </div>
   );
 }
 
-function AgentRow({ agent, index }: { agent: Agent; index: number }) {
-  const statusMeta = STATUS_META[agent.status];
+function AgentCard({ agent }: { agent: Agent }) {
+  const meta = STATUS_META[agent.status];
 
   return (
-    <div
-      className="group flex h-14 items-center gap-3 border-b border-[#eef1f6] px-4 text-[14px] text-[#111827] transition-all duration-150 ease-out hover:translate-x-[2px] hover:bg-[#f7f9fc] last:border-b-0 motion-reduce:transition-none motion-reduce:hover:translate-x-0"
-      style={{
-        animation: "roster-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both",
-        animationDelay: `${index * 30}ms`,
-      }}
+    <article
+      className={cn(
+        "rounded-2xl border p-4 shadow-[0_1px_0_rgba(28,25,23,0.04)] transition duration-150 ease-out hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(28,25,23,0.06)] motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+        meta.border,
+        meta.surface,
+      )}
     >
-      <div className="flex min-w-0 flex-1 items-center gap-3">
-        <StatusDot status={agent.status} />
-
-        <div className="min-w-0 flex-1 md:flex md:items-center md:gap-3">
-          <div className="min-w-0 md:w-[28%] md:min-w-[180px]">
-            <div className="truncate font-semibold text-[#111827]">{agent.name}</div>
-            <div className="truncate text-[11px] text-[#9aa3b2] md:hidden">
-              {agent.branch} · {agent.owner}
-            </div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className={cn("h-2.5 w-2.5 rounded-full", meta.dot)} aria-hidden="true" />
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500">{agent.id}</p>
           </div>
+          <h3 className="mt-2 truncate text-[18px] font-semibold tracking-[-0.03em] text-stone-950">
+            {agent.name}
+          </h3>
+          <p className="mt-1 text-[13px] text-stone-600">
+            {agent.provider} · {agent.model}
+          </p>
+        </div>
+        <StatusPill status={agent.status} />
+      </div>
 
-          <div className="hidden min-w-0 md:block md:w-[20%]">
-            <span className="inline-flex h-6 items-center rounded-full border border-[#e5e9f0] bg-[#f8fafc] px-2.5 text-[11px] font-medium text-[#6b7280]">
-              {agent.model}
-            </span>
-          </div>
-
-          <div className="hidden min-w-0 text-[13px] text-[#6b7280] lg:block lg:w-[24%]">
-            <span className="truncate">{agent.branch}</span>
-          </div>
-
-          <div className="hidden min-w-0 text-[13px] text-[#6b7280] xl:block xl:w-[16%]">
-            <span className="truncate">{agent.node}</span>
-          </div>
+      <div className="mt-4 grid grid-cols-2 gap-3 text-[13px] text-stone-700">
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.1em] text-stone-500">Branch</p>
+          <p className="mt-1 truncate font-medium text-stone-900">{agent.branch}</p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.1em] text-stone-500">Node</p>
+          <p className="mt-1 truncate font-medium text-stone-900">{agent.node}</p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.1em] text-stone-500">Uptime</p>
+          <p className="mt-1 font-medium text-stone-900">{agent.uptime}</p>
+        </div>
+        <div>
+          <p className="text-[11px] uppercase tracking-[0.1em] text-stone-500">Memory</p>
+          <p className="mt-1 font-medium text-stone-900">{agent.memory}</p>
         </div>
       </div>
 
-      <div className="hidden text-right text-[13px] text-[#6b7280] sm:block sm:w-[84px]">
-        {agent.lastSeen}
-      </div>
+      <p className="mt-4 rounded-xl border border-white/70 bg-white/80 px-3 py-2 text-[13px] leading-5 text-stone-700">
+        {agent.notes}
+      </p>
 
-      <div className="w-[72px] text-right text-[13px] text-[#6b7280]">{agent.uptime}</div>
+      {agent.alert ? (
+        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[12px] font-medium text-amber-800">
+          {agent.alert}
+        </div>
+      ) : null}
 
-      <div className="flex w-[92px] items-center justify-end gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 motion-reduce:transition-none">
-        <button
-          className="inline-flex min-h-12 items-center rounded-md px-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-white hover:text-[#111827]"
-          aria-label={`More actions for ${agent.name}`}
-        >
-          <MoreHorizontal className="h-4 w-4" />
-        </button>
-        <button
-          className={cn(
-            "inline-flex min-h-12 items-center rounded-md px-2 text-[13px] font-medium transition",
-            agent.status === "terminated"
-              ? "text-[#9aa3b2] hover:bg-white hover:text-[#6b7280]"
-              : "text-[#6b7280] hover:bg-[#fff1f2] hover:text-[#b42318]",
-          )}
-        >
-          Kill
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-stone-200/80 pt-3">
+        <p className="min-w-0 truncate text-[12px] text-stone-500">{agent.lastEvent}</p>
+        <button className="inline-flex min-h-11 shrink-0 items-center rounded-xl border border-rose-200 bg-white px-3 text-[12px] font-semibold text-rose-700 transition hover:bg-rose-50">
+          {meta.action}
         </button>
       </div>
-
-      <span className={cn("sr-only", statusMeta.text)}>{statusMeta.label}</span>
-    </div>
+    </article>
   );
 }
 
 function GroupSection({
-  status,
+  title,
+  tone,
+  icon: Icon,
   agents,
   collapsed,
   onToggle,
-  startIndex,
 }: {
-  status: AgentStatus;
+  title: string;
+  tone: string;
+  icon: typeof Sparkles;
   agents: Agent[];
   collapsed: boolean;
   onToggle: () => void;
-  startIndex: number;
 }) {
-  const meta = STATUS_META[status];
-  const Chevron = collapsed ? ChevronRight : ChevronDown;
-
   return (
-    <section className="border-t border-[#eef1f6] first:border-t-0">
+    <section className="rounded-[28px] border border-stone-200 bg-white/92 shadow-[0_1px_0_rgba(28,25,23,0.04)]">
       <button
         onClick={onToggle}
-        className="flex min-h-12 w-full items-center justify-between px-4 text-left transition hover:bg-[#fafbfd]"
+        className="flex min-h-14 w-full items-center justify-between gap-3 px-4 py-3 text-left sm:px-5"
         aria-expanded={!collapsed}
       >
-        <div className="flex items-center gap-2">
-          <Chevron className="h-3.5 w-3.5 text-[#9aa3b2]" />
-          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6b7280]">
-            {meta.label} ({meta.headerCount})
-          </span>
+        <div className="flex min-w-0 items-center gap-3">
+          <div className={cn("flex h-9 w-9 items-center justify-center rounded-2xl border bg-white", tone)}>
+            <Icon className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">{title}</p>
+            <p className="text-[14px] text-stone-700">{agents.length} visible in this lane</p>
+          </div>
         </div>
-        <span className="text-[11px] text-[#9aa3b2]">{agents.length} visible</span>
+        <div className="flex items-center gap-3">
+          <span className="hidden text-[12px] text-stone-500 sm:inline">tap to collapse</span>
+          {collapsed ? (
+            <ChevronRight className="h-4 w-4 text-stone-500" />
+          ) : (
+            <ChevronDown className="h-4 w-4 text-stone-500" />
+          )}
+        </div>
       </button>
 
-      {!collapsed && (
-        <div>
-          {agents.map((agent, index) => (
-            <AgentRow key={agent.id} agent={agent} index={startIndex + index} />
-          ))}
+      {!collapsed ? (
+        <div className="border-t border-stone-200/80">
+          <div className="hidden lg:block">
+            <div className="grid grid-cols-[1.5fr_1.05fr_1.1fr_120px_120px_118px] gap-3 border-b border-stone-200/80 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500">
+              <span>Agent</span>
+              <span>Model</span>
+              <span>Work</span>
+              <span>Memory</span>
+              <span>Uptime</span>
+              <span className="text-right">Kill switch</span>
+            </div>
+            <div>
+              {agents.map((agent) => {
+                const meta = STATUS_META[agent.status];
+
+                return (
+                  <article
+                    key={agent.id}
+                    className="grid grid-cols-[1.5fr_1.05fr_1.1fr_120px_120px_118px] gap-3 border-b border-stone-200/70 px-5 py-4 text-sm last:border-b-0"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className={cn("h-2.5 w-2.5 rounded-full", meta.dot)} aria-hidden="true" />
+                        <p className="truncate font-semibold tracking-[-0.02em] text-stone-950">{agent.name}</p>
+                        <StatusPill status={agent.status} />
+                      </div>
+                      <p className="mt-1 truncate text-[12px] text-stone-500">
+                        {agent.id} · {agent.owner} · {agent.region}
+                      </p>
+                      <p className="mt-2 truncate text-[13px] text-stone-700">{agent.lastEvent}</p>
+                      {agent.alert ? (
+                        <p className="mt-2 inline-flex rounded-full bg-amber-100 px-2 py-1 text-[11px] font-medium text-amber-800">
+                          {agent.alert}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-stone-900">{agent.model}</p>
+                      <p className="mt-1 text-[12px] text-stone-500">{agent.provider}</p>
+                      <p className="mt-3 text-[12px] text-stone-600">{agent.tokens} tokens</p>
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="truncate font-medium text-stone-900">{agent.branch}</p>
+                      <p className="mt-1 truncate text-[12px] text-stone-500">{agent.notes}</p>
+                      <p className="mt-3 truncate text-[12px] text-stone-600">{agent.node} · {agent.since}</p>
+                    </div>
+
+                    <div>
+                      <p className="font-medium text-stone-900">{agent.memory}</p>
+                      <p className="mt-1 text-[12px] text-stone-500">resident</p>
+                    </div>
+
+                    <div>
+                      <p className="font-medium text-stone-900">{agent.uptime}</p>
+                      <p className="mt-1 text-[12px] text-stone-500">alive window</p>
+                    </div>
+
+                    <div className="flex items-center justify-end">
+                      <button className="inline-flex min-h-11 items-center rounded-xl border border-rose-200 bg-white px-3 text-[12px] font-semibold text-rose-700 transition hover:bg-rose-50">
+                        {meta.action}
+                      </button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="grid gap-3 p-3 lg:hidden sm:p-4">
+            {agents.map((agent) => (
+              <AgentCard key={agent.id} agent={agent} />
+            ))}
+          </div>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }
@@ -405,225 +606,289 @@ function GroupSection({
 export default function AgentRosterPage() {
   const [view, setView] = useState<ViewState>("loading");
   const [query, setQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("All agents");
-  const [collapsed, setCollapsed] = useState<Record<AgentStatus, boolean>>({
-    running: false,
-    paused: false,
-    terminated: false,
+  const [filter, setFilter] = useState<AgentFilter>("all");
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
+    hot: false,
+    watch: false,
+    ended: false,
   });
 
   useEffect(() => {
+    if (view !== "loading") return;
+
     const timer = window.setTimeout(() => {
       setView("happy");
-    }, 750);
+    }, 800);
 
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [view]);
 
-  const visibleAgents = useMemo(() => {
+  const filteredAgents = useMemo(() => {
     if (view === "empty") return [];
 
-    const base = AGENTS.filter((agent) => {
-      const matchesQuery =
-        query.length === 0 ||
-        [agent.name, agent.model, agent.branch, agent.node, agent.owner]
-          .join(" ")
-          .toLowerCase()
-          .includes(query.toLowerCase());
+    return FLEET.filter((agent) => {
+      const searchTarget = [
+        agent.name,
+        agent.model,
+        agent.provider,
+        agent.branch,
+        agent.node,
+        agent.owner,
+        agent.notes,
+      ]
+        .join(" ")
+        .toLowerCase();
 
-      const matchesTab =
-        activeTab === "All agents"
+      const matchesQuery = !query || searchTarget.includes(query.toLowerCase());
+      const matchesFilter =
+        filter === "all"
           ? true
-          : activeTab === "Assigned to Pete"
-            ? agent.owner === "pete"
-            : activeTab === "Needs review"
-              ? agent.status === "paused"
+          : filter === "pete"
+            ? agent.owner.toLowerCase() === "pete"
+            : filter === "watch"
+              ? ["warming", "draining", "paused"].includes(agent.status)
               : agent.status === "terminated";
 
-      return matchesQuery && matchesTab;
+      return matchesQuery && matchesFilter;
     });
+  }, [filter, query, view]);
 
-    return base;
-  }, [activeTab, query, view]);
+  const lanes = useMemo(
+    () => ({
+      hot: filteredAgents.filter((agent) => ["running", "warming"].includes(agent.status)),
+      watch: filteredAgents.filter((agent) => ["paused", "draining"].includes(agent.status)),
+      ended: filteredAgents.filter((agent) => agent.status === "terminated"),
+    }),
+    [filteredAgents],
+  );
 
-  const grouped = useMemo(() => {
-    return {
-      running: visibleAgents.filter((agent) => agent.status === "running"),
-      paused: visibleAgents.filter((agent) => agent.status === "paused"),
-      terminated: visibleAgents.filter((agent) => agent.status === "terminated"),
-    };
-  }, [visibleAgents]);
+  const stats = useMemo(() => {
+    const running = FLEET.filter((agent) => agent.status === "running").length;
+    const watch = FLEET.filter((agent) => ["warming", "paused", "draining"].includes(agent.status)).length;
+    const terminated = FLEET.filter((agent) => agent.status === "terminated").length;
 
-  const groupOrder: AgentStatus[] = ["running", "paused", "terminated"];
-  let rowIndex = 0;
+    return { running, watch, terminated };
+  }, []);
+
+  const totalVisible = filteredAgents.length;
+  const alerts = filteredAgents.filter((agent) => agent.alert).length;
 
   return (
-    <main className="min-h-screen bg-[#fbfaf8] text-[#111827]">
-      <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col px-5 pb-24 pt-6 sm:px-6 lg:px-8">
-        <header className="border-b border-[#eceff4] pb-4">
-          <div className="flex min-h-10 items-center justify-between gap-4">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[#9aa3b2]">
-                <span>OpenClaw</span>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(254,240,138,0.18),_transparent_28%),linear-gradient(180deg,#fcfbf8_0%,#f6f2ea_100%)] text-stone-900">
+      <div className="mx-auto max-w-[1400px] px-4 pb-28 pt-4 sm:px-6 lg:px-8 lg:pt-6">
+        <header className="rounded-[32px] border border-stone-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(250,248,244,0.92))] p-4 shadow-[0_1px_0_rgba(28,25,23,0.04)] sm:p-6">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="min-w-0 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">
+                <span className="rounded-full border border-stone-200 bg-white px-2.5 py-1">OpenClaw</span>
                 <ChevronRight className="h-3 w-3" />
-                <span>Fleet</span>
+                <span>Fleet console</span>
                 <ChevronRight className="h-3 w-3" />
-                <span className="text-[#6b7280]">Agent roster</span>
+                <span className="text-stone-700">Pete’s agent roster</span>
               </div>
-              <div className="mt-1 flex items-center gap-4">
-                <h1 className="text-[18px] font-semibold text-[#111827]">Pete’s agent roster</h1>
-                <nav className="hidden items-center gap-4 md:flex">
-                  <button className="border-b border-[#111827] pb-2 text-[13px] font-medium text-[#111827]">
-                    Agents
+
+              <div className="mt-4 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                <div>
+                  <h1 className="text-[32px] font-semibold tracking-[-0.06em] text-stone-950 sm:text-[40px]">
+                    Pete’s OpenClaw agent roster
+                  </h1>
+                  <p className="mt-3 max-w-2xl text-[15px] leading-7 text-stone-600 sm:text-[16px]">
+                    A live fleet view for the agents running around Pete’s personal OpenClaw setup. Fast enough for kill-switch duty, dense enough to spot weirdness before it snowballs.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-[12px] font-medium text-emerald-800">
+                    <Zap className="h-3.5 w-3.5" />
+                    31 agents live
+                  </div>
+                  <button className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 text-[13px] font-medium text-stone-800 transition hover:border-stone-400 hover:bg-stone-50">
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Sync roster
                   </button>
-                  <button className="pb-2 text-[13px] text-[#6b7280]">Runs</button>
-                  <button className="pb-2 text-[13px] text-[#6b7280]">Policies</button>
-                </nav>
+                </div>
               </div>
             </div>
 
-            <button className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dde3ec] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#cfd7e3] hover:bg-[#fafbfd]">
-              <RefreshCw className="h-3.5 w-3.5" />
-              Sync
-            </button>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-[420px] lg:grid-cols-1 xl:w-[460px] xl:grid-cols-3">
+              <StatTile
+                label="Live now"
+                value={`${stats.running}`}
+                detail="healthy workers taking jobs right now"
+                icon={Bot}
+              />
+              <StatTile
+                label="Watch list"
+                value={`${stats.watch}`}
+                detail="warming, paused, or draining agents"
+                icon={ShieldAlert}
+              />
+              <StatTile
+                label="Terminated"
+                value={`${stats.terminated}`}
+                detail="recently ended or manually killed runs"
+                icon={Skull}
+              />
+            </div>
           </div>
         </header>
 
-        <section className="border-b border-[#eceff4] py-4">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1">
-              {FILTER_TABS.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={cn(
-                    "inline-flex min-h-12 shrink-0 items-center rounded-md px-2.5 text-[13px] transition",
-                    activeTab === tab
-                      ? "bg-[#eef3fb] text-[#111827]"
-                      : "text-[#6b7280] hover:bg-[#f4f6fa] hover:text-[#374151]",
-                  )}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+        <section className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-4">
+            <div className="rounded-[28px] border border-stone-200 bg-white/92 p-4 shadow-[0_1px_0_rgba(28,25,23,0.04)] sm:p-5">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1">
+                  {FILTERS.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setFilter(item.id)}
+                      className={cn(
+                        "inline-flex min-h-11 shrink-0 items-center rounded-full border px-3.5 text-[13px] font-medium transition",
+                        filter === item.id
+                          ? "border-stone-900 bg-stone-900 text-white"
+                          : "border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300 hover:bg-white",
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
 
-            <div className="flex items-center gap-2">
-              <div className="relative min-w-0 flex-1 lg:w-[320px] lg:flex-none">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#9aa3b2]" />
-                <input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search agents, models, branches"
-                  className="h-9 w-full rounded-md border border-[#dde3ec] bg-white pl-9 pr-9 text-[13px] text-[#111827] outline-none placeholder:text-[#9aa3b2] focus:border-[#c9d5e4]"
-                />
-                {query ? (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="absolute right-0 top-1/2 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded text-[#9aa3b2] transition hover:bg-[#f4f6fa] hover:text-[#6b7280]"
-                    aria-label="Clear search"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                ) : null}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <div className="relative min-w-0 sm:w-[300px]">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+                    <input
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Search agent, model, branch, node"
+                      className="h-11 w-full rounded-xl border border-stone-200 bg-stone-50 pl-9 pr-10 text-[14px] text-stone-900 outline-none placeholder:text-stone-400 focus:border-stone-400 focus:bg-white"
+                    />
+                    {query ? (
+                      <button
+                        onClick={() => setQuery("")}
+                        className="absolute right-1 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-stone-400 transition hover:bg-stone-100 hover:text-stone-700"
+                        aria-label="Clear search"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    ) : null}
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-[12px] text-stone-600">
+                    <Waypoints className="h-3.5 w-3.5" />
+                    {totalVisible} visible
+                    {alerts > 0 ? <span>· {alerts} alerts</span> : null}
+                  </div>
+                </div>
               </div>
-
-              <button className="inline-flex min-h-12 items-center gap-2 rounded-md border border-[#dde3ec] bg-white px-3 text-[13px] font-medium text-[#374151] transition hover:border-[#cfd7e3] hover:bg-[#fafbfd]">
-                <SlidersHorizontal className="h-3.5 w-3.5" />
-                Filter
-              </button>
-            </div>
-          </div>
-
-          <p className="mt-3 text-[13px] text-[#6b7280]">47 agents • 31 running • 8 paused • 8 terminated</p>
-        </section>
-
-        <section className="flex-1 py-4">
-          <div className="overflow-hidden border border-[#e8ebf2] bg-white shadow-[0_1px_0_rgba(17,24,39,0.02)]">
-            <div className="hidden h-9 items-center border-b border-[#eef1f6] bg-[#fcfcfd] px-4 text-[11px] font-medium uppercase tracking-[0.08em] text-[#9aa3b2] md:flex">
-              <div className="w-[28%] min-w-[180px]">Agent</div>
-              <div className="w-[20%]">Model</div>
-              <div className="w-[24%] lg:block">Branch</div>
-              <div className="hidden xl:block xl:w-[16%]">Node</div>
-              <div className="ml-auto mr-[72px] hidden w-[84px] text-right sm:block">Seen</div>
-              <div className="w-[72px] text-right">Uptime</div>
-              <div className="w-[92px] text-right">Actions</div>
             </div>
 
             {view === "loading" ? (
-              <LoadingRows />
+              <LoadingState />
             ) : view === "error" ? (
               <ErrorState onRetry={() => setView("loading")} />
-            ) : visibleAgents.length === 0 ? (
+            ) : filteredAgents.length === 0 ? (
               <EmptyState />
             ) : (
-              groupOrder.map((status) => {
-                const agents = grouped[status];
-                const currentStart = rowIndex;
-                rowIndex += collapsed[status] ? 0 : agents.length;
-
-                return (
-                  <GroupSection
-                    key={status}
-                    status={status}
-                    agents={agents}
-                    collapsed={collapsed[status]}
-                    onToggle={() =>
-                      setCollapsed((current) => ({
-                        ...current,
-                        [status]: !current[status],
-                      }))
-                    }
-                    startIndex={currentStart}
-                  />
-                );
-              })
+              <div className="space-y-4">
+                <GroupSection
+                  title="Hot lane"
+                  tone="border-emerald-200 text-emerald-700"
+                  icon={Radio}
+                  agents={lanes.hot}
+                  collapsed={collapsed.hot}
+                  onToggle={() => setCollapsed((current) => ({ ...current, hot: !current.hot }))}
+                />
+                <GroupSection
+                  title="Watch lane"
+                  tone="border-amber-200 text-amber-700"
+                  icon={ShieldAlert}
+                  agents={lanes.watch}
+                  collapsed={collapsed.watch}
+                  onToggle={() => setCollapsed((current) => ({ ...current, watch: !current.watch }))}
+                />
+                <GroupSection
+                  title="Ended lane"
+                  tone="border-rose-200 text-rose-700"
+                  icon={Skull}
+                  agents={lanes.ended}
+                  collapsed={collapsed.ended}
+                  onToggle={() => setCollapsed((current) => ({ ...current, ended: !current.ended }))}
+                />
+              </div>
             )}
           </div>
+
+          <aside className="space-y-4 xl:sticky xl:top-6 xl:self-start">
+            <section className="rounded-[28px] border border-stone-200 bg-white/92 p-5 shadow-[0_1px_0_rgba(28,25,23,0.04)]">
+              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">
+                <Cpu className="h-3.5 w-3.5" />
+                Node snapshot
+              </div>
+              <div className="mt-4 space-y-3">
+                {NODE_SNAPSHOT.map((node) => (
+                  <div key={node.name} className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-medium text-stone-900">{node.name}</p>
+                      <span className="rounded-full border border-stone-200 bg-white px-2 py-1 text-[11px] text-stone-600">
+                        {node.state}
+                      </span>
+                    </div>
+                    <div className="mt-3 grid grid-cols-2 gap-2 text-[12px] text-stone-600">
+                      <div>
+                        <p className="uppercase tracking-[0.1em] text-stone-400">Load</p>
+                        <p className="mt-1 font-medium text-stone-900">{node.load}</p>
+                      </div>
+                      <div>
+                        <p className="uppercase tracking-[0.1em] text-stone-400">Temp</p>
+                        <p className="mt-1 font-medium text-stone-900">{node.temp}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="rounded-[28px] border border-stone-200 bg-white/92 p-5 shadow-[0_1px_0_rgba(28,25,23,0.04)]">
+              <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">
+                <Server className="h-3.5 w-3.5" />
+                Fleet notes
+              </div>
+              <div className="mt-4 space-y-3 text-[14px] leading-6 text-stone-700">
+                <p className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
+                  <span className="font-medium text-stone-950">Relay jitter on gpu-node-01.</span> Pete kept the view biased toward uptime, node heat, and safe-stop state so he can intervene fast.
+                </p>
+                <p className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
+                  Humor lives in the row data, not the chrome. The UI still needs to read like a real ops console.
+                </p>
+                <p className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
+                  Mobile swaps the table for stacked agent cards so the roster still works at phone width instead of turning into tiny spreadsheet soup.
+                </p>
+              </div>
+            </section>
+          </aside>
         </section>
       </div>
 
-      <div className="fixed bottom-4 right-4 z-10 rounded-lg border border-[#dde3ec] bg-white/92 p-1.5 shadow-[0_8px_24px_rgba(17,24,39,0.08)] backdrop-blur-sm">
+      <div className="fixed bottom-4 right-4 z-20 rounded-2xl border border-stone-300 bg-white/92 p-1.5 shadow-[0_12px_28px_rgba(28,25,23,0.12)] backdrop-blur-sm">
         <div className="flex items-center gap-1">
           {(["happy", "loading", "empty", "error"] as ViewState[]).map((state) => (
             <button
               key={state}
               onClick={() => setView(state)}
               className={cn(
-                "inline-flex min-h-12 items-center rounded-md px-2.5 text-[11px] font-medium capitalize transition",
+                "inline-flex min-h-10 items-center rounded-xl px-3 text-[12px] font-medium capitalize transition",
                 view === state
-                  ? "bg-[#eef3fb] text-[#111827]"
-                  : "text-[#6b7280] hover:bg-[#f4f6fa] hover:text-[#374151]",
+                  ? "bg-stone-900 text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
               )}
             >
-              {state === "loading" ? <Loader2 className="mr-1 h-3 w-3" /> : null}
+              {state === "loading" ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : null}
               {state}
             </button>
           ))}
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes roster-enter {
-          from {
-            opacity: 0;
-            transform: translateY(-8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-          }
-        }
-      `}</style>
     </main>
   );
 }

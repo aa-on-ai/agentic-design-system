@@ -37,6 +37,11 @@
 - rounded-lg on every surface creating a puffy, toy-like feel.
 - zinc/slate as the only background palette — agents default to this every time.
 
+## Demo/Meta-Navigation Mistakes
+- State toggles (happy/loading/empty/error) rendered inline as part of the UI — they must be floating overlays, clearly separate from the actual product surface.
+- Context briefs or design notes leaking into the rendered page (e.g. "This should feel like..." appearing as UI text).
+- Debug controls styled to match the product UI — they should look like developer tools, not product features.
+
 ## Interaction Mistakes
 - Missing hover, focus, or active states.
 - Bounce or elastic easing.

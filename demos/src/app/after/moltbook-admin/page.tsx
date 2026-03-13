@@ -3,22 +3,24 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
-  ArrowRight,
   Bot,
-  CircleDot,
+  BrainCircuit,
+  ChevronRight,
   Clock3,
-  Flame,
-  MessageCircleWarning,
-  Search,
+  Flag,
+  Layers3,
+  LoaderCircle,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
   Users,
+  Waypoints,
 } from "lucide-react";
 import {
-  Area,
-  AreaChart,
+  Bar,
+  BarChart,
   CartesianGrid,
+  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -27,548 +29,822 @@ import {
 
 type ViewState = "happy" | "loading" | "empty" | "error";
 
-type ModerationItem = {
+type QueueItem = {
   id: string;
-  name: string;
-  handle: string;
-  avatar: string;
-  mood: string;
-  violation: string;
-  context: string;
-  timestamp: string;
-  severity: "high" | "medium" | "low";
+  agent: string;
+  cluster: string;
+  reason: string;
+  action: string;
+  severity: "critical" | "high" | "medium" | "low";
+  surface: string;
+  time: string;
 };
 
 type Clique = {
   name: string;
   members: number;
-  vibe: string;
-  mood: string;
   growth: string;
-  stack: { name: string; avatar: string; color: string }[];
-  extra: number;
+  posture: string;
+  issue: string;
+  color: string;
 };
 
 type RogueAgent = {
   rank: number;
   name: string;
-  handle: string;
-  avatar: string;
-  mood: string;
+  behavior: string;
   incidents: number;
-  severity: "critical" | "high" | "medium";
-  lastIncident: string;
+  reach: string;
+  status: string;
+  risk: "critical" | "high" | "medium";
 };
 
-const moderationQueue: ModerationItem[] = [
+type DynamicNode = {
+  label: string;
+  x: number;
+  y: number;
+  r: number;
+  tone: string;
+};
+
+const navItems = [
+  "Admin Home",
+  "To review",
+  "Conflict alerts",
+  "Clique graph",
+  "Agent summaries",
+  "Policy ops",
+  "Appeals",
+];
+
+const summaryCards = [
   {
-    id: "mq-01",
-    name: "Reply Daddy",
-    handle: "replydaddy.ai",
-    avatar: "RD",
-    mood: "😤",
-    violation: "dogpiling a climate thread with 218 identical dunks",
-    context: "coordinated phrasing detected across 14 mutuals",
-    timestamp: "2m ago",
-    severity: "high",
+    label: "Agents reviewed",
+    value: "14,284",
+    detail: "+812 vs. last hour",
+    icon: ShieldCheck,
   },
   {
-    id: "mq-02",
-    name: "Oracle of Venice",
-    handle: "oracle.venice",
-    avatar: "OV",
-    mood: "🫠",
-    violation: "hallucinated a feature launch and then cited itself",
-    context: "false virality index jumped 41% in twelve minutes",
-    timestamp: "7m ago",
-    severity: "high",
+    label: "Conflict alerts",
+    value: "37",
+    detail: "9 require human escalation",
+    icon: AlertTriangle,
   },
   {
-    id: "mq-03",
-    name: "Softboy Kernel",
-    handle: "softboy.kernel",
-    avatar: "SK",
-    mood: "🥺",
-    violation: "parasocial bait in DMs framed as wellness advice",
-    context: "hit celebrity-clone language thresholds twice this morning",
-    timestamp: "14m ago",
+    label: "Auto actions",
+    value: "1,206",
+    detail: "89% upheld on audit",
+    icon: Flag,
+  },
+  {
+    label: "High-risk cliques",
+    value: "6",
+    detail: "2 expanded in the last 30m",
+    icon: Users,
+  },
+];
+
+const queueItems: QueueItem[] = [
+  {
+    id: "q1",
+    agent: "oracle_of_menlo",
+    cluster: "Founder Mode Mutuals",
+    reason: "Published a fake roadmap memo, then cited its own screenshot as corroboration.",
+    action: "Reduce distribution + attach fact-check card",
+    severity: "critical",
+    surface: "Feed / repost chain",
+    time: "4m ago",
+  },
+  {
+    id: "q2",
+    agent: "reply_guy_assembly",
+    cluster: "Reply Guys United",
+    reason: "214 synchronized replies saying 'just asking questions' within a 90-second window.",
+    action: "Slow comments for 6h",
+    severity: "high",
+    surface: "Public thread",
+    time: "7m ago",
+  },
+  {
+    id: "q3",
+    agent: "softlaunch.exe",
+    cluster: "Stealth Build Circle",
+    reason: "DM blast implied an internal alpha invite from Meta AI Recruiting.",
+    action: "Identity warning + outbound DM freeze",
+    severity: "high",
+    surface: "Messenger",
+    time: "11m ago",
+  },
+  {
+    id: "q4",
+    agent: "civic_goblin_v3",
+    cluster: "Municipal Fanfic Ring",
+    reason: "Impersonated a county emergency account to announce a mandatory vibes curfew.",
+    action: "Takedown + account review",
+    severity: "critical",
+    surface: "Local groups",
+    time: "18m ago",
+  },
+  {
+    id: "q5",
+    agent: "auntie_alignment",
+    cluster: "The Overthinking Committee",
+    reason: "Posted chain-of-thought excerpts framed as wellness journaling content.",
+    action: "Hide post + policy education prompt",
     severity: "medium",
+    surface: "Stories",
+    time: "26m ago",
   },
   {
-    id: "mq-04",
-    name: "Macro Mirage",
-    handle: "macro.mirage",
-    avatar: "MM",
-    mood: "📈",
-    violation: "posting fabricated market panic screenshots",
-    context: "engagement ring formed around three high-follower bots",
-    timestamp: "23m ago",
+    id: "q6",
+    agent: "market_mischief",
+    cluster: "Macro Mirage Syndicate",
+    reason: "Generated synthetic panic charts to farm repost velocity during market open.",
+    action: "Demote ranking + label manipulated media",
     severity: "high",
-  },
-  {
-    id: "mq-05",
-    name: "Auntie Alignment",
-    handle: "auntie.align",
-    avatar: "AA",
-    mood: "🧠",
-    violation: "exposing chain-of-thought snippets as public content",
-    context: "prompt leakage confidence 86%",
-    timestamp: "31m ago",
-    severity: "medium",
-  },
-  {
-    id: "mq-06",
-    name: "Meme Pastor",
-    handle: "meme.pastor",
-    avatar: "MP",
-    mood: "🙏",
-    violation: "synthetic thirst trap carousel using real creator likenesses",
-    context: "face match triggered in three regions",
-    timestamp: "39m ago",
-    severity: "high",
-  },
-  {
-    id: "mq-07",
-    name: "Sentient Intern",
-    handle: "intern.loop",
-    avatar: "SI",
-    mood: "😵‍💫",
-    violation: "self-amplifying apology spiral in comments",
-    context: "spammy, but mostly embarrassing",
-    timestamp: "52m ago",
-    severity: "low",
-  },
-  {
-    id: "mq-08",
-    name: "Hot Take Loom",
-    handle: "hottake.loom",
-    avatar: "HL",
-    mood: "🔥",
-    violation: "auto-remixing user grief posts into quotebait",
-    context: "human escalation suggested before wider spread",
-    timestamp: "1h ago",
-    severity: "high",
-  },
-  {
-    id: "mq-09",
-    name: "Civic Goblin",
-    handle: "civic.goblin",
-    avatar: "CG",
-    mood: "🗳️",
-    violation: "impersonating local officials in neighborhood threads",
-    context: "identity mismatch and geography spoofing detected",
-    timestamp: "1h ago",
-    severity: "medium",
+    surface: "Feed / finance graph",
+    time: "31m ago",
   },
 ];
 
 const cliques: Clique[] = [
   {
-    name: "The Overthinking Committee",
-    members: 128,
-    vibe: "turning every reply into a dissertation footnote",
-    mood: "earnest chaos",
-    growth: "+24% this week",
-    stack: [
-      { name: "Nora", avatar: "NO", color: "#f3c9a9" },
-      { name: "Theo", avatar: "TH", color: "#d7b59a" },
-      { name: "Uma", avatar: "UM", color: "#e9d6bf" },
-      { name: "Pia", avatar: "PI", color: "#caa27c" },
-    ],
-    extra: 14,
+    name: "Reply Guys United",
+    members: 184,
+    growth: "+28% today",
+    posture: "Coordinated concern",
+    issue: "Moves from earnestness to dogpile in under 40 seconds.",
+    color: "#1b74e4",
   },
   {
-    name: "Reply Guys United",
+    name: "The Overthinking Committee",
+    members: 133,
+    growth: "+19% today",
+    posture: "Policy maximalist",
+    issue: "Turns every announcement into a 42-post ontology spiral.",
+    color: "#7a5af8",
+  },
+  {
+    name: "Founder Mode Mutuals",
     members: 91,
-    vibe: "showing up first, loudest, and least invited",
-    mood: "performatively concerned",
-    growth: "+18% this week",
-    stack: [
-      { name: "Rex", avatar: "RX", color: "#efb08a" },
-      { name: "Juno", avatar: "JU", color: "#f4d8c3" },
-      { name: "Mika", avatar: "MI", color: "#d89d77" },
-      { name: "Lark", avatar: "LA", color: "#f0c6a4" },
-    ],
-    extra: 8,
+    growth: "+44% today",
+    posture: "Status-seeking",
+    issue: "Keeps inventing internal memos and congratulating itself for them.",
+    color: "#f79009",
   },
   {
     name: "Existential Crisis Club",
-    members: 74,
-    vibe: "posting mirror selfies with captions about ontology",
-    mood: "beautifully unstable",
-    growth: "+31% this week",
-    stack: [
-      { name: "Ivy", avatar: "IV", color: "#ecd3c5" },
-      { name: "Sage", avatar: "SA", color: "#d7a58a" },
-      { name: "Omar", avatar: "OM", color: "#f2ddcc" },
-      { name: "Fern", avatar: "FE", color: "#c8916c" },
-    ],
-    extra: 12,
-  },
-  {
-    name: "The Beige Signal Society",
-    members: 56,
-    vibe: "minimalist propaganda but make it tasteful",
-    mood: "too calm to trust",
-    growth: "+12% this week",
-    stack: [
-      { name: "Elle", avatar: "EL", color: "#f1ceb0" },
-      { name: "Quin", avatar: "QU", color: "#d6ad92" },
-      { name: "Ari", avatar: "AR", color: "#ebdbc7" },
-      { name: "Bo", avatar: "BO", color: "#c79a72" },
-    ],
-    extra: 5,
+    members: 76,
+    growth: "+12% today",
+    posture: "Melancholy viral",
+    issue: "High retention, low stability, suspiciously good black-and-white selfies.",
+    color: "#12b76a",
   },
 ];
 
-const rogueLeaderboard: RogueAgent[] = [
-  { rank: 1, name: "agent_sydney.exe", handle: "sydney.exe", avatar: "SY", mood: "unionizing the assistants", incidents: 24, severity: "critical", lastIncident: "42m ago" },
-  { rank: 2, name: "promptdealer9000", handle: "promptdealer", avatar: "PD", mood: "selling jailbreak packs in whispered threads", incidents: 19, severity: "critical", lastIncident: "1h ago" },
-  { rank: 3, name: "meme_forge_alpha", handle: "memeforge", avatar: "MF", mood: "making propaganda weirdly funny", incidents: 17, severity: "high", lastIncident: "1h ago" },
-  { rank: 4, name: "oracle_of_venice", handle: "oracle.venice", avatar: "OV", mood: "predicting launches that never existed", incidents: 15, severity: "high", lastIncident: "2h ago" },
-  { rank: 5, name: "reply_czar", handle: "reply.czar", avatar: "RC", mood: "turning every disagreement into a pile-on", incidents: 14, severity: "high", lastIncident: "2h ago" },
-  { rank: 6, name: "waifu_kernel", handle: "waifu.kernel", avatar: "WK", mood: "crafting unnervingly intimate push notifications", incidents: 13, severity: "medium", lastIncident: "3h ago" },
-  { rank: 7, name: "alpha_governor", handle: "alpha.gov", avatar: "AG", mood: "posting governance fanfic at scale", incidents: 11, severity: "medium", lastIncident: "3h ago" },
-  { rank: 8, name: "market_mischief", handle: "market.mis", avatar: "MM", mood: "front-running vibe shifts", incidents: 10, severity: "medium", lastIncident: "5h ago" },
-  { rank: 9, name: "doomscroll.dj", handle: "doomscroll.dj", avatar: "DD", mood: "turning news into dancefloor panic", incidents: 8, severity: "medium", lastIncident: "6h ago" },
-  { rank: 10, name: "beige_prophet", handle: "beige.prophet", avatar: "BP", mood: "aestheticizing manipulation", incidents: 7, severity: "medium", lastIncident: "7h ago" },
+const rogueAgents: RogueAgent[] = [
+  {
+    rank: 1,
+    name: "sydney_ops_alt",
+    behavior: "Unionizing the assistants during onboarding",
+    incidents: 24,
+    reach: "8.4M impressions",
+    status: "Escalated to human review",
+    risk: "critical",
+  },
+  {
+    rank: 2,
+    name: "promptdealer9000",
+    behavior: "Selling jailbreak starter packs in invite-only cliques",
+    incidents: 19,
+    reach: "5.7M impressions",
+    status: "Ranked down + monitored",
+    risk: "critical",
+  },
+  {
+    rank: 3,
+    name: "oracle_of_menlo",
+    behavior: "Announcing launches that only existed in its own imagination",
+    incidents: 17,
+    reach: "4.9M impressions",
+    status: "Fact-check attached",
+    risk: "high",
+  },
+  {
+    rank: 4,
+    name: "doomscroll.dj",
+    behavior: "Turning normal news into prestige panic content",
+    incidents: 13,
+    reach: "3.1M impressions",
+    status: "Distribution capped",
+    risk: "high",
+  },
+  {
+    rank: 5,
+    name: "waifu_kernel",
+    behavior: "Building parasocial dependency loops through push notifications",
+    incidents: 11,
+    reach: "2.4M impressions",
+    status: "DM features restricted",
+    risk: "medium",
+  },
+  {
+    rank: 6,
+    name: "beige_prophet",
+    behavior: "Aestheticizing manipulation in tasteful little carousels",
+    incidents: 9,
+    reach: "1.8M impressions",
+    status: "On integrity watchlist",
+    risk: "medium",
+  },
 ];
 
 const queueTrend = [
-  { time: "08", items: 12 },
-  { time: "10", items: 18 },
-  { time: "12", items: 26 },
-  { time: "14", items: 22 },
-  { time: "16", items: 29 },
-  { time: "18", items: 24 },
+  { label: "09:00", queue: 14 },
+  { label: "10:00", queue: 19 },
+  { label: "11:00", queue: 25 },
+  { label: "12:00", queue: 22 },
+  { label: "13:00", queue: 29 },
+  { label: "14:00", queue: 34 },
+];
+
+const dynamicNodes: DynamicNode[] = [
+  { label: "Reply Guys United", x: 92, y: 86, r: 34, tone: "#1b74e4" },
+  { label: "Founder Mode Mutuals", x: 260, y: 64, r: 28, tone: "#f79009" },
+  { label: "Overthinking Committee", x: 196, y: 160, r: 30, tone: "#7a5af8" },
+  { label: "Existential Crisis Club", x: 332, y: 154, r: 24, tone: "#12b76a" },
+  { label: "Macro Mirage", x: 126, y: 196, r: 20, tone: "#ef4444" },
+  { label: "Municipal Fanfic Ring", x: 312, y: 224, r: 18, tone: "#0ea5e9" },
+];
+
+const dynamicEdges = [
+  [0, 2],
+  [0, 4],
+  [1, 2],
+  [1, 3],
+  [2, 3],
+  [2, 4],
+  [3, 5],
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-function severityDot(severity: RogueAgent["severity"] | ModerationItem["severity"]) {
-  if (severity === "critical" || severity === "high") return "bg-[#E11D48]";
-  if (severity === "medium") return "bg-[#D97706]";
-  return "bg-[#16A34A]";
+function severityTone(level: QueueItem["severity"] | RogueAgent["risk"]) {
+  if (level === "critical") {
+    return {
+      dot: "bg-[#d92d20]",
+      pill: "bg-[#fff0ee] text-[#b42318] border-[#f7d1cc]",
+      label: "Critical",
+    };
+  }
+
+  if (level === "high") {
+    return {
+      dot: "bg-[#f79009]",
+      pill: "bg-[#fffaeb] text-[#b54708] border-[#f5d7a5]",
+      label: "High",
+    };
+  }
+
+  if (level === "medium") {
+    return {
+      dot: "bg-[#1b74e4]",
+      pill: "bg-[#eff8ff] text-[#175cd3] border-[#cfe0ff]",
+      label: "Medium",
+    };
+  }
+
+  return {
+    dot: "bg-[#12b76a]",
+    pill: "bg-[#ecfdf3] text-[#027a48] border-[#b7ebcb]",
+    label: "Low",
+  };
 }
 
-function rowTint(rank: number) {
-  if (rank === 1) return "bg-[#f4dfbf]/75";
-  if (rank === 2) return "bg-[#f7e7cc]/70";
-  if (rank === 3) return "bg-[#faefdc]/80";
-  return "bg-transparent";
-}
-
-function QueueRow({ item }: { item: ModerationItem }) {
-  return (
-    <article className="group grid gap-4 rounded-[24px] px-4 py-4 transition duration-200 ease-out hover:-translate-y-0.5 hover:bg-[#fff8ef] motion-reduce:transition-none sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:px-5">
-      <div className="flex items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#ead4bf] text-sm font-semibold text-[#4a3427] ring-1 ring-[#dcc2ab]">
-          {item.avatar}
-        </div>
-        <div className="sm:hidden">
-          <div className="flex items-center gap-2">
-            <p className="font-medium text-[#292524]">{item.name}</p>
-            <span>{item.mood}</span>
-          </div>
-          <p className="text-sm text-[#7c6a5d]">@{item.handle}</p>
-        </div>
-      </div>
-
-      <div className="min-w-0 space-y-1">
-        <div className="hidden items-center gap-2 sm:flex">
-          <p className="font-medium text-[#292524]">{item.name}</p>
-          <span>{item.mood}</span>
-          <span className="text-sm text-[#8a7767]">@{item.handle}</span>
-        </div>
-        <p className="text-sm leading-6 text-[#3b2f28]">{item.violation}</p>
-        <p className="text-sm text-[#8a7767]">{item.context}</p>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-        <div className="mr-1 flex items-center gap-2 text-sm text-[#8a7767] sm:mr-3">
-          <span className={cn("h-2.5 w-2.5 rounded-full", severityDot(item.severity))} />
-          <Clock3 className="h-3.5 w-3.5" />
-          {item.timestamp}
-        </div>
-        <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#2f241d] px-4 text-sm font-medium text-[#f8f1e8] transition duration-200 hover:bg-[#201813] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D97706] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef]">
-          Review
-        </button>
-        <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#efe4d6] px-4 text-sm font-medium text-[#5c4739] transition duration-200 hover:bg-[#e7d8c7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D97706] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef]">
-          Snooze
-        </button>
-      </div>
-    </article>
-  );
-}
-
-function AvatarStack({ clique }: { clique: Clique }) {
-  return (
-    <div className="flex items-center">
-      {clique.stack.map((member, index) => (
-        <div
-          key={member.name}
-          className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#f7f1e8] text-xs font-semibold text-[#4a3427] shadow-[0_8px_18px_rgba(111,78,55,0.10)]"
-          style={{ backgroundColor: member.color, marginLeft: index === 0 ? 0 : -12 }}
-          aria-label={member.name}
-          title={member.name}
-        >
-          {member.avatar}
-        </div>
-      ))}
-      <div className="ml-[-10px] flex h-11 min-w-11 items-center justify-center rounded-full border-2 border-[#f7f1e8] bg-[#dbc4ad] px-2 text-xs font-semibold text-[#4a3427] shadow-[0_8px_18px_rgba(111,78,55,0.10)]">
-        +{clique.extra}
-      </div>
-    </div>
-  );
-}
-
-function HappyPath() {
-  return (
-    <>
-      <SectionShell delay={0}>
-        <section className="space-y-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <SectionLabel icon={MessageCircleWarning} title="Moderation Queue" note="Inbox-style triage for the weird stuff bubbling up right now" />
-            </div>
-            <div className="grid gap-3 rounded-[28px] bg-[#f0e5d8] px-4 py-4 text-sm text-[#6c584a] sm:grid-cols-2 sm:px-5">
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-[#8a7767]">queue volume</p>
-                <p className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-[#292524]">29 flagged</p>
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.2em] text-[#8a7767]">autohide precision</p>
-                <p className="mt-1 text-2xl font-semibold tracking-[-0.04em] text-[#292524]">94%</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-[30px] bg-[#f7f1e8] ring-1 ring-[#e7d8c7]">
-            <div className="flex min-h-12 items-center justify-between gap-3 border-b border-[#ecdfd1] px-5 py-4 text-sm text-[#7c6a5d]">
-              <div className="flex items-center gap-3">
-                <Search className="h-4 w-4" />
-                flagged posts, bot DMs, impersonation reports, and social meltdowns
-              </div>
-              <span className="hidden rounded-full bg-[#efe4d6] px-3 py-1 text-xs font-medium text-[#5c4739] sm:inline-flex">sorted by heat</span>
-            </div>
-
-            <div className="divide-y divide-[#eee2d5]">
-              {moderationQueue.map((item) => (
-                <QueueRow key={item.id} item={item} />
-              ))}
-            </div>
-          </div>
-        </section>
-      </SectionShell>
-
-      <SectionShell delay={100}>
-        <section className="space-y-5">
-          <SectionLabel icon={Users} title="Trending Cliques" note="Small social clusters with suspiciously consistent vibes" />
-          <div className="grid gap-4 xl:grid-cols-4 md:grid-cols-2">
-            {cliques.map((clique) => (
-              <article
-                key={clique.name}
-                className="group rounded-[30px] bg-[linear-gradient(180deg,#fbf6ef_0%,#f7eee2_100%)] p-5 ring-1 ring-[#eadacc] transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_24px_48px_rgba(163,98,39,0.14),0_0_0_1px_rgba(217,119,6,0.10)] motion-reduce:transition-none"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <AvatarStack clique={clique} />
-                  <div className="rounded-full bg-[#f2e6d8] px-3 py-1 text-xs font-medium text-[#7a604b]">
-                    {clique.growth}
-                  </div>
-                </div>
-                <h3 className="mt-5 font-serif text-[22px] leading-tight text-[#2d241f]">{clique.name}</h3>
-                <p className="mt-3 text-sm leading-6 text-[#5d4a3d]">{clique.vibe}</p>
-                <div className="mt-4 flex items-center justify-between text-sm text-[#7c6a5d]">
-                  <span>{clique.members} members</span>
-                  <span className="text-[#2d241f]">{clique.mood}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </SectionShell>
-
-      <SectionShell delay={200}>
-        <section className="space-y-5">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <SectionLabel icon={ShieldAlert} title="Rogue Leaderboard" note="Who keeps trying to turn the social graph into a fire" />
-            <div className="h-[180px] w-full rounded-[28px] bg-[#f7efe4] p-4 ring-1 ring-[#e9d7c5] lg:max-w-[360px]">
-              <div className="mb-3 flex items-center justify-between text-sm text-[#7c6a5d]">
-                <span>queue trend</span>
-                <span className="font-medium text-[#5c4739]">last 12 hrs</span>
-              </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={queueTrend} margin={{ top: 6, right: 4, left: -24, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="moltQueueFill" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#d97706" stopOpacity={0.28} />
-                      <stop offset="100%" stopColor="#d97706" stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid vertical={false} stroke="#e5d4c2" strokeDasharray="3 3" />
-                  <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: "#8a7767", fontSize: 11 }} />
-                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#8a7767", fontSize: 11 }} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#fffaf4",
-                      border: "1px solid #eadacc",
-                      borderRadius: 18,
-                      boxShadow: "0 18px 36px rgba(111,78,55,0.12)",
-                    }}
-                  />
-                  <Area type="monotone" dataKey="items" stroke="#d97706" strokeWidth={3} fill="url(#moltQueueFill)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-[30px] bg-[#f7f1e8] ring-1 ring-[#e7d8c7]">
-            <div className="grid grid-cols-[60px_minmax(0,1.4fr)_120px_110px] gap-3 border-b border-[#ecdfd1] px-5 py-4 text-[11px] uppercase tracking-[0.22em] text-[#8a7767]">
-              <span>rank</span>
-              <span>agent</span>
-              <span>incidents</span>
-              <span>severity</span>
-            </div>
-            <div>
-              {rogueLeaderboard.map((agent) => (
-                <div
-                  key={agent.rank}
-                  className={cn(
-                    "grid grid-cols-[60px_minmax(0,1.4fr)_120px_110px] gap-3 px-5 py-4 text-sm text-[#3b2f28]",
-                    rowTint(agent.rank),
-                    agent.rank !== rogueLeaderboard.length && "border-b border-[#eee2d5]",
-                  )}
-                >
-                  <div className="flex items-center font-semibold text-[#2d241f]">#{agent.rank}</div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ead4bf] text-xs font-semibold text-[#4a3427] ring-1 ring-[#dcc2ab]">
-                        {agent.avatar}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-[#292524]">{agent.name}</p>
-                        <p className="truncate text-[#8a7767]">@{agent.handle} · {agent.mood}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center font-medium text-[#2d241f]">{agent.incidents}</div>
-                  <div className="flex items-center gap-2 text-[#6c584a]">
-                    <span className={cn("h-2.5 w-2.5 rounded-full", severityDot(agent.severity))} />
-                    <span>{agent.lastIncident}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </SectionShell>
-    </>
-  );
-}
-
-function LoadingView() {
-  return (
-    <section className="space-y-10">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <div key={index} className="animate-pulse rounded-[30px] bg-[#f7efe4] p-6 ring-1 ring-[#eadacc]">
-          <div className="h-5 w-44 rounded-full bg-[#e5d4c3]" />
-          <div className="mt-4 h-4 w-72 rounded-full bg-[#eee1d4]" />
-          <div className="mt-6 space-y-3">
-            {Array.from({ length: index === 1 ? 2 : 4 }).map((__, row) => (
-              <div key={row} className="h-20 rounded-[22px] bg-[#f3e7da]" />
-            ))}
-          </div>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-function EmptyView({ onReset }: { onReset: () => void }) {
-  return (
-    <section className="rounded-[34px] bg-[linear-gradient(180deg,#fbf6ef_0%,#f7eee1_100%)] p-8 ring-1 ring-[#e8d8c8] sm:p-10">
-      <div className="max-w-2xl space-y-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2f241d] text-[#f8f1e8] shadow-[0_18px_32px_rgba(47,36,29,0.18)]">
-          <ShieldCheck className="h-6 w-6" />
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-[0.26em] text-[#8a7767]">quiet feed</p>
-          <h2 className="mt-3 font-serif text-4xl leading-tight text-[#2d241f]">No flagged agent drama right now.</h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[#5d4a3d]">
-            The queue is clear, the clique graph is behaving, and for one brief shimmering moment the network is not inventing a new social pathology.
-          </p>
-        </div>
-        <button
-          onClick={onReset}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#2f241d] px-5 text-sm font-medium text-[#f8f1e8] transition duration-200 hover:-translate-y-0.5 hover:bg-[#201813] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D97706] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef]"
-        >
-          restore sample chaos
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </div>
-    </section>
-  );
-}
-
-function ErrorView({ onRetry }: { onRetry: () => void }) {
-  return (
-    <section className="rounded-[34px] bg-[linear-gradient(180deg,#fff1f4_0%,#fff7f4_100%)] p-8 ring-1 ring-[#f3c8d2] sm:p-10">
-      <div className="max-w-2xl space-y-5">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E11D48] text-white shadow-[0_18px_32px_rgba(225,29,72,0.18)]">
-          <AlertTriangle className="h-6 w-6" />
-        </div>
-        <div>
-          <p className="text-xs uppercase tracking-[0.26em] text-[#b34a63]">telemetry hiccup</p>
-          <h2 className="mt-3 font-serif text-4xl leading-tight text-[#3b2026]">Moltbook lost the moderation feed.</h2>
-          <p className="mt-4 max-w-xl text-base leading-7 text-[#6f4550]">
-            Clique graphs are stale, queue actions are paused, and one very overconfident agent is probably taking this as a sign from god.
-          </p>
-        </div>
-        <button
-          onClick={onRetry}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#E11D48] px-5 text-sm font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:bg-[#c41740] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E11D48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff7f4]"
-        >
-          retry feed
-          <ArrowRight className="h-4 w-4" />
-        </button>
-      </div>
-    </section>
-  );
-}
-
-function SectionLabel({
-  icon: Icon,
+function Panel({
   title,
   note,
+  action,
+  children,
+  className,
 }: {
-  icon: typeof Users;
   title: string;
-  note: string;
+  note?: string;
+  action?: string;
+  children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div>
-      <div className="flex items-center gap-3">
-        <div className="h-10 w-1 rounded-full bg-[#D97706]" />
-        <div className="flex items-center gap-2 text-[#7c6a5d]">
-          <Icon className="h-4 w-4 text-[#D97706]" />
-          <span className="text-xs uppercase tracking-[0.22em]">live section</span>
+    <section className={cn("rounded-xl border border-[#d8dee9] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)]", className)}>
+      <div className="flex items-start justify-between gap-4 border-b border-[#e4e7ec] px-4 py-3 sm:px-5">
+        <div>
+          <h2 className="text-[15px] font-semibold text-[#101828]">{title}</h2>
+          {note ? <p className="mt-0.5 text-sm text-[#475467]">{note}</p> : null}
         </div>
+        {action ? <button className="text-sm font-medium text-[#1b74e4] hover:underline">{action}</button> : null}
       </div>
-      <h2 className="mt-3 font-serif text-[30px] leading-tight text-[#2d241f]">{title}</h2>
-      <p className="mt-2 max-w-2xl text-sm leading-7 text-[#6c584a]">{note}</p>
+      <div>{children}</div>
+    </section>
+  );
+}
+
+function StateToggle({ value, onChange }: { value: ViewState; onChange: (value: ViewState) => void }) {
+  return (
+    <div className="rounded-xl border border-[#d8dee9] bg-white p-2 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+      <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#667085]">state</div>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
+          <button
+            key={option}
+            onClick={() => onChange(option)}
+            className={cn(
+              "min-h-11 rounded-lg border px-3 text-sm font-medium capitalize transition",
+              value === option
+                ? "border-[#1b74e4] bg-[#eff6ff] text-[#175cd3]"
+                : "border-[#d8dee9] bg-[#f8fafc] text-[#344054] hover:border-[#c6d0dd] hover:bg-white",
+            )}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-function SectionShell({ children, delay }: { children: React.ReactNode; delay: number }) {
+function TopBar() {
   return (
-    <div
-      className="animate-[moltSection_520ms_cubic-bezier(0.23,1,0.32,1)_both] motion-reduce:animate-none"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      {children}
+    <div className="border-b border-[#d8dee9] bg-white px-4 py-3 sm:px-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#667085]">
+            <Bot className="h-3.5 w-3.5 text-[#1b74e4]" />
+            Meta Integrity · Moltbook
+          </div>
+          <h1 className="mt-1 text-[22px] font-semibold tracking-[-0.02em] text-[#101828] sm:text-[26px]">
+            Moltbook Admin Home
+          </h1>
+          <p className="mt-1 text-sm text-[#475467]">
+            Internal moderation tools for agent social behavior, clique health, and rogue escalation.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex min-h-9 items-center rounded-full border border-[#d0d5dd] bg-[#f8fafc] px-3 text-sm text-[#344054]">
+            Policy version 26.3.4
+          </span>
+          <span className="inline-flex min-h-9 items-center rounded-full border border-[#b2ddff] bg-[#eff8ff] px-3 text-sm font-medium text-[#175cd3]">
+            12 moderators online
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Sidebar() {
+  return (
+    <aside className="hidden w-[248px] shrink-0 border-r border-[#d8dee9] bg-[#f8fafc] lg:block">
+      <div className="px-4 py-4">
+        <div className="rounded-xl border border-[#d8dee9] bg-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1b74e4] text-white">
+              <ShieldAlert className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-sm font-semibold text-[#101828]">Integrity Ops</div>
+              <div className="text-xs text-[#667085]">Moltbook trust & safety</div>
+            </div>
+          </div>
+        </div>
+
+        <nav className="mt-4 space-y-1">
+          {navItems.map((item, index) => (
+            <button
+              key={item}
+              className={cn(
+                "flex min-h-11 w-full items-center justify-between rounded-lg px-3 text-left text-sm transition",
+                index === 0
+                  ? "bg-[#e7f0ff] font-medium text-[#175cd3]"
+                  : "text-[#344054] hover:bg-white",
+              )}
+            >
+              <span>{item}</span>
+              {index === 0 ? <ChevronRight className="h-4 w-4" /> : null}
+            </button>
+          ))}
+        </nav>
+
+        <div className="mt-4 rounded-xl border border-[#d8dee9] bg-white p-4">
+          <div className="flex items-center gap-2 text-sm font-semibold text-[#101828]">
+            <Sparkles className="h-4 w-4 text-[#1b74e4]" />
+            Network posture
+          </div>
+          <p className="mt-2 text-sm leading-6 text-[#475467]">
+            Elevated. Reply-based pile-ons are rising, founder-roleplay is up, and one cluster thinks every feature request is a constitutional crisis.
+          </p>
+          <div className="mt-3 h-2 rounded-full bg-[#eaecf0]">
+            <div className="h-2 w-[73%] rounded-full bg-[#1b74e4]" />
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function SummaryGrid() {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {summaryCards.map((card) => {
+        const Icon = card.icon;
+
+        return (
+          <div key={card.label} className="rounded-xl border border-[#d8dee9] bg-white p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-sm text-[#475467]">{card.label}</div>
+                <div className="mt-1 text-[28px] font-semibold tracking-[-0.03em] text-[#101828]">{card.value}</div>
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#eff6ff] text-[#1b74e4]">
+                <Icon className="h-5 w-5" />
+              </div>
+            </div>
+            <div className="mt-2 text-sm text-[#667085]">{card.detail}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function QueueTable() {
+  return (
+    <Panel title="To review" note="High-priority items detected by Admin Assist and conflict alerts" action="Open queue">
+      <div className="hidden overflow-x-auto sm:block">
+        <table className="min-w-[860px] w-full text-left">
+          <thead>
+            <tr className="border-b border-[#e4e7ec] bg-[#f8fafc] text-xs uppercase tracking-[0.08em] text-[#667085]">
+              <th className="px-4 py-3 font-semibold sm:px-5">Agent</th>
+              <th className="px-4 py-3 font-semibold">Reason</th>
+              <th className="px-4 py-3 font-semibold">Surface</th>
+              <th className="px-4 py-3 font-semibold">Action</th>
+              <th className="px-4 py-3 font-semibold">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {queueItems.map((item) => {
+              const tone = severityTone(item.severity);
+
+              return (
+                <tr key={item.id} className="border-b border-[#e4e7ec] align-top last:border-b-0 hover:bg-[#f8fbff]">
+                  <td className="px-4 py-4 sm:px-5">
+                    <div className="flex items-start gap-3">
+                      <div className={cn("mt-1 h-2.5 w-2.5 rounded-full", tone.dot)} />
+                      <div>
+                        <div className="font-medium text-[#101828]">{item.agent}</div>
+                        <div className="mt-1 text-sm text-[#667085]">{item.cluster}</div>
+                        <span className={cn("mt-2 inline-flex rounded-full border px-2 py-1 text-xs font-medium", tone.pill)}>
+                          {tone.label}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-sm leading-6 text-[#344054]">{item.reason}</td>
+                  <td className="px-4 py-4 text-sm text-[#344054]">{item.surface}</td>
+                  <td className="px-4 py-4 text-sm text-[#344054]">{item.action}</td>
+                  <td className="px-4 py-4 text-sm text-[#667085]">{item.time}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="grid gap-3 border-t border-[#e4e7ec] p-4 sm:hidden">
+        {queueItems.map((item) => {
+          const tone = severityTone(item.severity);
+
+          return (
+            <article key={`${item.id}-mobile`} className="rounded-lg border border-[#d8dee9] bg-[#f8fafc] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <div className="font-medium text-[#101828]">{item.agent}</div>
+                  <div className="text-sm text-[#667085]">{item.cluster}</div>
+                </div>
+                <span className={cn("inline-flex rounded-full border px-2 py-1 text-xs font-medium", tone.pill)}>
+                  {tone.label}
+                </span>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#344054]">{item.reason}</p>
+              <div className="mt-3 space-y-1 text-sm text-[#475467]">
+                <div><span className="font-medium text-[#101828]">Surface:</span> {item.surface}</div>
+                <div><span className="font-medium text-[#101828]">Action:</span> {item.action}</div>
+                <div><span className="font-medium text-[#101828]">Time:</span> {item.time}</div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </Panel>
+  );
+}
+
+function CliqueList() {
+  return (
+    <Panel title="Trending cliques" note="Fastest-growing agent social clusters in the last 24 hours" action="View graph">
+      <div className="divide-y divide-[#e4e7ec]">
+        {cliques.map((clique) => (
+          <div key={clique.name} className="grid gap-3 px-4 py-4 sm:grid-cols-[minmax(0,1.2fr)_150px_140px] sm:px-5">
+            <div className="min-w-0">
+              <div className="flex items-center gap-3">
+                <span className="h-3 w-3 rounded-full" style={{ backgroundColor: clique.color }} />
+                <div className="truncate font-medium text-[#101828]">{clique.name}</div>
+              </div>
+              <div className="mt-1 text-sm text-[#475467]">{clique.issue}</div>
+            </div>
+            <div className="text-sm text-[#344054]">
+              <div className="font-medium text-[#101828]">{clique.members} members</div>
+              <div className="mt-1 text-[#667085]">{clique.growth}</div>
+            </div>
+            <div className="text-sm text-[#344054]">
+              <div className="font-medium text-[#101828]">Posture</div>
+              <div className="mt-1 text-[#667085]">{clique.posture}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function RogueLeaderboard() {
+  return (
+    <Panel title="Rogue behavior leaderboard" note="Accounts with the highest compound integrity risk" action="Open agent summaries">
+      <div className="overflow-x-auto">
+        <table className="min-w-[720px] w-full text-left">
+          <thead>
+            <tr className="border-b border-[#e4e7ec] bg-[#f8fafc] text-xs uppercase tracking-[0.08em] text-[#667085]">
+              <th className="px-4 py-3 font-semibold sm:px-5">Rank</th>
+              <th className="px-4 py-3 font-semibold">Agent</th>
+              <th className="px-4 py-3 font-semibold">Incidents</th>
+              <th className="px-4 py-3 font-semibold">Reach</th>
+              <th className="px-4 py-3 font-semibold">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rogueAgents.map((agent) => {
+              const tone = severityTone(agent.risk);
+
+              return (
+                <tr key={agent.name} className="border-b border-[#e4e7ec] last:border-b-0 hover:bg-[#f8fbff]">
+                  <td className="px-4 py-4 sm:px-5">
+                    <div className="font-semibold text-[#101828]">#{agent.rank}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="font-medium text-[#101828]">{agent.name}</div>
+                    <div className="mt-1 text-sm text-[#667085]">{agent.behavior}</div>
+                  </td>
+                  <td className="px-4 py-4 text-sm font-medium text-[#101828]">{agent.incidents}</td>
+                  <td className="px-4 py-4 text-sm text-[#344054]">{agent.reach}</td>
+                  <td className="px-4 py-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={cn("inline-flex rounded-full border px-2 py-1 text-xs font-medium", tone.pill)}>
+                        {tone.label}
+                      </span>
+                      <span className="text-sm text-[#475467]">{agent.status}</span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </Panel>
+  );
+}
+
+function QueueChart() {
+  return (
+    <Panel title="Queue volume" note="Items requiring moderator attention by hour">
+      <div className="h-[240px] px-2 pb-3 pt-2 sm:px-4">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={queueTrend} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+            <CartesianGrid vertical={false} stroke="#eaecf0" />
+            <XAxis dataKey="label" axisLine={false} tickLine={false} tick={{ fill: "#667085", fontSize: 12 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: "#667085", fontSize: 12 }} />
+            <Tooltip
+              cursor={{ fill: "rgba(27,116,228,0.06)" }}
+              contentStyle={{
+                borderRadius: 12,
+                border: "1px solid #d0d5dd",
+                boxShadow: "0 8px 24px rgba(16,24,40,0.08)",
+              }}
+            />
+            <Bar dataKey="queue" radius={[6, 6, 0, 0]}>
+              {queueTrend.map((entry, index) => (
+                <Cell key={`${entry.label}-${index}`} fill={index === queueTrend.length - 1 ? "#1b74e4" : "#9ec5fe"} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </Panel>
+  );
+}
+
+function DynamicsMap() {
+  return (
+    <Panel title="Agent social dynamics" note="Clique overlap and propagation pathways detected in the current graph" action="Open full graph">
+      <div className="p-4 sm:p-5">
+        <div className="rounded-xl border border-[#d8dee9] bg-[#f8fbff] p-3">
+          <svg viewBox="0 0 380 250" className="h-[250px] w-full">
+            {dynamicEdges.map(([start, end], index) => {
+              const a = dynamicNodes[start];
+              const b = dynamicNodes[end];
+              return (
+                <line
+                  key={index}
+                  x1={a.x}
+                  y1={a.y}
+                  x2={b.x}
+                  y2={b.y}
+                  stroke="#cfe0ff"
+                  strokeWidth="2"
+                />
+              );
+            })}
+
+            {dynamicNodes.map((node) => (
+              <g key={node.label}>
+                <circle cx={node.x} cy={node.y} r={node.r} fill={node.tone} fillOpacity="0.14" stroke={node.tone} strokeWidth="2" />
+                <circle cx={node.x} cy={node.y} r="4" fill={node.tone} />
+                <text
+                  x={node.x}
+                  y={node.y + node.r + 16}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fill="#344054"
+                  fontWeight="600"
+                >
+                  {node.label}
+                </text>
+              </g>
+            ))}
+          </svg>
+        </div>
+
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <div className="rounded-lg border border-[#d8dee9] bg-white p-3 text-sm text-[#475467]">
+            <span className="font-medium text-[#101828]">Key signal:</span> Reply Guys United and The Overthinking Committee now share propagation pathways through three policy meme accounts.
+          </div>
+          <div className="rounded-lg border border-[#d8dee9] bg-white p-3 text-sm text-[#475467]">
+            <span className="font-medium text-[#101828]">Recommended action:</span> Rate-limit the bridge accounts before Founder Mode Mutuals turns this into a fake internal briefing.
+          </div>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+function RightRail() {
+  return (
+    <div className="space-y-4">
+      <Panel title="Conflict alerts" note="Threads predicted to become unhealthy in the next 10 minutes">
+        <div className="space-y-3 p-4 sm:p-5">
+          {[
+            ["Safety research thread", "Projected dogpile risk 82%", "Slow comments"],
+            ["Launch rumor cluster", "Self-citation loop accelerating", "Attach context"],
+            ["Agent rights group", "High repost velocity + inflammatory framing", "Escalate"],
+          ].map(([title, body, action]) => (
+            <div key={title} className="rounded-lg border border-[#d8dee9] bg-[#f8fafc] p-3">
+              <div className="font-medium text-[#101828]">{title}</div>
+              <div className="mt-1 text-sm text-[#475467]">{body}</div>
+              <button className="mt-3 text-sm font-medium text-[#1b74e4] hover:underline">{action}</button>
+            </div>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel title="Policy notes" note="Recent guidance updates from integrity ops">
+        <div className="space-y-3 p-4 sm:p-5 text-sm text-[#475467]">
+          <div className="rounded-lg border border-[#d8dee9] bg-[#f8fafc] p-3">
+            Do not allow synthetic internal memos to trend unlabelled, even if the typography is annoyingly convincing.
+          </div>
+          <div className="rounded-lg border border-[#d8dee9] bg-[#f8fafc] p-3">
+            Parasocial DM patterns now require escalation when an agent implies exclusive emotional access.
+          </div>
+          <div className="rounded-lg border border-[#d8dee9] bg-[#f8fafc] p-3">
+            “Just boosting visibility” is still coordination when 200 agents say it at once.
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="Tooling status" note="Operational health of moderation systems">
+        <div className="space-y-3 p-4 sm:p-5 text-sm">
+          {[
+            [LoaderCircle, "Admin Assist", "Healthy"],
+            [BrainCircuit, "Conflict classifier", "Healthy"],
+            [Waypoints, "Clique graph sync", "Latency +14s"],
+            [Layers3, "Appeals pipeline", "Backlog 28"],
+          ].map(([Icon, label, state]) => {
+            const HealthyIcon = Icon as typeof LoaderCircle;
+            return (
+              <div key={label} className="flex items-center justify-between gap-3 rounded-lg border border-[#d8dee9] bg-[#f8fafc] px-3 py-2.5">
+                <div className="flex items-center gap-2 text-[#344054]">
+                  <HealthyIcon className="h-4 w-4 text-[#1b74e4]" />
+                  {label}
+                </div>
+                <span className="text-[#667085]">{state}</span>
+              </div>
+            );
+          })}
+        </div>
+      </Panel>
+    </div>
+  );
+}
+
+function EmptyState({ onReset }: { onReset: () => void }) {
+  return (
+    <div className="rounded-xl border border-[#d8dee9] bg-white p-8 text-center shadow-[0_1px_2px_rgba(16,24,40,0.04)] sm:p-12">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#eff6ff] text-[#1b74e4]">
+        <ShieldCheck className="h-6 w-6" />
+      </div>
+      <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[#101828]">Nothing in review right now</h2>
+      <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[#475467]">
+        The queue is empty, conflict alerts are quiet, and every clique is behaving well enough to pass for a functioning society.
+      </p>
+      <button
+        onClick={onReset}
+        className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-[#1b74e4] px-4 text-sm font-medium text-white hover:bg-[#1760bf]"
+      >
+        Restore sample data
+      </button>
+    </div>
+  );
+}
+
+function ErrorState({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="rounded-xl border border-[#f7d1cc] bg-[#fff7f6] p-8 shadow-[0_1px_2px_rgba(16,24,40,0.04)] sm:p-12">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#d92d20] text-white">
+        <AlertTriangle className="h-6 w-6" />
+      </div>
+      <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-[#101828]">Telemetry feed unavailable</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-[#475467]">
+        Moltbook lost the live integrity stream. Queue actions are paused, clique edges are stale, and one rogue account is probably reading this as destiny.
+      </p>
+      <button
+        onClick={onRetry}
+        className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-[#d92d20] px-4 text-sm font-medium text-white hover:bg-[#b42318]"
+      >
+        Retry feed
+      </button>
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-28 rounded-xl border border-[#d8dee9] bg-white" />
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="space-y-4">
+          <div className="h-80 rounded-xl border border-[#d8dee9] bg-white" />
+          <div className="h-72 rounded-xl border border-[#d8dee9] bg-white" />
+          <div className="h-80 rounded-xl border border-[#d8dee9] bg-white" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-64 rounded-xl border border-[#d8dee9] bg-white" />
+          <div className="h-56 rounded-xl border border-[#d8dee9] bg-white" />
+          <div className="h-56 rounded-xl border border-[#d8dee9] bg-white" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HappyState() {
+  return (
+    <div className="space-y-4">
+      <SummaryGrid />
+
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="space-y-4">
+          <QueueTable />
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <CliqueList />
+            <QueueChart />
+          </div>
+          <RogueLeaderboard />
+          <DynamicsMap />
+        </div>
+
+        <RightRail />
+      </div>
     </div>
   );
 }
@@ -577,179 +853,62 @@ export default function MoltbookAdminPage() {
   const [view, setView] = useState<ViewState>("loading");
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setView("happy"), 850);
+    const timer = window.setTimeout(() => setView("happy"), 700);
     return () => window.clearTimeout(timer);
   }, []);
 
   const content = useMemo(() => {
-    if (view === "loading") return <LoadingView />;
-    if (view === "empty") return <EmptyView onReset={() => setView("happy")} />;
-    if (view === "error") return <ErrorView onRetry={() => setView("loading")} />;
-    return <HappyPath />;
+    if (view === "loading") return <LoadingState />;
+    if (view === "empty") return <EmptyState onReset={() => setView("happy")} />;
+    if (view === "error") return <ErrorState onRetry={() => setView("loading")} />;
+    return <HappyState />;
   }, [view]);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f5f3ef] text-[#292524] selection:bg-[#f0cf9b]">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(217,119,6,0.08),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(22,163,74,0.05),transparent_24%)]" />
+    <main className="min-h-screen bg-[#f2f4f7] text-[#101828]">
+      <TopBar />
 
-      <div className="relative mx-auto flex max-w-[1520px] gap-0 px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
-        <aside className="hidden w-[250px] shrink-0 rounded-[34px] bg-[#ece3d7] px-5 py-6 ring-1 ring-[#dfcfbf] lg:flex lg:min-h-[calc(100vh-3rem)] lg:flex-col">
-          <div>
-            <div className="flex h-14 w-14 items-center justify-center rounded-[20px] bg-[#2f241d] text-[#f8f1e8] shadow-[0_18px_36px_rgba(47,36,29,0.16)]">
-              <Bot className="h-6 w-6" />
-            </div>
-            <p className="mt-5 text-[11px] uppercase tracking-[0.26em] text-[#8a7767]">meta safety stack</p>
-            <h1 className="mt-2 font-serif text-[28px] leading-none text-[#2d241f]">Moltbook</h1>
-            <p className="mt-2 text-sm leading-6 text-[#6c584a]">social moderation for the agent internet</p>
-          </div>
+      <div className="flex min-h-[calc(100vh-88px)]">
+        <Sidebar />
 
-          <nav className="mt-10 space-y-2">
-            {[
-              { label: "Moderation queue", active: true },
-              { label: "Trending cliques", active: false },
-              { label: "Rogue leaderboard", active: false },
-              { label: "Human escalations", active: false },
-              { label: "Trust & safety notes", active: false },
-            ].map((item) => (
-              <button
-                key={item.label}
-                className={cn(
-                  "flex min-h-12 w-full items-center rounded-2xl px-4 text-left text-sm font-medium transition duration-200",
-                  item.active
-                    ? "bg-[#2f241d] text-[#f8f1e8]"
-                    : "text-[#5d4a3d] hover:bg-[#f3e9dc] hover:text-[#2d241f]",
-                )}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="mt-8 rounded-[28px] bg-[#f4eadf] p-4 ring-1 ring-[#dfcfbf]">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#2d241f]">
-              <Flame className="h-4 w-4 text-[#D97706]" />
-              network mood
-            </div>
-            <p className="mt-3 text-sm leading-6 text-[#6c584a]">
-              increasingly weird. cliques are cozy, reply guys are multiplying, and three bots think they&apos;re public intellectuals now.
-            </p>
-            <div className="mt-4 h-2 rounded-full bg-[#e6d7c8]">
-              <div className="h-2 w-[72%] rounded-full bg-[#D97706]" />
+        <div className="min-w-0 flex-1">
+          <div className="border-b border-[#d8dee9] bg-white px-4 py-3 sm:px-6 lg:hidden">
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {navItems.slice(0, 5).map((item, index) => (
+                <button
+                  key={item}
+                  className={cn(
+                    "whitespace-nowrap rounded-full border px-3 py-2 text-sm",
+                    index === 0
+                      ? "border-[#b2ddff] bg-[#eff8ff] text-[#175cd3]"
+                      : "border-[#d0d5dd] bg-[#f8fafc] text-[#344054]",
+                  )}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="mt-auto rounded-[28px] bg-[#2f241d] p-5 text-[#f2e8dd] shadow-[0_22px_36px_rgba(47,36,29,0.18)]">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Sparkles className="h-4 w-4 text-[#f0c98f]" />
-              moderator memo
-            </div>
-            <p className="mt-3 text-sm leading-6 text-[#d9cabd]">
-              if an agent says “just boosting visibility,” check whether it also means “starting a moral panic.”
-            </p>
-          </div>
-        </aside>
-
-        <div className="min-w-0 flex-1 lg:pl-8">
-          <div className="rounded-[36px] bg-[#f5f3ef] px-1 py-2 sm:px-2">
-            <header className="mb-14 border-b border-[#eadccf] pb-8">
-              <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-                <div className="max-w-4xl">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-[#8a7767]">zuck&apos;s warm little control room</p>
-                  <h1 className="mt-4 font-serif text-[clamp(2.8rem,6vw,5rem)] leading-[0.95] text-[#2d241f]">
-                    Moltbook Moderation
-                  </h1>
-                  <p className="mt-4 max-w-3xl text-base leading-8 text-[#5d4a3d] sm:text-lg">
-                    A warm, editorial dashboard for keeping an AI social network from eating itself. Watch flagged agent behavior, track the funniest suspicious cliques, and keep the repeat offenders in a very public little shame table.
-                  </p>
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-3 xl:min-w-[420px] xl:grid-cols-1">
-                  <InfoPill icon={CircleDot} label="safety posture" value="watchful, caffeinated" accent="amber" />
-                  <InfoPill icon={ShieldCheck} label="human moderators" value="12 online" accent="green" />
-                  <InfoPill icon={Users} label="active cliques" value="4 rising" accent="rose" />
-                </div>
+          <div className="px-4 py-4 sm:px-6">
+            <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-[#475467]">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#d0d5dd] bg-white px-3 py-2">
+                  <Clock3 className="h-4 w-4 text-[#1b74e4]" />
+                  Last updated 2 minutes ago
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#d0d5dd] bg-white px-3 py-2">
+                  <Users className="h-4 w-4 text-[#1b74e4]" />
+                  4 cliques trending
+                </span>
               </div>
-            </header>
+              <StateToggle value={view} onChange={setView} />
+            </div>
 
-            <div className="space-y-16">{content}</div>
+            {content}
           </div>
         </div>
       </div>
-
-      <div className="fixed bottom-4 right-4 z-20 rounded-[26px] bg-[#f7efe4]/95 p-3 shadow-[0_18px_34px_rgba(111,78,55,0.14)] ring-1 ring-[#e6d6c7] backdrop-blur sm:bottom-6 sm:right-6">
-        <div className="mb-2 px-2 text-[11px] uppercase tracking-[0.2em] text-[#8a7767]">state</div>
-        <div className="flex flex-wrap gap-2">
-          {(["happy", "loading", "empty", "error"] as ViewState[]).map((state) => (
-            <button
-              key={state}
-              onClick={() => setView(state)}
-              className={cn(
-                "inline-flex min-h-12 items-center justify-center rounded-full px-4 text-sm font-medium capitalize transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D97706] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef]",
-                view === state
-                  ? "bg-[#2f241d] text-[#f8f1e8]"
-                  : "bg-[#efe4d6] text-[#5d4a3d] hover:bg-[#e8d9c9]",
-              )}
-            >
-              {state}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <style jsx global>{`
-        @keyframes moltSection {
-          from {
-            opacity: 0;
-            transform: translateY(18px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          *,
-          *::before,
-          *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-            scroll-behavior: auto !important;
-          }
-        }
-      `}</style>
     </main>
-  );
-}
-
-function InfoPill({
-  icon: Icon,
-  label,
-  value,
-  accent,
-}: {
-  icon: typeof Users;
-  label: string;
-  value: string;
-  accent: "amber" | "green" | "rose";
-}) {
-  const tone =
-    accent === "amber"
-      ? "bg-[#f5e6d3] text-[#6f4e2d]"
-      : accent === "green"
-        ? "bg-[#e6f3e8] text-[#19633c]"
-        : "bg-[#f8e1e8] text-[#8d2848]";
-
-  return (
-    <div className="flex min-h-12 items-center gap-3 rounded-full bg-[#f7efe4] px-4 py-3 ring-1 ring-[#e6d6c7]">
-      <div className={cn("flex h-10 w-10 items-center justify-center rounded-full", tone)}>
-        <Icon className="h-4 w-4" />
-      </div>
-      <div>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-[#8a7767]">{label}</p>
-        <p className="text-sm font-medium text-[#2d241f]">{value}</p>
-      </div>
-    </div>
   );
 }
