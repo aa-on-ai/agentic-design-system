@@ -352,24 +352,21 @@ function Panel({
 
 function StateToggle({ value, onChange }: { value: ViewState; onChange: (value: ViewState) => void }) {
   return (
-    <div className="rounded-xl border border-[#d8dee9] bg-white p-2 shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
-      <div className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#667085]">state</div>
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
-          <button
-            key={option}
-            onClick={() => onChange(option)}
-            className={cn(
-              "min-h-11 rounded-lg border px-3 text-sm font-medium capitalize transition",
-              value === option
-                ? "border-[#1b74e4] bg-[#eff6ff] text-[#175cd3]"
-                : "border-[#d8dee9] bg-[#f8fafc] text-[#344054] hover:border-[#c6d0dd] hover:bg-white",
-            )}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
+    <div className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-xl border border-[#d8dee9] bg-white/95 p-1.5 shadow-lg backdrop-blur-sm">
+      {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
+        <button
+          key={option}
+          onClick={() => onChange(option)}
+          className={cn(
+            "min-h-8 rounded-lg px-3 text-[11px] font-medium uppercase tracking-wide capitalize transition",
+            value === option
+              ? "bg-[#1b74e4] text-white"
+              : "text-[#344054] hover:bg-[#f0f2f5]",
+          )}
+        >
+          {option}
+        </button>
+      ))}
     </div>
   );
 }
@@ -902,8 +899,8 @@ export default function MoltbookAdminPage() {
                   4 cliques trending
                 </span>
               </div>
-              <StateToggle value={view} onChange={setView} />
             </div>
+            <StateToggle value={view} onChange={setView} />
 
             {content}
           </div>

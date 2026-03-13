@@ -859,10 +859,10 @@ export default function AgentRosterPage() {
                   <span className="font-medium text-stone-950">Relay jitter on gpu-node-01.</span> Pete kept the view biased toward uptime, node heat, and safe-stop state so he can intervene fast.
                 </p>
                 <p className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
-                  Humor lives in the row data, not the chrome. The UI still needs to read like a real ops console.
+                  <span className="font-medium text-stone-950">Memory budget warning.</span> sonnet-scout approaching 128k context ceiling — consider pruning or cycling.
                 </p>
                 <p className="rounded-2xl border border-stone-200 bg-stone-50/80 p-3">
-                  Mobile swaps the table for stacked agent cards so the roster still works at phone width instead of turning into tiny spreadsheet soup.
+                  <span className="font-medium text-stone-950">Rate-limit headroom.</span> Anthropic tier at 78% capacity. OpenAI comfortable at 41%.
                 </p>
               </div>
             </section>

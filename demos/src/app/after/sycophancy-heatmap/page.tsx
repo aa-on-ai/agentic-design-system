@@ -568,22 +568,19 @@ export default function SycophancyHeatmapPage() {
               </div>
             </header>
 
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="text-[12px] text-[#7F7F7F]">Tone: deadpan, internal, diagnostic. Humor lives in the notes, not the chrome.</div>
-              <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/8 bg-[#202020] p-1">
-                {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => setViewState(option)}
-                    className={cn(
-                      "min-h-8 rounded-full px-3 text-[11px] uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
-                      viewState === option ? "bg-white text-[#171717]" : "text-[#8E8E8E] hover:bg-white/[0.05] hover:text-white",
-                    )}
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
+            <div className="fixed bottom-4 right-4 z-50 flex items-center gap-1 rounded-xl border border-white/10 bg-[#1a1a1a]/95 p-1 shadow-lg backdrop-blur-sm">
+              {(["happy", "loading", "empty", "error"] as ViewState[]).map((option) => (
+                <button
+                  key={option}
+                  onClick={() => setViewState(option)}
+                  className={cn(
+                    "min-h-8 rounded-lg px-3 text-[11px] uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                    viewState === option ? "bg-white text-[#171717]" : "text-[#8E8E8E] hover:bg-white/[0.05] hover:text-white",
+                  )}
+                >
+                  {option}
+                </button>
+              ))}
             </div>
 
             <div className="mt-5 grid gap-4 xl:grid-cols-[1.14fr_0.86fr]">
