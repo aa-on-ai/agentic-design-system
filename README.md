@@ -32,7 +32,7 @@ drop these into your agent's context. each one is a self-contained skill file wi
 
 | skill | what it does | when to use |
 |-------|-------------|-------------|
-| [design-review](./skills/design-review/) | quality gate with pre-flight checklist + 5 reference files (typography, color, spacing, motion, anti-patterns) | before presenting any visual work |
+| [design-review](./skills/design-review/) | quality gate with pre-flight checklist + 11 reference files (typography, color, spacing, motion, layout, alignment, responsive, ux-writing, mock-data, anti-patterns, inspiration) | before presenting any visual work |
 | [ux-baseline-check](./skills/ux-baseline-check/) | state inventory — happy path, empty, loading, error, edge cases | before shipping any screen |
 | [ui-polish-pass](./skills/ui-polish-pass/) | sequential visual polish — spacing, alignment, hierarchy | final step before presenting |
 | [whimsical-design](./skills/whimsical-design/) | pushes past sterile toward personality and delight | any user-facing work that should feel alive |
@@ -49,14 +49,66 @@ not every task needs every skill. the [routing doc](./routing/ROUTING.md) tells 
 - [agents-snippet.md](./templates/agents-snippet.md) — copy-paste block for your AGENTS.md, .cursorrules, or codex instructions
 - [brand-guidelines-template.md](./templates/brand-guidelines-template.md) — blank template for your project's design tokens, patterns, and learnings
 
-## quick start
+## try it in 60 seconds
+
+**claude code:**
+```bash
+git clone https://github.com/aa-on-ai/agentic-design-system.git
+cd your-project
+cp -r ../agentic-design-system/skills ./skills
+```
+
+then prompt:
+```
+build me a dashboard that shows agent uptime and status.
+use the design skills in /skills for quality — read the routing
+doc first to know which skills to apply.
+```
+
+that's it. the agent reads the skills, follows the routing chain, and builds something better than it would have without them.
+
+**cursor:**
+```bash
+cp -r agentic-design-system/skills .cursor/skills
+```
+add to `.cursorrules`: "read and follow the design skills in .cursor/skills/ for all visual work."
+
+**codex cli:**
+```bash
+cp -r agentic-design-system/skills .codex/skills
+```
+
+## use cases
+
+**"I need to oneshot a dashboard for a client demo"**
+point the agent at the full skill chain. it reads design-review for quality, ux-baseline-check for states (loading, empty, error), and whimsical-design to push past generic. your first pass comes back with proper hierarchy, real-feeling mock data, and personality.
+
+**"my agent keeps building dark mode card grids"**
+that's the #1 agent cliche. the anti-patterns reference file explicitly calls this out, plus 30+ other defaults agents reach for. drop the skills in and the agent learns what NOT to do.
+
+**"I want to polish an existing page before presenting"**
+run just the ui-polish-pass skill. it does 6 sequential passes: spacing, alignment, typography, color, motion, then final review. tell the agent: "run a polish pass on this page using the ui-polish-pass skill."
+
+**"client has brand guidelines, how do I make the agent follow them?"**
+fill in the [brand guidelines template](./templates/brand-guidelines-template.md) with your project's colors, fonts, spacing, and patterns. the agent loads this alongside the skills and stays on-brand while still getting the quality floor.
+
+**"I built something and it looks AI-generated"**
+run design-review (catches structural problems) then whimsical-design (adds personality). the combination flags what makes it feel generic and pushes toward something with warmth and intention.
+
+**"I'm building a landing page that should feel immersive"**
+use the world-build skill first — it sets creative direction (atmosphere, sensory palette, narrative arc) before the quality chain runs. think: sites that feel like places, not pages.
+
+**"I want my site to work well for AI agents visiting it"**
+the agent-friendly-design skill covers semantic HTML, ARIA, structured data, llms.txt, and API-first patterns. run it alongside the visual chain — a page can be beautiful for humans and parseable for agents.
+
+## full setup
 
 1. copy the `skills/` folder into your project
 2. paste the [agents snippet](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, .cursorrules, codex instructions, etc.)
 3. fill in the [brand guidelines template](./templates/brand-guidelines-template.md) with your project's tokens and patterns
 4. agents will automatically route through the appropriate skill chain based on the task
 
-that's it. the system is designed to be loaded by agents, not memorized by humans.
+the system is designed to be loaded by agents, not memorized by humans.
 
 ## divergent exploration
 
