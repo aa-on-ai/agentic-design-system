@@ -427,7 +427,7 @@ export default function ComplianceDispatchPage() {
               <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_160px] lg:items-start">
                 <div>
                   <p className="text-sm uppercase tracking-[0.32em] text-black/44">The Compliance Dispatch</p>
-                  <h1 className="mt-3 max-w-5xl font-serif text-[2.8rem] leading-[0.94] tracking-[-0.05em] text-[#121212] sm:text-[4.4rem] lg:text-[6.15rem]">
+                  <h1 className="mt-3 max-w-3xl font-serif text-[1.75rem] leading-[1.1] tracking-[-0.03em] text-[#121212] sm:text-[2.4rem] lg:text-[3rem]">
                     sam altman&apos;s weekly internal read on where government AI got bigger, riskier, and easier to explain.
                   </h1>
                 </div>
@@ -470,7 +470,7 @@ export default function ComplianceDispatchPage() {
                   <span>{dispatch.summaryLabel}</span>
                   <Lock className="h-3.5 w-3.5" />
                 </div>
-                <p className="font-serif text-[1.8rem] leading-[1.06] tracking-[-0.035em] text-[#181817] sm:text-[2.1rem]">
+                <p className="font-serif text-[1.25rem] leading-[1.15] tracking-[-0.02em] text-[#181817] sm:text-[1.5rem]">
                   {dispatch.summaryValue}
                 </p>
                 <div className="flex items-center gap-3 border-t border-black/10 pt-4 text-sm text-black/56">
@@ -490,7 +490,7 @@ export default function ComplianceDispatchPage() {
                   <Landmark className="h-3.5 w-3.5" />
                   this week&apos;s expansion map
                 </div>
-                <h2 className="font-serif text-[2rem] leading-none tracking-[-0.04em] sm:text-[2.8rem]">
+                <h2 className="font-serif text-[1.5rem] leading-[1.1] tracking-[-0.02em] sm:text-[1.875rem]">
                   Which agencies expanded AI usage, and which ones now read like next week&apos;s examples
                 </h2>
                 <p className="text-[0.98rem] leading-7 text-black/58">
@@ -611,7 +611,7 @@ export default function ComplianceDispatchPage() {
                     <Radar className="h-3.5 w-3.5" />
                     risk score changes
                   </div>
-                  <h2 className="mt-3 max-w-[11ch] font-serif text-[2.1rem] leading-[0.96] tracking-[-0.045em] sm:text-[3rem] lg:text-[3.6rem]">
+                  <h2 className="mt-3 max-w-[11ch] font-serif text-[1.5rem] leading-[1.05] tracking-[-0.03em] sm:text-[2rem] lg:text-[2.25rem]">
                     Six weeks of drift, and none of it looks accidental anymore.
                   </h2>
                 </div>
@@ -625,7 +625,7 @@ export default function ComplianceDispatchPage() {
                   <div className="flex flex-col gap-3 border-b border-black/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                       <p className="text-[11px] uppercase tracking-[0.2em] text-black/38">composite leadership score</p>
-                      <p className="mt-2 text-[2.6rem] font-semibold tracking-[-0.06em] text-[#151513]">74</p>
+                      <p className="mt-2 text-[1.75rem] font-semibold tracking-[-0.03em] text-[#151513]">74</p>
                     </div>
                     <p className="max-w-[28ch] text-sm leading-6 text-black/54">
                       Annotated against the first week procurement risk and care-workflow risk began reinforcing each other.
@@ -744,7 +744,7 @@ export default function ComplianceDispatchPage() {
                   <Building2 className="h-3.5 w-3.5" />
                   press investigations
                 </div>
-                <h2 className="font-serif text-[2rem] leading-none tracking-[-0.04em] sm:text-[2.7rem]">
+                <h2 className="font-serif text-[1.5rem] leading-[1.1] tracking-[-0.02em] sm:text-[1.75rem]">
                   Which reporting lines are closest to defining next week&apos;s frame
                 </h2>
               </div>
@@ -769,7 +769,7 @@ export default function ComplianceDispatchPage() {
                       </div>
                       <div className="text-left sm:text-right">
                         <p className="text-[11px] uppercase tracking-[0.18em] text-black/34">heat</p>
-                        <p className={`mt-2 text-[2.15rem] font-semibold tracking-[-0.06em] ${heatTone(item.heat)}`}>
+                        <p className={`mt-2 text-[1.5rem] font-semibold tracking-[-0.03em] ${heatTone(item.heat)}`}>
                           {item.heat}
                         </p>
                       </div>
@@ -813,7 +813,7 @@ export default function ComplianceDispatchPage() {
                     <Flame className="h-3.5 w-3.5" />
                     what to watch next week
                   </div>
-                  <h2 className="mt-4 max-w-[13ch] font-serif text-[2rem] leading-[0.98] tracking-[-0.04em] text-white sm:text-[2.75rem] lg:text-[3.2rem]">
+                  <h2 className="mt-4 max-w-[13ch] font-serif text-[1.5rem] leading-[1.05] tracking-[-0.02em] text-white sm:text-[1.875rem] lg:text-[2.25rem]">
                     The next move is probably narrative compression, not a new class of event.
                   </h2>
                 </div>
@@ -835,7 +835,7 @@ export default function ComplianceDispatchPage() {
 
             <div className="self-end border-t border-black/10 pt-6 lg:pb-6">
               <p className="text-[11px] uppercase tracking-[0.22em] text-black/38">bottom line</p>
-              <p className="mt-4 font-serif text-[1.8rem] leading-[1.1] tracking-[-0.035em] text-[#171614] sm:text-[2.35rem]">
+              <p className="mt-4 font-serif text-[1.25rem] leading-[1.15] tracking-[-0.02em] text-[#171614] sm:text-[1.5rem]">
                 {dispatch.footer}
               </p>
             </div>
