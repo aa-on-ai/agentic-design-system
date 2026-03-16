@@ -122,6 +122,51 @@ draw invisible lines:
 <div className="p-6">  // always p-6 for cards, never mixed
 ```
 
+## Concentric Border Radius
+
+when nesting rounded elements (a card inside a card, a button inside a rounded container), the outer radius must be larger than the inner radius by exactly the padding between them.
+
+```
+outer radius = inner radius + padding
+```
+
+example: inner card has `rounded-lg` (8px), padding between them is 12px, outer card needs `rounded-[20px]`.
+
+mismatched radii on nested elements is one of the most common "feels off" tells. agents almost always use the same radius on parent and child.
+
+```css
+/* wrong — same radius on both */
+.outer { border-radius: 12px; padding: 16px; }
+.inner { border-radius: 12px; }
+
+/* right — concentric */
+.outer { border-radius: 28px; padding: 16px; }
+.inner { border-radius: 12px; }
+```
+
+## Optical vs Geometric Alignment
+
+geometric centering (equal pixels on all sides) sometimes LOOKS wrong, even though it's mathematically correct. this happens with:
+- play buttons / triangles inside circles (the triangle's visual weight is off-center)
+- icons next to text (icon's visual mass doesn't match text baseline)
+- asymmetric shapes in symmetric containers
+
+when geometric centering looks off, adjust optically. nudge the element 1-2px until it LOOKS centered. this is a human judgment call — agents should flag when they're using asymmetric shapes in centered containers and note that optical adjustment may be needed.
+
+## Shadows Over Borders
+
+use layered transparent box-shadows instead of solid borders for depth between sections. shadows adapt to any background color; borders fight it.
+
+```css
+/* instead of */
+border: 1px solid #e5e7eb;
+
+/* use */
+box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
+```
+
+layer 2-3 shadows at different offsets and opacities for natural depth. reserve solid borders for interactive states (focus rings, selected items) where the hard edge communicates state, not decoration.
+
 ## The Meta-Rule
 
 if you're ever unsure about spacing or alignment, zoom out to 50% and look at the page as a shape. does it look like a composed rectangle with clear structure? or does it look like a collection of stuff thrown onto a canvas?

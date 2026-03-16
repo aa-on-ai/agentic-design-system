@@ -58,7 +58,17 @@ The screen works. Now make it feel right. This is the difference between functio
 - [ ] Focus visible — tab through the page, always know where you are
 - [ ] No dead zones — click targets are generous, not tiny islands of text
 
-### Pass 6: Final Proof
+### Pass 6: Micro-Details
+- [ ] **Tabular numbers** — any dynamically updating number uses `font-variant-numeric: tabular-nums` to prevent layout shift (counters, prices, stats, timers)
+- [ ] **Text wrapping** — headings use `text-wrap: balance`, body text uses `text-wrap: pretty` to avoid orphans
+- [ ] **Font smoothing** — root layout has `-webkit-font-smoothing: antialiased` for crisper text on macOS
+- [ ] **Concentric border radius** — nested rounded elements have outer radius = inner radius + padding (see alignment.md)
+- [ ] **Image outlines** — images on light backgrounds get a subtle `outline: 1px solid rgba(0,0,0,0.06)` for consistent depth
+- [ ] **Icon animations** — icons that change state (open/close, play/pause) cross-fade with opacity + scale, not hard swap
+- [ ] **Scale on press** — buttons use `scale(0.97)` on active state for tactile feedback, 100ms transition
+- [ ] **No `transition: all`** — always specify exact properties (`transition-property: transform, opacity`)
+
+### Pass 7: Final Proof
 - [ ] Screenshot at 1x — does it still look professional at actual pixels?
 - [ ] Compare to reference — side by side, honestly
 - [ ] The 3-second test — can someone tell what the screen is for quickly?
