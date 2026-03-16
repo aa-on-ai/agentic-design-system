@@ -7,11 +7,12 @@
 - Polishing a bad foundation instead of rebuilding the layout.
 
 ## Typography Mistakes
-- Inter or system font defaults as unexamined autopilot.
+- Inter, Roboto, Arial, or system font defaults as unexamined autopilot. agents reach for these every time. pick a distinctive font that matches the product's personality. there are thousands of fonts — using the default is a non-decision.
+- Same font on every project. if two different products use the same typeface, one of them chose wrong.
 - Mushy scales with too many neighboring sizes.
 - Large type trying to rescue weak hierarchy.
 - Monospace used as a shortcut for "tech" personality.
-- Too many font families fighting for attention.
+- Too many font families fighting for attention (but two is usually right: one display + one body).
 
 ## Color Mistakes
 - Purple gradients, cyan glows, and generic AI-saas palettes.

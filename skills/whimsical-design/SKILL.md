@@ -33,7 +33,58 @@ Everything should feel alive. Static interfaces are dead interfaces.
 - Toggle switches: spring physics (slight overshoot on slide, ~200ms)
 - Empty states: gentle floating animation on the illustration (translateY ±4px, 3s ease-in-out infinite)
 
-### 3. Craft Signals
+### 3. Bold Aesthetic Commitment
+Before writing a single line of code, commit to a specific aesthetic direction. not "clean and modern" — that's a non-decision. pick an extreme and execute it with intention:
+
+- brutally minimal (nothing that doesn't earn its place)
+- maximalist chaos (dense, layered, overwhelming in the best way)
+- retro-futuristic (old tech aesthetics, modern capability)
+- organic/natural (textures, warmth, imperfection)
+- luxury/refined (thin weights, generous space, precious materials)
+- playful/toy-like (rounded, bouncy, colorful, tactile)
+- editorial/magazine (type-forward, dramatic scale, reading rhythm)
+- brutalist/raw (exposed structure, no decoration, confrontational)
+- industrial/utilitarian (functional, dense, no-nonsense)
+
+the key is intentionality, not intensity. bold maximalism and refined minimalism both work. what doesn't work is the timid middle — the agent default of "a little of everything."
+
+write one sentence describing your aesthetic direction before building. if you can't articulate it, you haven't committed.
+
+### 4. Background Atmosphere
+agents default to flat solid color backgrounds. that's the single biggest "AI built this" tell after card grids. backgrounds create mood before any content loads.
+
+techniques:
+- **noise/grain texture** — `background-image: url("data:image/svg+xml,...")` with a subtle noise pattern at 3-5% opacity. makes flat colors feel tactile.
+- **gradient mesh** — 2-3 radial gradients layered at low opacity. creates depth without being gaudy.
+- **subtle pattern** — dots, lines, or geometric shapes at 2-4% opacity. adds texture without distraction.
+- **layered transparencies** — overlapping semi-transparent shapes in the background. creates depth and atmosphere.
+
+```css
+/* noise texture overlay */
+.textured {
+  position: relative;
+}
+.textured::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* gradient mesh */
+.atmospheric {
+  background: 
+    radial-gradient(ellipse at 20% 50%, rgba(232, 114, 58, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(45, 106, 79, 0.06) 0%, transparent 50%),
+    #FAFAF8;
+}
+```
+
+don't: use these on every surface. use them on the page background and hero sections. inner components should be clean.
+
+### 5. Craft Signals
 The opposite of "AI generated this." Every surface should feel touched by a human.
 - Grain textures, noise overlays, subtle paper feel
 - Intentional imperfection — slightly uneven, hand-placed, organic
@@ -42,8 +93,9 @@ The opposite of "AI generated this." Every surface should feel touched by a huma
 - Custom illustrations over stock icons where possible
 - SVG elements that respond to cursor or scroll
 
-### 4. Color With Feeling
+### 6. Color With Feeling
 Color should create mood, not just differentiate elements.
+- **Dominant + accent, not evenly distributed** — one dominant color owns the page. one sharp accent draws attention to what matters. a timid, evenly-spread palette is an agent default. commit: what's the ONE color someone remembers?
 - Studio Ghibli palettes: warm earth tones, saturated sky blues, forest greens
 - Pantone-chip energy: specific, intentional, named
 - Avoid: gray-on-white corporate void, neon-on-dark "developer tool"
@@ -57,7 +109,7 @@ Color should create mood, not just differentiate elements.
 - Status colors: success `#16A34A` (not neon green), warning `#D97706` (not yellow), error `#DC2626` (not pink), info `#2563EB`
 - Gradient (subtle, not gaudy): `from-amber-50 to-orange-50` for warm sections, `from-slate-50 to-blue-50` for cool sections — backgrounds only, never on text
 
-### 5. Typography as Character
+### 7. Typography as Character
 Type carries personality before anyone reads a word.
 - Mix weights dramatically (thin headlines + chunky body, or vice versa)
 - Consider display faces for headers — not just system fonts

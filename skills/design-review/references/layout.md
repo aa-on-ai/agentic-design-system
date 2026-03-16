@@ -105,3 +105,28 @@ or:
 ```
 
 the key: no two sections should have the same visual weight. if everything is equally important, nothing is.
+
+## Spatial Composition — Breaking the Grid
+
+grids create order. but a page that never breaks its grid feels mechanical — like a spreadsheet with better fonts. the best interfaces establish a grid and then deliberately break it when the content demands attention.
+
+### techniques
+- **overlap** — let an element overlap the boundary between two sections. a card that sits half in the hero and half in the content below creates visual continuity and depth.
+- **asymmetric columns** — not everything needs to be 50/50 or 33/33/33. use 60/40, 70/30, or even 80/20 when one element is clearly more important.
+- **full-bleed breaking** — a section that breaks out of the max-width container and stretches edge-to-edge creates a dramatic pause in the reading rhythm.
+- **negative space as structure** — an intentionally empty column or large gap isn't wasted space. it's directing attention to what remains.
+- **diagonal flow** — elements arranged along a diagonal line (top-left to bottom-right) create energy and forward momentum. use for landing pages and marketing, not for data-heavy admin tools.
+- **varied section heights** — sections with different internal heights create rhythm. a tall hero → short stat bar → tall content area → short CTA reads as composed. uniform height reads as template.
+
+### when to break the grid
+- hero sections and page headers (first impression, highest impact)
+- featured content or "hero'd" metrics
+- transitions between major page sections
+- call-to-action areas
+- full-bleed images or charts
+
+### when NOT to break the grid
+- data tables and lists (consistency aids scanning)
+- form layouts (predictability reduces errors)
+- navigation (users need spatial memory)
+- repeated elements in a series (cards, list items)
