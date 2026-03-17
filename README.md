@@ -24,17 +24,15 @@ the system works in three layers:
 
 read [PHILOSOPHY.md](./PHILOSOPHY.md) for the full thinking.
 
-## see it in action
+## real tests
 
-before = agent output without any design system. after = same prompt with the agentic design system loaded.
+not staged demos — real A/B tests. same model (GPT-5.4), same prompt, one without skills, one with core pack only.
 
-| demo | type | before | after |
-|------|------|--------|-------|
-| Moltbook Admin | dashboard | [before](https://agentic-design-system.vercel.app/before/moltbook-admin) | [after](https://agentic-design-system.vercel.app/after/moltbook-admin) |
-| Model Tuning Console | form / wizard | [before](https://agentic-design-system.vercel.app/before/model-tuning) | [after](https://agentic-design-system.vercel.app/after/model-tuning) |
-| The Compliance Dispatch | editorial | [before](https://agentic-design-system.vercel.app/before/compliance-dispatch) | [after](https://agentic-design-system.vercel.app/after/compliance-dispatch) |
+| test | prompt | before | after |
+|------|--------|--------|-------|
+| Canopy | "build a landing page for a new weather app called Canopy" | [before](https://agentic-design-system.vercel.app/before/canopy) | [after](https://agentic-design-system.vercel.app/after/canopy) |
 
-three different UI types, three different company aesthetics (Meta, Anthropic, OpenAI), same design system.
+we originally ran this with all skills (including creative pack) and the output was worse — it fought the product-appropriate dark/glassy weather aesthetic and produced something that looked like a wellness brand. so we split into core + creative packs, re-ran with core only, and got a better result. the system learned from the failure. [more tests coming]
 
 ## what's in the box
 
