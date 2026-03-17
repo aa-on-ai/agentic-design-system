@@ -24,6 +24,18 @@ the system works in three layers:
 
 read [PHILOSOPHY.md](./PHILOSOPHY.md) for the full thinking.
 
+## see it in action
+
+before = agent output without any design system. after = same prompt with the agentic design system loaded.
+
+| demo | type | before | after |
+|------|------|--------|-------|
+| Moltbook Admin | dashboard | [before](https://agentic-design-system.vercel.app/before/moltbook-admin) | [after](https://agentic-design-system.vercel.app/after/moltbook-admin) |
+| Model Tuning Console | form / wizard | [before](https://agentic-design-system.vercel.app/before/model-tuning) | [after](https://agentic-design-system.vercel.app/after/model-tuning) |
+| The Compliance Dispatch | editorial | [before](https://agentic-design-system.vercel.app/before/compliance-dispatch) | [after](https://agentic-design-system.vercel.app/after/compliance-dispatch) |
+
+three different UI types, three different company aesthetics (Meta, Anthropic, OpenAI), same design system.
+
 ## what's in the box
 
 ### skills
@@ -132,6 +144,14 @@ the system learns from every build. after each session:
 - animation patterns that worked get documented
 
 the review step produces the update as a byproduct, not as homework. day 1, the human answers a lot of steering questions. month 3, the guidelines handle most of it.
+
+## how is this different from Impeccable?
+
+[Impeccable](https://impeccable.style) is a great quality gate — 17 slash commands like `/audit`, `/polish`, `/bolder` that catch problems and add polish. if you want one skill that does design review, it's solid.
+
+we go wider and deeper: 7 skills with routing logic that tells agents WHEN to apply WHAT. a context pass that grounds builds in the actual company being referenced. a workflow layer (divergent exploration, pattern benchmarking, compounding). creative direction skills (whimsical-design, world-build) that push past safe. verification scripts that catch anti-patterns programmatically. and an agent-friendly-design skill for building sites that agents themselves can consume.
+
+Impeccable raises the craft ceiling. we raise the floor AND add the workflow. they're complementary — use both if you want.
 
 ## pairs well with
 

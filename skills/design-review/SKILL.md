@@ -84,7 +84,20 @@ Run this EVERY TIME before presenting work to Aaron.
 - [ ] Does it meet the brief, not an adjacent brief?
 - [ ] Would you be proud to show this to Aaron cold?
 
-### Step 4: Present with evidence
+### Step 4: Run verification scripts
+if you have access to the scripts directory, run these before presenting:
+
+```bash
+# check for common agent anti-patterns
+python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
+
+# verify loading, empty, and error states exist
+python3 skills/design-review/scripts/state-check.py <your-file.tsx>
+```
+
+fix any warnings before presenting. these are the cheapest quality checks — they catch the obvious stuff so the human review can focus on judgment calls.
+
+### Step 5: Present with evidence
 - Screenshot of the result
 - What you referenced
 - Known gaps or uncertainties
