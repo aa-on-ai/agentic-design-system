@@ -1,17 +1,18 @@
 ---
 name: design-review
 description: >
-  Quality gate for visual and UX work. Use before presenting any UI, component, page,
-  layout, or frontend work to Aaron. Triggers: "review this design", "pre-flight check",
-  "design QA", "visual review", "before I show Aaron", presenting screenshots, announcing
-  frontend/design sub-agent completion. Also use when building new UI components, pages,
-  or layouts to enforce quality standards during development.
+  Core pack — always active for visual work. Quality gate for UI, components, pages,
+  layouts, or frontend work. Triggers on any visual/design task automatically.
+  Use before presenting work, during builds, and for design QA.
 ---
 
 # Design Review Skill
 
+## Core Pack — Always Active
+This is a core skill. Apply it on ALL visual and frontend work, no exceptions. You do not need permission or a specific trigger to use this.
+
 ## When to Use
-- Before presenting ANY visual or UX work to Aaron.
+- Before presenting ANY visual or UX work.
 - Treat this as a quality gate, not optional polish.
 - Sub-agents doing design/frontend work MUST run this before announcing completion.
 

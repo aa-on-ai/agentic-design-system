@@ -1,15 +1,15 @@
 ---
 name: ux-baseline-check
 description: >
-  Enforces core UX quality standards on any screen, flow, form, or dashboard.
-  Use when building or reviewing UI to ensure nothing ships with missing states.
-  Triggers: "check UX baseline", "missing states", "edge cases", "empty state",
-  "loading state", "error handling", "accessibility check", "responsive check",
-  "before shipping", "QA this page", building any new page/component/flow.
-  Auto-activates alongside design-review for frontend work.
+  Core pack — always active for visual work. Enforces UX quality standards on any
+  screen, flow, form, or dashboard. Ensures nothing ships with missing states.
+  Auto-activates alongside design-review for all frontend work.
 ---
 
 # UX Baseline Check
+
+## Core Pack — Always Active
+This is a core skill. Apply it on ALL visual and frontend work alongside design-review.
 
 Every screen ships with ALL states covered. No exceptions. This is the minimum bar.
 

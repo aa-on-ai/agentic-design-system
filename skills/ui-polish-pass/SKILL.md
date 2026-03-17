@@ -1,14 +1,15 @@
 ---
 name: ui-polish-pass
 description: >
-  Final visual polish pass for UI work. Use when a screen is functionally complete
-  but needs spacing, hierarchy, alignment, and visual cleanup before presenting to Aaron.
-  Triggers: "polish this", "tighten up the UI", "visual pass", "spacing feels off",
-  "make it look professional", "it works but looks rough", "design polish",
-  "before presenting to Aaron", final stage of any frontend sub-agent task.
+  Core pack — always active as final step. Visual polish pass for spacing, hierarchy,
+  alignment, and cleanup. Runs after design-review and ux-baseline-check as the last
+  quality step before presenting work.
 ---
 
 # UI Polish Pass
+
+## Core Pack — Always Active
+This is a core skill. Use as the final step after design-review and ux-baseline-check on all visual work.
 
 The screen works. Now make it feel right. This is the difference between functional and professional.
 

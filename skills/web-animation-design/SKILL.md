@@ -7,6 +7,13 @@ metadata:
 
 # Web Animation Design
 
+## ⚠️ Creative Pack — NOT auto-apply
+
+This skill is part of the creative pack. Use when the task explicitly involves animation, motion, or interaction feel. Do NOT load this for general UI building — the motion reference in design-review covers baseline motion quality.
+
+**Use when:** user asks about animations, easing, springs, transitions, interaction feel, or "make it smooth."
+**Skip when:** building standard UI where the motion reference in design-review is sufficient.
+
 A comprehensive guide for creating animations that feel right, based on Emil Kowalski's "Animations on the Web" course.
 
 ## Initial Response

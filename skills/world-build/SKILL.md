@@ -1,21 +1,24 @@
 # World Build
 
-## What This Is
-The creative development playbook for building things that feel like *places*, not pages. Use when Aaron says "world-build this" or when building any site, app, or experience that needs to feel immersive, atmospheric, or memorable.
+## ⚠️ Creative Pack — NOT auto-apply
 
-Whimsical-design asks "does it have personality?" World-build provides the construction manual for **depth**.
+This skill is part of the creative pack. Do NOT apply it by default on every visual task.
 
-## When to Use
-- Portfolio sites, landing pages, marketing sites
-- Game UIs, interactive experiences
-- Product launches, announcement pages
-- Anything where first impression matters more than information density
-- When Aaron says "world-build" or "make this feel like a place"
+**Use ONLY when explicitly triggered:**
+- user says "world-build this" or "make this feel like a place"
+- task is explicitly about immersive experience (portfolio, launch, game UI, interactive storytelling)
+- user asks for atmosphere, narrative arc, or sensory design
 
-## NOT For
-- Admin dashboards, data-heavy tools (use design-review instead)
-- Content that needs to be scannable and fast (docs, settings pages)
+**Do NOT use when:**
+- no one asked for immersion — most UI tasks don't need this
+- building product UI, dashboards, forms, settings, or tools
+- content needs to be scannable and fast (docs, settings pages)
 - MVP prototypes where speed matters more than atmosphere
+
+If this skill wasn't explicitly requested, skip it. Use design-review instead.
+
+## What This Is
+The creative development playbook for building things that feel like *places*, not pages. Whimsical-design asks "does it have personality?" World-build provides the construction manual for **depth**.
 
 ---
 

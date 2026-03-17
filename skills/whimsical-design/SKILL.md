@@ -1,7 +1,25 @@
 # Whimsical Design Skill
 
-## When to Use
-Before any frontend/visual work, read this alongside `skills/design-review/SKILL.md`. Design-review catches quality problems. This skill pushes toward delight.
+## ⚠️ Creative Pack — NOT auto-apply
+
+This skill is part of the creative pack. Do NOT apply it by default on every visual task.
+
+**Use ONLY when at least one is true:**
+- user explicitly asks for personality, delight, whimsy, or brand expression
+- task is marketing, landing page, portfolio, launch, or editorial
+- the default/safe output is clearly the problem (everything looks the same)
+- multiple creative directions are being explored on purpose
+
+**Do NOT use when:**
+- building utility UI, admin tools, settings pages, or internal tools
+- the product already has a clear design language you should match
+- the default aesthetic is already appropriate for the product category
+- task is primarily about structure, states, or production hardening
+
+If in doubt, skip this skill. Core skills (design-review, ux-baseline-check, ui-polish-pass) are always safe. This one requires judgment about whether "push past safe" is actually what the product needs.
+
+## When It Applies
+Design-review catches quality problems. This skill pushes toward delight. Use alongside `skills/design-review/SKILL.md` when the triggers above are met.
 
 ## The Bar
 Would someone screenshot this and send it to a friend? Would it make them smile? If no, push further.

@@ -2,19 +2,37 @@
 
 how to decide which skills to run and when.
 
+## two packs
+
+**core pack** (always active for visual work):
+- design-review — quality gate
+- ux-baseline-check — state completeness
+- ui-polish-pass — final visual polish
+- agent-friendly-design — make sites work for AI consumers
+
+**creative pack** (opt-in only):
+- whimsical-design — personality and delight
+- world-build — immersive atmosphere
+- web-animation-design — motion and interaction feel
+
+core pack runs on every visual task. creative pack runs only when triggered. each creative skill has its own trigger rules in its SKILL.md — read those, not just this doc.
+
 ## the decision
 
 ```
 is this visual or user-facing?
 ├── no → skip (scripts, backend, config, data)
-└── yes
-    ├── is it new? (new page, new component, new flow)
-    │   └── full chain
-    ├── is it immersive? (landing page, portfolio, launch site, game UI)
-    │   └── full chain + world-build
-    └── is it a modification to existing UI?
-        └── review only
+└── yes → core pack always runs
+    │
+    does it need creative direction?
+    ├── user asked for personality/delight/whimsy → add whimsical-design
+    ├── user asked for immersion/atmosphere/world → add world-build
+    ├── user asked about animation/motion/feel → add web-animation-design
+    ├── it's marketing/launch/portfolio/editorial → whimsical-design likely helps
+    └── none of the above → core pack is enough
 ```
+
+**the key rule:** if the default aesthetic is appropriate for the product, don't fight it. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. "different from defaults" is not always better. core pack makes the defaults excellent. creative pack makes them different. only add creative when different is actually what the product needs.
 
 ## context pass (run first if applicable)
 
@@ -31,30 +49,22 @@ rules:
 
 skip this step only if the prompt is generic (no named entities).
 
-## full chain
+## core chain (default for all visual work)
 
-for new pages, new components, anything a stakeholder will see. run in order:
+run in order:
 
-0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. if you already ran the context pass above, your primary reference is set — use pattern benchmarking only for gaps. if the prompt is generic, find 2-3 real examples via Mobbin/Godly. this step takes 2 minutes and saves 30 minutes of iteration.
-1. **design-review** — quality gate. catches structural problems, anti-patterns, missing states. run first.
-2. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases. nothing ships incomplete.
-3. **whimsical-design** — personality pass. pushes past sterile toward delight. warm > cold, alive > static.
-4. **web-animation-design** — motion pass. easing, timing, springs, transitions. everything that moves should feel intentional.
-5. **ui-polish-pass** — final polish. spacing, alignment, hierarchy, visual cleanup. last step before presenting.
+0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. find 2-3 real examples via Mobbin/Godly. this step takes 2 minutes and saves 30 minutes of iteration.
+1. **design-review** — quality gate. catches structural problems, anti-patterns, missing states.
+2. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases.
+3. **ui-polish-pass** — final polish. spacing, alignment, hierarchy, visual cleanup.
 
-not every task needs all 5. use judgment:
-- data-heavy admin tool? skip whimsical-design, light on animation.
-- marketing page? whimsical-design and animation are critical.
-- internal tool nobody screenshots? design-review + ux-baseline-check might be enough.
+## core + creative (only when triggered)
 
-## full chain + world-build
+add creative skills on top of core when the triggers are met:
 
-for sites that need to feel like *places*, not pages. portfolio sites, product launches, game UIs, anything where atmosphere matters more than information density.
-
-run world-build **before** the full chain — it sets creative direction that everything else builds on:
-
-1. **world-build** — creative brief. what world is this? what does it feel like? sensory palette, reference board, atmospheric direction.
-2. then run the full chain (design-review → ux-baseline-check → whimsical-design → web-animation-design → ui-polish-pass)
+- **+ whimsical-design** — when user asks for personality, delight, or brand expression. when building marketing/editorial/launch pages. when the output needs to be screenshotable.
+- **+ world-build** — when user explicitly asks for immersion or atmosphere. portfolio sites, product launches, game UIs. runs BEFORE the core chain (sets creative direction first).
+- **+ web-animation-design** — when user asks about motion, easing, springs, interaction feel, or "make it smooth." when the task specifically involves animation work.
 
 ## review only
 
@@ -71,12 +81,7 @@ for any web project shipping to production where agents may consume or interact 
 
 1. **agent-friendly-design** — semantic HTML, ARIA, structured data, llms.txt, API-first patterns, crawlability
 
-routing within the skill:
-- every project: semantic HTML + ARIA + machine-readable state (non-negotiable)
-- public-facing: add structured data, llms.txt, crawlability
-- products/SaaS: add predictable interactions, API-first, content optimization
-
-this skill runs alongside the visual chain, not instead of it. a page can need both whimsical-design (for humans) and agent-friendly-design (for agents).
+this skill runs alongside the core chain, not instead of it. a page can need both visual quality (for humans) and agent-friendly design (for agents).
 
 ## skip
 
@@ -91,18 +96,17 @@ don't run the design chain for non-visual work:
 when the task is creative or the direction is unclear, don't commit to one approach. instead:
 
 1. ask the builder: "this could go a few directions — want me to explore 2-3 options or pick one?"
-2. if exploring: build multiple versions with a navigation element (version selector, tabs, URL variants) so the builder can compare
+2. if exploring: build multiple versions with a navigation element (version selector, tabs, URL variants)
 3. different agents can work on different directions simultaneously
 4. the builder picks a winner or hybridizes, then run the quality chain on the chosen direction
 
-this is expensive — use it for layout decisions, visual direction, and interaction models. not for button colors.
+use for layout decisions and visual direction. not for button colors.
 
 ## token budget awareness
 
-the full chain loads multiple skill files + references. be smart about it:
-- only load reference files you actually need (don't read all 5 design-review refs for a spacing fix)
-- whimsical-design and world-build are short — low token cost, high impact
-- web-animation-design has a PRACTICAL-TIPS.md supplement — load it when doing animation work, skip it otherwise
+- only load reference files you actually need
+- creative pack skills are short — low token cost when loaded
+- web-animation-design has a PRACTICAL-TIPS.md supplement — load only when doing animation work
 - if you're doing review-only, one skill file is all you need
 
 ## compounding
@@ -110,6 +114,4 @@ the full chain loads multiple skill files + references. be smart about it:
 after every build or review, capture what worked and what didn't:
 - new anti-patterns go in `skills/design-review/references/anti-patterns.md`
 - project-specific decisions go in the project's `guidelines.md`
-- animation patterns that landed well go in `skills/web-animation-design/PRACTICAL-TIPS.md`
-
-the system gets smarter every time it's used. don't skip this step.
+- the system gets smarter every time it's used. don't skip this step.
