@@ -133,6 +133,12 @@ the system learns from every build. after each session:
 
 the review step produces the update as a byproduct, not as homework. day 1, the human answers a lot of steering questions. month 3, the guidelines handle most of it.
 
+## pairs well with
+
+- [react-grab](https://github.com/aidenybai/react-grab) — hover over any element in your browser, press Cmd+C, get the file name + component + HTML. paste into your agent for precise "fix this" workflows. our system tells agents how to build good UI; react-grab lets you point at what still needs work.
+- [Impeccable](https://impeccable.style) — slash commands for design polish (/audit, /polish, /bolder). good quality gate. we go deeper on workflow, routing, and creative direction, but their commands are a nice ergonomic layer.
+- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) — micro-detail skill (concentric border radius, tabular numbers, text wrapping). we've absorbed most of these into our reference files, but the original is worth reading.
+
 ## works with
 
 - [Claude Code](./integrations/) / Anthropic agents
