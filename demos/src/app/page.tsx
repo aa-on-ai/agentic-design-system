@@ -5,7 +5,7 @@ const tests = [
     name: "Canopy",
     type: "Landing Page",
     prompt: "build a landing page for a new weather app called Canopy",
-    desc: "No brand to reference. Tests whether core pack improves defaults without fighting product-appropriate aesthetics.",
+    desc: "Same model (GPT-5.4), same prompt. Before = no skills. After = core pack only.",
     before: "/before/canopy",
     after: "/after/canopy",
   },
@@ -15,13 +15,18 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        agentic design system — tests
+        agentic design system
       </h1>
       <p className="mt-2 text-sm text-neutral-500">
-        real tests, not staged demos. same model (GPT-5.4), same prompt, different context.
-      </p>
-      <p className="mt-1 text-sm text-neutral-500">
-        before = no skills loaded. after = core pack only (design-review, ux-baseline-check, ui-polish-pass).
+        real A/B tests, not staged demos. same model, same prompt, one without
+        skills, one with the{" "}
+        <a
+          href="https://github.com/aa-on-ai/agentic-design-system"
+          className="underline hover:text-neutral-900 transition-colors"
+        >
+          agentic design system
+        </a>{" "}
+        loaded.
       </p>
 
       <div className="mt-12 space-y-8">
@@ -35,10 +40,10 @@ export default function Home() {
                 {test.type}
               </span>
             </div>
-            <p className="mt-2 rounded bg-neutral-50 px-3 py-2 font-mono text-xs text-neutral-600">
+            <p className="mt-1 text-sm text-neutral-500 italic">
               &ldquo;{test.prompt}&rdquo;
             </p>
-            <p className="mt-2 text-sm text-neutral-500">{test.desc}</p>
+            <p className="mt-1 text-xs text-neutral-400">{test.desc}</p>
             <div className="mt-3 flex gap-4">
               <Link
                 href={test.before}

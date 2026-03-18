@@ -156,6 +156,7 @@ Impeccable raises the craft ceiling. we raise the floor AND add the workflow. th
 - [react-grab](https://github.com/aidenybai/react-grab) — hover over any element in your browser, press Cmd+C, get the file name + component + HTML. paste into your agent for precise "fix this" workflows. our system tells agents how to build good UI; react-grab lets you point at what still needs work.
 - [Impeccable](https://impeccable.style) — slash commands for design polish (/audit, /polish, /bolder). good quality gate. we go deeper on workflow, routing, and creative direction, but their commands are a nice ergonomic layer.
 - [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) — micro-detail skill (concentric border radius, tabular numbers, text wrapping). we've absorbed most of these into our reference files, but the original is worth reading.
+- [userinterface.wiki](https://www.userinterface.wiki/) — deep articles on UX psychology (Fitts's law, Hick's law, Miller's law), animation techniques, and sound design. installable as an agent skill. we handle workflow and routing; this handles the theory behind why patterns work.
 
 ## works with
 
