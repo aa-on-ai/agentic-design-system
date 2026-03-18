@@ -24,15 +24,36 @@ the system works in three layers:
 
 read [PHILOSOPHY.md](./PHILOSOPHY.md) for the full thinking.
 
-## real tests
+## does it actually work?
 
-not staged demos — real A/B tests. same model (GPT-5.4), same prompt, one without skills, one with core pack only.
+we built an automated eval loop to find out. same model (GPT-5.4), same prompt, one run without skills, one with core pack. scored by our verification scripts + Claude Sonnet as a neutral judge.
 
-| test | prompt | before | after |
-|------|--------|--------|-------|
-| Canopy | "build a landing page for a new weather app called Canopy" | [before](https://agentic-design-system.vercel.app/before/canopy) | [after](https://agentic-design-system.vercel.app/after/canopy) |
+```
+                        BEFORE    AFTER     DELTA
+canopy (landing)          16        40       +24
+pawprint (dashboard)      15        41       +26
+notion-ai (settings)      17        40       +23
+                        ----      ----      ----
+average                   16        40      +24.3
+```
 
-we originally ran this with all skills (including creative pack) and the output was worse — it fought the product-appropriate dark/glassy weather aesthetic and produced something that looked like a wellness brand. so we split into core + creative packs, re-ran with core only, and got a better result. the system learned from the failure. [more tests coming]
+**what the scores mean:** programmatic checks (anti-pattern warnings, state completeness) + model judge scoring hierarchy, spacing, copy quality, product-fit, and screenshot-worthiness. max score ~50.
+
+**what improved:** before pages averaged 4 anti-pattern warnings and 0/3 states (no loading, empty, or error handling). after pages averaged 0.33 warnings and 3/3 states every time. judge scores improved from ~7/10 to ~8/10 across all dimensions.
+
+**what we learned the hard way:** we originally ran all 7 skills on a weather app landing page and the output was *worse* — the creative pack fought the product-appropriate dark/glassy aesthetic and produced something that looked like a wellness brand. so we split into [core + creative packs](#two-packs), re-ran with core only, and the results above are what came out. the system improved because it failed honestly.
+
+run it yourself: `npx tsx testing/eval-loop.ts` (needs OpenAI + Anthropic API keys). add your own prompts to `testing/prompts.json`.
+
+## two packs
+
+**core pack** (always active for visual work):
+- design-review, ux-baseline-check, ui-polish-pass, agent-friendly-design
+
+**creative pack** (opt-in only — each skill has trigger rules baked in):
+- whimsical-design, world-build, web-animation-design
+
+core pack runs on every visual task. creative pack runs only when the product needs personality, immersion, or animation beyond the baseline. each creative skill self-gates — it won't activate unless the triggers in its description are met. this split exists because we tested it and found that auto-applying creative skills to everything made some outputs worse.
 
 ## what's in the box
 
