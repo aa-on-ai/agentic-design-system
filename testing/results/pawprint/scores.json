@@ -1,0 +1,66 @@
+{
+  "prompt": "build an admin dashboard for a dog walking service called Pawprint",
+  "slug": "pawprint",
+  "type": "dashboard",
+  "timestamp": "2026-03-18T05:06:01.642Z",
+  "before": {
+    "file": "testing/results/pawprint/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×61)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 6,
+      "productFit": 7,
+      "screenshotWorthy": 6
+    },
+    "judgeTotal": 33,
+    "penalties": {
+      "antiPatterns": -9,
+      "missingStates": -9,
+      "responsive": 0
+    },
+    "total": 15
+  },
+  "after": {
+    "file": "testing/results/pawprint/after.tsx",
+    "antiPatterns": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 9,
+      "copy": 8,
+      "productFit": 8,
+      "screenshotWorthy": 8
+    },
+    "judgeTotal": 41,
+    "penalties": {
+      "antiPatterns": 0,
+      "missingStates": 0,
+      "responsive": 0
+    },
+    "total": 41
+  },
+  "delta": 26,
+  "winner": "after"
+}

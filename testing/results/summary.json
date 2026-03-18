@@ -1,0 +1,224 @@
+{
+  "timestamp": "2026-03-18T05:10:02.798Z",
+  "models": {
+    "generator": "gpt-5.4",
+    "judge": "claude-sonnet-4-6"
+  },
+  "totals": {
+    "promptsAttempted": 3,
+    "promptsSucceeded": 3,
+    "promptsFailed": 0
+  },
+  "averages": {
+    "beforeTotal": 16,
+    "afterTotal": 40.33,
+    "delta": 24.33,
+    "beforeJudgeTotal": 34.33,
+    "afterJudgeTotal": 41.67,
+    "beforeWarnings": 4,
+    "afterWarnings": 0.33,
+    "beforeInfo": 1.33,
+    "afterInfo": 0.67
+  },
+  "results": [
+    {
+      "prompt": "build a landing page for a new weather app called Canopy",
+      "slug": "canopy",
+      "type": "landing",
+      "timestamp": "2026-03-18T05:03:50.496Z",
+      "before": {
+        "file": "testing/results/canopy/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 2,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×23)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n  ℹ️ Generic button labels (×1)\n     Generic button label detected — buttons should describe the action ('Send message', 'Save changes', not 'Submit').\n\n  Summary: 4 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 7,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 35,
+        "penalties": {
+          "antiPatterns": -10,
+          "missingStates": -9,
+          "responsive": 0
+        },
+        "total": 16
+      },
+      "after": {
+        "file": "testing/results/canopy/after.tsx",
+        "antiPatterns": {
+          "warnings": 1,
+          "info": 2,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ============================================================\n  ⚠️ Placeholder text (×1)\n     Placeholder text detected — use real, specific content.\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n  ℹ️ Generic button labels (×1)\n     Generic button label detected — buttons should describe the action ('Send message', 'Save changes', not 'Submit').\n\n  Summary: 1 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 9,
+          "spacing": 9,
+          "copy": 9,
+          "productFit": 8,
+          "screenshotWorthy": 9
+        },
+        "judgeTotal": 44,
+        "penalties": {
+          "antiPatterns": -4,
+          "missingStates": 0,
+          "responsive": 0
+        },
+        "total": 40
+      },
+      "delta": 24,
+      "winner": "after"
+    },
+    {
+      "prompt": "build an admin dashboard for a dog walking service called Pawprint",
+      "slug": "pawprint",
+      "type": "dashboard",
+      "timestamp": "2026-03-18T05:06:01.642Z",
+      "before": {
+        "file": "testing/results/pawprint/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×61)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 6,
+          "productFit": 7,
+          "screenshotWorthy": 6
+        },
+        "judgeTotal": 33,
+        "penalties": {
+          "antiPatterns": -9,
+          "missingStates": -9,
+          "responsive": 0
+        },
+        "total": 15
+      },
+      "after": {
+        "file": "testing/results/pawprint/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 9,
+          "copy": 8,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 41,
+        "penalties": {
+          "antiPatterns": 0,
+          "missingStates": 0,
+          "responsive": 0
+        },
+        "total": 41
+      },
+      "delta": 26,
+      "winner": "after"
+    },
+    {
+      "prompt": "build a settings page for Notion's AI features",
+      "slug": "notion-ai-settings",
+      "type": "settings",
+      "timestamp": "2026-03-18T05:07:51.197Z",
+      "before": {
+        "file": "testing/results/notion-ai-settings/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×123)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×1)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 7,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 35,
+        "penalties": {
+          "antiPatterns": -9,
+          "missingStates": -9,
+          "responsive": 0
+        },
+        "total": 17
+      },
+      "after": {
+        "file": "testing/results/notion-ai-settings/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 40,
+        "penalties": {
+          "antiPatterns": 0,
+          "missingStates": 0,
+          "responsive": 0
+        },
+        "total": 40
+      },
+      "delta": 23,
+      "winner": "after"
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,66 @@
+{
+  "prompt": "build a landing page for a new weather app called Canopy",
+  "slug": "canopy",
+  "type": "landing",
+  "timestamp": "2026-03-18T05:03:50.496Z",
+  "before": {
+    "file": "testing/results/canopy/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 2,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×23)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n  ℹ️ Generic button labels (×1)\n     Generic button label detected — buttons should describe the action ('Send message', 'Save changes', not 'Submit').\n\n  Summary: 4 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 7,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 35,
+    "penalties": {
+      "antiPatterns": -10,
+      "missingStates": -9,
+      "responsive": 0
+    },
+    "total": 16
+  },
+  "after": {
+    "file": "testing/results/canopy/after.tsx",
+    "antiPatterns": {
+      "warnings": 1,
+      "info": 2,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ============================================================\n  ⚠️ Placeholder text (×1)\n     Placeholder text detected — use real, specific content.\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n  ℹ️ Generic button labels (×1)\n     Generic button label detected — buttons should describe the action ('Send message', 'Save changes', not 'Submit').\n\n  Summary: 1 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 9,
+      "spacing": 9,
+      "copy": 9,
+      "productFit": 8,
+      "screenshotWorthy": 9
+    },
+    "judgeTotal": 44,
+    "penalties": {
+      "antiPatterns": -4,
+      "missingStates": 0,
+      "responsive": 0
+    },
+    "total": 40
+  },
+  "delta": 24,
+  "winner": "after"
+}

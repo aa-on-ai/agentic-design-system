@@ -125,6 +125,88 @@ every audit should produce at least one update:
 
 the audit isn't just QA. it's the mechanism that makes the system smarter.
 
+## eval loop: automated before vs after benchmark
+
+for repo-level proof, use `testing/eval-loop.ts`.
+
+### what it does
+
+for each prompt in `testing/prompts.json`, the script:
+
+1. generates a **before** page with plain prompting only
+2. generates an **after** page with the full core pack inlined at runtime:
+   - `skills/design-review/SKILL.md`
+   - every file in `skills/design-review/references/`
+   - `skills/ux-baseline-check/SKILL.md`
+   - `skills/ui-polish-pass/SKILL.md`
+   - `routing/ROUTING.md`
+3. saves both TSX files to `testing/results/<slug>/`
+4. runs the existing python checkers:
+   - `anti-pattern-check.py`
+   - `state-check.py`
+5. checks for responsive breakpoints directly from the TSX source
+6. sends both files to an Anthropic judge model for 5 design scores
+7. computes totals using `testing/eval-spec.md`
+8. writes per-prompt `scores.json` and a global `testing/results/summary.json`
+
+### run it
+
+```bash
+npx tsx testing/eval-loop.ts
+```
+
+optional helpers:
+
+```bash
+# validate files and prompt loading without hitting APIs
+npx tsx testing/eval-loop.ts --dry-run
+
+# run one case only
+npx tsx testing/eval-loop.ts --slug canopy
+```
+
+### env vars
+
+the script looks for these first:
+
+- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
+
+if they are not set, it falls back to:
+
+- `~/.clawdbot/credentials/openai.env`
+- `~/.clawdbot/credentials/anthropic.env`
+
+### outputs
+
+```
+testing/results/
+  summary.json
+  canopy/
+    before.tsx
+    after.tsx
+    scores.json
+  pawprint/
+    before.tsx
+    after.tsx
+    scores.json
+  notion-ai-settings/
+    before.tsx
+    after.tsx
+    scores.json
+```
+
+### scoring
+
+totals combine:
+
+- judge scores (5 dimensions, 1-10 each)
+- anti-pattern penalties (`-2` per warning, `-1` per info)
+- missing state penalties (`-3` each)
+- responsive penalty (`-5` if no breakpoints are detected)
+
+this loop is meant to answer a simple question: does the same model produce measurably better output when the design system is loaded?
+
 ---
 
 ## roadmap: behavioral testing with clawbotomy

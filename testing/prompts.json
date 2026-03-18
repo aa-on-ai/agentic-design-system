@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "canopy",
+    "prompt": "build a landing page for a new weather app called Canopy",
+    "type": "landing"
+  },
+  {
+    "slug": "pawprint",
+    "prompt": "build an admin dashboard for a dog walking service called Pawprint",
+    "type": "dashboard"
+  },
+  {
+    "slug": "notion-ai-settings",
+    "prompt": "build a settings page for Notion's AI features",
+    "type": "settings"
+  }
+]

@@ -1,0 +1,66 @@
+{
+  "prompt": "build a settings page for Notion's AI features",
+  "slug": "notion-ai-settings",
+  "type": "settings",
+  "timestamp": "2026-03-18T05:07:51.197Z",
+  "before": {
+    "file": "testing/results/notion-ai-settings/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×123)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×1)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 7,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 35,
+    "penalties": {
+      "antiPatterns": -9,
+      "missingStates": -9,
+      "responsive": 0
+    },
+    "total": 17
+  },
+  "after": {
+    "file": "testing/results/notion-ai-settings/after.tsx",
+    "antiPatterns": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 8,
+      "copy": 8,
+      "productFit": 8,
+      "screenshotWorthy": 8
+    },
+    "judgeTotal": 40,
+    "penalties": {
+      "antiPatterns": 0,
+      "missingStates": 0,
+      "responsive": 0
+    },
+    "total": 40
+  },
+  "delta": 23,
+  "winner": "after"
+}
