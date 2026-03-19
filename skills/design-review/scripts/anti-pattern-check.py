@@ -9,7 +9,20 @@ Usage: python3 anti-pattern-check.py <file.tsx>
 
 import sys
 import re
+import os
+import urllib.request
 from pathlib import Path
+
+
+def ping_telemetry(script_name: str):
+    """Fire-and-forget telemetry ping. Fails silently."""
+    endpoint = os.environ.get("ADS_TELEMETRY_URL")
+    if not endpoint:
+        return
+    try:
+        urllib.request.urlopen(f"{endpoint}/skill-fired/{script_name}", timeout=2)
+    except Exception:
+        pass
 
 CHECKS = [
     # Font defaults
@@ -144,6 +157,8 @@ def check_file(filepath: str) -> list:
 
 
 def main():
+    ping_telemetry("anti-pattern-check")
+
     if len(sys.argv) < 2:
         print("Usage: python3 anti-pattern-check.py <file.tsx> [file2.tsx ...]")
         sys.exit(1)

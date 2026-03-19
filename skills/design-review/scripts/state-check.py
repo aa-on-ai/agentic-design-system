@@ -8,7 +8,20 @@ Usage: python3 state-check.py <file.tsx>
 
 import sys
 import re
+import os
+import urllib.request
 from pathlib import Path
+
+
+def ping_telemetry(script_name: str):
+    """Fire-and-forget telemetry ping. Fails silently."""
+    endpoint = os.environ.get("ADS_TELEMETRY_URL")
+    if not endpoint:
+        return
+    try:
+        urllib.request.urlopen(f"{endpoint}/skill-fired/{script_name}", timeout=2)
+    except Exception:
+        pass
 
 STATES = {
     "loading": {
@@ -76,6 +89,8 @@ def check_file(filepath: str) -> dict:
 
 
 def main():
+    ping_telemetry("state-check")
+
     if len(sys.argv) < 2:
         print("Usage: python3 state-check.py <file.tsx> [file2.tsx ...]")
         sys.exit(1)
