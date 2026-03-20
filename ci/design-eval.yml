@@ -1,0 +1,31 @@
+# Design eval — GitHub Actions workflow
+# Copy this file to .github/workflows/design-eval.yml in your project.
+#
+# Runs the agentic design system verification scripts on every PR.
+# Checks: anti-patterns, state completeness, accessibility.
+#
+# Prerequisites:
+#   Install the skills into your project first:
+#   cp -r agentic-design-system/skills ./skills
+#   (or .cursor/skills, .claude/skills, .codex/skills)
+
+name: Design eval
+on: [pull_request]
+
+jobs:
+  design-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Option A: run the wrapper script (if you copied ci/design-eval.py)
+      - run: python3 ci/design-eval.py --strict
+
+      # Option B: run scripts directly (if you only copied the skills folder)
+      # - run: |
+      #     python3 skills/design-review/scripts/anti-pattern-check.py $(find src app components -name '*.tsx' 2>/dev/null)
+      #     python3 skills/design-review/scripts/state-check.py $(find src app components -name '*.tsx' 2>/dev/null)
+      #     python3 skills/design-review/scripts/accessibility-check.py $(find src app components -name '*.tsx' 2>/dev/null)

@@ -94,9 +94,14 @@ python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
 
 # verify loading, empty, and error states exist
 python3 skills/design-review/scripts/state-check.py <your-file.tsx>
+
+# check semantic HTML, aria labels, alt text, heading hierarchy
+python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
 ```
 
 fix any warnings before presenting. these are the cheapest quality checks — they catch the obvious stuff so the human review can focus on judgment calls.
+
+for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 
 ### Step 5: Present with evidence
 - Screenshot of the result
