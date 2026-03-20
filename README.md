@@ -59,17 +59,22 @@ core pack runs on every visual task. creative pack runs only when the product ne
 
 ### skills
 
-drop these into your agent's context. each one is a self-contained skill file with clear triggers and instructions.
+**core pack** — always active for visual work:
 
-| skill | what it does | when to use |
-|-------|-------------|-------------|
-| [design-review](./skills/design-review/) | quality gate with pre-flight checklist + 11 reference files (typography, color, spacing, motion, layout, alignment, responsive, ux-writing, mock-data, anti-patterns, inspiration) | before presenting any visual work |
-| [ux-baseline-check](./skills/ux-baseline-check/) | state inventory — happy path, empty, loading, error, edge cases | before shipping any screen |
-| [ui-polish-pass](./skills/ui-polish-pass/) | sequential visual polish — spacing, alignment, hierarchy | final step before presenting |
-| [whimsical-design](./skills/whimsical-design/) | pushes past sterile toward personality and delight | any user-facing work that should feel alive |
-| [web-animation-design](./skills/web-animation-design/) | easing, springs, timing, transitions, accessibility | anything that moves |
-| [world-build](./skills/world-build/) | creative direction for immersive sites that feel like places | landing pages, portfolios, launches, game UI |
-| [agent-friendly-design](./skills/agent-friendly-design/) | make your site consumable and interactable by AI agents — semantic HTML, ARIA, structured data, llms.txt, MCP, API-first patterns | any web project shipping to production |
+| skill | what it does |
+|-------|-------------|
+| [design-review](./skills/design-review/) | quality gate with pre-flight checklist, 11 reference files, and 3 verification scripts |
+| [ux-baseline-check](./skills/ux-baseline-check/) | state inventory — loading, empty, error, edge cases |
+| [ui-polish-pass](./skills/ui-polish-pass/) | final visual polish — spacing, alignment, hierarchy |
+| [agent-friendly-design](./skills/agent-friendly-design/) | semantic HTML, ARIA, structured data, llms.txt, MCP |
+
+**creative pack** — opt-in, each skill self-gates:
+
+| skill | what it does | triggers |
+|-------|-------------|----------|
+| [whimsical-design](./skills/whimsical-design/) | personality and delight | user asks for personality, marketing/editorial work |
+| [world-build](./skills/world-build/) | immersive atmosphere | user says "world-build this", portfolios, launches |
+| [web-animation-design](./skills/web-animation-design/) | easing, springs, interaction feel | user asks about animation or motion |
 
 ### routing
 

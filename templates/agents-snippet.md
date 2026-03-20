@@ -1,21 +1,29 @@
-## Design system routing
+## Design system
 
-Before starting UI work, route the task through the design system checks below.
+this project uses the [agentic design system](https://github.com/aa-on-ai/agentic-design-system). read `routing/ROUTING.md` for the full decision tree. summary:
 
-- **Full chain** — use for new pages, new components, or anything a stakeholder will see.
-  1. Read `./skills/design-review/SKILL.md`
-  2. Read `./skills/ux-baseline-check/SKILL.md`
-  3. Read `./skills/ui-polish-pass/SKILL.md`
+### core pack (always active for visual work)
+1. `skills/design-review/SKILL.md` — quality gate
+2. `skills/ux-baseline-check/SKILL.md` — state completeness
+3. `skills/ui-polish-pass/SKILL.md` — final polish
 
-- **Review only** — use for modifications to existing UI.
-  1. Read `./skills/design-review/SKILL.md`
-  2. Run the pre-flight checklist only
+### creative pack (opt-in only — read each skill's trigger rules first)
+- `skills/whimsical-design/SKILL.md` — only when user asks for personality/delight
+- `skills/world-build/SKILL.md` — only when user asks for immersion/atmosphere
+- `skills/web-animation-design/SKILL.md` — only when task involves animation
 
-- **Skip** — use for non-visual work such as scripts, backend, data, config, or infrastructure.
+### routing
+- visual + new → core pack (add creative only if triggered)
+- visual + modification → design-review only
+- non-visual → skip
 
-Decision rule:
-- If the task is not visual, skip the chain.
-- If the task is visual and new, use the full chain.
-- If the task is visual and modifies existing UI, use review only.
+### verification (run before presenting)
+```bash
+python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 skills/design-review/scripts/state-check.py <file.tsx>
+python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
+```
+fix warnings before presenting.
 
-When in doubt, default to the full chain.
+### key rule
+if the default aesthetic is product-appropriate, don't fight it. make it excellent, not different.

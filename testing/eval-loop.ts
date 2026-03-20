@@ -41,16 +41,24 @@ type StateResult = {
   raw: string;
 };
 
+type AccessibilityResult = {
+  warnings: number;
+  info: number;
+  raw: string;
+};
+
 type VariantResult = {
   file: string;
   antiPatterns: AntiPatternResult;
   states: StateResult;
+  accessibility: AccessibilityResult;
   responsive: boolean;
   judge: JudgeScores;
   judgeTotal: number;
   penalties: {
     antiPatterns: number;
     missingStates: number;
+    accessibility: number;
     responsive: number;
   };
   total: number;
@@ -325,6 +333,19 @@ function parseStateOutput(raw: string) {
   };
 }
 
+async function runAccessibilityCheck(filePath: string): Promise<AccessibilityResult> {
+  const scriptPath = path.join(ROOT, 'skills', 'design-review', 'scripts', 'accessibility-check.py');
+  try {
+    const { stdout, stderr } = await execFileAsync('python3', [scriptPath, filePath], { cwd: ROOT });
+    const raw = [stdout, stderr].filter(Boolean).join('\n').trim();
+    return { ...parseAntiPatternOutput(raw), raw };
+  } catch (error) {
+    const execError = error as { stdout?: string; stderr?: string; message: string };
+    const raw = [execError.stdout, execError.stderr, execError.message].filter(Boolean).join('\n').trim();
+    return { ...parseAntiPatternOutput(raw), raw };
+  }
+}
+
 async function detectResponsive(filePath: string) {
   const content = await fs.readFile(filePath, 'utf8');
   return /(?:^|\W)(?:sm:|md:|lg:|xl:|2xl:)/.test(content);
@@ -342,10 +363,12 @@ function computeTotal(args: {
   judge: JudgeScores;
   antiPatterns: AntiPatternResult;
   states: StateResult;
+  accessibility: AccessibilityResult;
   responsive: boolean;
 }) {
   const antiPatternPenalty = -(args.antiPatterns.warnings * 2 + args.antiPatterns.info);
   const missingStatesPenalty = -(missingStateCount(args.states) * 3);
+  const accessibilityPenalty = -(args.accessibility.warnings * 2 + args.accessibility.info);
   const responsivePenalty = args.responsive ? 0 : -5;
   const judgeScore = judgeTotal(args.judge);
 
@@ -354,9 +377,10 @@ function computeTotal(args: {
     penalties: {
       antiPatterns: antiPatternPenalty,
       missingStates: missingStatesPenalty,
+      accessibility: accessibilityPenalty,
       responsive: responsivePenalty,
     },
-    total: judgeScore + antiPatternPenalty + missingStatesPenalty + responsivePenalty,
+    total: judgeScore + antiPatternPenalty + missingStatesPenalty + accessibilityPenalty + responsivePenalty,
   };
 }
 
@@ -378,18 +402,20 @@ function validateJudgeScores(scores: JudgeScores, label: string) {
 }
 
 async function evaluateVariant(filePath: string, judge: JudgeScores): Promise<VariantResult> {
-  const [antiPatterns, states, responsive] = await Promise.all([
+  const [antiPatterns, states, accessibility, responsive] = await Promise.all([
     runAntiPatternCheck(filePath),
     runStateCheck(filePath),
+    runAccessibilityCheck(filePath),
     detectResponsive(filePath),
   ]);
 
-  const totals = computeTotal({ judge, antiPatterns, states, responsive });
+  const totals = computeTotal({ judge, antiPatterns, states, accessibility, responsive });
 
   return {
     file: path.relative(ROOT, filePath),
     antiPatterns,
     states,
+    accessibility,
     responsive,
     judge,
     judgeTotal: totals.judgeTotal,
