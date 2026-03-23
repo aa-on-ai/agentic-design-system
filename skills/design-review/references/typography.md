@@ -20,9 +20,10 @@
 
 ## Patterns Agents Miss
 - Giant type is often compensation for weak layout.
-- Metrics, tables, and dashboards want tabular numbers.
+- Metrics, tables, and dashboards want tabular numbers (`font-variant-numeric: tabular-nums`).
 - Long-form text needs restrained measure and enough line-height to breathe.
 - Centered paragraphs almost always make product UI worse.
+- Use `text-wrap: balance` on headings and short text blocks to distribute text evenly across lines and prevent orphaned words. Use `text-wrap: pretty` for body copy where balance is too aggressive.
 
 ## Avoid
 - Inter/system font autopilot.

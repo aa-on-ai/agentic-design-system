@@ -153,6 +153,22 @@ geometric centering (equal pixels on all sides) sometimes LOOKS wrong, even thou
 
 when geometric centering looks off, adjust optically. nudge the element 1-2px until it LOOKS centered. this is a human judgment call — agents should flag when they're using asymmetric shapes in centered containers and note that optical adjustment may be needed.
 
+## Image Outline Overlay
+
+add a 1px semi-transparent outline to images, avatars, and thumbnails to create consistent depth against any background:
+
+```css
+.image-overlay {
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -1px;
+}
+.dark .image-overlay {
+  outline-color: rgba(255, 255, 255, 0.1);
+}
+```
+
+works better than borders because it uses transparency and adapts to any background. especially useful in design systems where other elements also use borders — the overlay creates visual consistency without fighting background colors.
+
 ## Shadows Over Borders
 
 use layered transparent box-shadows instead of solid borders for depth between sections. shadows adapt to any background color; borders fight it.
