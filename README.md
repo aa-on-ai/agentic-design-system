@@ -2,118 +2,56 @@
 
 a design system for AI agents that build UI.
 
-not a component library. not a Figma kit. a set of skills, references, and routing logic that agents load into context so they produce professional, intentional work instead of the default AI slop.
+not a component library. not a Figma kit. a set of skills, references, and routing logic that agents load into context so they stop producing default AI-looking interfaces.
 
-## the problem
-
-agents default to the median of their training data. safe layouts, familiar patterns, blue buttons in a grid. technically correct, visually forgettable. the output isn't broken — it's just boring. and boring compounds until everything looks the same.
-
-more rules don't fix this. agents are already constrained by what they've seen. tighter boxes reinforce the center of the distribution.
-
-## the fix
-
-constraint + permission. a non-negotiable floor so nothing ships broken, and explicit encouragement to push beyond safe.
-
-the system works in three layers:
-
-**non-negotiable** — tokens, spacing, type, accessibility, brand. agents follow the system or fail the quality gate.
-
-**guided** — layout patterns, component usage, hierarchy. the system has opinions but agents can propose alternatives. this layer grows over time as decisions compound.
-
-**open** — visual direction, interaction ideas, creative solutions. agents riff, diverge, compete. multiple directions at once. the ceiling is high on purpose.
-
-read [PHILOSOPHY.md](./PHILOSOPHY.md) for the full thinking.
+if your agent keeps shipping safe card grids, vague hierarchy, missing states, and generic polish, this is for that.
 
 ## does it actually work?
 
-we built an automated eval loop to find out. same model (GPT-5.4), same prompt, one run without skills, one with core pack. scored by our verification scripts + Claude Sonnet as a neutral judge.
+we built an eval loop and tested it. same model (GPT-5.4), same prompt, one run without skills, one with core pack.
 
-```
-                        BEFORE    AFTER     DELTA
-canopy (landing)          16        40       +24
-pawprint (dashboard)      15        41       +26
-notion-ai (settings)      17        40       +23
-                        ----      ----      ----
-average                   16        40      +24.3
-```
+| prompt | before | after | delta |
+|---|---:|---:|---:|
+| canopy (landing) | 16 | 40 | +24 |
+| pawprint (dashboard) | 15 | 41 | +26 |
+| notion-ai (settings) | 17 | 40 | +23 |
+| **average** | **16** | **40** | **+24.3** |
 
-**what the scores mean:** programmatic checks (anti-pattern warnings, state completeness) + model judge scoring hierarchy, spacing, copy quality, product-fit, and screenshot-worthiness. max score ~50.
+scores come from verification scripts + Claude Sonnet as a neutral judge.
 
-**what improved:** before pages averaged 4 anti-pattern warnings and 0/3 states (no loading, empty, or error handling). after pages averaged 0.33 warnings and 3/3 states every time. judge scores improved from ~7/10 to ~8/10 across all dimensions.
+what improved: anti-pattern warnings dropped from 4 avg to 0.33. state coverage went from 0/3 to 3/3. judge scores improved across hierarchy, spacing, copy, product-fit, and screenshot-worthiness.
 
-**what we learned the hard way:** we originally ran all 7 skills on a weather app landing page and the output was *worse* — the creative pack fought the product-appropriate dark/glassy aesthetic and produced something that looked like a wellness brand. so we split into [core + creative packs](#two-packs), re-ran with core only, and the results above are what came out. the system improved because it failed honestly.
+what we learned the hard way: we originally ran all 7 skills on a weather app and the output was *worse*. the creative pack fought the product-appropriate dark/glassy aesthetic. so we split into core + creative packs, re-ran with core only, and got the results above.
 
-run it yourself: `npx tsx testing/eval-loop.ts` (needs OpenAI + Anthropic API keys). add your own prompts to `testing/prompts.json`.
-
-## two packs
-
-**core pack** (always active for visual work):
-- design-review, ux-baseline-check, ui-polish-pass, agent-friendly-design
-
-**creative pack** (opt-in only — each skill has trigger rules baked in):
-- whimsical-design, world-build, web-animation-design
-
-core pack runs on every visual task. creative pack runs only when the product needs personality, immersion, or animation beyond the baseline. each creative skill self-gates — it won't activate unless the triggers in its description are met. this split exists because we tested it and found that auto-applying creative skills to everything made some outputs worse.
-
-## what's in the box
-
-### skills
-
-**core pack** — always active for visual work:
-
-| skill | what it does |
-|-------|-------------|
-| [design-review](./skills/design-review/) | quality gate with pre-flight checklist, 11 reference files, and 3 verification scripts |
-| [ux-baseline-check](./skills/ux-baseline-check/) | state inventory — loading, empty, error, edge cases |
-| [ui-polish-pass](./skills/ui-polish-pass/) | final visual polish — spacing, alignment, hierarchy |
-| [agent-friendly-design](./skills/agent-friendly-design/) | semantic HTML, ARIA, structured data, llms.txt, MCP |
-
-**creative pack** — opt-in, each skill self-gates:
-
-| skill | what it does | triggers |
-|-------|-------------|----------|
-| [whimsical-design](./skills/whimsical-design/) | personality and delight | user asks for personality, marketing/editorial work |
-| [world-build](./skills/world-build/) | immersive atmosphere | user says "world-build this", portfolios, launches |
-| [web-animation-design](./skills/web-animation-design/) | easing, springs, interaction feel | user asks about animation or motion |
-
-### routing
-
-not every task needs every skill. the [routing doc](./routing/ROUTING.md) tells agents when to apply the full chain, when to do a light review, and when to skip entirely. includes a decision tree, token budget guidance, the divergent exploration pattern, and the agent-friendly pass for sites that need to serve AI consumers.
-
-### templates
-
-- [agents-snippet.md](./templates/agents-snippet.md) — copy-paste block for your AGENTS.md, .cursorrules, or codex instructions
-- [brand-guidelines-template.md](./templates/brand-guidelines-template.md) — blank template for your project's design tokens, patterns, and learnings
+run it yourself: `npx tsx testing/eval-loop.ts` (needs OpenAI + Anthropic API keys).
 
 ## install
 
-### option 1: one command (recommended)
+### one command (recommended)
 
 ```bash
 npx skills add aa-on-ai/agentic-design-system
 ```
 
-works with Claude Code, Cursor, Codex, and any agent that follows the [Agent Skills](https://agentskills.io) spec. installs all skills into your current project.
+works with Claude Code, Cursor, Codex, and anything that follows the [Agent Skills](https://agentskills.io) spec.
 
-### option 2: global install (personal use)
+### global install (personal use)
 
-install once, available in every project you open:
+install once, available in every project:
 
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
 cp -r agentic-design-system/skills ~/.claude/skills/
 ```
 
-good for personal workflows where you want the design system active everywhere without installing per-project.
-
-### option 3: project-level (teams)
+### project-level (teams)
 
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
 cp -r agentic-design-system/skills your-project/skills/
 ```
 
-then paste the [agents snippet](./templates/agents-snippet.md) into your project's instruction file:
+then paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into your agent's instruction file:
 - Claude Code: `AGENTS.md` or `CLAUDE.md`
 - Cursor: `.cursorrules`
 - Codex CLI: `.codex/instructions`
@@ -121,83 +59,81 @@ then paste the [agents snippet](./templates/agents-snippet.md) into your project
 
 ### after install
 
-prompt your agent with any visual task:
+just prompt normally:
 
 ```
 build me a dashboard that shows agent uptime and status.
 ```
 
-that's it. the agent reads the skill descriptions, routes through the quality chain, and builds something better than it would have without them. no special prompting needed — the skills trigger automatically on visual/frontend work.
+the skills route themselves based on the task. no special invocation needed.
+
+## two packs
+
+**core pack** (always active for visual work):
+- design-review, ux-baseline-check, ui-polish-pass, agent-friendly-design
+
+**creative pack** (opt-in only, each skill self-gates):
+- whimsical-design, world-build, web-animation-design
+
+we split them after finding that auto-applying creative skills to everything made some outputs worse. core pack raises the floor. creative pack changes the direction. only add creative when different is what the product actually needs.
+
+## what's in the box
+
+### core pack
+
+| skill | what it does |
+|---|---|
+| [design-review](./skills/design-review/) | quality gate with checklist, 11 reference files, and 3 verification scripts |
+| [ux-baseline-check](./skills/ux-baseline-check/) | checks loading, empty, error, and edge-case states |
+| [ui-polish-pass](./skills/ui-polish-pass/) | tightens spacing, alignment, hierarchy, and visual finish |
+| [agent-friendly-design](./skills/agent-friendly-design/) | semantic HTML, ARIA, structured data, llms.txt, MCP |
+
+### creative pack
+
+| skill | what it does | triggers |
+|---|---|---|
+| [whimsical-design](./skills/whimsical-design/) | personality and delight | user asks for personality, marketing/editorial work |
+| [world-build](./skills/world-build/) | immersive atmosphere | user says "world-build this", portfolios, launches |
+| [web-animation-design](./skills/web-animation-design/) | easing, springs, interaction feel | user asks about animation or motion |
+
+### routing
+
+[`routing/ROUTING.md`](./routing/ROUTING.md) tells agents when to run the full chain, when to do a lighter pass, and when to skip entirely.
+
+### templates
+
+- [`agents-snippet.md`](./templates/agents-snippet.md) — paste into your agent's instruction file
+- [`brand-guidelines-template.md`](./templates/brand-guidelines-template.md) — fill in with your project's tokens and patterns
 
 ## use cases
 
-**"I need to oneshot a dashboard for a client demo"**
-point the agent at the full skill chain. it reads design-review for quality, ux-baseline-check for states (loading, empty, error), and whimsical-design to push past generic. your first pass comes back with proper hierarchy, real-feeling mock data, and personality.
+**"I need a decent first-pass dashboard fast"**
+load the core pack and let the agent build. you get better hierarchy, better defaults, and complete states instead of a hollow mock.
 
-**"my agent keeps building dark mode card grids"**
-that's the #1 agent cliche. the anti-patterns reference file explicitly calls this out, plus 30+ other defaults agents reach for. drop the skills in and the agent learns what NOT to do.
+**"my agent keeps making dark card-grid SaaS UI"**
+the anti-patterns reference calls out common agent cliches directly, so the model has something better to reach for.
 
-**"I want to polish an existing page before presenting"**
-run just the ui-polish-pass skill. it does 6 sequential passes: spacing, alignment, typography, color, motion, then final review. tell the agent: "run a polish pass on this page using the ui-polish-pass skill."
+**"I want to polish a page before showing it to someone"**
+run `ui-polish-pass` on an existing page for spacing, alignment, hierarchy, and finish.
 
-**"client has brand guidelines, how do I make the agent follow them?"**
-fill in the [brand guidelines template](./templates/brand-guidelines-template.md) with your project's colors, fonts, spacing, and patterns. the agent loads this alongside the skills and stays on-brand while still getting the quality floor.
+**"we have brand guidelines and want the agent to follow them"**
+fill in the brand template and load it with the skills. the system gets a quality floor without drifting off-brand.
 
-**"I built something and it looks AI-generated"**
-run design-review (catches structural problems) then whimsical-design (adds personality). the combination flags what makes it feel generic and pushes toward something with warmth and intention.
-
-**"I'm building a landing page that should feel immersive"**
-use the world-build skill first — it sets creative direction (atmosphere, sensory palette, narrative arc) before the quality chain runs. think: sites that feel like places, not pages.
-
-**"I want my site to work well for AI agents visiting it"**
-the agent-friendly-design skill covers semantic HTML, ARIA, structured data, llms.txt, and API-first patterns. run it alongside the visual chain — a page can be beautiful for humans and parseable for agents.
-
-## full setup
-
-1. copy the `skills/` folder into your project
-2. paste the [agents snippet](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, .cursorrules, codex instructions, etc.)
-3. fill in the [brand guidelines template](./templates/brand-guidelines-template.md) with your project's tokens and patterns
-4. agents will automatically route through the appropriate skill chain based on the task
-
-the system is designed to be loaded by agents, not memorized by humans.
-
-## divergent exploration
-
-one of the core workflow patterns: instead of asking an agent to build one thing, have it explore multiple directions with a version selector so you can compare and pick.
-
-```
-"this layout could go a few directions — want me to explore
-2-3 options or should I pick one?"
-```
-
-different agents can work on different directions simultaneously. the builder picks a winner or hybridizes. then the quality chain runs on the chosen direction.
-
-use this for layout decisions and visual direction. not for button colors.
-
-## compounding
-
-the system learns from every build. after each session:
-
-- new anti-patterns get added to the reference files
-- project-specific decisions go in your guidelines
-- animation patterns that worked get documented
-
-the review step produces the update as a byproduct, not as homework. day 1, the human answers a lot of steering questions. month 3, the guidelines handle most of it.
+**"I want a site that works for humans and agents"**
+`agent-friendly-design` covers semantic structure, accessibility, structured data, and AI-readable surfaces.
 
 ## how is this different from Impeccable?
 
-[Impeccable](https://impeccable.style) is a great quality gate — 17 slash commands like `/audit`, `/polish`, `/bolder` that catch problems and add polish. if you want one skill that does design review, it's solid.
+[Impeccable](https://impeccable.style) is a good quality gate with slash commands for polish.
 
-we go wider and deeper: 7 skills with routing logic that tells agents WHEN to apply WHAT. a context pass that grounds builds in the actual company being referenced. a workflow layer (divergent exploration, pattern benchmarking, compounding). creative direction skills (whimsical-design, world-build) that push past safe. verification scripts that catch anti-patterns programmatically. and an agent-friendly-design skill for building sites that agents themselves can consume.
-
-Impeccable raises the craft ceiling. we raise the floor AND add the workflow. they're complementary — use both if you want.
+we go broader: quality gate + state checklist + polish pass + creative direction + routing logic + agent-friendly patterns + verification scripts. they're complementary — use both if you want.
 
 ## pairs well with
 
-- [react-grab](https://github.com/aidenybai/react-grab) — hover over any element in your browser, press Cmd+C, get the file name + component + HTML. paste into your agent for precise "fix this" workflows. our system tells agents how to build good UI; react-grab lets you point at what still needs work.
-- [Impeccable](https://impeccable.style) — slash commands for design polish (/audit, /polish, /bolder). good quality gate. we go deeper on workflow, routing, and creative direction, but their commands are a nice ergonomic layer.
-- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) — micro-detail skill (concentric border radius, tabular numbers, text wrapping). we've absorbed most of these into our reference files, but the original is worth reading.
-- [userinterface.wiki](https://www.userinterface.wiki/) — deep articles on UX psychology (Fitts's law, Hick's law, Miller's law), animation techniques, and sound design. installable as an agent skill. we handle workflow and routing; this handles the theory behind why patterns work.
+- [react-grab](https://github.com/aidenybai/react-grab) — point an agent at exact components to fix
+- [Impeccable](https://impeccable.style) — ergonomic slash-command polish on top of this system
+- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) — micro-detail heuristics (concentric radius, tabular nums, text wrapping)
+- [userinterface.wiki](https://www.userinterface.wiki/) — UX theory and pattern reasoning
 
 ## works with
 
@@ -209,13 +145,11 @@ Impeccable raises the craft ceiling. we raise the floor AND add the workflow. th
 
 ## philosophy
 
-> design systems aren't for designers anymore. they're for agents. and the agents that use them will build things the ones without them can't.
-
-the full philosophy: [PHILOSOPHY.md](./PHILOSOPHY.md)
+read [PHILOSOPHY.md](./PHILOSOPHY.md) for the full thinking behind the system.
 
 ## contributing
 
-this is a living system. if you find patterns that work, anti-patterns that keep recurring, or better ways to route — open a PR.
+if you find a recurring anti-pattern, a better routing rule, or a skill that should exist, open a PR.
 
 ## license
 
