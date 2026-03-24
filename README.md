@@ -85,34 +85,49 @@ not every task needs every skill. the [routing doc](./routing/ROUTING.md) tells 
 - [agents-snippet.md](./templates/agents-snippet.md) — copy-paste block for your AGENTS.md, .cursorrules, or codex instructions
 - [brand-guidelines-template.md](./templates/brand-guidelines-template.md) — blank template for your project's design tokens, patterns, and learnings
 
-## try it in 60 seconds
+## install
 
-**claude code:**
+### option 1: one command (recommended)
+
+```bash
+npx skills add aa-on-ai/agentic-design-system
+```
+
+works with Claude Code, Cursor, Codex, and any agent that follows the [Agent Skills](https://agentskills.io) spec. installs all skills into your current project.
+
+### option 2: global install (personal use)
+
+install once, available in every project you open:
+
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
-cd your-project
-cp -r ../agentic-design-system/skills ./skills
+cp -r agentic-design-system/skills ~/.claude/skills/
 ```
 
-then prompt:
+good for personal workflows where you want the design system active everywhere without installing per-project.
+
+### option 3: project-level (teams)
+
+```bash
+git clone https://github.com/aa-on-ai/agentic-design-system.git
+cp -r agentic-design-system/skills your-project/skills/
+```
+
+then paste the [agents snippet](./templates/agents-snippet.md) into your project's instruction file:
+- Claude Code: `AGENTS.md` or `CLAUDE.md`
+- Cursor: `.cursorrules`
+- Codex CLI: `.codex/instructions`
+- OpenClaw: `AGENTS.md`
+
+### after install
+
+prompt your agent with any visual task:
+
 ```
 build me a dashboard that shows agent uptime and status.
-use the design skills in /skills for quality — read the routing
-doc first to know which skills to apply.
 ```
 
-that's it. the agent reads the skills, follows the routing chain, and builds something better than it would have without them.
-
-**cursor:**
-```bash
-cp -r agentic-design-system/skills .cursor/skills
-```
-add to `.cursorrules`: "read and follow the design skills in .cursor/skills/ for all visual work."
-
-**codex cli:**
-```bash
-cp -r agentic-design-system/skills .codex/skills
-```
+that's it. the agent reads the skill descriptions, routes through the quality chain, and builds something better than it would have without them. no special prompting needed — the skills trigger automatically on visual/frontend work.
 
 ## use cases
 
