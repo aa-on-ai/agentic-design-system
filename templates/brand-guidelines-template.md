@@ -1,5 +1,9 @@
 # Brand guidelines template
 
+> **Deprecated.** superseded by [`project-identity-template.md`](./project-identity-template.md), which is opinionated and fillable rather than blank. use that instead. this file is kept as a redirect so existing integration docs and copy-paste workflows don't break; it will be removed in a future release.
+>
+> if you're starting fresh, copy `templates/project-identity-template.md` as `guidelines.md` and pick a starting point from `presets/`.
+
 Use this file to capture project-specific visual rules that should inform design reviews and implementation.
 
 ## Design tokens

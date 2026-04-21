@@ -1,14 +1,25 @@
 # agentic design system
 
-a set of agent skills and verification scripts that make coding agents critique and fix their own UI output before presenting it.
+a governance layer for agent-generated interfaces. rubric, verifier, audit trail, and compounding identity file — plugs into whatever generator your agent already uses.
 
-## the problem
+## what this is (and isn't)
+
+this isn't another UI generator. it's the layer that sits on top of one.
+
+- **rubric.** a weighted 4-criterion rubric the agent grades itself against before presenting work ([`skills/agentic-design-system/SKILL.md`](./skills/agentic-design-system/SKILL.md)).
+- **verifier.** three deterministic scripts — anti-pattern, state completeness, accessibility — that catch the floor issues rubrics miss ([`skills/design-review/scripts/`](./skills/design-review/scripts/)).
+- **audit trail.** every run emits a human-readable `report.md` with rule hits, rubric scores, and follow-ups ([`EXPLAINABILITY.md`](./EXPLAINABILITY.md)).
+- **identity file.** an opinionated, fillable project brief the agent reads before building and writes to after ([`templates/project-identity-template.md`](./templates/project-identity-template.md), starting points in [`presets/`](./presets/)).
+
+works with Claude Code, Cursor, Codex CLI, OpenClaw — anything that reads the [Agent Skills](https://agentskills.io) spec.
+
+## why
 
 agents are bad at *spontaneously* avoiding design anti-patterns — card grids, dark gradients, missing error states, cramped spacing. but they're surprisingly good at *finding* those problems when given explicit criteria after the fact.
 
-this system exploits that gap. build first, then run structured critique passes with checklists the agent couldn't hold in mind during generation. each pass encodes specific review criteria, and the agent reruns them until the output clears the bar.
+this system exploits that gap. build first, then run structured critique passes with checklists the agent couldn't hold in mind during generation. each pass encodes specific review criteria, and the agent reruns them until the output clears the bar. this is the [karpathy auto-research](https://x.com/karpathy/status/1886192184808149383) evaluation pattern applied to design: LLMs grading LLM output against criteria, not freeform self-reflection.
 
-this is the [karpathy auto-research](https://x.com/karpathy/status/1886192184808149383) evaluation pattern applied to design: LLMs grading LLM output against criteria, not freeform self-reflection.
+but a loop without a readable artifact is just a score. the governance layer is what makes the loop's work legible and compoundable — see [`EXPLAINABILITY.md`](./EXPLAINABILITY.md).
 
 ## how the loop runs
 
@@ -28,18 +39,19 @@ three more skills exist for creative direction — personality, atmosphere, anim
 
 1. install the skills (see below)
 2. paste the [agent snippet](./templates/agents-snippet.md) into your instruction file
-3. prompt normally: "build me a dashboard showing agent uptime"
-4. agent builds the first pass
-5. design-review runs → catches anti-patterns, flags missing hierarchy
-6. ux-baseline-check runs → flags missing loading/error states
-7. ui-polish-pass runs → tightens spacing, alignment, finish
-8. agent fixes what the passes caught, then presents
+3. copy [`templates/project-identity-template.md`](./templates/project-identity-template.md) into your project as `guidelines.md` and fill it in — start from a [preset](./presets/) if close enough
+4. prompt normally: "build me a dashboard showing agent uptime"
+5. agent builds the first pass
+6. design-review runs → catches anti-patterns, flags missing hierarchy
+7. ux-baseline-check runs → flags missing loading/error states
+8. ui-polish-pass runs → tightens spacing, alignment, finish
+9. agent fixes what the passes caught, emits a `report.md` ([template](./templates/run-report-template.md)), then presents
 
 no special syntax. the skills route themselves based on the task.
 
 ## evidence
 
-same model (GPT-5.4), same prompt, one run without evaluation passes, one with.
+same model (GPT-5.4), same prompt, one run without skills, one with the core pack.
 
 | prompt | without | with | delta |
 |---|---:|---:|---:|
@@ -48,11 +60,20 @@ same model (GPT-5.4), same prompt, one run without evaluation passes, one with.
 | notion-ai (settings) | 17 | 40 | +23 |
 | **average** | **16** | **40.3** | **+24.3** |
 
-scores are 0-50 across 5 dimensions (hierarchy, spacing, copy, product-fit, screenshot-worthiness), judged by Claude Sonnet on the rendered output. [scoring rubric and prompts →](./testing/)
+scores are 0-50 across 5 dimensions (hierarchy, spacing, copy, product-fit, screenshot-worthiness), judged by Claude Sonnet on the rendered output. anti-pattern warnings dropped 4 → 0.33 on average. state coverage went 0/3 → 3/3.
 
-anti-pattern warnings dropped from 4 avg to 0.33. state coverage went from 0/3 to 3/3.
+**case studies with rule hits, rubric deltas, and narrative:** [`examples/case-studies/`](./examples/case-studies/). every case lists what the loop actually caught, not just the summary number.
 
-run the benchmark yourself: `npx tsx testing/eval-loop.ts` (needs OpenAI + Anthropic API keys). it runs the included demo prompts with and without skills and compares scores.
+run the benchmark yourself:
+
+```bash
+npx tsx testing/eval-loop.ts                                 # 6 prompts, default models
+npx tsx testing/eval-loop.ts --dry-run                       # verify without API calls
+npx tsx testing/eval-loop.ts --slug canopy                   # single prompt
+npx tsx testing/eval-loop.ts --generator claude-sonnet-4-6   # swap the generator model
+```
+
+needs OpenAI + Anthropic API keys (env vars or credentials file — see [`testing/TESTING.md`](./testing/TESTING.md)). every run writes `scores.json` and a human-readable `report.md` per prompt, plus a `summary.json` across the set.
 
 we found that running every skill on every task can make output worse — creative passes fought product-appropriate aesthetics on a weather app. so the system splits core review from opt-in creative direction. routing matters.
 
@@ -90,8 +111,10 @@ then paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into y
 | **core skills** | [design-review](./skills/design-review/), [ux-baseline-check](./skills/ux-baseline-check/), [ui-polish-pass](./skills/ui-polish-pass/) |
 | **creative skills** | [whimsical-design](./skills/whimsical-design/), [world-build](./skills/world-build/), [web-animation-design](./skills/web-animation-design/) |
 | **agent-friendly-design** | semantic HTML, ARIA, structured data, llms.txt, MCP patterns |
-| **verification scripts** | [anti-pattern detection + state completeness checks](./testing/) (Python, stdlib only) |
-| **templates** | [agent snippet](./templates/agents-snippet.md), [brand guidelines template](./templates/brand-guidelines-template.md) |
+| **verification scripts** | [anti-pattern, state, accessibility checks](./skills/design-review/scripts/) (Python, stdlib only) |
+| **identity + presets** | [project-identity template](./templates/project-identity-template.md), [presets](./presets/) for editorial/SaaS/utility |
+| **run reports** | [`EXPLAINABILITY.md`](./EXPLAINABILITY.md) + [run-report template](./templates/run-report-template.md) — audit trail per build |
+| **evidence** | [case studies](./examples/case-studies/) with rule hits, rubric scores, narrative |
 | **integration guides** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
 
 ## limitations

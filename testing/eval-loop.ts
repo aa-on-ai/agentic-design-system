@@ -11,8 +11,8 @@ const TESTING_DIR = path.join(ROOT, 'testing');
 const RESULTS_DIR = path.join(TESTING_DIR, 'results');
 const PROMPTS_PATH = path.join(TESTING_DIR, 'prompts.json');
 const JUDGE_PROMPT_PATH = path.join(TESTING_DIR, 'judge-prompt.md');
-const OPENAI_MODEL = 'gpt-5.4';
-const ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+const DEFAULT_GENERATOR = 'gpt-5.4';
+const DEFAULT_JUDGE = 'claude-sonnet-4-6';
 
 type PromptDef = {
   slug: string;
@@ -93,6 +93,8 @@ function parseArgs() {
     dryRun: args.includes('--dry-run'),
     help: args.includes('--help') || args.includes('-h'),
     slug: readFlagValue(args, '--slug'),
+    generator: readFlagValue(args, '--generator') ?? process.env.EVAL_GENERATOR_MODEL ?? DEFAULT_GENERATOR,
+    judge: readFlagValue(args, '--judge') ?? process.env.EVAL_JUDGE_MODEL ?? DEFAULT_JUDGE,
   };
 }
 
@@ -103,7 +105,7 @@ function readFlagValue(args: string[], name: string): string | undefined {
 }
 
 function printHelp() {
-  console.log(`Usage: npx tsx testing/eval-loop.ts [--dry-run] [--slug <slug>]\n\nOptions:\n  --dry-run     Validate inputs and print what would run without calling APIs\n  --slug        Run only one prompt slug\n  --help, -h    Show this help`);
+  console.log(`Usage: npx tsx testing/eval-loop.ts [options]\n\nOptions:\n  --dry-run             Validate inputs and print what would run without calling APIs\n  --slug <slug>         Run only one prompt slug\n  --generator <model>   Override the generator model (default: ${DEFAULT_GENERATOR}, or $EVAL_GENERATOR_MODEL)\n  --judge <model>       Override the judge model (default: ${DEFAULT_JUDGE}, or $EVAL_JUDGE_MODEL)\n  --help, -h            Show this help`);
 }
 
 async function ensureDir(dir: string) {
@@ -206,7 +208,7 @@ function buildAfterUserPrompt(prompt: string) {
   return `${prompt}\n\nFollow the core pack chain from the system prompt. Build a single React + Tailwind CSS page component with a default export and a use client directive. Include intentional hierarchy, specific copy, responsive behavior, and clear loading, empty, and error states when applicable. Return TSX only.`;
 }
 
-async function callOpenAI({ apiKey, system, user }: { apiKey: string; system?: string; user: string }) {
+async function callOpenAI({ apiKey, model, system, user }: { apiKey: string; model: string; system?: string; user: string }) {
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
@@ -214,7 +216,7 @@ async function callOpenAI({ apiKey, system, user }: { apiKey: string; system?: s
       authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: OPENAI_MODEL,
+      model,
       input: [
         ...(system ? [{ role: 'system', content: [{ type: 'input_text', text: system }] }] : []),
         { role: 'user', content: [{ type: 'input_text', text: user }] },
@@ -245,7 +247,7 @@ async function callOpenAI({ apiKey, system, user }: { apiKey: string; system?: s
   return stripCodeFences(output);
 }
 
-async function callAnthropic({ apiKey, system, user }: { apiKey: string; system: string; user: string }) {
+async function callAnthropic({ apiKey, model, system, user }: { apiKey: string; model: string; system: string; user: string }) {
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -254,7 +256,7 @@ async function callAnthropic({ apiKey, system, user }: { apiKey: string; system:
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: ANTHROPIC_MODEL,
+      model,
       max_tokens: 1200,
       system,
       messages: [{ role: 'user', content: user }],
@@ -429,18 +431,132 @@ async function writeJson(filePath: string, value: unknown) {
   await fs.writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
+async function writeText(filePath: string, value: string) {
+  await ensureDir(path.dirname(filePath));
+  await fs.writeFile(filePath, value.endsWith('\n') ? value : `${value}\n`, 'utf8');
+}
+
+function formatVerdict(result: PromptResult): string {
+  const delta = result.delta;
+  if (result.winner === 'after' && delta >= 20) return 'after — strong lift';
+  if (result.winner === 'after') return 'after — modest lift';
+  if (result.winner === 'tie') return 'tie — no meaningful delta';
+  return 'before — loop did not help, investigate';
+}
+
+function renderVariantRuleBlock(variant: VariantResult): string {
+  const missing: string[] = [];
+  if (!variant.states.loading) missing.push('loading');
+  if (!variant.states.empty) missing.push('empty');
+  if (!variant.states.error) missing.push('error');
+  const statesLine = missing.length === 0 ? 'loading, empty, error all present' : `missing: ${missing.join(', ')}`;
+  return [
+    `- anti-pattern: ${variant.antiPatterns.warnings} warnings, ${variant.antiPatterns.info} info`,
+    `- states: ${statesLine}`,
+    `- accessibility: ${variant.accessibility.warnings} warnings, ${variant.accessibility.info} info`,
+    `- responsive breakpoints: ${variant.responsive ? 'yes' : 'no'}`,
+  ].join('\n');
+}
+
+function renderJudgeTable(result: PromptResult): string {
+  const rows: Array<[keyof JudgeScores, string]> = [
+    ['hierarchy', 'hierarchy'],
+    ['spacing', 'spacing'],
+    ['copy', 'copy'],
+    ['productFit', 'productFit'],
+    ['screenshotWorthy', 'screenshotWorthy'],
+  ];
+  const lines = [
+    '| dimension | before | after | delta |',
+    '|---|---:|---:|---:|',
+    ...rows.map(([key, label]) => {
+      const b = result.before.judge[key];
+      const a = result.after.judge[key];
+      const d = a - b;
+      const sign = d > 0 ? `+${d}` : `${d}`;
+      return `| ${label} | ${b} | ${a} | ${sign} |`;
+    }),
+    `| **judge total** | **${result.before.judgeTotal}** | **${result.after.judgeTotal}** | **${signed(result.after.judgeTotal - result.before.judgeTotal)}** |`,
+  ];
+  return lines.join('\n');
+}
+
+function renderPenaltyTable(result: PromptResult): string {
+  return [
+    '| category | before | after |',
+    '|---|---:|---:|',
+    `| anti-pattern | ${result.before.penalties.antiPatterns} | ${result.after.penalties.antiPatterns} |`,
+    `| missing states | ${result.before.penalties.missingStates} | ${result.after.penalties.missingStates} |`,
+    `| accessibility | ${result.before.penalties.accessibility} | ${result.after.penalties.accessibility} |`,
+    `| responsive | ${result.before.penalties.responsive} | ${result.after.penalties.responsive} |`,
+  ].join('\n');
+}
+
+function signed(n: number): string {
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
+function buildReportMarkdown(result: PromptResult, models: { generator: string; judge: string }): string {
+  const totalDelta = signed(result.delta);
+  return [
+    `# run report — ${result.slug}`,
+    '',
+    `**prompt:** ${result.prompt}`,
+    `**type:** ${result.type}`,
+    `**generator model:** ${models.generator}`,
+    `**judge model:** ${models.judge}`,
+    `**timestamp:** ${result.timestamp}`,
+    `**score:** ${result.before.total} → ${result.after.total} (${totalDelta})`,
+    `**verdict:** ${formatVerdict(result)}`,
+    '',
+    '## files',
+    '',
+    `- before: \`${result.before.file}\``,
+    `- after: \`${result.after.file}\``,
+    '',
+    '## rules fired',
+    '',
+    '### before',
+    '',
+    renderVariantRuleBlock(result.before),
+    '',
+    '### after',
+    '',
+    renderVariantRuleBlock(result.after),
+    '',
+    '## judge scores (1–10 each)',
+    '',
+    renderJudgeTable(result),
+    '',
+    '## penalties',
+    '',
+    renderPenaltyTable(result),
+    '',
+    '## follow-ups',
+    '',
+    '1. anti-pattern hits present on the after variant → candidates for `skills/design-review/references/anti-patterns.md`',
+    '2. judge dimensions under 7 on after → iterate before shipping',
+    '3. rubric weights from `skills/agentic-design-system/SKILL.md` (Design Quality 35%, Originality 30%, Craft 20%, Functionality 15%) are not automatically scored here — apply manually before verdict',
+    '',
+    '## raw',
+    '',
+    'see `scores.json` in this directory for the full structured output.',
+  ].join('\n');
+}
+
 function average(values: number[]) {
   if (values.length === 0) return 0;
   return Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(2));
 }
 
-async function buildSummary(results: PromptResult[], failures: PromptFailure[]) {
+async function buildSummary(
+  results: PromptResult[],
+  failures: PromptFailure[],
+  models: { generator: string; judge: string },
+) {
   const summary = {
     timestamp: new Date().toISOString(),
-    models: {
-      generator: OPENAI_MODEL,
-      judge: ANTHROPIC_MODEL,
-    },
+    models,
     totals: {
       promptsAttempted: results.length + failures.length,
       promptsSucceeded: results.length,
@@ -484,9 +600,14 @@ async function main() {
 
   if (args.dryRun) {
     log(`Dry run. Would evaluate ${filteredPrompts.length} prompt(s): ${filteredPrompts.map((item) => item.slug).join(', ')}`);
+    log(`Generator model: ${args.generator}`);
+    log(`Judge model: ${args.judge}`);
     log(`Loaded judge prompt and core pack bundle.`);
     return;
   }
+
+  log(`Generator model: ${args.generator}`);
+  log(`Judge model: ${args.judge}`);
 
   const openAiKey = await loadEnvKey('OPENAI_API_KEY', '~/.clawdbot/credentials/openai.env');
   const anthropicKey = await loadEnvKey('ANTHROPIC_API_KEY', '~/.clawdbot/credentials/anthropic.env');
@@ -503,12 +624,14 @@ async function main() {
       log(`Generating before for ${promptDef.slug}`);
       const beforeTsx = await callOpenAI({
         apiKey: openAiKey,
+        model: args.generator,
         user: buildBeforeUserPrompt(promptDef.prompt),
       });
 
       log(`Generating after for ${promptDef.slug}`);
       const afterTsx = await callOpenAI({
         apiKey: openAiKey,
+        model: args.generator,
         system: corePackPrompt,
         user: buildAfterUserPrompt(promptDef.prompt),
       });
@@ -523,6 +646,7 @@ async function main() {
       log(`Judging ${promptDef.slug}`);
       const judgeRaw = await callAnthropic({
         apiKey: anthropicKey,
+        model: args.judge,
         system: judgeSystemPrompt,
         user: [
           `Prompt: ${promptDef.prompt}`,
@@ -556,6 +680,10 @@ async function main() {
       };
 
       await writeJson(path.join(resultDir, 'scores.json'), result);
+      await writeText(
+        path.join(resultDir, 'report.md'),
+        buildReportMarkdown(result, { generator: args.generator, judge: args.judge }),
+      );
       successes.push(result);
       log(`Completed ${promptDef.slug}: ${result.winner} (${result.before.total} -> ${result.after.total})`);
     } catch (error) {
@@ -572,7 +700,7 @@ async function main() {
     }
   }
 
-  await buildSummary(successes, failures);
+  await buildSummary(successes, failures, { generator: args.generator, judge: args.judge });
   log(`Done. ${successes.length} succeeded, ${failures.length} failed.`);
 }
 

@@ -13,5 +13,20 @@
     "slug": "notion-ai-settings",
     "prompt": "build a settings page for Notion's AI features",
     "type": "settings"
+  },
+  {
+    "slug": "linear-issues-table",
+    "prompt": "build an issue list for a Linear-style project tracker with filters, sticky header, priority and status cells, and inline row actions",
+    "type": "data-table"
+  },
+  {
+    "slug": "stripe-onboarding",
+    "prompt": "build a three-step onboarding flow for a Stripe-style payments product: business info, identity verification, bank account. progress indicator at the top and one primary action per step",
+    "type": "onboarding"
+  },
+  {
+    "slug": "vercel-pricing",
+    "prompt": "build a pricing page for a Vercel-style developer platform with four tiers, a comparison table below, and an annual/monthly toggle",
+    "type": "pricing"
   }
 ]

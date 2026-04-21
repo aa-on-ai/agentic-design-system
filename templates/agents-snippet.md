@@ -25,5 +25,9 @@ python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 fix warnings before presenting.
 
+### identity + report
+- read `guidelines.md` before building. if it doesn't exist, start from `templates/project-identity-template.md` (or a `presets/` starting point) and propose a draft.
+- after building, emit a `report.md` per `templates/run-report-template.md` — rule hits, rubric scores, follow-ups. this is the audit trail, not an optional extra.
+
 ### key rule
 if the default aesthetic is product-appropriate, don't fight it. make it excellent, not different.
