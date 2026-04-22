@@ -9,7 +9,22 @@
 
 ## live artifacts
 
-scored-only in v1.1. like pawprint, the before/after are not yet committed as routes under `demos/src/app/`. see PHASE-2.md for the intentional scope cut.
+| variant | route | source |
+|---|---|---|
+| before | `/before/notion-ai-settings` | [`demos/src/app/before/notion-ai-settings/page.tsx`](../../demos/src/app/before/notion-ai-settings/page.tsx) |
+| after | `/after/notion-ai-settings` | [`demos/src/app/after/notion-ai-settings/page.tsx`](../../demos/src/app/after/notion-ai-settings/page.tsx) |
+
+to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
+
+## screenshots
+
+### before
+
+![notion ai settings before](./screenshots/notion-ai-settings-before.png)
+
+### after
+
+![notion ai settings after](./screenshots/notion-ai-settings-after.png)
 
 ## rules fired
 
@@ -69,5 +84,5 @@ the judge plateau at 8 across all dimensions is a signal. productFit won't reach
 ## follow-ups
 
 1. plateau at 8 is the identity-file wall — same recommendation as pawprint
-2. routes not yet rendered under `demos/` — scheduled post-v1.1
+2. verify this route against a brand-constrained identity file for higher productFit
 3. the prompt names a real company ("Notion") which per `routing/ROUTING.md` should trigger the context pass — this case is a clean example to verify that path fires correctly in future runs

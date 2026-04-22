@@ -9,7 +9,22 @@
 
 ## live artifacts
 
-scored-only in v1.1. the TSX sources exist in the benchmark output (`testing/results/pawprint/scores.json` records the judge's reading) but before/after routes have not been committed to the `demos/` next app yet. see PHASE-2.md — pawprint and notion-ai-settings render to the demos app in a follow-up, to keep the v1.1 cut small and shippable.
+| variant | route | source |
+|---|---|---|
+| before | `/before/pawprint` | [`demos/src/app/before/pawprint/page.tsx`](../../demos/src/app/before/pawprint/page.tsx) |
+| after | `/after/pawprint` | [`demos/src/app/after/pawprint/page.tsx`](../../demos/src/app/after/pawprint/page.tsx) |
+
+to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
+
+## screenshots
+
+### before
+
+![pawprint before](./screenshots/pawprint-before.png)
+
+### after
+
+![pawprint after](./screenshots/pawprint-after.png)
 
 ## rules fired
 
@@ -68,4 +83,4 @@ the judge delta (+8) is more moderate than canopy's (+9). dashboards reward craf
 
 1. productFit at 8 — the route to 9+ is a project-identity file with real dog-walker nouns, not more prompt engineering
 2. no anti-pattern hits on the after variant — this is the target state for every run; use pawprint as the reference for "clean" in the anti-pattern docs
-3. render before/after routes in `demos/src/app/{before,after}/pawprint/` so this case has a visual artifact
+3. run one more qualitative pass to decide whether the map/list split should be denser at large desktop widths
