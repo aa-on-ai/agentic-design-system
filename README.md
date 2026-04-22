@@ -1,5 +1,7 @@
 # agentic design system
 
+![agentic design system before-and-after hero](./media/hero.png)
+
 your agent writes code. it writes UI that looks like every other AI-built UI — card grids, dark gradients, cramped spacing, missing error states.
 
 this is a loop your agent runs on every UI task: critique, fix, emit a report, then present. install one pack of skills, and your agent becomes its own design reviewer.
