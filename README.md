@@ -1,81 +1,61 @@
 # agentic design system
 
-a governance layer for agent-generated interfaces. rubric, verifier, audit trail, and compounding identity file — plugs into whatever generator your agent already uses.
+your agent writes code. it writes UI that looks like every other AI-built UI — card grids, dark gradients, cramped spacing, missing error states.
 
-## what this is (and isn't)
+this is a loop your agent runs on every UI task: critique, fix, emit a report, then present. install one pack of skills, and your agent becomes its own design reviewer.
 
-this isn't another UI generator. it's the layer that sits on top of one.
+works with Claude Code, Cursor, Codex CLI, OpenClaw, and any tool that reads the [Agent Skills](https://agentskills.io) spec.
 
-- **rubric.** a weighted 4-criterion rubric the agent grades itself against before presenting work ([`skills/agentic-design-system/SKILL.md`](./skills/agentic-design-system/SKILL.md)).
-- **verifier.** three deterministic scripts — anti-pattern, state completeness, accessibility — that catch the floor issues rubrics miss ([`skills/design-review/scripts/`](./skills/design-review/scripts/)).
-- **audit trail.** every run emits a human-readable `report.md` with rule hits, rubric scores, and follow-ups ([`EXPLAINABILITY.md`](./EXPLAINABILITY.md)).
-- **identity file.** an opinionated, fillable project brief the agent reads before building and writes to after ([`templates/project-identity-template.md`](./templates/project-identity-template.md), starting points in [`presets/`](./presets/)).
+## pick your setup
 
-works with Claude Code, Cursor, Codex CLI, OpenClaw — anything that reads the [Agent Skills](https://agentskills.io) spec.
+three opinionated starting points. copy the right one into your project and the agent knows what "good" looks like for your kind of work.
 
-## why
-
-agents are bad at *spontaneously* avoiding design anti-patterns — card grids, dark gradients, missing error states, cramped spacing. but they're surprisingly good at *finding* those problems when given explicit criteria after the fact.
-
-this system exploits that gap. build first, then run structured critique passes with checklists the agent couldn't hold in mind during generation. each pass encodes specific review criteria, and the agent reruns them until the output clears the bar. this is the [karpathy auto-research](https://x.com/karpathy/status/1886192184808149383) evaluation pattern applied to design: LLMs grading LLM output against criteria, not freeform self-reflection.
-
-but a loop without a readable artifact is just a score. the governance layer is what makes the loop's work legible and compoundable — see [`EXPLAINABILITY.md`](./EXPLAINABILITY.md).
-
-## how the loop runs
-
-three evaluation passes, each with its own criteria:
-
-| pass | what it checks | when it runs |
+| preset | for | skips |
 |---|---|---|
-| **design-review** | anti-patterns, hierarchy, spacing, product-fit ([11 reference files](./skills/design-review/references/)) | always, for any visual work |
-| **ux-baseline-check** | loading, empty, error, edge-case states | always, for any visual work |
-| **ui-polish-pass** | spacing tightness, alignment, visual finish | always, as the final step |
+| [**utilitarian app**](./presets/utilitarian-app.md) | admin tools, internal dashboards, forms | decoration, animation theater |
+| [**dense dashboard**](./presets/dense-dashboard.md) | analytics, data tables, monitoring | gradients, marketing flourish |
+| [**marketing editorial**](./presets/marketing-editorial.md) | landing pages, launches, content sites | utilitarian minimalism |
 
-these three are the core pack. they run automatically on any visual task.
+no preset fits? the [project identity template](./templates/project-identity-template.md) is a 5-section form that defines your `DESIGN.md` from scratch in ten minutes.
 
-three more skills exist for creative direction — personality, atmosphere, animation. they're opt-in and only activate when the prompt calls for them. see [routing](./routing/ROUTING.md) for the full decision logic.
+## what it actually does
 
-### in practice
+on every UI task, your agent runs three passes before presenting:
 
-1. install the skills (see below)
-2. paste the [agent snippet](./templates/agents-snippet.md) into your instruction file
-3. copy [`templates/project-identity-template.md`](./templates/project-identity-template.md) into your project as `guidelines.md` and fill it in — start from a [preset](./presets/) if close enough
-4. prompt normally: "build me a dashboard showing agent uptime"
-5. agent builds the first pass
-6. design-review runs → catches anti-patterns, flags missing hierarchy
-7. ux-baseline-check runs → flags missing loading/error states
-8. ui-polish-pass runs → tightens spacing, alignment, finish
-9. agent fixes what the passes caught, emits a `report.md` ([template](./templates/run-report-template.md)), then presents
+- **design-review** catches anti-patterns, flags bad hierarchy, tests product-fit
+- **ux-baseline-check** makes sure loading, empty, error, and edge states exist (they usually don't)
+- **ui-polish-pass** tightens spacing and alignment as the final step
 
-no special syntax. the skills route themselves based on the task.
+three more skills (whimsical-design, world-build, web-animation-design) are opt-in when the task actually calls for them. [routing](./routing/ROUTING.md) decides which fire.
 
-## evidence
+every run emits a [`report.md`](./templates/run-report-template.md) — rule hits, rubric scores, what got fixed, what's still your call. you know why it looks the way it does.
 
-same model (GPT-5.4), same prompt, one run without skills, one with the core pack.
+## does it actually work
+
+one model, same prompt, with vs without the loop.
+
+**[canopy](./examples/case-studies/canopy.md)** — agent-built landing page. **23 anti-patterns → 0.** state coverage 0/3 → 3/3. rubric 16 → 40 (out of 50).
+
+**[pawprint](./examples/case-studies/pawprint.md)** — agent-built dashboard. **61 → 0.** 0/3 → 3/3 states. rubric 15 → 41.
+
+**[notion-ai-settings](./examples/case-studies/notion-ai-settings.md)** — agent-built settings surface. **123 → 0.** 0/3 → 3/3 states. rubric 17 → 40.
 
 | prompt | without | with | delta |
 |---|---:|---:|---:|
-| canopy (landing page) | 16 | 40 | +24 |
+| canopy (landing) | 16 | 40 | +24 |
 | pawprint (dashboard) | 15 | 41 | +26 |
 | notion-ai (settings) | 17 | 40 | +23 |
 | **average** | **16** | **40.3** | **+24.3** |
 
-scores are 0-50 across 5 dimensions (hierarchy, spacing, copy, product-fit, screenshot-worthiness), judged by Claude Sonnet on the rendered output. anti-pattern warnings dropped 4 → 0.33 on average. state coverage went 0/3 → 3/3.
+scored 0–50 across hierarchy, spacing, copy, product-fit, and screenshot-worthiness. judged by Claude Sonnet on rendered output. [reproduce it →](./testing/)
 
-**case studies with rule hits, rubric deltas, and narrative:** [`examples/case-studies/`](./examples/case-studies/). every case lists what the loop actually caught, not just the summary number.
+## why this works
 
-run the benchmark yourself:
+agents are bad at *spontaneously* avoiding design anti-patterns. they're surprisingly good at *finding* them when given explicit criteria after the fact.
 
-```bash
-npx tsx testing/eval-loop.ts                                 # 6 prompts, default models
-npx tsx testing/eval-loop.ts --dry-run                       # verify without API calls
-npx tsx testing/eval-loop.ts --slug canopy                   # single prompt
-npx tsx testing/eval-loop.ts --generator claude-sonnet-4-6   # swap the generator model
-```
+the loop exploits that asymmetry. build first, then run structured critique with checklists the agent couldn't hold in mind during generation. [karpathy's auto-research pattern](https://x.com/karpathy/status/1886192184808149383), applied to UI.
 
-needs OpenAI + Anthropic API keys (env vars or credentials file — see [`testing/TESTING.md`](./testing/TESTING.md)). every run writes `scores.json` and a human-readable `report.md` per prompt, plus a `summary.json` across the set.
-
-we found that running every skill on every task can make output worse — creative passes fought product-appropriate aesthetics on a weather app. so the system splits core review from opt-in creative direction. routing matters.
+but a loop without a readable artifact is just a score. the `report.md` is the difference between "my agent got better" and "here is exactly what it fixed."
 
 ## install
 
@@ -83,9 +63,11 @@ we found that running every skill on every task can make output worse — creati
 npx skills add aa-on-ai/agentic-design-system
 ```
 
-works with Claude Code, Cursor, Codex CLI, OpenClaw, and anything that follows the [Agent Skills](https://agentskills.io) spec.
+then:
 
-this installs: 7 skill folders (markdown criteria + reference docs), routing logic, verification scripts (Python, stdlib only), and templates.
+1. paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, .cursorrules, .codex/instructions, etc.)
+2. copy your chosen [preset](./presets/) into the project as `guidelines.md`
+3. prompt normally — skills route themselves based on the task
 
 <details>
 <summary>manual install</summary>
@@ -93,55 +75,52 @@ this installs: 7 skill folders (markdown criteria + reference docs), routing log
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
 
-# global (available in every project)
+# global (every project)
 cp -r agentic-design-system/skills ~/.claude/skills/
 
 # or project-level
 cp -r agentic-design-system/skills your-project/skills/
 ```
 
-then paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, .cursorrules, .codex/instructions, etc).
-
 </details>
 
-## what's included
+## what's in the box
 
-| type | contents |
+| | |
 |---|---|
 | **core skills** | [design-review](./skills/design-review/), [ux-baseline-check](./skills/ux-baseline-check/), [ui-polish-pass](./skills/ui-polish-pass/) |
 | **creative skills** | [whimsical-design](./skills/whimsical-design/), [world-build](./skills/world-build/), [web-animation-design](./skills/web-animation-design/) |
 | **agent-friendly-design** | semantic HTML, ARIA, structured data, llms.txt, MCP patterns |
-| **verification scripts** | [anti-pattern, state, accessibility checks](./skills/design-review/scripts/) (Python, stdlib only) |
-| **identity + presets** | [project-identity template](./templates/project-identity-template.md), [presets](./presets/) for editorial/SaaS/utility |
-| **run reports** | [`EXPLAINABILITY.md`](./EXPLAINABILITY.md) + [run-report template](./templates/run-report-template.md) — audit trail per build |
-| **evidence** | [case studies](./examples/case-studies/) with rule hits, rubric scores, narrative |
-| **integration guides** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
-| **phase 2 direction** | [control plane spec](./PHASE-2.md), [explainability model](./EXPLAINABILITY.md), [example run reports](./examples/run-reports/), [preset schema](./schemas/preset.schema.json) |
+| **verification scripts** | anti-pattern / state / accessibility (Python, stdlib only) |
+| **presets** | 3 opinionated starters + [portable JSON](./schemas/preset.schema.json) + [identity template](./templates/project-identity-template.md) |
+| **explainability** | [`report.md`](./templates/run-report-template.md) per run, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
+| **case studies** | [canopy](./examples/case-studies/canopy.md) · [pawprint](./examples/case-studies/pawprint.md) · [notion-ai-settings](./examples/case-studies/notion-ai-settings.md) |
+| **integrations** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
 
 ## limitations
 
-- creative passes can over-steer utilitarian UI — that's why they're opt-in, not default
-- depends on the agent actually following skill instructions (works best with frontier models)
-- code-only review catches a lot, but screenshot-based review catches more (contrast, truncation, visual weight)
-- does not replace human taste or product judgment — it raises the floor, not the ceiling
+- creative passes can over-steer utilitarian UI — that's why they're opt-in
+- depends on agents actually following skill instructions (works best with frontier models)
+- code-only review catches a lot; screenshot-based review catches more (contrast, truncation, visual weight)
+- raises the floor, not the ceiling — doesn't replace taste or product judgment
 - verification scripts catch structural issues, not aesthetic ones
 
 ## how is this different from Impeccable?
 
-[Impeccable](https://impeccable.style) is a quality gate with slash commands for polish. this system adds the full evaluation loop: multiple structured critique passes, state coverage checking, creative direction routing, and verification scripts. use both if you want.
+[Impeccable](https://impeccable.style) is a quality gate with slash commands for polish. this adds the full evaluation loop: structured critique passes, state coverage, creative direction routing, and verification scripts. use both if you want.
 
-## related tools
+## related
 
 - [react-grab](https://github.com/aidenybai/react-grab) — point an agent at exact components to fix
 - [Impeccable](https://impeccable.style) — ergonomic slash-command polish
 - [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) — micro-detail heuristics
 - [userinterface.wiki](https://www.userinterface.wiki/) — UX theory and pattern reasoning
 
-the design philosophy behind the system is in [PHILOSOPHY.md](./PHILOSOPHY.md).
+## further reading
 
-the next layer of the product is documented in [PHASE-2.md](./PHASE-2.md): make the invisible visible through presets, explainability, project identity, and shareable configs.
-
-if you want the docs-first version of that today, start with [presets/](./presets/), the [project identity template](./templates/project-identity-template.md), the [run report template](./templates/run-report-template.md), and the [example run reports](./examples/run-reports/).
+- [PHILOSOPHY.md](./PHILOSOPHY.md) — design philosophy behind the system
+- [PHASE-2.md](./PHASE-2.md) — the control plane: presets, explainability, identity
+- [EXPLAINABILITY.md](./EXPLAINABILITY.md) — how `report.md` is generated and why it exists
 
 ## contributing
 
