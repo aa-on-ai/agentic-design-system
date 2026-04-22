@@ -10,6 +10,8 @@ works with Claude Code, Cursor, Codex CLI, OpenClaw, and any tool that reads the
 
 ## pick your setup
 
+see it live: [demos-aaron-ae.vercel.app](https://demos-aaron-ae.vercel.app)
+
 three opinionated starting points. copy the right one into your project and the agent knows what "good" looks like for your kind of work.
 
 | preset | for | skips |
