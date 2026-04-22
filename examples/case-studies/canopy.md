@@ -14,7 +14,17 @@
 | before | `/before/canopy` | [`demos/src/app/before/canopy/page.tsx`](../../demos/src/app/before/canopy/page.tsx) |
 | after | `/after/canopy` | [`demos/src/app/after/canopy/page.tsx`](../../demos/src/app/after/canopy/page.tsx) |
 
-to render: `cd demos && npm install && npm run dev` then open the routes above. screenshot checked in next to this file as it's captured — see `img/` once it exists.
+to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
+
+## screenshots
+
+### before
+
+![canopy before](./screenshots/canopy-before.png)
+
+### after
+
+![canopy after](./screenshots/canopy-after.png)
 
 ## rules fired
 

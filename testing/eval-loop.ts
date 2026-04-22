@@ -47,6 +47,12 @@ type AccessibilityResult = {
   raw: string;
 };
 
+type RuleHit = {
+  severity: 'warning' | 'info';
+  rule: string;
+  count: number;
+};
+
 type VariantResult = {
   file: string;
   antiPatterns: AntiPatternResult;
@@ -105,7 +111,7 @@ function readFlagValue(args: string[], name: string): string | undefined {
 }
 
 function printHelp() {
-  console.log(`Usage: npx tsx testing/eval-loop.ts [options]\n\nOptions:\n  --dry-run             Validate inputs and print what would run without calling APIs\n  --slug <slug>         Run only one prompt slug\n  --generator <model>   Override the generator model (default: ${DEFAULT_GENERATOR}, or $EVAL_GENERATOR_MODEL)\n  --judge <model>       Override the judge model (default: ${DEFAULT_JUDGE}, or $EVAL_JUDGE_MODEL)\n  --help, -h            Show this help`);
+  console.log(`Usage: npx tsx testing/eval-loop.ts [options]\n\nOptions:\n  --dry-run             Validate inputs and print what would run without calling APIs\n  --slug <slug>         Run only one prompt slug\n  --generator <model>   Override the generator model (default: ${DEFAULT_GENERATOR}, or $EVAL_GENERATOR_MODEL). OpenAI and Anthropic models supported.\n  --judge <model>       Override the judge model (default: ${DEFAULT_JUDGE}, or $EVAL_JUDGE_MODEL)\n  --help, -h            Show this help`);
 }
 
 async function ensureDir(dir: string) {
@@ -277,6 +283,36 @@ async function callAnthropic({ apiKey, model, system, user }: { apiKey: string; 
   return stripCodeFences(text);
 }
 
+function isAnthropicModel(model: string) {
+  return /^(claude|anthropic)/i.test(model);
+}
+
+async function generateTsx(args: {
+  model: string;
+  openAiKey: string;
+  anthropicKey: string;
+  user: string;
+  system?: string;
+}) {
+  if (isAnthropicModel(args.model)) {
+    return callAnthropic({
+      apiKey: args.anthropicKey,
+      model: args.model,
+      system:
+        args.system ??
+        'You are an expert React + Tailwind UI generator. Return only valid TSX code with a default export and no markdown fences.',
+      user: args.user,
+    });
+  }
+
+  return callOpenAI({
+    apiKey: args.openAiKey,
+    model: args.model,
+    system: args.system,
+    user: args.user,
+  });
+}
+
 function stripCodeFences(value: string) {
   return value
     .replace(/^```[a-zA-Z0-9_-]*\s*/, '')
@@ -444,18 +480,27 @@ function formatVerdict(result: PromptResult): string {
   return 'before — loop did not help, investigate';
 }
 
-function renderVariantRuleBlock(variant: VariantResult): string {
-  const missing: string[] = [];
-  if (!variant.states.loading) missing.push('loading');
-  if (!variant.states.empty) missing.push('empty');
-  if (!variant.states.error) missing.push('error');
-  const statesLine = missing.length === 0 ? 'loading, empty, error all present' : `missing: ${missing.join(', ')}`;
-  return [
-    `- anti-pattern: ${variant.antiPatterns.warnings} warnings, ${variant.antiPatterns.info} info`,
-    `- states: ${statesLine}`,
-    `- accessibility: ${variant.accessibility.warnings} warnings, ${variant.accessibility.info} info`,
-    `- responsive breakpoints: ${variant.responsive ? 'yes' : 'no'}`,
-  ].join('\n');
+function parseRuleHits(raw: string): RuleHit[] {
+  const hits: RuleHit[] = [];
+  const regex = /(^|\n)\s*(⚠️|ℹ️)\s+([^\n(]+?)(?:\s+\(×(\d+)\))?\s*(?=\n|$)/g;
+  let match: RegExpExecArray | null = regex.exec(raw);
+  while (match) {
+    hits.push({
+      severity: match[2] === '⚠️' ? 'warning' : 'info',
+      rule: match[3].trim(),
+      count: Number(match[4] ?? 1),
+    });
+    match = regex.exec(raw);
+  }
+  return hits;
+}
+
+function renderRuleHitRows(raw: string): string[] {
+  const hits = parseRuleHits(raw);
+  if (hits.length === 0) {
+    return ['| warning | none | 0 |', '| info | none | 0 |'];
+  }
+  return hits.map((hit) => `| ${hit.severity} | ${hit.rule} | ${hit.count} |`);
 }
 
 function renderJudgeTable(result: PromptResult): string {
@@ -498,6 +543,21 @@ function signed(n: number): string {
 
 function buildReportMarkdown(result: PromptResult, models: { generator: string; judge: string }): string {
   const totalDelta = signed(result.delta);
+  const beforeMissingStates = missingStateCount(result.before.states);
+  const afterMissingStates = missingStateCount(result.after.states);
+  const stateCoverageBefore = `${3 - beforeMissingStates}/3`;
+  const stateCoverageAfter = `${3 - afterMissingStates}/3`;
+  const judgeDelta = result.after.judgeTotal - result.before.judgeTotal;
+  const strongestJudgeLift = (['hierarchy', 'spacing', 'copy', 'productFit', 'screenshotWorthy'] as Array<keyof JudgeScores>)
+    .map((key) => ({ key, delta: result.after.judge[key] - result.before.judge[key] }))
+    .sort((a, b) => b.delta - a.delta)[0];
+  const qualitativeNoteA = result.after.antiPatterns.warnings === 0 && result.after.antiPatterns.info === 0
+    ? 'after variant is rule-clean on anti-pattern checks.'
+    : `after variant still has ${result.after.antiPatterns.warnings} warning(s) and ${result.after.antiPatterns.info} info hit(s).`;
+  const qualitativeNoteB = `state coverage moved ${stateCoverageBefore} -> ${stateCoverageAfter}; judge total moved ${result.before.judgeTotal} -> ${result.after.judgeTotal} (${signed(judgeDelta)}).`;
+  const qualitativeNoteC = strongestJudgeLift.delta > 0
+    ? `largest judge lift: ${strongestJudgeLift.key} (${signed(strongestJudgeLift.delta)}).`
+    : 'judge dimensions were flat or lower; inspect qualitative fit.';
   return [
     `# run report — ${result.slug}`,
     '',
@@ -518,11 +578,57 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     '',
     '### before',
     '',
-    renderVariantRuleBlock(result.before),
+    `- anti-pattern summary: ${result.before.antiPatterns.warnings} warnings, ${result.before.antiPatterns.info} info`,
+    '',
+    '#### anti-pattern-check.py',
+    '',
+    '| severity | rule | count |',
+    '|---|---|---:|',
+    ...renderRuleHitRows(result.before.antiPatterns.raw),
+    '',
+    '#### state-check.py',
+    '',
+    '| state | present |',
+    '|---|---|',
+    `| loading | ${result.before.states.loading ? 'yes' : 'no'} |`,
+    `| empty | ${result.before.states.empty ? 'yes' : 'no'} |`,
+    `| error | ${result.before.states.error ? 'yes' : 'no'} |`,
+    '',
+    '#### accessibility-check.py',
+    '',
+    '| severity | rule | count |',
+    '|---|---|---:|',
+    ...renderRuleHitRows(result.before.accessibility.raw),
+    '',
+    `- state coverage: ${stateCoverageBefore}`,
+    `- responsive breakpoints: ${result.before.responsive ? 'yes' : 'no'}`,
     '',
     '### after',
     '',
-    renderVariantRuleBlock(result.after),
+    `- anti-pattern summary: ${result.after.antiPatterns.warnings} warnings, ${result.after.antiPatterns.info} info`,
+    '',
+    '#### anti-pattern-check.py',
+    '',
+    '| severity | rule | count |',
+    '|---|---|---:|',
+    ...renderRuleHitRows(result.after.antiPatterns.raw),
+    '',
+    '#### state-check.py',
+    '',
+    '| state | present |',
+    '|---|---|',
+    `| loading | ${result.after.states.loading ? 'yes' : 'no'} |`,
+    `| empty | ${result.after.states.empty ? 'yes' : 'no'} |`,
+    `| error | ${result.after.states.error ? 'yes' : 'no'} |`,
+    '',
+    '#### accessibility-check.py',
+    '',
+    '| severity | rule | count |',
+    '|---|---|---:|',
+    ...renderRuleHitRows(result.after.accessibility.raw),
+    '',
+    `- state coverage: ${stateCoverageAfter}`,
+    `- responsive breakpoints: ${result.after.responsive ? 'yes' : 'no'}`,
     '',
     '## judge scores (1–10 each)',
     '',
@@ -531,6 +637,12 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     '## penalties',
     '',
     renderPenaltyTable(result),
+    '',
+    '## qualitative notes',
+    '',
+    `- ${qualitativeNoteA}`,
+    `- ${qualitativeNoteB}`,
+    `- ${qualitativeNoteC}`,
     '',
     '## follow-ups',
     '',
@@ -578,6 +690,78 @@ async function buildSummary(
   };
 
   await writeJson(path.join(RESULTS_DIR, 'summary.json'), summary);
+  await writeText(path.join(RESULTS_DIR, 'report.md'), buildBatchReportMarkdown(summary));
+}
+
+function buildBatchReportMarkdown(summary: {
+  timestamp: string;
+  models: { generator: string; judge: string };
+  totals: { promptsAttempted: number; promptsSucceeded: number; promptsFailed: number };
+  averages: {
+    beforeTotal: number;
+    afterTotal: number;
+    delta: number;
+    beforeJudgeTotal: number;
+    afterJudgeTotal: number;
+    beforeWarnings: number;
+    afterWarnings: number;
+    beforeInfo: number;
+    afterInfo: number;
+  };
+  results: PromptResult[];
+  failures: PromptFailure[];
+}) {
+  return [
+    '# run report — batch summary',
+    '',
+    `**timestamp:** ${summary.timestamp}`,
+    `**generator model:** ${summary.models.generator}`,
+    `**judge model:** ${summary.models.judge}`,
+    `**prompts:** ${summary.totals.promptsSucceeded}/${summary.totals.promptsAttempted} succeeded`,
+    '',
+    '## score summary',
+    '',
+    `- total score average: ${summary.averages.beforeTotal} -> ${summary.averages.afterTotal} (${signed(summary.averages.delta)})`,
+    `- judge total average: ${summary.averages.beforeJudgeTotal} -> ${summary.averages.afterJudgeTotal} (${signed(summary.averages.afterJudgeTotal - summary.averages.beforeJudgeTotal)})`,
+    `- anti-pattern warnings average: ${summary.averages.beforeWarnings} -> ${summary.averages.afterWarnings}`,
+    `- anti-pattern info average: ${summary.averages.beforeInfo} -> ${summary.averages.afterInfo}`,
+    '',
+    '## prompt results',
+    '',
+    '| slug | type | before | after | delta | rule hits before -> after | states before -> after |',
+    '|---|---|---:|---:|---:|---|---|',
+    ...summary.results.map((result) => {
+      const beforeRuleHits = result.before.antiPatterns.warnings + result.before.antiPatterns.info + result.before.accessibility.warnings + result.before.accessibility.info;
+      const afterRuleHits = result.after.antiPatterns.warnings + result.after.antiPatterns.info + result.after.accessibility.warnings + result.after.accessibility.info;
+      const beforeStates = `${3 - missingStateCount(result.before.states)}/3`;
+      const afterStates = `${3 - missingStateCount(result.after.states)}/3`;
+      return `| ${result.slug} | ${result.type} | ${result.before.total} | ${result.after.total} | ${signed(result.delta)} | ${beforeRuleHits} -> ${afterRuleHits} | ${beforeStates} -> ${afterStates} |`;
+    }),
+    '',
+    '## qualitative notes',
+    '',
+    `- ${summary.results.filter((result) => result.winner === 'after').length}/${summary.results.length} prompts improved after the core-pack loop.`,
+    `- ${summary.results.filter((result) => missingStateCount(result.after.states) === 0).length}/${summary.results.length} after variants reached full loading/empty/error coverage.`,
+    ...(
+      summary.failures.length > 0
+        ? [`- ${summary.failures.length} prompt(s) failed. See failure table below.`]
+        : ['- no failed prompts in this batch.']
+    ),
+    '',
+    ...(summary.failures.length > 0
+      ? [
+          '## failures',
+          '',
+          '| slug | type | error |',
+          '|---|---|---|',
+          ...summary.failures.map((failure) => `| ${failure.slug} | ${failure.type} | ${failure.error.split('\n')[0]} |`),
+          '',
+        ]
+      : []),
+    '## per-prompt reports',
+    '',
+    'see `testing/results/<slug>/report.md` for rule-level tables and detailed notes.',
+  ].join('\n');
 }
 
 async function main() {
@@ -622,15 +806,17 @@ async function main() {
 
     try {
       log(`Generating before for ${promptDef.slug}`);
-      const beforeTsx = await callOpenAI({
-        apiKey: openAiKey,
+      const beforeTsx = await generateTsx({
+        openAiKey,
+        anthropicKey,
         model: args.generator,
         user: buildBeforeUserPrompt(promptDef.prompt),
       });
 
       log(`Generating after for ${promptDef.slug}`);
-      const afterTsx = await callOpenAI({
-        apiKey: openAiKey,
+      const afterTsx = await generateTsx({
+        openAiKey,
+        anthropicKey,
         model: args.generator,
         system: corePackPrompt,
         user: buildAfterUserPrompt(promptDef.prompt),

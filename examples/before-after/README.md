@@ -13,10 +13,10 @@ npm install
 npm run dev
 ```
 
-committed in v1.1:
+committed routes:
 
 - `/before/canopy` · `/after/canopy`
-
-pawprint and notion-ai-settings exist as scored runs in `testing/results/` but the rendered routes have not been committed — see [`../case-studies/`](../case-studies/) for the numbers and [`../../PHASE-2.md`](../../PHASE-2.md) for the scope cut.
+- `/before/pawprint` · `/after/pawprint`
+- `/before/notion-ai-settings` · `/after/notion-ai-settings`
 
 narrative case studies — rule hits, rubric scores, what the loop caught — are in [`../case-studies/`](../case-studies/).
