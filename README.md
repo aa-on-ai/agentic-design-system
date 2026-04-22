@@ -116,6 +116,7 @@ then paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into y
 | **run reports** | [`EXPLAINABILITY.md`](./EXPLAINABILITY.md) + [run-report template](./templates/run-report-template.md) — audit trail per build |
 | **evidence** | [case studies](./examples/case-studies/) with rule hits, rubric scores, narrative |
 | **integration guides** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
+| **phase 2 direction** | [control plane spec](./PHASE-2.md), [explainability model](./EXPLAINABILITY.md), [example run reports](./examples/run-reports/), [preset schema](./schemas/preset.schema.json) |
 
 ## limitations
 
@@ -137,6 +138,10 @@ then paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into y
 - [userinterface.wiki](https://www.userinterface.wiki/) — UX theory and pattern reasoning
 
 the design philosophy behind the system is in [PHILOSOPHY.md](./PHILOSOPHY.md).
+
+the next layer of the product is documented in [PHASE-2.md](./PHASE-2.md): make the invisible visible through presets, explainability, project identity, and shareable configs.
+
+if you want the docs-first version of that today, start with [presets/](./presets/), the [project identity template](./templates/project-identity-template.md), the [run report template](./templates/run-report-template.md), and the [example run reports](./examples/run-reports/).
 
 ## contributing
 

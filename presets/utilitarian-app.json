@@ -1,0 +1,99 @@
+{
+  "$schema": "../schemas/preset.schema.json",
+  "id": "utilitarian-app",
+  "name": "utilitarian app",
+  "version": "0.1.0",
+  "bestFor": [
+    "product UI",
+    "settings surfaces",
+    "workflows",
+    "admin panels",
+    "internal tools",
+    "operational interfaces"
+  ],
+  "activates": [
+    "design-review",
+    "ux-baseline-check",
+    "ui-polish-pass",
+    "agent-friendly-design when production-facing",
+    "responsive.md",
+    "ai-css-failure-patterns.md",
+    "sticky-scroll-patterns.md when sticky regions, drawers, or tables are present"
+  ],
+  "skips": [
+    "whimsical-design by default",
+    "world-build by default",
+    "web-animation-design unless motion is explicitly requested"
+  ],
+  "designPosture": [
+    "calm",
+    "direct",
+    "utilitarian",
+    "hierarchy through spacing and type before color",
+    "restraint over visual noise"
+  ],
+  "qualityBar": [
+    "no obvious AI dashboard tropes",
+    "loading, empty, and error states present",
+    "touch targets and responsive behavior handled cleanly",
+    "visual hierarchy works without decorative color",
+    "the result feels like product software, not a template demo"
+  ],
+  "recommendedInputs": [
+    "existing product screenshots or live references",
+    "component library or design system guidance",
+    "DESIGN.md or filled project identity template",
+    "specific constraints around density, navigation, and states"
+  ],
+  "humanJudgmentRequired": [
+    "what the primary task flow should be",
+    "whether a new pattern is actually justified",
+    "when density is helping vs hurting",
+    "what deserves emphasis in the information hierarchy"
+  ],
+  "promptFraming": [
+    "build a calm, competent settings surface",
+    "prioritize clarity and flow over personality",
+    "use restraint. no decorative cards or color noise",
+    "mobile should preserve focus, not desktop density"
+  ],
+  "runReportDefaults": {
+    "taskClassification": [
+      "utilitarian app",
+      "product UI",
+      "settings surface",
+      "operational surface"
+    ],
+    "skillsFired": [
+      "design-review",
+      "ux-baseline-check",
+      "ui-polish-pass",
+      "agent-friendly-design when shipping to production"
+    ],
+    "skillsSkipped": [
+      "creative skills unless explicitly requested"
+    ],
+    "referencesConsulted": [
+      "spacing.md",
+      "anti-patterns.md",
+      "responsive.md",
+      "ai-css-failure-patterns.md"
+    ],
+    "issuesDetected": [
+      "hierarchy flattening",
+      "missing states",
+      "hover-only affordances",
+      "decorative color misuse",
+      "mobile focus problems"
+    ],
+    "fixesApplied": [
+      "simplified layout",
+      "stronger type hierarchy",
+      "state coverage",
+      "cleaner responsive behavior"
+    ],
+    "humanJudgment": [
+      "whether the interface needs more personality or should stay restrained"
+    ]
+  }
+}

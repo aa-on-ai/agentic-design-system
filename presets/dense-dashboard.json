@@ -1,0 +1,105 @@
+{
+  "$schema": "../schemas/preset.schema.json",
+  "id": "dense-dashboard",
+  "name": "dense dashboard",
+  "version": "0.1.0",
+  "bestFor": [
+    "data-heavy tools",
+    "analytics products",
+    "ops consoles",
+    "monitoring surfaces",
+    "finance views",
+    "comparison-heavy tables"
+  ],
+  "activates": [
+    "design-review",
+    "ux-baseline-check",
+    "ui-polish-pass",
+    "agent-friendly-design when production-facing",
+    "responsive.md",
+    "ai-css-failure-patterns.md",
+    "responsive-design-forks.md",
+    "sticky-scroll-patterns.md"
+  ],
+  "skips": [
+    "whimsical-design by default",
+    "world-build by default",
+    "web-animation-design unless motion is part of the brief"
+  ],
+  "designPosture": [
+    "dense but legible",
+    "comparison first",
+    "preserve structure before adding personality",
+    "dashboards are compositions, not card grids"
+  ],
+  "qualityBar": [
+    "no equal-weight admin autopilot layouts",
+    "clear primary vs secondary visual weight",
+    "tables and filters survive mobile with explicit decisions",
+    "sticky elements earn their space and actually work",
+    "the screen feels information-rich, not cramped"
+  ],
+  "recommendedInputs": [
+    "real or realistic data shapes",
+    "known priority metrics or entities",
+    "device targets for dense usage",
+    "explicit mobile strategy for tables, sidebars, and sticky chrome",
+    "DESIGN.md or project identity notes with responsive stance"
+  ],
+  "humanJudgmentRequired": [
+    "what should remain simultaneously visible vs collapse on mobile",
+    "which data deserves dominant placement",
+    "when a table should stay a table vs translate to cards or detail views",
+    "how much density the product can support before trust drops"
+  ],
+  "promptFraming": [
+    "build a dense but legible dashboard for comparison-heavy work",
+    "avoid generic admin templates and equal-weight cards",
+    "treat mobile as a deliberate translation problem, not a shrink pass",
+    "preserve analytical clarity over decorative polish"
+  ],
+  "runReportDefaults": {
+    "taskClassification": [
+      "dense dashboard",
+      "analytics surface",
+      "comparison-heavy interface"
+    ],
+    "skillsFired": [
+      "design-review",
+      "ux-baseline-check",
+      "ui-polish-pass",
+      "responsive-design-forks",
+      "sticky-scroll-patterns",
+      "agent-friendly-design when relevant"
+    ],
+    "skillsSkipped": [
+      "creative skills unless explicitly called for"
+    ],
+    "referencesConsulted": [
+      "spacing.md",
+      "anti-patterns.md",
+      "responsive.md",
+      "ai-css-failure-patterns.md",
+      "responsive-design-forks.md",
+      "sticky-scroll-patterns.md"
+    ],
+    "issuesDetected": [
+      "equal-weight cards",
+      "broken sticky behavior",
+      "bad table translation on mobile",
+      "hidden comparison context",
+      "cramped density"
+    ],
+    "fixesApplied": [
+      "clearer composition",
+      "explicit mobile fork choice",
+      "sticky repair",
+      "table strategy",
+      "better visual weighting"
+    ],
+    "humanJudgment": [
+      "what must stay visible on mobile",
+      "which metrics deserve dominant placement"
+    ]
+  }
+}

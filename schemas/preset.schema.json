@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aa-on-ai/agentic-design-system/schemas/preset.schema.json",
+  "title": "Agentic Design System Preset",
+  "description": "Portable preset format for the phase 2 control plane. Describes what a preset is for, what it activates, what it skips, what inputs it benefits from, and how explainability should be shaped.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "bestFor",
+    "activates",
+    "skips",
+    "designPosture",
+    "qualityBar",
+    "recommendedInputs",
+    "humanJudgmentRequired",
+    "runReportDefaults"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Stable machine-readable preset identifier."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable preset name."
+    },
+    "bestFor": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Task types and product surfaces this preset fits best."
+    },
+    "activates": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Skills or references this preset commonly activates."
+    },
+    "skips": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Skills or modes this preset intentionally avoids by default."
+    },
+    "designPosture": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Short phrases describing the aesthetic and structural posture."
+    },
+    "qualityBar": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "What good looks like for this preset."
+    },
+    "recommendedInputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Inputs that materially improve performance."
+    },
+    "humanJudgmentRequired": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Decisions the system should surface rather than automate."
+    },
+    "promptFraming": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Reusable prompt-language hints aligned to the preset."
+    },
+    "runReportDefaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "taskClassification",
+        "skillsFired",
+        "skillsSkipped",
+        "referencesConsulted",
+        "issuesDetected",
+        "fixesApplied",
+        "humanJudgment"
+      ],
+      "properties": {
+        "taskClassification": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "skillsFired": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "skillsSkipped": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "referencesConsulted": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "issuesDetected": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "fixesApplied": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "humanJudgment": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "Optional preset version for future compatibility."
+    }
+  }
+}
