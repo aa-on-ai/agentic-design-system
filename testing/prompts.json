@@ -28,5 +28,15 @@
     "slug": "vercel-pricing",
     "prompt": "build a pricing page for a Vercel-style developer platform with four tiers, a comparison table below, and an annual/monthly toggle",
     "type": "pricing"
+  },
+  {
+    "slug": "figma-comments-panel",
+    "prompt": "build a comments panel for a Figma-style design tool with unresolved/resolved filters, threaded replies, and assignee avatars",
+    "type": "collaboration"
+  },
+  {
+    "slug": "shopify-orders",
+    "prompt": "build an orders table for a Shopify-style commerce admin with status chips, payment state, fulfillment timeline, and saved views",
+    "type": "operations"
   }
 ]
