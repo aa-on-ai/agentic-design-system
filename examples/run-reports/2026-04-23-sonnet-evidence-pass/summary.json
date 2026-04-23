@@ -1,0 +1,650 @@
+{
+  "timestamp": "2026-04-23T18:38:33.231Z",
+  "models": {
+    "generator": "gpt-5.4",
+    "judge": "claude-sonnet-4-6"
+  },
+  "totals": {
+    "promptsAttempted": 8,
+    "promptsSucceeded": 8,
+    "promptsFailed": 0
+  },
+  "averages": {
+    "beforeTotal": 12.13,
+    "afterTotal": 38.13,
+    "delta": 26,
+    "beforeJudgeTotal": 31.5,
+    "afterJudgeTotal": 41.13,
+    "beforeWarnings": 3.63,
+    "afterWarnings": 0.5,
+    "beforeInfo": 0.88,
+    "afterInfo": 0.63
+  },
+  "results": [
+    {
+      "prompt": "build a landing page for a new weather app called Canopy",
+      "slug": "canopy",
+      "type": "landing",
+      "timestamp": "2026-04-23T18:18:00.756Z",
+      "before": {
+        "file": "testing/results/canopy/before.tsx",
+        "antiPatterns": {
+          "warnings": 3,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×28)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n\n  Summary: 3 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": true,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx\n  ============================================================\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 1 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 7,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 35,
+        "penalties": {
+          "antiPatterns": -7,
+          "missingStates": -6,
+          "accessibility": -2,
+          "responsive": 0
+        },
+        "total": 20
+      },
+      "after": {
+        "file": "testing/results/canopy/after.tsx",
+        "antiPatterns": {
+          "warnings": 1,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ============================================================\n  ⚠️ Placeholder text (×4)\n     Placeholder text detected — use real, specific content.\n  ℹ️ Generic button labels (×1)\n     Generic button label detected — buttons should describe the action ('Send message', 'Save changes', not 'Submit').\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/canopy/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 9,
+          "copy": 9,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 42,
+        "penalties": {
+          "antiPatterns": -3,
+          "missingStates": 0,
+          "accessibility": 0,
+          "responsive": 0
+        },
+        "total": 39
+      },
+      "delta": 19,
+      "winner": "after"
+    },
+    {
+      "prompt": "build an admin dashboard for a dog walking service called Pawprint",
+      "slug": "pawprint",
+      "type": "dashboard",
+      "timestamp": "2026-04-23T18:20:50.018Z",
+      "before": {
+        "file": "testing/results/pawprint/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×56)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 2,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx\n  ============================================================\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 1 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 6,
+          "productFit": 7,
+          "screenshotWorthy": 6
+        },
+        "judgeTotal": 33,
+        "penalties": {
+          "antiPatterns": -9,
+          "missingStates": -9,
+          "accessibility": -4,
+          "responsive": 0
+        },
+        "total": 11
+      },
+      "after": {
+        "file": "testing/results/pawprint/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/pawprint/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 40,
+        "penalties": {
+          "antiPatterns": 0,
+          "missingStates": 0,
+          "accessibility": 0,
+          "responsive": 0
+        },
+        "total": 40
+      },
+      "delta": 29,
+      "winner": "after"
+    },
+    {
+      "prompt": "build a settings page for Notion's AI features",
+      "slug": "notion-ai-settings",
+      "type": "settings",
+      "timestamp": "2026-04-23T18:23:02.652Z",
+      "before": {
+        "file": "testing/results/notion-ai-settings/before.tsx",
+        "antiPatterns": {
+          "warnings": 3,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 3 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 1,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n\n  Summary: 0 warnings, 1 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 7,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 35,
+        "penalties": {
+          "antiPatterns": -7,
+          "missingStates": -9,
+          "accessibility": -1,
+          "responsive": 0
+        },
+        "total": 18
+      },
+      "after": {
+        "file": "testing/results/notion-ai-settings/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 9,
+          "copy": 9,
+          "productFit": 9,
+          "screenshotWorthy": 9
+        },
+        "judgeTotal": 44,
+        "penalties": {
+          "antiPatterns": 0,
+          "missingStates": 0,
+          "accessibility": 0,
+          "responsive": 0
+        },
+        "total": 44
+      },
+      "delta": 26,
+      "winner": "after"
+    },
+    {
+      "prompt": "build an issue list for a Linear-style project tracker with filters, sticky header, priority and status cells, and inline row actions",
+      "slug": "linear-issues-table",
+      "type": "data-table",
+      "timestamp": "2026-04-23T18:25:18.130Z",
+      "before": {
+        "file": "testing/results/linear-issues-table/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×35)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×7)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": true,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 2,
+          "info": 3,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ============================================================\n  ⚠️ No semantic landmarks\n     No semantic HTML landmarks found. Use <nav>, <main>, <section>, <article> instead of bare <div> wrappers.\n  ℹ️ Div soup\n     ~96% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 2 warnings, 3 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 6,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 34,
+        "penalties": {
+          "antiPatterns": -9,
+          "missingStates": -6,
+          "accessibility": -7,
+          "responsive": 0
+        },
+        "total": 12
+      },
+      "after": {
+        "file": "testing/results/linear-issues-table/after.tsx",
+        "antiPatterns": {
+          "warnings": 1,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×95)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×7)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 3,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~92% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ⚠️ Buttons without accessible labels (×3)\n     Icon-only button without visible text. Add aria-label or sr-only text so screen readers and agents know what it does.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 1 warnings, 3 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 40,
+        "penalties": {
+          "antiPatterns": -3,
+          "missingStates": 0,
+          "accessibility": -5,
+          "responsive": 0
+        },
+        "total": 32
+      },
+      "delta": 20,
+      "winner": "after"
+    },
+    {
+      "prompt": "build a three-step onboarding flow for a Stripe-style payments product: business info, identity verification, bank account. progress indicator at the top and one primary action per step",
+      "slug": "stripe-onboarding",
+      "type": "onboarding",
+      "timestamp": "2026-04-23T18:27:51.570Z",
+      "before": {
+        "file": "testing/results/stripe-onboarding/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 2,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×90)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×20)\n     Placeholder text detected — use real, specific content.\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 4 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 2,
+          "info": 1,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ============================================================\n  ⚠️ No semantic landmarks\n     No semantic HTML landmarks found. Use <nav>, <main>, <section>, <article> instead of bare <div> wrappers.\n  ⚠️ Div soup\n     ~100% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n\n  Summary: 2 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 6,
+          "productFit": 7,
+          "screenshotWorthy": 6
+        },
+        "judgeTotal": 33,
+        "penalties": {
+          "antiPatterns": -10,
+          "missingStates": -9,
+          "accessibility": -5,
+          "responsive": 0
+        },
+        "total": 9
+      },
+      "after": {
+        "file": "testing/results/stripe-onboarding/after.tsx",
+        "antiPatterns": {
+          "warnings": 1,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×101)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 1,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ============================================================\n  ℹ️ Missing form input types (×9)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n  ⚠️ Multiple h1 elements\n     2 h1 elements found. One h1 per page — use h2/h3 for subsections.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 9,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 41,
+        "penalties": {
+          "antiPatterns": -3,
+          "missingStates": 0,
+          "accessibility": -3,
+          "responsive": 0
+        },
+        "total": 35
+      },
+      "delta": 26,
+      "winner": "after"
+    },
+    {
+      "prompt": "build a pricing page for a Vercel-style developer platform with four tiers, a comparison table below, and an annual/monthly toggle",
+      "slug": "vercel-pricing",
+      "type": "pricing",
+      "timestamp": "2026-04-23T18:30:47.248Z",
+      "before": {
+        "file": "testing/results/vercel-pricing/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ============================================================\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ No responsive breakpoints\n     No responsive breakpoints detected — does this work on mobile?\n\n  Summary: 4 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": false,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ============================================================\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 1 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+        },
+        "responsive": false,
+        "judge": {
+          "hierarchy": 3,
+          "spacing": 3,
+          "copy": 3,
+          "productFit": 2,
+          "screenshotWorthy": 2
+        },
+        "judgeTotal": 13,
+        "penalties": {
+          "antiPatterns": -8,
+          "missingStates": -9,
+          "accessibility": -2,
+          "responsive": -5
+        },
+        "total": -11
+      },
+      "after": {
+        "file": "testing/results/vercel-pricing/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ============================================================\n  ℹ️ transition-all usage (×2)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 0 warnings, 1 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 9,
+          "spacing": 9,
+          "copy": 8,
+          "productFit": 9,
+          "screenshotWorthy": 9
+        },
+        "judgeTotal": 44,
+        "penalties": {
+          "antiPatterns": -1,
+          "missingStates": 0,
+          "accessibility": 0,
+          "responsive": 0
+        },
+        "total": 43
+      },
+      "delta": 54,
+      "winner": "after"
+    },
+    {
+      "prompt": "build a comments panel for a Figma-style design tool with unresolved/resolved filters, threaded replies, and assignee avatars",
+      "slug": "figma-comments-panel",
+      "type": "collaboration",
+      "timestamp": "2026-04-23T18:32:54.372Z",
+      "before": {
+        "file": "testing/results/figma-comments-panel/before.tsx",
+        "antiPatterns": {
+          "warnings": 4,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ============================================================\n  ⚠️ Purple gradient (×1)\n     Purple gradient/accent detected — the #1 'AI-generated' color cliche.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+        },
+        "states": {
+          "loading": false,
+          "empty": true,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 1,
+          "info": 2,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~98% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ⚠️ Skipped heading levels\n     Heading levels skipped (e.g., h1 → h3). Use sequential heading levels for proper document outline.\n\n  Summary: 1 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 8,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 36,
+        "penalties": {
+          "antiPatterns": -8,
+          "missingStates": -6,
+          "accessibility": -4,
+          "responsive": 0
+        },
+        "total": 18
+      },
+      "after": {
+        "file": "testing/results/figma-comments-panel/after.tsx",
+        "antiPatterns": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 0,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 7,
+          "screenshotWorthy": 7
+        },
+        "judgeTotal": 38,
+        "penalties": {
+          "antiPatterns": 0,
+          "missingStates": 0,
+          "accessibility": 0,
+          "responsive": 0
+        },
+        "total": 38
+      },
+      "delta": 20,
+      "winner": "after"
+    },
+    {
+      "prompt": "build an orders table for a Shopify-style commerce admin with status chips, payment state, fulfillment timeline, and saved views",
+      "slug": "shopify-orders",
+      "type": "operations",
+      "timestamp": "2026-04-23T18:35:30.938Z",
+      "before": {
+        "file": "testing/results/shopify-orders/before.tsx",
+        "antiPatterns": {
+          "warnings": 3,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×111)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 3 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": false,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 3,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~93% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 0 warnings, 3 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 7,
+          "spacing": 7,
+          "copy": 6,
+          "productFit": 7,
+          "screenshotWorthy": 6
+        },
+        "judgeTotal": 33,
+        "penalties": {
+          "antiPatterns": -7,
+          "missingStates": -3,
+          "accessibility": -3,
+          "responsive": 0
+        },
+        "total": 20
+      },
+      "after": {
+        "file": "testing/results/shopify-orders/after.tsx",
+        "antiPatterns": {
+          "warnings": 1,
+          "info": 1,
+          "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×130)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx"
+        },
+        "states": {
+          "loading": true,
+          "empty": true,
+          "error": true,
+          "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+        },
+        "accessibility": {
+          "warnings": 0,
+          "info": 3,
+          "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~91% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 0 warnings, 3 info"
+        },
+        "responsive": true,
+        "judge": {
+          "hierarchy": 8,
+          "spacing": 8,
+          "copy": 8,
+          "productFit": 8,
+          "screenshotWorthy": 8
+        },
+        "judgeTotal": 40,
+        "penalties": {
+          "antiPatterns": -3,
+          "missingStates": 0,
+          "accessibility": -3,
+          "responsive": 0
+        },
+        "total": 34
+      },
+      "delta": 14,
+      "winner": "after"
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,78 @@
+{
+  "prompt": "build a three-step onboarding flow for a Stripe-style payments product: business info, identity verification, bank account. progress indicator at the top and one primary action per step",
+  "slug": "stripe-onboarding",
+  "type": "onboarding",
+  "timestamp": "2026-04-23T18:27:51.570Z",
+  "before": {
+    "file": "testing/results/stripe-onboarding/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 2,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×90)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×20)\n     Placeholder text detected — use real, specific content.\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 4 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 2,
+      "info": 1,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx\n  ============================================================\n  ⚠️ No semantic landmarks\n     No semantic HTML landmarks found. Use <nav>, <main>, <section>, <article> instead of bare <div> wrappers.\n  ⚠️ Div soup\n     ~100% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n\n  Summary: 2 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 6,
+      "productFit": 7,
+      "screenshotWorthy": 6
+    },
+    "judgeTotal": 33,
+    "penalties": {
+      "antiPatterns": -10,
+      "missingStates": -9,
+      "accessibility": -5,
+      "responsive": 0
+    },
+    "total": 9
+  },
+  "after": {
+    "file": "testing/results/stripe-onboarding/after.tsx",
+    "antiPatterns": {
+      "warnings": 1,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×101)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 1,
+      "info": 1,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx\n  ============================================================\n  ℹ️ Missing form input types (×9)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n  ⚠️ Multiple h1 elements\n     2 h1 elements found. One h1 per page — use h2/h3 for subsections.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/stripe-onboarding/after.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 8,
+      "copy": 8,
+      "productFit": 9,
+      "screenshotWorthy": 8
+    },
+    "judgeTotal": 41,
+    "penalties": {
+      "antiPatterns": -3,
+      "missingStates": 0,
+      "accessibility": -3,
+      "responsive": 0
+    },
+    "total": 35
+  },
+  "delta": 26,
+  "winner": "after"
+}

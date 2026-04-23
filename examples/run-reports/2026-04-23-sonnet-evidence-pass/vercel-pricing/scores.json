@@ -1,0 +1,78 @@
+{
+  "prompt": "build a pricing page for a Vercel-style developer platform with four tiers, a comparison table below, and an annual/monthly toggle",
+  "slug": "vercel-pricing",
+  "type": "pricing",
+  "timestamp": "2026-04-23T18:30:47.248Z",
+  "before": {
+    "file": "testing/results/vercel-pricing/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ============================================================\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ No responsive breakpoints\n     No responsive breakpoints detected — does this work on mobile?\n\n  Summary: 4 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 1,
+      "info": 0,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx\n  ============================================================\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 1 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/before.tsx"
+    },
+    "responsive": false,
+    "judge": {
+      "hierarchy": 3,
+      "spacing": 3,
+      "copy": 3,
+      "productFit": 2,
+      "screenshotWorthy": 2
+    },
+    "judgeTotal": 13,
+    "penalties": {
+      "antiPatterns": -8,
+      "missingStates": -9,
+      "accessibility": -2,
+      "responsive": -5
+    },
+    "total": -11
+  },
+  "after": {
+    "file": "testing/results/vercel-pricing/after.tsx",
+    "antiPatterns": {
+      "warnings": 0,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ============================================================\n  ℹ️ transition-all usage (×2)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 0 warnings, 1 info"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/vercel-pricing/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 9,
+      "spacing": 9,
+      "copy": 8,
+      "productFit": 9,
+      "screenshotWorthy": 9
+    },
+    "judgeTotal": 44,
+    "penalties": {
+      "antiPatterns": -1,
+      "missingStates": 0,
+      "accessibility": 0,
+      "responsive": 0
+    },
+    "total": 43
+  },
+  "delta": 54,
+  "winner": "after"
+}

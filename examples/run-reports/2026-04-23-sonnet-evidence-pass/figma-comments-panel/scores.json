@@ -1,0 +1,78 @@
+{
+  "prompt": "build a comments panel for a Figma-style design tool with unresolved/resolved filters, threaded replies, and assignee avatars",
+  "slug": "figma-comments-panel",
+  "type": "collaboration",
+  "timestamp": "2026-04-23T18:32:54.372Z",
+  "before": {
+    "file": "testing/results/figma-comments-panel/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ============================================================\n  ⚠️ Purple gradient (×1)\n     Purple gradient/accent detected — the #1 'AI-generated' color cliche.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 0 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 1,
+      "info": 2,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~98% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ⚠️ Skipped heading levels\n     Heading levels skipped (e.g., h1 → h3). Use sequential heading levels for proper document outline.\n\n  Summary: 1 warnings, 2 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 8,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 36,
+    "penalties": {
+      "antiPatterns": -8,
+      "missingStates": -6,
+      "accessibility": -4,
+      "responsive": 0
+    },
+    "total": 18
+  },
+  "after": {
+    "file": "testing/results/figma-comments-panel/after.tsx",
+    "antiPatterns": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/figma-comments-panel/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 8,
+      "copy": 8,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 38,
+    "penalties": {
+      "antiPatterns": 0,
+      "missingStates": 0,
+      "accessibility": 0,
+      "responsive": 0
+    },
+    "total": 38
+  },
+  "delta": 20,
+  "winner": "after"
+}

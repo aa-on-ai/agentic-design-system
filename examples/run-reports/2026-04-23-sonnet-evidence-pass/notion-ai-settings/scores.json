@@ -1,0 +1,78 @@
+{
+  "prompt": "build a settings page for Notion's AI features",
+  "slug": "notion-ai-settings",
+  "type": "settings",
+  "timestamp": "2026-04-23T18:23:02.652Z",
+  "before": {
+    "file": "testing/results/notion-ai-settings/before.tsx",
+    "antiPatterns": {
+      "warnings": 3,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ℹ️ transition-all usage (×1)\n     transition-all detected — specify exact properties instead (transform, opacity, etc.)\n\n  Summary: 3 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": false,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✗ empty — MISSING\n    empty state — what happens when there's no data? guide the user to the next action.\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, empty, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 1,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/before.tsx\n  ============================================================\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n\n  Summary: 0 warnings, 1 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 7,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 35,
+    "penalties": {
+      "antiPatterns": -7,
+      "missingStates": -9,
+      "accessibility": -1,
+      "responsive": 0
+    },
+    "total": 18
+  },
+  "after": {
+    "file": "testing/results/notion-ai-settings/after.tsx",
+    "antiPatterns": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no anti-patterns detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 0,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/notion-ai-settings/after.tsx\n  ============================================================\n  PASS — no accessibility issues detected\n\n  Summary: 0 warnings, 0 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 9,
+      "copy": 9,
+      "productFit": 9,
+      "screenshotWorthy": 9
+    },
+    "judgeTotal": 44,
+    "penalties": {
+      "antiPatterns": 0,
+      "missingStates": 0,
+      "accessibility": 0,
+      "responsive": 0
+    },
+    "total": 44
+  },
+  "delta": 26,
+  "winner": "after"
+}

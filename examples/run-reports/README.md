@@ -13,6 +13,7 @@ these are not final product contracts. they exist to test whether the report sha
 - [utilitarian app](./utilitarian-app-example.md)
 - [dense dashboard](./dense-dashboard-example.md)
 - [marketing / editorial](./marketing-editorial-example.md)
+- [2026-04-23 sonnet evidence pass](./2026-04-23-sonnet-evidence-pass/report.md)
 
 ## what to look for
 

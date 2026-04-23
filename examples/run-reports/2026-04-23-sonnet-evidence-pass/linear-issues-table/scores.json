@@ -1,0 +1,78 @@
+{
+  "prompt": "build an issue list for a Linear-style project tracker with filters, sticky header, priority and status cells, and inline row actions",
+  "slug": "linear-issues-table",
+  "type": "data-table",
+  "timestamp": "2026-04-23T18:25:18.130Z",
+  "before": {
+    "file": "testing/results/linear-issues-table/before.tsx",
+    "antiPatterns": {
+      "warnings": 4,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×35)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No empty state\n     No empty state detected — what happens when there's no data?\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×7)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 4 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+    },
+    "states": {
+      "loading": false,
+      "empty": true,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ==================================================\n  ✗ loading — MISSING\n    loading state — what does the user see while data loads?\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: loading, error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 2,
+      "info": 3,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx\n  ============================================================\n  ⚠️ No semantic landmarks\n     No semantic HTML landmarks found. Use <nav>, <main>, <section>, <article> instead of bare <div> wrappers.\n  ℹ️ Div soup\n     ~96% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n  ⚠️ No focus-visible styles\n     No focus styles detected. Interactive elements need visible focus indicators for keyboard navigation.\n\n  Summary: 2 warnings, 3 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/before.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 6,
+      "productFit": 7,
+      "screenshotWorthy": 7
+    },
+    "judgeTotal": 34,
+    "penalties": {
+      "antiPatterns": -9,
+      "missingStates": -6,
+      "accessibility": -7,
+      "responsive": 0
+    },
+    "total": 12
+  },
+  "after": {
+    "file": "testing/results/linear-issues-table/after.tsx",
+    "antiPatterns": {
+      "warnings": 1,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×95)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×7)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 1,
+      "info": 3,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~92% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ⚠️ Buttons without accessible labels (×3)\n     Icon-only button without visible text. Add aria-label or sr-only text so screen readers and agents know what it does.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 1 warnings, 3 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/accessibility-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/linear-issues-table/after.tsx"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 8,
+      "copy": 8,
+      "productFit": 8,
+      "screenshotWorthy": 8
+    },
+    "judgeTotal": 40,
+    "penalties": {
+      "antiPatterns": -3,
+      "missingStates": 0,
+      "accessibility": -5,
+      "responsive": 0
+    },
+    "total": 32
+  },
+  "delta": 20,
+  "winner": "after"
+}

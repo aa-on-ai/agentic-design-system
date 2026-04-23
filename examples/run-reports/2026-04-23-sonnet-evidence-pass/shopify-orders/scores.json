@@ -1,0 +1,78 @@
+{
+  "prompt": "build an orders table for a Shopify-style commerce admin with status chips, payment state, fulfillment timeline, and saved views",
+  "slug": "shopify-orders",
+  "type": "operations",
+  "timestamp": "2026-04-23T18:35:30.938Z",
+  "before": {
+    "file": "testing/results/shopify-orders/before.tsx",
+    "antiPatterns": {
+      "warnings": 3,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×111)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ No loading state\n     No loading state detected — every page needs a loading state.\n  ⚠️ No error state\n     No error state detected — what happens when something breaks?\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 3 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": false,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✗ error — MISSING\n    error state — what happens when something breaks? say what happened and what to do.\n\n  FAIL — missing: error\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/state-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 3,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/before.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~93% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 0 warnings, 3 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 7,
+      "spacing": 7,
+      "copy": 6,
+      "productFit": 7,
+      "screenshotWorthy": 6
+    },
+    "judgeTotal": 33,
+    "penalties": {
+      "antiPatterns": -7,
+      "missingStates": -3,
+      "accessibility": -3,
+      "responsive": 0
+    },
+    "total": 20
+  },
+  "after": {
+    "file": "testing/results/shopify-orders/after.tsx",
+    "antiPatterns": {
+      "warnings": 1,
+      "info": 1,
+      "raw": "Checking: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ============================================================\n  ℹ️ Zinc/Slate palette (×130)\n     Zinc/slate palette detected — common agent default. consider tinted neutrals with warmth or coolness.\n  ⚠️ Placeholder text (×2)\n     Placeholder text detected — use real, specific content.\n\n  Summary: 1 warnings, 1 info\n\nCommand failed: python3 /Users/moltbot/clawd/projects/agentic-design-system/skills/design-review/scripts/anti-pattern-check.py /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx"
+    },
+    "states": {
+      "loading": true,
+      "empty": true,
+      "error": true,
+      "raw": "Checking states: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ==================================================\n  ✓ loading\n  ✓ empty\n  ✓ error\n\n  PASS — all states present"
+    },
+    "accessibility": {
+      "warnings": 0,
+      "info": 3,
+      "raw": "Checking accessibility: /Users/moltbot/clawd/projects/agentic-design-system/testing/results/shopify-orders/after.tsx\n  ============================================================\n  ℹ️ Div soup\n     ~91% of container elements are <div>. Use semantic elements where they apply — <nav> for navigation, <section> for grouped content, <article> for standalone content.\n  ℹ️ Inputs without labels\n     Form inputs found without associated labels. Use <label htmlFor> or aria-label on every input.\n  ℹ️ Missing form input types (×1)\n     Input without explicit type attribute. Specify type (email, tel, number, search, etc.) for correct mobile keyboards and validation.\n\n  Summary: 0 warnings, 3 info"
+    },
+    "responsive": true,
+    "judge": {
+      "hierarchy": 8,
+      "spacing": 8,
+      "copy": 8,
+      "productFit": 8,
+      "screenshotWorthy": 8
+    },
+    "judgeTotal": 40,
+    "penalties": {
+      "antiPatterns": -3,
+      "missingStates": 0,
+      "accessibility": -3,
+      "responsive": 0
+    },
+    "total": 34
+  },
+  "delta": 14,
+  "winner": "after"
+}
