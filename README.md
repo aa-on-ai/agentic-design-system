@@ -30,6 +30,23 @@ three more skills (whimsical-design, world-build, web-animation-design) are opt-
 
 every run emits a [`report.md`](./templates/run-report-template.md) — rule hits, rubric scores, what got fixed, what's still your call. you know why it looks the way it does.
 
+## how this composes
+
+think of the system as one installable control plane with 8 skills doing different jobs in the loop:
+
+- **agentic-design-system** is the orchestrator. it tells the agent which skills exist, when to route into them, and how to leave behind a readable artifact instead of a mysterious "trust me."
+- **design-review** is the hard quality gate. it catches hierarchy, spacing, product-fit, and anti-pattern issues before the agent gets to call the work done.
+- **ux-baseline-check** forces boring-but-critical completeness: loading, empty, error, and edge states.
+- **ui-polish-pass** is the final tightening pass once the structural issues are solved.
+- **agent-friendly-design** keeps the output legible to agents and machines too: semantic HTML, ARIA, structured data, llms.txt, and MCP-aware patterns.
+- **whimsical-design** is optional personality. it only fires when the brief actually benefits from delight instead of getting noisier.
+- **world-build** is optional atmosphere. it is for narrative environments and stronger visual framing, not default product chrome.
+- **web-animation-design** is optional motion direction. it handles when movement clarifies hierarchy or feel instead of becoming theater.
+
+that stack is the governance loop. the core skills raise the floor, the creative skills only enter when routing says they should, and the report explains what fired, what changed, and what still belongs to human judgment. phase 2 is basically making that loop visible enough that you can configure it, inspect it, and trust it without reading the whole repo first.
+
+for first-time setup, start with a preset plus [`project-identity-template.md`](./templates/project-identity-template.md). [`brand-guidelines-template.md`](./templates/brand-guidelines-template.md) stays around as a deprecated bridge for older integrations, but the project identity template is the current path.
+
 ## does it actually work
 
 one model, same prompt, with vs without the loop.
