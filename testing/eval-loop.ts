@@ -75,6 +75,7 @@ type PromptResult = {
   slug: string;
   type: string;
   timestamp: string;
+  judgeFallbackUsed: boolean;
   before: VariantResult;
   after: VariantResult;
   delta: number;
@@ -101,6 +102,7 @@ function parseArgs() {
     slug: readFlagValue(args, '--slug'),
     generator: readFlagValue(args, '--generator') ?? process.env.EVAL_GENERATOR_MODEL ?? DEFAULT_GENERATOR,
     judge: readFlagValue(args, '--judge') ?? process.env.EVAL_JUDGE_MODEL ?? DEFAULT_JUDGE,
+    judgeFallback: process.env.EVAL_JUDGE_FALLBACK_MODEL?.trim() || undefined,
   };
 }
 
@@ -288,6 +290,16 @@ function isAnthropicModel(model: string) {
 }
 
 async function generateTsx(args: {
+  model: string;
+  openAiKey: string;
+  anthropicKey: string;
+  user: string;
+  system?: string;
+}) {
+  return callModel(args);
+}
+
+async function callModel(args: {
   model: string;
   openAiKey: string;
   anthropicKey: string;
@@ -786,12 +798,18 @@ async function main() {
     log(`Dry run. Would evaluate ${filteredPrompts.length} prompt(s): ${filteredPrompts.map((item) => item.slug).join(', ')}`);
     log(`Generator model: ${args.generator}`);
     log(`Judge model: ${args.judge}`);
+    if (args.judgeFallback) {
+      log(`Judge fallback model configured: ${args.judgeFallback}`);
+    }
     log(`Loaded judge prompt and core pack bundle.`);
     return;
   }
 
   log(`Generator model: ${args.generator}`);
   log(`Judge model: ${args.judge}`);
+  if (args.judgeFallback) {
+    log(`Judge fallback model configured: ${args.judgeFallback}`);
+  }
 
   const openAiKey = await loadEnvKey('OPENAI_API_KEY', '~/.clawdbot/credentials/openai.env');
   const anthropicKey = await loadEnvKey('ANTHROPIC_API_KEY', '~/.clawdbot/credentials/anthropic.env');
@@ -830,24 +848,48 @@ async function main() {
       ]);
 
       log(`Judging ${promptDef.slug}`);
-      const judgeRaw = await callAnthropic({
-        apiKey: anthropicKey,
-        model: args.judge,
-        system: judgeSystemPrompt,
-        user: [
-          `Prompt: ${promptDef.prompt}`,
-          '',
-          '## before.tsx',
-          '```tsx',
-          beforeTsx,
-          '```',
-          '',
-          '## after.tsx',
-          '```tsx',
-          afterTsx,
-          '```',
-        ].join('\n'),
-      });
+      const judgeUserPrompt = [
+        `Prompt: ${promptDef.prompt}`,
+        '',
+        '## before.tsx',
+        '```tsx',
+        beforeTsx,
+        '```',
+        '',
+        '## after.tsx',
+        '```tsx',
+        afterTsx,
+        '```',
+      ].join('\n');
+
+      let judgeFallbackUsed = false;
+      let judgeRaw: string;
+      try {
+        judgeRaw = await callModel({
+          openAiKey,
+          anthropicKey,
+          model: args.judge,
+          system: judgeSystemPrompt,
+          user: judgeUserPrompt,
+        });
+      } catch (primaryJudgeError) {
+        if (!args.judgeFallback) {
+          throw primaryJudgeError;
+        }
+        log(`Primary judge failed for ${promptDef.slug}; retrying once with fallback model ${args.judgeFallback}`);
+        try {
+          judgeRaw = await callModel({
+            openAiKey,
+            anthropicKey,
+            model: args.judgeFallback,
+            system: judgeSystemPrompt,
+            user: judgeUserPrompt,
+          });
+          judgeFallbackUsed = true;
+        } catch {
+          throw primaryJudgeError;
+        }
+      }
       const judge = parseJudgeScores(judgeRaw);
 
       log(`Running programmatic evals for ${promptDef.slug}`);
@@ -859,6 +901,7 @@ async function main() {
         slug: promptDef.slug,
         type: promptDef.type,
         timestamp: startedAt,
+        judgeFallbackUsed,
         before,
         after,
         delta: after.total - before.total,

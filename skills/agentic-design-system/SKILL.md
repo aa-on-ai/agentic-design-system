@@ -30,6 +30,20 @@ the system has two packs of skills installed alongside this one. you don't need 
 ### agent-friendly (read for production sites)
 - `skills/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
 
+## project handoff context (DESIGN.md)
+
+if a `DESIGN.md` file exists at the repo root — or at a path the orchestrator passes in — load it as handoff context **before** building. it is the normative source of truth for design tokens (colors, typography, spacing, rounded, components) and a prose overlay for atmosphere, component tone, and anti-goals.
+
+- YAML frontmatter tokens win on conflicts with prose
+- prose gives the **why** so the agent can judge edge cases
+- unknown sections are preserved without error per the spec, so this repo's one extension (`Example Prompting Language`) is safe to use
+
+the project-identity template for this repo lives at `templates/project-identity-template.md` and is DESIGN.md-shaped. worked examples live in `testing/fixtures/` — three bespoke (canopy, pawprint, notion-ai-settings) and three real from the ecosystem (airbnb, linear, notion).
+
+format reference: https://github.com/google-labs-code/design.md (alpha — this repo consumes the format, does not author tooling for it)
+
+prior art / ecosystem: https://github.com/VoltAgent/awesome-design-md — curated real-world DESIGN.md examples. the three real fixtures in `testing/fixtures/` were pulled via `npx getdesign@latest add <slug>`.
+
 ## routing decision
 
 ```
