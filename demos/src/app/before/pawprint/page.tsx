@@ -89,7 +89,7 @@ export default function PawprintAdminDashboard() {
           </div>
 
           <nav className="flex-1 space-y-2 p-4">
-            {[
+            {([
               ['Overview', true],
               ['Bookings', false],
               ['Walkers', false],
@@ -98,7 +98,7 @@ export default function PawprintAdminDashboard() {
               ['Payments', false],
               ['Reports', false],
               ['Settings', false],
-            ].map(([item, active]) => (
+            ] as const).map(([item, active]) => (
               <button
                 key={item}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
