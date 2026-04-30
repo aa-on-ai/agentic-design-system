@@ -13,3 +13,4 @@ out/
 # Generated eval output (re-generate with: npx tsx testing/eval-loop.ts)
 testing/results/*/before.tsx
 testing/results/*/after.tsx
+.worktrees/
