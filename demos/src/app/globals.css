@@ -5,8 +5,8 @@
   --foreground: #1d1812;
   --page: #f4ead8;
   --text: #1d1812;
-  --muted: #6f5c47;
-  --quiet: #927a5e;
+  --muted: #5f4d39;
+  --quiet: #80664b;
   --surface: #fff7e9;
   --surface-soft: #ead8bd;
   --surface-ink: #201810;
@@ -23,8 +23,8 @@
   --foreground: #f8ead5;
   --page: #10151c;
   --text: #f8ead5;
-  --muted: #d8c8aa;
-  --quiet: #b8a589;
+  --muted: #e1d2b7;
+  --quiet: #cdbb9d;
   --surface: #171e29;
   --surface-soft: #232a35;
   --surface-ink: #090d12;
@@ -42,8 +42,8 @@
     --foreground: #f8ead5;
     --page: #10151c;
     --text: #f8ead5;
-    --muted: #d8c8aa;
-    --quiet: #b8a589;
+    --muted: #e1d2b7;
+    --quiet: #cdbb9d;
     --surface: #171e29;
     --surface-soft: #232a35;
     --surface-ink: #090d12;
@@ -798,19 +798,27 @@ a { -webkit-tap-highlight-color: transparent; }
   .theme-toggle { width: 2.4rem; min-width: 2.4rem; height: 2.4rem; }
 
   .qa-hero { padding-top: 3.6rem; }
-  .qa-hero h1 {
-    font-size: clamp(3.2rem, 17vw, 4.45rem);
-    line-height: 0.88;
-    letter-spacing: -0.052em;
+  .qa-nav-actions {
+    display: none;
   }
-  .qa-lede { font-size: 1rem; }
+
+  .qa-console-top strong {
+    display: none;
+  }
+
+  .qa-hero h1 {
+    font-size: clamp(2.9rem, 15.4vw, 4.05rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+  }
+  .qa-lede { font-size: 1.04rem; }
 
   .qa-hero-actions { flex-direction: column; }
   .qa-primary,
   .qa-secondary { width: 100%; }
 
-  .hero-command-strip { padding: 0.78rem !important; }
-  .hero-command-strip .flex { align-items: flex-start; gap: 0.65rem; }
+  .hero-command-strip { padding: 0.95rem !important; }
+  .hero-command-strip .flex { align-items: flex-start; gap: 0.75rem; }
   .hero-command-code {
     display: block;
     font-size: 0.72rem;
@@ -828,11 +836,15 @@ a { -webkit-tap-highlight-color: transparent; }
   .qa-section h2 { font-size: clamp(2.6rem, 15vw, 4rem); }
 
   .qa-report-card header { align-items: flex-start; flex-direction: column; }
-  .qa-report-row { grid-template-columns: 1fr; gap: 0.35rem; }
+  .qa-report-row {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    padding: 1.05rem;
+  }
   .qa-report-row p,
   .qa-check-card p,
   .qa-console-list li {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
   }
   .qa-state-strip span {
     border-radius: 0.9rem;
@@ -846,7 +858,7 @@ a { -webkit-tap-highlight-color: transparent; }
 
 @media (max-width: 380px) {
   .qa-wordmark span:last-child { max-width: 9.6rem; }
-  .hero-command-code { font-size: 0.66rem; }
+  .hero-command-code { font-size: 0.68rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
