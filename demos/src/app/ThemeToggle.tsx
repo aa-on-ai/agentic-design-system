@@ -47,7 +47,6 @@ export function ThemeToggle() {
           </svg>
         )}
       </span>
-      {theme === "dark" ? "Light mode" : "Dark mode"}
     </button>
   );
 }

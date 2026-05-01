@@ -80,7 +80,7 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -89,13 +89,13 @@ body {
   font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .theme-page {
   background: var(--page);
   color: var(--text);
-  overflow-x: hidden;
+  overflow-x: clip;
   transition-property: background-color, color;
   transition-duration: 360ms;
   transition-timing-function: ease;
@@ -272,10 +272,15 @@ body {
 }
 
 .eyebrow-pill {
-  color: var(--accent-strong);
+  color: var(--accent);
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--accent-strong) 12%, transparent);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="dark"] .eyebrow-pill,
+:root:not([data-theme="light"]) .eyebrow-pill {
+  color: var(--accent-strong);
 }
 
 .hero-atmosphere {
@@ -568,5 +573,720 @@ body {
   .hero-frame:hover .hero-art,
   .score-card:hover {
     transform: none;
+  }
+}
+
+/* Opinionated product pass */
+.site-nav {
+  background: color-mix(in srgb, var(--page) 58%, transparent);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border-color: color-mix(in srgb, var(--border) 78%, transparent);
+  box-shadow: 0 18px 55px rgba(92, 63, 28, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+:root[data-theme="dark"] .site-nav,
+:root:not([data-theme="light"]) .site-nav {
+  background: rgba(11, 18, 32, 0.58);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.28);
+}
+
+.wordmark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.wordmark::before {
+  content: "";
+  width: 0.68rem;
+  height: 0.68rem;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-strong) 18%, transparent);
+}
+
+.nav-link,
+.github-link,
+.theme-toggle,
+.accent-button,
+.nav-chip,
+.system-card,
+.sequence-card,
+.contract-card,
+.install-panel a,
+#proof article,
+#install article {
+  transition-property: transform, background-color, border-color, box-shadow, color, opacity, filter;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+.nav-link:hover,
+.github-link:hover,
+.theme-toggle:hover,
+.nav-chip:hover {
+  transform: translateY(-1px);
+}
+
+.theme-toggle,
+.github-link {
+  min-width: 2.55rem;
+  min-height: 2.55rem;
+  justify-content: center;
+  padding: 0;
+}
+
+.theme-toggle__icon svg,
+.github-link svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.accent-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(240, 166, 75, 0.32);
+}
+
+.nav-chip:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.hero-atmosphere {
+  background: var(--page);
+}
+
+.hero-scene-wrap {
+  background: var(--page);
+}
+
+.hero-scene {
+  object-position: 63% center;
+  transform: scale(1.04);
+  opacity: 0.86;
+  filter: saturate(0.92) contrast(0.96) brightness(1.06);
+}
+
+:root[data-theme="dark"] .hero-scene,
+:root:not([data-theme="light"]) .hero-scene {
+  opacity: 0.78;
+  filter: saturate(1.08) contrast(1.06) brightness(0.72);
+}
+
+.hero-scrim {
+  background:
+    radial-gradient(circle at 76% 36%, transparent 0 24%, color-mix(in srgb, var(--page) 8%, transparent) 46%, color-mix(in srgb, var(--page) 72%, transparent) 78%),
+    linear-gradient(90deg, color-mix(in srgb, var(--page) 92%, transparent) 0%, color-mix(in srgb, var(--page) 58%, transparent) 38%, color-mix(in srgb, var(--page) 10%, transparent) 68%, transparent 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--page) 22%, transparent) 0%, transparent 58%, var(--page) 100%);
+}
+
+:root[data-theme="dark"] .hero-scrim,
+:root:not([data-theme="light"]) .hero-scrim {
+  background:
+    radial-gradient(circle at 76% 36%, transparent 0 22%, rgba(11, 18, 32, 0.18) 48%, rgba(11, 18, 32, 0.9) 82%),
+    linear-gradient(90deg, rgba(11, 18, 32, 0.95) 0%, rgba(11, 18, 32, 0.68) 38%, rgba(11, 18, 32, 0.2) 70%, transparent 100%),
+    linear-gradient(180deg, rgba(11, 18, 32, 0.16) 0%, transparent 52%, #0b1220 100%);
+}
+
+.hero-copy-panel {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--page) 86%, transparent), color-mix(in srgb, var(--page) 52%, transparent));
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.hero-sequence {
+  align-self: end;
+}
+
+.sequence-card:hover,
+.sequence-card:focus-visible,
+.system-card:hover,
+.contract-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border));
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.14);
+}
+
+.sequence-number {
+  color: var(--accent-text);
+  background: var(--accent-strong);
+}
+
+.system-section {
+  background:
+    radial-gradient(circle at 16% 12%, color-mix(in srgb, var(--accent-strong) 12%, transparent), transparent 28%),
+    var(--page);
+  color: var(--text);
+}
+
+.taste-contract {
+  position: relative;
+  overflow: hidden;
+}
+
+.taste-contract::after {
+  content: "";
+  position: absolute;
+  width: 18rem;
+  height: 18rem;
+  right: -8rem;
+  top: -8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-strong) 18%, transparent);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.install-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.install-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 78% 0%, rgba(240, 166, 75, 0.18), transparent 36%);
+  pointer-events: none;
+}
+
+.install-panel > * {
+  position: relative;
+}
+
+#proof article:hover,
+#install article:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 58px rgba(0, 0, 0, 0.16);
+}
+
+@media (max-width: 1023px) {
+  .hero-atmosphere {
+    min-height: auto;
+  }
+
+  .hero-scene {
+    object-position: 68% center;
+    transform: scale(1.02);
+  }
+
+  .hero-sequence {
+    max-width: 100%;
+  }
+
+  .theme-toggle,
+  .github-link {
+    min-width: 2.5rem;
+    padding: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .wordmark {
+    max-width: 12rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .github-link,
+  .theme-toggle,
+  .accent-button,
+  .nav-chip,
+  .system-card,
+  .sequence-card,
+  .contract-card,
+  #proof article,
+  #install article {
+    transition-duration: 1ms;
+  }
+
+  .sequence-card:hover,
+  .system-card:hover,
+  .contract-card:hover,
+  #proof article:hover,
+  #install article:hover,
+  .accent-button:hover,
+  .nav-chip:hover {
+    transform: none;
+  }
+}
+
+/* Static homepage product pass */
+.hero-atmosphere {
+  min-height: 860px;
+}
+
+.hero-artifact {
+  transform: translateZ(0);
+}
+
+.artifact-shell {
+  position: relative;
+  overflow: hidden;
+}
+
+.artifact-shell::before {
+  content: "";
+  position: absolute;
+  inset: -30% 40% 35% -20%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-strong) 22%, transparent), transparent 62%);
+  pointer-events: none;
+}
+
+.artifact-shell > * {
+  position: relative;
+}
+
+.artifact-panel,
+.process-step,
+.benchmark-row,
+.subtle-link,
+.copy-command,
+.install-command-card {
+  transition-property: transform, background-color, border-color, box-shadow, color, filter;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+.artifact-panel:hover,
+.artifact-panel:focus-within,
+.process-step:hover,
+.benchmark-row:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--accent) 54%, var(--border));
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.14);
+}
+
+.artifact-panel:hover li span {
+  transform: scale(1.35);
+}
+
+.artifact-panel li span {
+  transition: transform 180ms ease;
+}
+
+.process-rail {
+  counter-reset: process;
+}
+
+.process-step:nth-child(2),
+.process-step:nth-child(4) {
+  margin-left: clamp(0rem, 4vw, 3rem);
+}
+
+.proof-section,
+.install-section {
+  background:
+    radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--accent-strong) 10%, transparent), transparent 26%),
+    var(--page);
+  color: var(--text);
+}
+
+.report-card,
+.install-command-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.report-card::before,
+.install-command-card::before {
+  content: "";
+  position: absolute;
+  width: 18rem;
+  height: 18rem;
+  right: -9rem;
+  top: -9rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-strong) 16%, transparent);
+  pointer-events: none;
+}
+
+.report-card > *,
+.install-command-card > * {
+  position: relative;
+}
+
+.subtle-link:hover,
+.copy-command:hover {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--surface-strong) 58%, transparent);
+}
+
+.install-command-card pre {
+  box-shadow: inset 0 0 0 1px rgba(255, 244, 223, 0.08);
+}
+
+@media (min-width: 1024px) {
+  .hero-artifact {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-atmosphere {
+    min-height: auto;
+  }
+
+  .process-step:nth-child(2),
+  .process-step:nth-child(4) {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-atmosphere {
+    padding-top: 132px;
+  }
+
+  .artifact-flow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artifact-panel,
+  .process-step,
+  .benchmark-row,
+  .subtle-link,
+  .copy-command,
+  .install-command-card {
+    transition-duration: 1ms;
+  }
+
+  .artifact-panel:hover,
+  .process-step:hover,
+  .benchmark-row:hover,
+  .subtle-link:hover,
+  .copy-command:hover {
+    transform: none;
+  }
+}
+
+/* Focused workflow-language polish */
+.hero-command-strip {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-command-strip::before {
+  content: "$";
+  margin-right: 0.55rem;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.hero-command-strip code {
+  display: inline-block;
+  max-width: calc(100% - 1.2rem);
+  vertical-align: middle;
+}
+
+.process-rail {
+  position: relative;
+}
+
+.process-rail::before {
+  content: "";
+  position: absolute;
+  left: 1.5rem;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  width: 1px;
+  background: linear-gradient(var(--accent), color-mix(in srgb, var(--accent) 8%, transparent));
+}
+
+.process-step {
+  position: relative;
+  padding-left: 4.25rem;
+}
+
+.process-step::before {
+  content: "";
+  position: absolute;
+  left: 1.12rem;
+  top: 1.65rem;
+  width: 0.78rem;
+  height: 0.78rem;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  box-shadow: 0 0 0 0.42rem color-mix(in srgb, var(--accent-strong) 16%, transparent);
+}
+
+.theme-toggle,
+.github-link {
+  background: color-mix(in srgb, var(--surface-strong) 78%, transparent);
+  border-color: color-mix(in srgb, var(--text) 18%, var(--border));
+}
+
+:root[data-theme="dark"] .theme-toggle,
+:root:not([data-theme="light"]) .theme-toggle,
+:root[data-theme="dark"] .github-link,
+:root:not([data-theme="light"]) .github-link {
+  background: rgba(8, 14, 25, 0.78);
+  border-color: rgba(240, 166, 75, 0.34);
+}
+
+@media (max-width: 640px) {
+  .artifact-panel p,
+  .artifact-panel span,
+  .artifact-panel li,
+  .artifact-shell p {
+    letter-spacing: normal;
+  }
+
+  .artifact-panel p.text-xs,
+  .artifact-shell p.text-xs {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+  }
+
+  .artifact-panel ul {
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  .hero-command-strip code,
+  .install-command-card pre {
+    font-size: 0.82rem;
+  }
+}
+
+/* Blocker polish: operational workflow and mobile clarity */
+.hero-copy-panel,
+.hero-artifact,
+.hero-command-strip {
+  border-color: color-mix(in srgb, var(--text) 14%, var(--border));
+  box-shadow: 0 30px 100px rgba(54, 36, 18, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+:root[data-theme="dark"] .hero-copy-panel,
+:root:not([data-theme="light"]) .hero-copy-panel,
+:root[data-theme="dark"] .hero-artifact,
+:root:not([data-theme="light"]) .hero-artifact,
+:root[data-theme="dark"] .hero-command-strip,
+:root:not([data-theme="light"]) .hero-command-strip {
+  border-color: rgba(240, 166, 75, 0.3);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 244, 223, 0.1);
+}
+
+.hero-command-strip {
+  background: color-mix(in srgb, var(--surface-strong) 72%, transparent);
+}
+
+:root[data-theme="dark"] .hero-command-strip,
+:root:not([data-theme="light"]) .hero-command-strip {
+  background: rgba(8, 14, 25, 0.78);
+}
+
+.process-rail::before {
+  left: 1.86rem;
+  width: 2px;
+  opacity: 0.75;
+}
+
+.process-step {
+  z-index: 0;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 94%, transparent), color-mix(in srgb, var(--surface-strong) 55%, transparent));
+}
+
+.process-step::before {
+  z-index: 1;
+  left: 1.48rem;
+}
+
+.process-step::after {
+  content: "";
+  position: absolute;
+  left: 3.28rem;
+  top: 2.06rem;
+  width: 0.9rem;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.artifact-panel {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, transparent), color-mix(in srgb, var(--surface-strong) 42%, transparent));
+}
+
+@media (max-width: 640px) {
+  .hero-command-strip {
+    padding: 0.85rem;
+  }
+
+  .hero-command-strip::before {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .hero-command-strip code {
+    max-width: 100%;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .theme-toggle,
+  .github-link {
+    color: var(--text) !important;
+    background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+    border-color: color-mix(in srgb, var(--text) 24%, var(--border));
+    box-shadow: 0 8px 24px rgba(54, 36, 18, 0.14);
+  }
+
+  :root[data-theme="dark"] .theme-toggle,
+  :root:not([data-theme="light"]) .theme-toggle,
+  :root[data-theme="dark"] .github-link,
+  :root:not([data-theme="light"]) .github-link {
+    background: rgba(8, 14, 25, 0.92);
+    border-color: rgba(240, 166, 75, 0.42);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+  }
+}
+
+.hero-command-code {
+  display: inline-flex;
+  max-width: calc(100% - 1.2rem);
+  flex-wrap: wrap;
+  gap: 0.3rem 0.55rem;
+  vertical-align: middle;
+}
+
+.hero-command-code span {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .hero-command-code {
+    display: flex;
+    max-width: 100%;
+    gap: 0.25rem;
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+
+  .hero-command-code span {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hero-command-code span:first-child {
+    color: var(--muted);
+  }
+}
+
+/* Final pre-Aaron polish */
+.hero-scene {
+  opacity: 0.72;
+  filter: saturate(0.82) contrast(0.9) brightness(1.08);
+}
+
+:root[data-theme="dark"] .hero-scene,
+:root:not([data-theme="light"]) .hero-scene {
+  opacity: 0.66;
+  filter: saturate(0.94) contrast(0.98) brightness(0.64);
+}
+
+.hero-artifact {
+  opacity: 0.94;
+  transform: scale(0.975);
+  border-color: color-mix(in srgb, var(--text) 10%, var(--border));
+  box-shadow: 0 22px 72px rgba(54, 36, 18, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+:root[data-theme="dark"] .hero-artifact,
+:root:not([data-theme="light"]) .hero-artifact {
+  box-shadow: 0 22px 72px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 244, 223, 0.08);
+}
+
+.hero-command-strip {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: 0 10px 28px rgba(54, 36, 18, 0.12);
+}
+
+.hero-command-strip::before {
+  content: none;
+}
+
+.hero-command-code {
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.hero-command-code::-webkit-scrollbar {
+  display: none;
+}
+
+.system-section {
+  margin-top: -1px;
+  padding-top: clamp(4rem, 8vw, 6rem);
+}
+
+@media (max-width: 640px) {
+  .hero-atmosphere {
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-copy-panel {
+    padding: 1.15rem;
+    border-radius: 1.75rem;
+  }
+
+  .hero-copy-panel h1 {
+    font-size: clamp(2.35rem, 10.8vw, 3.35rem);
+    line-height: 0.96;
+    letter-spacing: -0.058em;
+  }
+
+  .hero-lede {
+    margin-top: 1.35rem;
+    line-height: 1.55;
+  }
+
+  .hero-copy-panel .mt-8 {
+    margin-top: 1.35rem;
+  }
+
+  .hero-command-strip {
+    padding: 0.7rem 0.72rem;
+  }
+
+  .hero-command-strip .flex {
+    gap: 0.5rem;
+  }
+
+  .hero-command-code {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow-x: auto;
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+
+  .copy-command {
+    padding-inline: 0.62rem;
+  }
+
+  .hero-artifact {
+    margin-top: -0.25rem;
+    transform: none;
+    border-radius: 2rem;
+  }
+
+  .artifact-shell {
+    border-radius: 1.55rem;
+    padding: 0.95rem;
+  }
+
+  .artifact-flow {
+    gap: 0.75rem;
+  }
+
+  .system-section {
+    padding-top: 4rem;
   }
 }
