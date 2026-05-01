@@ -91,8 +91,8 @@ export default function Home() {
           <a className="nav-link rounded-full px-3 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#loop">
             Workflow
           </a>
-          <a className="nav-link rounded-full px-3 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#proof">
-            Proof
+          <a className="nav-link rounded-full px-3 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#report">
+            Report
           </a>
           <a className="nav-link rounded-full px-3 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#install">
             Install
@@ -138,17 +138,17 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[0.9fr_1fr] lg:items-center">
           <div className="hero-copy-panel w-full max-w-full rounded-[2.25rem] p-5 sm:max-w-3xl sm:p-7 lg:p-8">
             <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[0.98] tracking-[-0.055em] text-[var(--text)] sm:text-6xl lg:text-7xl">
-              Give agents context, taste, and critique before they draw UI.
+              Context, taste, critique — before agents draw UI.
             </h1>
             <p className="hero-lede mt-7 max-w-2xl text-pretty text-base leading-7 text-[var(--muted)] sm:text-lg">
-              Installs a reusable workflow that creates rules, generates UI, reviews screenshots, and reports what changed.
+              Install a workflow that turns project files and references into rules, reviewed UI, and a short report.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#install"
                 className="accent-button inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-sm font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.98]"
               >
-                Install in your repo
+                Install workflow
               </a>
               <a
                 href="#loop"
@@ -169,7 +169,7 @@ export default function Home() {
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--accent)]">Workflow contract</p>
                   <p className="mt-1 text-lg font-semibold tracking-[-0.025em] text-[var(--text)]">Rules before pixels.</p>
                 </div>
-                <span className="rounded-full bg-[var(--accent-strong)] px-3 py-1 text-xs font-bold text-[var(--accent-text)]">ready</span>
+
               </div>
               <p className="mt-4 rounded-[1rem] border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-sm font-semibold leading-5 text-[var(--muted)]">
                 WORKFLOW.md generated from your repo, docs, routes, and screenshots.
@@ -217,15 +217,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="proof" className="proof-section px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
+      <section id="report" className="proof-section px-5 py-20 sm:px-8 lg:px-10 lg:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.78fr_1fr] lg:items-start">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--accent)]">Proof</p>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-[var(--accent)]">Report</p>
             <h2 className="mt-5 max-w-xl text-balance text-4xl font-semibold leading-[1.05] tracking-[-0.04em] sm:text-5xl">
-              Compact report. Visible judgment.
+              What the workflow returns.
             </h2>
             <p className="mt-6 max-w-xl text-base leading-7 text-[var(--muted)]">
-              Benchmarks support the workflow instead of leading the page.
+              A compact summary of checks, changes, and remaining risks. Examples are supporting evidence, not a promise.
             </p>
           </div>
           <div className="report-card rounded-[2.25rem] border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.14)]">
@@ -282,6 +282,17 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <footer className="footer-shell px-5 py-10 text-[var(--muted)] sm:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>Built by <a className="font-semibold text-[var(--text)] underline-offset-4 hover:underline" href="https://aaroncodes.xyz">Aaron Thomas</a>.</p>
+          <div className="flex flex-wrap gap-4">
+            <a className="hover:text-[var(--text)]" href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a>
+            <a className="hover:text-[var(--text)]" href="https://aaroncodes.xyz">Portfolio</a>
+            <span>© 2026</span>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

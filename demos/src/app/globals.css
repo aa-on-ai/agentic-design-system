@@ -1473,3 +1473,295 @@ body {
     linear-gradient(90deg, rgba(247, 238, 220, 0.94) 0%, rgba(247, 238, 220, 0.72) 34%, rgba(247, 238, 220, 0.22) 68%, transparent 100%),
     linear-gradient(180deg, rgba(247, 238, 220, 0.18) 0%, transparent 48%, #f7eedc 100%);
 }
+
+/* Aaron refinement: more image, less explanatory weight */
+.mode-switch {
+  width: 3.15rem;
+  height: 2rem;
+  min-width: 3.15rem;
+  min-height: 2rem;
+  padding: 0.22rem;
+}
+
+.mode-switch__track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f5d8a2, #1c2940);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text) 16%, transparent);
+}
+
+.mode-switch__knob {
+  position: absolute;
+  top: 0.22rem;
+  left: 0.24rem;
+  width: 1.12rem;
+  height: 1.12rem;
+  border-radius: 999px;
+  background: #fff7e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background-color 220ms ease;
+}
+
+.mode-switch[data-theme-state="dark"] .mode-switch__knob {
+  transform: translateX(1.16rem);
+  background: #f0a64b;
+}
+
+.hero-atmosphere {
+  min-height: 980px;
+  padding-top: 136px;
+}
+
+.hero-atmosphere > .mx-auto.grid {
+  grid-template-columns: minmax(0, 0.56fr) minmax(18rem, 0.34fr);
+  align-items: start;
+  gap: clamp(2rem, 7vw, 7rem);
+}
+
+.hero-copy-panel {
+  max-width: 41rem;
+  padding: clamp(1.35rem, 2vw, 2rem);
+}
+
+.hero-copy-panel h1 {
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.hero-lede {
+  max-width: 34rem;
+  margin-top: 1.35rem;
+  line-height: 1.5;
+}
+
+.hero-copy-panel .mt-8 {
+  margin-top: 1.45rem;
+}
+
+.hero-command-strip {
+  max-width: 34rem;
+  opacity: 0.86;
+}
+
+.hero-artifact {
+  max-width: 26rem;
+  margin-top: 23rem;
+  opacity: 0.88;
+  transform: scale(0.94);
+  backdrop-filter: blur(12px);
+}
+
+.hero-artifact:hover {
+  opacity: 1;
+  transform: scale(0.955) translateY(-2px);
+}
+
+.hero-scene {
+  object-position: 67% center;
+  transform: scale(1.01);
+}
+
+:root[data-theme="light"] .hero-scrim {
+  background:
+    linear-gradient(90deg, rgba(247, 238, 220, 0.9) 0%, rgba(247, 238, 220, 0.48) 30%, rgba(247, 238, 220, 0.05) 62%, transparent 100%),
+    linear-gradient(180deg, rgba(247, 238, 220, 0.1) 0%, transparent 52%, #f7eedc 100%);
+}
+
+:root[data-theme="dark"] .hero-scrim,
+:root:not([data-theme="light"]) .hero-scrim {
+  background:
+    linear-gradient(90deg, rgba(11, 18, 32, 0.92) 0%, rgba(11, 18, 32, 0.52) 30%, rgba(11, 18, 32, 0.08) 64%, transparent 100%),
+    linear-gradient(180deg, rgba(11, 18, 32, 0.08) 0%, transparent 52%, #0b1220 100%);
+}
+
+.system-section {
+  position: relative;
+  margin-top: -4rem;
+  padding-top: 7rem;
+}
+
+.system-section::before {
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  left: 50%;
+  width: min(38rem, calc(100% - 3rem));
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 42%, transparent), transparent);
+}
+
+.process-step {
+  overflow: hidden;
+}
+
+.process-step::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -30%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent-strong) 13%, transparent), transparent);
+  opacity: 0;
+  animation: workflow-trace 9s ease-in-out infinite;
+}
+
+.process-step:nth-child(2)::after { animation-delay: 0.4s; }
+.process-step:nth-child(3)::after { animation-delay: 0.8s; }
+.process-step:nth-child(4)::after { animation-delay: 1.2s; }
+.process-step:nth-child(5)::after { animation-delay: 1.6s; }
+
+@keyframes workflow-trace {
+  0%, 56%, 100% { transform: translateX(0); opacity: 0; }
+  64% { opacity: 1; }
+  82% { transform: translateX(520%); opacity: 0; }
+}
+
+.footer-shell {
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--page) 88%, #000 3%);
+}
+
+@media (max-width: 1023px) {
+  .hero-atmosphere > .mx-auto.grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-artifact {
+    max-width: 100%;
+    margin-top: 0;
+    opacity: 0.94;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-atmosphere {
+    min-height: auto;
+    padding-top: 128px;
+    padding-bottom: 4.25rem;
+  }
+
+  .hero-copy-panel h1 {
+    font-size: clamp(2.15rem, 10vw, 3.05rem);
+    line-height: 0.92;
+  }
+
+  .hero-lede {
+    margin-top: 1rem;
+    font-size: 0.98rem;
+  }
+
+  .hero-artifact {
+    margin-top: -0.25rem;
+  }
+
+  .system-section {
+    margin-top: -2rem;
+    padding-top: 5.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-step::after {
+    animation: none;
+  }
+}
+
+/* Tiny pre-deploy fix: keep the full mobile install command visible */
+@media (max-width: 640px) {
+  .hero-command-strip {
+    padding: 0.78rem;
+  }
+
+  .hero-command-strip .flex {
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .hero-command-code {
+    min-width: 0;
+    font-size: 0.68rem;
+    line-height: 1.42;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-command-code span {
+    display: block;
+    white-space: nowrap;
+  }
+
+  .copy-command {
+    padding-inline: 0.68rem;
+  }
+}
+
+/* Override earlier mobile ellipsis rule: command must be visibly complete */
+@media (max-width: 640px) {
+  .hero-command-code span {
+    width: auto;
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+
+/* Final responsive safety: prevent mobile visual clipping without changing desktop */
+@media (max-width: 640px) {
+  main,
+  section,
+  footer,
+  .mx-auto,
+  .hero-copy-panel,
+  .hero-artifact,
+  .report-card,
+  .process-step,
+  .install-command-card {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .hero-atmosphere > .mx-auto,
+  .system-section > .mx-auto,
+  .proof-section > .mx-auto,
+  .install-section > .mx-auto {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .install-section .mx-auto > *,
+  .proof-section .mx-auto > *,
+  .system-section .mx-auto > *,
+  .hero-atmosphere .mx-auto > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .install-command-card {
+    width: 100%;
+    max-width: calc(100vw - 40px);
+  }
+
+  .install-command-card .flex {
+    min-width: 0;
+  }
+
+  .install-command-card pre {
+    max-width: 100%;
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 0.78rem;
+  }
+
+  .install-command-card pre code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
