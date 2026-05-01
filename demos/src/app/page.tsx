@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { InstallCommand } from "./InstallCommand";
-import { ThemeToggle } from "./ThemeToggle";
 
 const intakeItems = [
   "Repo routes, screenshots, and UI tokens",
@@ -41,18 +40,6 @@ export default function Home() {
           <a className="qa-nav-link focus-ring focus-visible:outline" href="#report">Report</a>
           <a className="qa-nav-link focus-ring focus-visible:outline" href="#install">Install</a>
         </div>
-        <div className="qa-nav-actions">
-          <ThemeToggle />
-          <a
-            href="https://github.com/aa-on-ai/agentic-design-system"
-            aria-label="Open GitHub repository"
-            className="qa-icon-link focus-ring focus-visible:outline"
-          >
-            <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 fill-current">
-              <path d="M8 0C3.58 0 0 3.67 0 8.2c0 3.62 2.29 6.69 5.47 7.77.4.08.55-.18.55-.4 0-.2-.01-.86-.01-1.56-2.01.38-2.53-.5-2.69-.95-.09-.23-.48-.95-.82-1.14-.28-.16-.68-.55-.01-.56.63-.01 1.08.59 1.23.84.72 1.24 1.87.89 2.33.68.07-.53.28-.89.51-1.09-1.78-.21-3.64-.91-3.64-4.03 0-.89.31-1.62.82-2.19-.08-.21-.36-1.04.08-2.16 0 0 .67-.22 2.2.84A7.4 7.4 0 0 1 8 3.98c.68 0 1.36.09 2 .27 1.53-1.06 2.2-.84 2.2-.84.44 1.12.16 1.95.08 2.16.51.57.82 1.3.82 2.19 0 3.13-1.87 3.82-3.65 4.03.29.26.54.76.54 1.53 0 1.1-.01 1.99-.01 2.26 0 .22.15.48.55.4A8.15 8.15 0 0 0 16 8.2C16 3.67 12.42 0 8 0Z" />
-            </svg>
-          </a>
-        </div>
       </nav>
 
       <header className="qa-hero">
@@ -67,7 +54,6 @@ export default function Home() {
         <aside className="qa-console" aria-label="Evaluation run preview">
           <div className="qa-console-top">
             <span>run_0427</span>
-            <strong>blocked before ship</strong>
           </div>
           <div className="qa-scorecard">
             <div>

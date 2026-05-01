@@ -798,14 +798,6 @@ a { -webkit-tap-highlight-color: transparent; }
   .theme-toggle { width: 2.4rem; min-width: 2.4rem; height: 2.4rem; }
 
   .qa-hero { padding-top: 3.6rem; }
-  .qa-nav-actions {
-    display: none;
-  }
-
-  .qa-console-top strong {
-    display: none;
-  }
-
   .qa-hero h1 {
     font-size: clamp(2.9rem, 15.4vw, 4.05rem);
     line-height: 0.92;
