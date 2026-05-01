@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Benchmark baseline routes intentionally preserve pre-skill output, including lint failures.
+    "src/app/before/**",
   ]),
 ]);
 

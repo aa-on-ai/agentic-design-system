@@ -1,8 +1,8 @@
-# routing
+# Routing
 
 how to decide which skills to run and when.
 
-## two packs
+## Two packs
 
 **core pack** (always active for visual work):
 - design-review — quality gate
@@ -11,13 +11,14 @@ how to decide which skills to run and when.
 - agent-friendly-design — make sites work for AI consumers
 
 **creative pack** (opt-in only):
+- visual-reference-calibration — reference contract before generation
 - whimsical-design — personality and delight
 - world-build — immersive atmosphere
 - web-animation-design — motion and interaction feel
 
 core pack runs on every visual task. creative pack runs only when triggered. each creative skill has its own trigger rules in its SKILL.md — read those, not just this doc.
 
-## the decision
+## The decision
 
 ```
 is this visual or user-facing?
@@ -25,6 +26,7 @@ is this visual or user-facing?
 └── yes → core pack always runs
     │
     does it need creative direction?
+    ├── visual reference/screenshot/site/CodePen/"feel like" prompt → add visual-reference-calibration BEFORE generation
     ├── user asked for personality/delight/whimsy → add whimsical-design
     ├── user asked for immersion/atmosphere/world → add world-build
     ├── user asked about animation/motion/feel → add web-animation-design
@@ -34,7 +36,50 @@ is this visual or user-facing?
 
 **the key rule:** if the default aesthetic is appropriate for the product, don't fight it. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. "different from defaults" is not always better. core pack makes the defaults excellent. creative pack makes them different. only add creative when different is actually what the product needs.
 
-## context pass (run first if applicable)
+## Project Knowledge Intake (optional; run when alignment is needed)
+
+default path: use a preset when there is no project context, then build. run Project Knowledge Intake only when the task depends on product taste and the project needs shared context beyond a preset.
+
+intake gathers:
+- brand/design docs, product specs, and prior decisions
+- existing components, tokens, routes, and screenshots
+- audience, domain nouns, workflows, and product language
+- visual references and anti-references
+- constraints: accessibility, responsive behavior, performance, libraries, launch risk
+
+then ask only the minimum clarifying questions needed to remove blocking ambiguity. do not interview when files already answer the question. emit or update a project identity brief using `templates/project-identity-template.md`, then continue with the normal chain.
+
+order: **ingest/interview → generate → critique → verify → report**.
+
+## Reference Intake Gate (optional; run when a visual target matters)
+
+if the prompt includes a visual reference, screenshot, site, CodePen, Dribbble shot, “make it feel like…”, marketing/editorial/launch art direction, or a previous output failed because the vibe was generic/sloppy/wrong, run `visual-reference-calibration` before building.
+
+create `templates/reference-intake-contract.md` or the same shape in the run report. the contract must state:
+- source/reference
+- primary borrowed layer: structure, scale, motion, mood, typography, art style, surface, or interaction model
+- secondary borrowed layers, if any
+- what not to borrow
+- fidelity target: close mimic, same spirit, or loose cue
+- product constraints
+- success cues and failure cues
+
+hard rule for reference-led work: if the agent cannot state what to borrow, what not to borrow, and the fidelity target, it cannot build. if the task is not reference-led, skip this gate.
+
+ask before building when:
+- the primary borrowed layer is unclear
+- the fidelity target is unclear and would change implementation strategy
+- the reference implies structural change but the user did not approve it
+- Aaron already said we missed the point
+
+done gate for reference-led work:
+1. screenshot the result
+2. compare against the reference contract when cheap/easy
+3. report where it matched and where it drifted
+
+order for reference-led work: **project knowledge intake (if needed) → reference intake contract → generate → critique → screenshot comparison → report**.
+
+## Context pass (run first if applicable)
 
 if the prompt names a real company, product, founder, or public figure:
 
@@ -49,16 +94,17 @@ rules:
 
 skip this step only if the prompt is generic (no named entities).
 
-## core chain (default for all visual work)
+## Core chain (default for all visual work)
 
 run in order:
 
-0. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. find 2-3 real examples via Mobbin/Godly. this step takes 2 minutes and saves 30 minutes of iteration.
-1. **design-review** — quality gate. catches structural problems, anti-patterns, missing states.
-2. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases.
-3. **ui-polish-pass** — final polish. spacing, alignment, hierarchy, visual cleanup.
+0. **project knowledge intake** — when context is incomplete, gather or interview enough to create/update the project identity brief before building.
+1. **pattern benchmarking** — BEFORE building, research how the best version of this already exists. read `skills/design-review/references/inspiration.md`. find 2-3 real examples via Mobbin/Godly. this step takes 2 minutes and saves 30 minutes of iteration.
+2. **design-review** — quality gate. catches structural problems, anti-patterns, missing states.
+3. **ux-baseline-check** — state inventory. happy path, empty, loading, error, edge cases.
+4. **ui-polish-pass** — final polish. spacing, alignment, hierarchy, visual cleanup.
 
-## core + creative (only when triggered)
+## Core + creative (only when triggered)
 
 add creative skills on top of core when the triggers are met:
 
@@ -66,7 +112,7 @@ add creative skills on top of core when the triggers are met:
 - **+ world-build** — when user explicitly asks for immersion or atmosphere. portfolio sites, product launches, game UIs. runs BEFORE the core chain (sets creative direction first).
 - **+ web-animation-design** — when user asks about motion, easing, springs, interaction feel, or "make it smooth." when the task specifically involves animation work.
 
-## review only
+## Review only
 
 for modifications to existing UI where the structure already exists.
 
@@ -75,7 +121,7 @@ run:
 
 examples: adjusting spacing, updating copy, minor layout tweaks, checking a screen before merge.
 
-## agent-friendly pass
+## Agent-friendly pass
 
 for any web project shipping to production where agents may consume or interact with the site. runs independently from the visual quality chain.
 
@@ -83,7 +129,7 @@ for any web project shipping to production where agents may consume or interact 
 
 this skill runs alongside the core chain, not instead of it. a page can need both visual quality (for humans) and agent-friendly design (for agents).
 
-## skip
+## Skip
 
 don't run the design chain for non-visual work:
 - scripts, tests, data migrations
@@ -91,7 +137,7 @@ don't run the design chain for non-visual work:
 - config, infrastructure
 - anything with no user-facing impact
 
-## divergent exploration mode
+## Divergent exploration mode
 
 when the task is creative or the direction is unclear, don't commit to one approach. instead:
 
@@ -102,16 +148,16 @@ when the task is creative or the direction is unclear, don't commit to one appro
 
 use for layout decisions and visual direction. not for button colors.
 
-## token budget awareness
+## Token budget awareness
 
 - only load reference files you actually need
 - creative pack skills are short — low token cost when loaded
 - web-animation-design has a PRACTICAL-TIPS.md supplement — load only when doing animation work
 - if you're doing review-only, one skill file is all you need
 
-## compounding
+## Compounding
 
 after every build or review, capture what worked and what didn't:
 - new anti-patterns go in `skills/design-review/references/anti-patterns.md`
-- project-specific decisions go in the project's `guidelines.md`
+- project-specific decisions go in the project's `guidelines.md` or `DESIGN.md`
 - the system gets smarter every time it's used. don't skip this step.

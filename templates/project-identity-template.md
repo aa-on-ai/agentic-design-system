@@ -97,6 +97,29 @@ components:
 
 # <Project Name>
 
+## Project Knowledge Intake
+
+Use this section before filling the identity. Prefer inspecting existing sources over asking the human. Ask only what is missing and blocking.
+
+### sources inspected
+- docs/specs:
+- existing routes/components:
+- screenshots or product references:
+- brand/design system material:
+- prior decisions or anti-patterns:
+
+### minimum interview
+1.
+2.
+3.
+
+### intake summary
+- audience:
+- domain nouns:
+- core workflows:
+- hard constraints:
+- unresolved risks:
+
 ## Overview
 
 Pick 2–4 adjectives for atmosphere and emotional register. State overall posture: editorial / utilitarian / playful / cinematic / analytical / calm / sharp. State density: spacious / balanced / dense. Write 1–2 sentences on what the product should feel like before the user reads a word.
@@ -157,6 +180,14 @@ Per-component guidance. Reference the tokens above. Cover at minimum:
 
 ### Don't
 -
+
+## Constraints & Verification
+
+- accessibility floor:
+- responsive floor:
+- performance or framework constraints:
+- required checks before presenting:
+- screenshot or artifact requirement:
 
 ---
 

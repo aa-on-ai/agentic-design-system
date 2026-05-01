@@ -1,76 +1,37 @@
-# claude code
+# Claude Code
 
-how to wire the agentic design system into Claude Code projects.
+Claude Code reads `CLAUDE.md` or `AGENTS.md` from your project root.
 
-## setup
-
-Claude Code reads `CLAUDE.md` (or `AGENTS.md`) from your project root. this is where the design system hooks in.
-
-### 1. copy skills into your project
+## Copy-paste setup
 
 ```bash
-# from the agentic-design-system repo
 cp -r skills/ /path/to/your/project/skills/
+cp presets/utilitarian-app.md /path/to/your/project/guidelines.md
 ```
 
-or keep them in a shared location and reference by path.
-
-### 2. add to CLAUDE.md
-
-paste the contents of `templates/agents-snippet.md` into your project's `CLAUDE.md`. it wires up the routing logic and tells Claude Code when to load which skills.
-
-minimal version:
+Then paste this into `CLAUDE.md` or `AGENTS.md`:
 
 ```markdown
-## Design Quality Chain
-
-Before presenting any visual/UI work, run the appropriate skill chain:
-
-- **New visual work** → read and follow these in order:
-  1. skills/design-review/SKILL.md
-  2. skills/ux-baseline-check/SKILL.md
-  3. skills/whimsical-design/SKILL.md
-  4. skills/web-animation-design/SKILL.md
-  5. skills/ui-polish-pass/SKILL.md
-
-- **Modifying existing UI** → read and follow:
-  1. skills/design-review/SKILL.md (pre-flight checklist only)
-
-- **Non-visual work** → skip the design chain
-
-Reference files are in skills/design-review/references/ — load only what's relevant.
+Before presenting visual/UI work:
+1. Read guidelines.md, DESIGN.md, or the closest preset.
+2. If the project needs alignment, run Project Knowledge Intake and create/update DESIGN.md.
+3. If a visual reference matters, run Reference Intake before coding.
+4. Run design-review, ux-baseline-check, ui-polish-pass.
+5. Screenshot when possible and report checks/gaps.
+Skip any gate that does not apply.
 ```
 
-### 3. add brand guidelines
+## Default path
 
-copy `templates/brand-guidelines-template.md` to your project root as `guidelines.md`. fill in your design tokens, component patterns, and anti-patterns.
+Use a preset, prompt normally, and let the core checks run.
 
-Claude Code will reference this alongside the skills.
+## Optional layers
 
-## how it works in practice
+- **Project Knowledge Intake** — use when the project has real constraints, stakeholders, existing tokens, or language the agent needs to learn.
+- **Reference Intake** — use when a screenshot/site/CodePen/“make it feel like…” target matters.
 
-when you ask Claude Code to build UI, it will:
+## Useful prompt
 
-1. check the routing logic (new vs modified vs non-visual)
-2. load the appropriate skills
-3. reference your guidelines.md for project-specific tokens
-4. run the quality chain before presenting work
-5. after the session, note what worked/didn't for compounding
-
-## divergent exploration
-
-ask Claude Code to explore multiple directions:
-
+```text
+Build this UI using guidelines.md. Run the core design checks before presenting. If you need project alignment, create/update DESIGN.md. If you use a visual reference, fill the Reference Intake Contract first.
 ```
-build this dashboard layout. try 2-3 different approaches —
-add a version selector at the top so I can compare them.
-pick distinct directions, not minor variations.
-```
-
-Claude Code will build each version and let you navigate between them.
-
-## tips
-
-- **be specific in prompts.** "build a table" gets median output. "build a table with sticky headers, row hover states, empty state with illustration, loading skeleton" gets professional output.
-- **reference the skills explicitly** if Claude Code doesn't pick them up automatically: "before you present this, run through skills/design-review/SKILL.md"
-- **compound after sessions.** if Claude Code made a mistake that the quality gate should catch, add it to `skills/design-review/references/anti-patterns.md`
