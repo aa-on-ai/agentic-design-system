@@ -72,8 +72,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -82,11 +89,13 @@ body {
   font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 .theme-page {
   background: var(--page);
   color: var(--text);
+  overflow-x: hidden;
   transition-property: background-color, color;
   transition-duration: 360ms;
   transition-timing-function: ease;
@@ -94,9 +103,17 @@ body {
 
 .site-nav {
   color: var(--text) !important;
-  background: transparent;
-  border-bottom: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
-  transition: background-color 360ms ease, color 360ms ease;
+  background: rgba(255, 250, 240, 0.84);
+  border: 1px solid color-mix(in srgb, var(--border) 62%, transparent);
+  border-top: 0;
+  border-radius: 0 0 1.5rem 1.5rem;
+  backdrop-filter: blur(18px);
+  transition: background-color 360ms ease, color 360ms ease, border-color 360ms ease;
+}
+
+:root[data-theme="dark"] .site-nav,
+:root:not([data-theme="light"]) .site-nav {
+  background: rgba(11, 18, 32, 0.72);
 }
 
 .nav-chip,
@@ -108,20 +125,29 @@ body {
   outline-color: var(--accent);
 }
 
+.wordmark {
+  color: var(--text);
+  outline-color: var(--accent);
+}
+
 .nav-link {
-  color: #17120d !important;
+  color: color-mix(in srgb, var(--text) 78%, transparent) !important;
+  display: inline-flex;
+  transition-property: color, background-color, transform;
+  transition-duration: 160ms;
 }
 
 .nav-link-group {
-  background: rgba(255, 250, 240, 0.9);
-  border: 1px solid rgba(72, 48, 28, 0.14);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  display: flex;
+}
+
+.nav-link:hover {
+  background: color-mix(in srgb, var(--surface-strong) 45%, transparent);
 }
 
 :root[data-theme="dark"] .nav-link,
 :root:not([data-theme="light"]) .nav-link {
-  color: #17120d !important;
-  text-shadow: none;
+  color: #fff4df !important;
 }
 
 :root[data-theme="dark"] .nav-chip,
@@ -145,6 +171,91 @@ body {
   filter: brightness(1.06);
 }
 
+.github-link {
+  color: var(--text);
+  border: 1px solid var(--nav-chip-border);
+  background: color-mix(in srgb, var(--surface-strong) 54%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 244, 223, 0.08);
+  outline-color: var(--accent);
+}
+
+.github-link:hover {
+  background: color-mix(in srgb, var(--surface-strong) 72%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .site-nav {
+    gap: 0.75rem;
+  }
+
+  .nav-actions {
+    margin-left: auto;
+  }
+
+  .nav-link-group {
+    display: none;
+  }
+
+  .wordmark {
+    max-width: 10.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  .theme-toggle,
+  .github-link {
+    min-height: 2.5rem;
+    padding-inline: 0.65rem;
+  }
+
+  .theme-toggle {
+    font-size: 0;
+    gap: 0;
+  }
+
+  .github-label {
+    display: none;
+  }
+
+  .hero-copy-panel {
+    max-width: 100%;
+  }
+
+  .hero-copy-panel,
+  .artifact-glow,
+  .pipeline-cue {
+    min-width: 0;
+  }
+
+  .hero-copy-panel h1 {
+    font-size: clamp(2.5rem, 12vw, 4.5rem);
+    overflow-wrap: break-word;
+  }
+
+  .artifact-glow > .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pipeline-cue {
+    border-radius: 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .wordmark {
+    max-width: 12rem;
+  }
+
+  .site-nav {
+    padding-inline: 1rem;
+  }
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -153,12 +264,11 @@ body {
   transition-duration: 180ms;
 }
 
-.theme-toggle__orb {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--accent-strong);
-  box-shadow: 0 0 18px rgba(240, 166, 75, 0.55);
+.theme-toggle__icon {
+  color: var(--accent-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .eyebrow-pill {
@@ -230,6 +340,8 @@ body {
 }
 
 .hero-copy-panel {
+  width: 100%;
+  max-width: min(48rem, 100%);
   background: linear-gradient(135deg, color-mix(in srgb, var(--page) 90%, transparent), color-mix(in srgb, var(--page) 58%, transparent));
   border: 1px solid color-mix(in srgb, var(--border) 96%, transparent);
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.18);
@@ -308,13 +420,14 @@ body {
 }
 
 .artifact-glow {
-  animation: artifact-breathe 5.5s ease-in-out infinite;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
 }
 
 .score-card {
   color: #fff4df !important;
   background: #140f0c !important;
   border-color: rgba(255, 244, 223, 0.18) !important;
+  min-width: 0;
   padding: 0.875rem;
   transition-property: transform, border-color, background-color, box-shadow;
   transition-duration: 180ms;
@@ -375,17 +488,11 @@ body {
 }
 
 .pipeline-cue::before {
-  content: "";
-  position: absolute;
-  inset-block: 0;
-  left: -22%;
-  width: 18%;
-  background: linear-gradient(90deg, transparent, rgba(240, 166, 75, 0.22), transparent);
-  animation: pipeline-spark 4.8s ease-in-out infinite;
+  content: none;
 }
 
 .pipeline-arrow {
-  animation: arrow-nudge 1.8s ease-in-out infinite;
+  animation: none;
 }
 
 .floating-ticket {

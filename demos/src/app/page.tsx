@@ -39,11 +39,10 @@ const proofCases = [
 ];
 
 const intakeItems = [
-  "Brand and design docs",
-  "Existing components and tokens",
-  "Audience, domain nouns, and product language",
-  "Visual references and anti-references",
-  "Prior decisions, constraints, and accessibility floor",
+  ["Sources", "Docs, specs, routes, screenshots"],
+  ["System", "Components, tokens, constraints"],
+  ["Language", "Audience, nouns, product terms"],
+  ["Taste", "References, anti-references, decisions"],
 ];
 
 const loopSteps = [
@@ -75,7 +74,6 @@ const loopSteps = [
 ];
 
 const installSteps = [
-  "npx skills add aa-on-ai/agentic-design-system",
   "Paste templates/agents-snippet.md into your agent instructions",
   "Start with a preset if you have no project context",
   "Add Project Intake or Reference Intake only when the task needs it",
@@ -111,32 +109,35 @@ export default function Home() {
     <main className="theme-page min-h-screen selection:bg-[#f0a64b] selection:text-[#111827]">
       <nav
         aria-label="Primary navigation"
-        className="site-nav mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-10"
+        className="site-nav sticky top-0 z-50 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-10"
       >
         <Link
           href="/"
-          className="nav-chip rounded-full px-4 py-2 text-sm font-semibold tracking-tight backdrop-blur focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="wordmark min-w-0 text-sm font-bold tracking-[-0.02em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           Agentic Design System
         </Link>
-        <div className="nav-link-group hidden items-center gap-6 rounded-full px-4 py-2 text-sm font-semibold md:flex">
-          <a className="nav-link hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#intake">
+        <div className="nav-link-group items-center gap-2 text-sm font-semibold">
+          <a className="nav-link rounded-full px-3 py-2 hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#intake">
             Intake
           </a>
-          <a className="nav-link hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#proof">
+          <a className="nav-link rounded-full px-3 py-2 hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#proof">
             Proof
           </a>
-          <a className="nav-link hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#install">
+          <a className="nav-link rounded-full px-3 py-2 hover:text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href="#install">
             Install
           </a>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="nav-actions flex shrink-0 items-center gap-3">
           <ThemeToggle />
           <a
             href="https://github.com/aa-on-ai/agentic-design-system"
-            className="accent-button rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.98]"
+            className="github-link inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.98]"
           >
-            View source
+            <svg aria-hidden="true" viewBox="0 0 16 16" className="h-4 w-4 fill-current">
+              <path d="M8 0C3.58 0 0 3.67 0 8.2c0 3.62 2.29 6.69 5.47 7.77.4.08.55-.18.55-.4 0-.2-.01-.86-.01-1.56-2.01.38-2.53-.5-2.69-.95-.09-.23-.48-.95-.82-1.14-.28-.16-.68-.55-.01-.56.63-.01 1.08.59 1.23.84.72 1.24 1.87.89 2.33.68.07-.53.28-.89.51-1.09-1.78-.21-3.64-.91-3.64-4.03 0-.89.31-1.62.82-2.19-.08-.21-.36-1.04.08-2.16 0 0 .67-.22 2.2.84A7.4 7.4 0 0 1 8 3.98c.68 0 1.36.09 2 .27 1.53-1.06 2.2-.84 2.2-.84.44 1.12.16 1.95.08 2.16.51.57.82 1.3.82 2.19 0 3.13-1.87 3.82-3.65 4.03.29.26.54.76.54 1.53 0 1.1-.01 1.99-.01 2.26 0 .22.15.48.55.4A8.15 8.15 0 0 0 16 8.2C16 3.67 12.42 0 8 0Z" />
+            </svg>
+            <span className="github-label">GitHub</span>
           </a>
         </div>
       </nav>
@@ -163,8 +164,8 @@ export default function Home() {
           />
         </div>
         <div className="hero-scrim absolute inset-0 -z-10" />
-        <div className="mx-auto max-w-7xl">
-          <div className="hero-copy-panel max-w-3xl rounded-[2rem] p-5 sm:p-7 lg:p-8">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="hero-copy-panel w-full max-w-full rounded-[2rem] p-5 sm:max-w-3xl sm:p-7 lg:p-8">
             <p className="eyebrow-pill mb-5 inline-flex rounded-full px-4 py-2 text-sm font-semibold">
               Agentic Design System
             </p>
@@ -172,20 +173,19 @@ export default function Home() {
               Give your agents taste, context, and a review loop.
             </h1>
             <p className="hero-lede mt-7 max-w-2xl text-pretty text-base leading-7 text-[var(--muted)] sm:text-lg">
-              Agentic Design System turns UI generation into a governed loop:
-              start with a preset, add project context when alignment matters,
-              add reference intake when taste matters, and skip the rest.
+              Start with a preset. Add project context when alignment matters.
+              Add reference intake when taste matters. Skip the rest.
             </p>
 
             <aside
               aria-label="Benchmark score summary"
-              className="artifact-glow mt-8 max-w-2xl rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_18px_55px_rgba(0,0,0,0.18)] backdrop-blur"
+              className="artifact-glow mt-8 w-full max-w-2xl rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_18px_55px_rgba(0,0,0,0.18)] backdrop-blur"
             >
-              <div className="flex items-center justify-between gap-4 border-b border-[#f0a64b]/16 pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#f0a64b]/16 pb-3">
                 <p className="text-sm font-bold text-[var(--text)]">Design benchmark score / 50</p>
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--accent)]">3 case studies</p>
               </div>
-              <div className="mt-4 grid grid-cols-3 gap-3 text-center tabular-nums">
+              <div className="mt-4 grid grid-cols-1 gap-3 text-center tabular-nums sm:grid-cols-3">
                 {proofCases.map((item) => (
                   <a
                     key={item.name}
@@ -203,15 +203,11 @@ export default function Home() {
 
             <div className="pipeline-cue mt-4 flex max-w-2xl flex-wrap items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-3 text-xs font-bold uppercase tracking-[0.08em] text-[var(--muted)] shadow-[0_10px_30px_rgba(0,0,0,0.1)] backdrop-blur">
               <span>Docs</span>
-              <span className="text-[var(--accent)]">/</span>
               <span>Specs</span>
-              <span className="text-[var(--accent)]">/</span>
               <span>Routes</span>
-              <span className="text-[var(--accent)]">/</span>
               <span>Tokens</span>
-              <span className="text-[var(--accent)]">/</span>
               <span>Screenshots</span>
-              <span className="pipeline-arrow text-[var(--accent)]">→</span>
+              <span className="text-[var(--accent)]">→</span>
               <span className="text-[var(--text)]">Taste extracted</span>
             </div>
 
@@ -233,9 +229,7 @@ export default function Home() {
           <div className="floating-ticket hero-environment-label absolute bottom-10 right-5 max-w-sm rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-4 text-[var(--text)] shadow-[0_18px_60px_rgba(0,0,0,0.18)] backdrop-blur-md sm:right-8 lg:bottom-16 lg:right-10">
             <p className="text-xs font-bold uppercase tracking-[0.1em] text-[var(--accent)]">Prompt → review → report</p>
             <p className="mt-2 text-sm font-semibold">The control plane is the world now.</p>
-            <p className="mt-1 text-sm leading-5 text-[var(--muted)]">
-              Reports, routes, checks, and generated UI all sit in the same visible environment.
-            </p>
+            <p className="mt-1 text-sm leading-5 text-[var(--muted)]">Artifacts agents can inspect.</p>
           </div>
         </div>
       </section>
@@ -247,7 +241,7 @@ export default function Home() {
               The failure mode
             </p>
             <h2 className="mt-4 max-w-xl text-balance text-3xl font-semibold leading-[1.05] tracking-[-0.035em] sm:text-4xl">
-              Agents do not lack hands. They lack taste memory.
+              Agents need taste memory.
             </h2>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -275,15 +269,14 @@ export default function Home() {
               Extract design taste into files agents can actually use.
             </h2>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-[#d8c5ad] sm:text-lg">
-              Intake is not homework. If the task is generic, start with a
-              preset and build. If the product has real constraints, the agent
-              gathers what exists, asks only the missing questions, and emits a
-              compact DESIGN.md-shaped brief downstream skills can use.
+              When a preset is not enough, intake turns messy project context
+              into a compact DESIGN.md brief.
             </p>
-            <ul className="mt-9 grid gap-3 sm:grid-cols-2" aria-label="Knowledge gathered during intake">
-              {intakeItems.map((item) => (
-                <li key={item} className="rounded-2xl border border-[#fff4df]/12 bg-[#fff4df]/6 px-4 py-3 text-sm font-medium text-[#f4dfc0]">
-                  {item}
+            <ul className="intake-grid mt-9 grid gap-3 sm:grid-cols-2" aria-label="Knowledge gathered during intake">
+              {intakeItems.map(([title, body]) => (
+                <li key={title} className="intake-card rounded-2xl border border-[#fff4df]/12 bg-[#fff4df]/6 p-4">
+                  <span className="block text-sm font-semibold text-[#fff4df]">{title}</span>
+                  <span className="mt-1 block text-sm leading-5 text-[#d8c5ad]">{body}</span>
                 </li>
               ))}
             </ul>
@@ -341,10 +334,8 @@ export default function Home() {
               Turn visual references into searchable taste cards.
             </h2>
             <p className="mt-6 max-w-2xl text-pretty text-base leading-7 text-[#d8c5ad] sm:text-lg">
-              Borrow the useful Refero idea: taste should be extracted into
-              referenceable artifacts. Reference Intake turns a screenshot or
-              site into a contract for what to borrow, what to ignore, and how
-              close the result should feel.
+              A screenshot or site becomes a small contract: what to borrow,
+              what to ignore, and how close the result should feel.
             </p>
           </div>
           <aside className="rounded-[2rem] border border-[#fff4df]/12 bg-[#1f1928] p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)]">
@@ -491,10 +482,8 @@ export default function Home() {
               One skill pack, then normal prompts.
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-7 text-[#4f4036] sm:text-lg">
-              Default path: install the pack, paste one snippet, choose a
-              preset, and prompt normally. Add Project Intake when the team
-              needs alignment. Add Reference Intake when a visual reference
-              matters. Skip anything that does not apply.
+              Install the pack, paste one snippet, choose a preset, and prompt
+              normally. Add the intake gates only when they apply.
             </p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {skipRules.map(([label, value]) => (
@@ -516,12 +505,18 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="rounded-[2rem] border border-[#1c1712]/10 bg-[#1c1712] p-5 text-[#fff4df] shadow-[0_28px_80px_rgba(28,23,18,0.22)]">
-            <pre className="overflow-x-auto rounded-[1.35rem] bg-[#0f0b08] p-5 text-sm leading-6 text-[#f4d8ab]"><code>{"npx skills add aa-on-ai/agentic-design-system"}</code></pre>
-            <ol className="mt-6 space-y-3" aria-label="Installation steps">
+          <div className="install-panel rounded-[2rem] border border-[#1c1712]/10 bg-[#1c1712] p-5 text-[#fff4df] shadow-[0_28px_80px_rgba(28,23,18,0.22)] lg:sticky lg:top-28">
+            <div className="rounded-[1.35rem] bg-[#0f0b08] p-5">
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#f0a64b]">01 install</p>
+                <span className="rounded-full border border-[#fff4df]/12 px-2 py-1 text-[11px] font-bold text-[#bfa88e]">command</span>
+              </div>
+              <pre className="overflow-x-auto text-sm leading-6 text-[#f4d8ab]"><code>{"npx skills add aa-on-ai/agentic-design-system"}</code></pre>
+            </div>
+            <ol className="mt-6 space-y-3" aria-label="Installation steps" start={2}>
               {installSteps.map((step, index) => (
                 <li key={step} className="grid grid-cols-[2.25rem_1fr] gap-3 text-sm leading-5 text-[#e8d2b5]">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0a64b] text-xs font-bold text-[#1c1712] tabular-nums">{index + 1}</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f0a64b] text-xs font-bold text-[#1c1712] tabular-nums">{index + 2}</span>
                   <span>{step}</span>
                 </li>
               ))}
