@@ -116,13 +116,22 @@ export default function Home() {
       <section className="hero-atmosphere relative isolate -mt-[73px] overflow-hidden px-5 pb-20 pt-[142px] sm:px-8 lg:px-10 lg:pb-28 lg:pt-[156px]">
         <div className="hero-scene-wrap absolute inset-0 -z-20">
           <Image
-            src="/hero/creative-pipeline-whimsical.png"
+            src="/hero/creative-pipeline-light.png"
             alt=""
             width={1536}
             height={1024}
             priority
             aria-hidden="true"
-            className="hero-scene"
+            className="hero-scene hero-scene-light"
+          />
+          <Image
+            src="/hero/creative-pipeline-dark.png"
+            alt=""
+            width={1536}
+            height={1024}
+            priority
+            aria-hidden="true"
+            className="hero-scene hero-scene-dark"
           />
         </div>
         <div className="hero-scrim absolute inset-0 -z-10" />
@@ -243,10 +252,10 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3">
-                    <Link className="subtle-link rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href={item.routes.before}>
+                    <Link className="subtle-link text-sm font-semibold text-[var(--muted)] underline-offset-4 hover:text-[var(--text)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href={item.routes.before}>
                       Before
                     </Link>
-                    <Link className="subtle-link rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href={item.routes.after}>
+                    <Link className="subtle-link text-sm font-semibold text-[var(--muted)] underline-offset-4 hover:text-[var(--text)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]" href={item.routes.after}>
                       After
                     </Link>
                   </div>

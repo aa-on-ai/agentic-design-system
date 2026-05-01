@@ -21,7 +21,10 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
     return (
       <div className="hero-command-strip rounded-[1.25rem] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_12px_36px_rgba(0,0,0,0.1)]">
         <div className="flex items-center gap-3">
-          <code className="hero-command-code min-w-0 flex-1 text-sm font-semibold text-[var(--text)]">{command}</code>
+          <code className="hero-command-code min-w-0 flex-1 text-sm font-semibold text-[var(--text)]" aria-label={command}>
+            <span>npx skills add&nbsp;</span>
+            <span>aa-on-ai/agentic-design-system</span>
+          </code>
           <button
             type="button"
             onClick={copy}
