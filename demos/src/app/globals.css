@@ -299,6 +299,7 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 
 .qa-hero-content {
+  position: relative;
   display: flex;
   min-height: 100svh;
   width: min(1160px, calc(100% - 32px));
@@ -306,6 +307,20 @@ a { -webkit-tap-highlight-color: transparent; }
   padding: clamp(8rem, 16vh, 12rem) 0 clamp(2rem, 6vh, 4rem);
   flex-direction: column;
   justify-content: flex-end;
+}
+
+.qa-hero-content::before {
+  content: "";
+  position: absolute;
+  inset: auto auto clamp(1.2rem, 5vh, 3rem) -1.15rem;
+  z-index: -1;
+  width: min(46rem, calc(100% + 2.3rem));
+  height: clamp(23rem, 44vh, 34rem);
+  border: 1px solid rgba(255, 248, 235, 0.2);
+  border-radius: 2.1rem;
+  background: linear-gradient(135deg, rgba(13, 14, 15, 0.34), rgba(13, 14, 15, 0.1));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(3px) saturate(1.06);
 }
 
 .qa-kicker {
@@ -345,9 +360,17 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .qa-hero-actions {
   display: flex;
+  width: max-content;
+  max-width: 100%;
   flex-wrap: wrap;
   gap: 0.65rem;
   margin-top: 1.35rem;
+  border: 1px solid rgba(255, 248, 235, 0.22);
+  border-radius: 999px;
+  padding: 0.35rem;
+  background: rgba(255, 248, 235, 0.13);
+  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px) saturate(1.16);
 }
 
 .qa-primary,
@@ -361,6 +384,7 @@ a { -webkit-tap-highlight-color: transparent; }
   font-size: 0.88rem;
   font-weight: 830;
   text-decoration: none;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
 }
 
 .qa-primary {
@@ -370,7 +394,8 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .qa-secondary {
   color: #fff7e9;
-  background: rgba(255, 248, 235, 0.16);
+  background: rgba(255, 248, 235, 0.14);
+  border: 1px solid rgba(255, 248, 235, 0.2);
 }
 
 .qa-primary:hover,
@@ -965,6 +990,14 @@ a { -webkit-tap-highlight-color: transparent; }
     padding-bottom: 1.2rem;
   }
 
+  .qa-hero-content::before {
+    inset: auto -0.45rem 0.55rem -0.45rem;
+    width: auto;
+    height: 65%;
+    border-radius: 1.45rem;
+    backdrop-filter: blur(2px) saturate(1.04);
+  }
+
   .qa-hero h1 {
     font-size: clamp(2.55rem, 12.8vw, 3.35rem);
     line-height: 0.96;
@@ -973,7 +1006,12 @@ a { -webkit-tap-highlight-color: transparent; }
 
   .qa-lede { font-size: 1rem; line-height: 1.5; }
 
-  .qa-hero-actions { flex-direction: column; }
+  .qa-hero-actions {
+    width: 100%;
+    flex-direction: column;
+    border-radius: 1.35rem;
+    padding: 0.42rem;
+  }
   .qa-primary,
   .qa-secondary { width: 100%; }
 
