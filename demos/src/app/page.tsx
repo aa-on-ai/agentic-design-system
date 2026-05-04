@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { InstallCommand } from "./InstallCommand";
+import { ThemeToggle } from "./ThemeToggle";
 
 const chapters = [
   {
@@ -106,7 +107,8 @@ export default function Home() {
             <a className="focus-visible:outline" href="#ship">Ship</a>
           </nav>
           <div className="ads-nav-actions">
-            <a className="focus-visible:outline" href="https://github.com/aa-on-ai/agentic-design-system">Source</a>
+            <a className="focus-visible:outline" href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a>
+            <ThemeToggle />
             <a className="ads-run-button focus-visible:outline" href="#install">Install</a>
           </div>
         </header>

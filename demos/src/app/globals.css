@@ -16,6 +16,40 @@
   --shadow: 0 26px 80px rgba(38, 35, 35, 0.12);
 }
 
+:root[data-theme="dark"] {
+  --background: #121719;
+  --foreground: #f7f2e8;
+  --ink: #f7f2e8;
+  --muted: #c7beb1;
+  --faint: #928a7f;
+  --line: rgba(247, 242, 232, 0.14);
+  --paper: #1d2528;
+  --paper-2: #263034;
+  --green: #dce8d8;
+  --blue: #2f9de5;
+  --blue-deep: #78c8f6;
+  --yellow: #f4bd45;
+  --shadow: 0 28px 90px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #121719;
+    --foreground: #f7f2e8;
+    --ink: #f7f2e8;
+    --muted: #c7beb1;
+    --faint: #928a7f;
+    --line: rgba(247, 242, 232, 0.14);
+    --paper: #1d2528;
+    --paper-2: #263034;
+    --green: #dce8d8;
+    --blue: #2f9de5;
+    --blue-deep: #78c8f6;
+    --yellow: #f4bd45;
+    --shadow: 0 28px 90px rgba(0, 0, 0, 0.3);
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -95,25 +129,26 @@ button:focus-visible {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 1000;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 1rem;
   padding: 1.45rem clamp(1.25rem, 2.2vw, 2rem);
-  background: rgba(47, 157, 229, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(2px);
+  background: linear-gradient(180deg, rgba(19, 28, 30, 0.26), rgba(19, 28, 30, 0.08));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px) saturate(1.08);
 }
 
 .ads-logo {
   justify-self: start;
   color: white;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.05rem, 1.55vw, 1.65rem);
+  font-family: var(--font-geist-sans), "Avenir Next", sans-serif;
+  font-size: clamp(0.95rem, 1.15vw, 1.18rem);
+  font-weight: 760;
   line-height: 1;
   text-decoration: none;
-  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.42);
 }
 
 .ads-nav-center,
@@ -125,16 +160,17 @@ button:focus-visible {
 
 .ads-nav-center {
   justify-self: center;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 0.65rem;
-  padding: 0.22rem;
-  background: rgba(31, 55, 49, 0.72);
-  box-shadow: 0 14px 42px rgba(20, 45, 42, 0.24);
-  backdrop-filter: blur(18px) saturate(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0.72rem;
+  padding: 0.24rem;
+  background: rgba(25, 38, 39, 0.82);
+  box-shadow: 0 14px 42px rgba(20, 45, 42, 0.3);
+  backdrop-filter: blur(20px) saturate(1.18);
 }
 
 .ads-nav-actions {
   justify-self: end;
+  gap: 0.42rem;
 }
 
 .ads-nav a {
@@ -142,17 +178,19 @@ button:focus-visible {
 }
 
 .ads-nav-center a,
-.ads-nav-actions a {
+.ads-nav-actions a,
+.theme-toggle {
   display: inline-flex;
   min-height: 2.4rem;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
+  border-radius: 0.55rem;
   padding: 0 0.95rem;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.92);
   font-size: 0.9rem;
-  font-weight: 560;
+  font-weight: 680;
   text-decoration: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
 }
 
 .ads-nav-center a + a {
@@ -166,10 +204,12 @@ button:focus-visible {
   color: white;
 }
 
-.ads-nav-actions a:not(.ads-run-button) {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(31, 55, 49, 0.52);
-  backdrop-filter: blur(18px);
+.ads-nav-actions a:not(.ads-run-button),
+.theme-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(25, 38, 39, 0.74);
+  box-shadow: 0 12px 34px rgba(20, 45, 42, 0.22);
+  backdrop-filter: blur(20px) saturate(1.14);
 }
 
 .ads-run-button {
@@ -182,6 +222,40 @@ button:focus-visible {
 .ads-run-button:hover {
   transform: translateY(-1px);
   background: white;
+}
+
+.theme-toggle {
+  width: 2.4rem;
+  min-width: 2.4rem;
+  padding: 0.22rem;
+  cursor: pointer;
+}
+
+.mode-switch__track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f7d89c, #202938);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.mode-switch__knob {
+  position: absolute;
+  top: 0.34rem;
+  left: 0.34rem;
+  width: 0.84rem;
+  height: 0.84rem;
+  border-radius: 999px;
+  background: #fff7e9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background-color 220ms ease;
+}
+
+.mode-switch[data-theme-state="dark"] .mode-switch__knob {
+  transform: translateX(0.96rem);
+  background: var(--yellow);
 }
 
 .ads-hero-copy {
@@ -269,9 +343,9 @@ button:focus-visible {
   border-radius: 1.4rem;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(38, 35, 35, 0.04) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(38, 35, 35, 0.04) 1px, transparent 1px),
-    rgba(255, 255, 255, 0.42);
+    linear-gradient(90deg, color-mix(in srgb, var(--ink) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(180deg, color-mix(in srgb, var(--ink) 5%, transparent) 1px, transparent 1px),
+    color-mix(in srgb, var(--paper) 72%, transparent);
   background-size: 64px 64px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
 }
@@ -303,7 +377,7 @@ button:focus-visible {
   justify-content: center;
   border: 1px solid var(--line);
   border-radius: 0.48rem;
-  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
   box-shadow: 0 12px 32px rgba(38, 35, 35, 0.06);
   color: var(--muted);
   font-size: 0.78rem;
@@ -345,6 +419,10 @@ button:focus-visible {
   background: var(--paper-2);
 }
 
+:root[data-theme="dark"] .ads-intro-surface {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .ads-chapters {
   padding: clamp(4.5rem, 8vw, 7rem) 0;
   text-align: center;
@@ -369,7 +447,7 @@ button:focus-visible {
   border-radius: 0.18rem;
   padding: 1rem;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.54);
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
   text-align: left;
   text-decoration: none;
   box-shadow: 0 12px 36px rgba(38, 35, 35, 0.04);
@@ -378,7 +456,7 @@ button:focus-visible {
 
 .ads-chapter-card:hover {
   transform: translateY(-8px);
-  background: white;
+  background: var(--paper);
   box-shadow: var(--shadow);
 }
 
@@ -449,7 +527,7 @@ button:focus-visible {
   height: 1.7rem;
   border: 1px solid var(--line);
   border-radius: 0.18rem;
-  background: white;
+  background: var(--paper);
 }
 
 .ads-system-copy h3 {
@@ -494,7 +572,7 @@ button:focus-visible {
   border: 1px solid var(--line);
   border-radius: 0.5rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.58);
+  background: color-mix(in srgb, var(--paper) 76%, transparent);
   box-shadow: 0 22px 70px rgba(38, 35, 35, 0.08);
 }
 
@@ -569,7 +647,7 @@ button:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.48);
   border-radius: 0.7rem;
   padding: clamp(1rem, 2.6vw, 1.5rem);
-  background: rgba(255, 255, 255, 0.88);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
   color: var(--ink);
   box-shadow: 0 34px 90px rgba(22, 84, 128, 0.24);
   backdrop-filter: blur(16px);
@@ -597,7 +675,7 @@ button:focus-visible {
   border: 1px solid var(--line);
   border-radius: 0.48rem;
   padding: 0.9rem;
-  background: white;
+  background: var(--paper);
   text-align: left;
 }
 
@@ -621,7 +699,7 @@ button:focus-visible {
   border: 1px solid var(--line) !important;
   border-radius: 0.5rem !important;
   padding: 0.75rem !important;
-  background: white !important;
+  background: var(--paper) !important;
   box-shadow: none !important;
 }
 
@@ -654,14 +732,14 @@ button:focus-visible {
 
 .copy-command:hover {
   transform: translateY(-1px);
-  background: white;
+  background: var(--paper);
 }
 
 .install-command-card {
   min-width: 0;
   border: 1px solid var(--line) !important;
   border-radius: 0.6rem !important;
-  background: white !important;
+  background: var(--paper) !important;
   box-shadow: var(--shadow) !important;
 }
 
@@ -770,13 +848,16 @@ button:focus-visible {
     white-space: nowrap;
   }
 
-  .ads-nav-actions a:not(.ads-run-button) {
-    display: none;
-  }
-
   .ads-nav-actions a {
     min-height: 2.7rem;
-    padding-inline: 0.9rem;
+    padding-inline: 0.78rem;
+    font-size: 0.82rem;
+  }
+
+  .theme-toggle {
+    width: 2.7rem;
+    min-width: 2.7rem;
+    min-height: 2.7rem;
   }
 
   .ads-hero-image {
