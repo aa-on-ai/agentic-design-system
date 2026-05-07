@@ -6,20 +6,24 @@ const installCommand = "npx skills add aa-on-ai/agentic-design-system --yes --gl
 
 const loopSteps = [
   {
-    label: "Intent",
-    text: "Say what the UI should accomplish and what kind of experience should land.",
+    label: "Define intent",
+    text: "Turn the user need into an outcome, constraints, and a clear stop condition.",
   },
   {
-    label: "Baseline",
+    label: "Capture baseline",
     text: "Load the repo, screenshots, routes, tokens, and current product behavior.",
   },
   {
-    label: "Rubric",
-    text: "Shape a project-fit review lens from ADS checks plus the local design context.",
+    label: "Write rubric",
+    text: "Shape a custom review lens from the outcome, baseline, and local design context.",
   },
   {
-    label: "Build",
-    text: "Ship the UI with states, accessibility checks, screenshots, and a short receipt.",
+    label: "Run grader",
+    text: "Review the artifact against the rubric, with evidence instead of vibes.",
+  },
+  {
+    label: "Revise",
+    text: "Feed the grader result back into one bounded pass, then stop or escalate.",
   },
 ];
 
@@ -113,8 +117,8 @@ export default function Home() {
             <p className="eyebrow">Installable design instructions</p>
             <h1>Design context for agents that build UI.</h1>
             <p className="hero-lede">
-              ADS is a set of skills, templates, and review artifacts an agent can install before it starts drawing screens.
-              It helps the build loop stay anchored to intent, product baseline, and project-fit critique.
+              ADS is the skills, templates, and review artifacts an agent installs before it draws a screen, so UI work
+              becomes an outcome-driven loop with a baseline, a custom rubric, and a grader.
             </p>
 
             <div className="hero-actions">
@@ -134,7 +138,7 @@ export default function Home() {
           <aside className="loop-card" aria-label="ADS build loop">
             <div className="loop-card__header">
               <p className="eyebrow">The loop</p>
-              <p>intent / baseline / rubric / build</p>
+              <p>intent / baseline / rubric / grader / revise</p>
             </div>
             <ol className="loop-list">
               {loopSteps.map((step, index) => (
@@ -174,8 +178,8 @@ export default function Home() {
         <div className="receipt-card">
           <span>Dogfood receipt</span>
           <p>
-            This landing page was planned with an outcome, checked against the current homepage baseline, and reviewed with a
-            small project-fit rubric before the build pass.
+            This page is dogfooding the ADS loop: outcome packet, baseline diagnosis, custom rubric, grader report,
+            checks, and screenshots.
           </p>
         </div>
       </section>
