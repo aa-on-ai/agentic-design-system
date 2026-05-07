@@ -20,21 +20,20 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
   if (variant === "strip") {
     return (
       <div className="hero-command-strip rounded-[1.25rem] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[0_12px_36px_rgba(0,0,0,0.1)]">
-        <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={copy}
+          aria-label="Copy install command"
+          className="flex w-full items-center gap-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] active:scale-[0.99]"
+        >
           <code className="hero-command-code min-w-0 flex-1 text-sm font-semibold text-[var(--text)]" aria-label={command}>
             <span>npx skills add&nbsp;</span>
             <span>aa-on-ai/agentic-design-system</span>
           </code>
-          <button
-            type="button"
-            onClick={copy}
-            aria-label="Copy install command"
-            className="copy-command shrink-0 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-bold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] active:scale-[0.98]"
-            aria-live="polite"
-          >
+          <span className="copy-command shrink-0 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-bold text-[var(--text)]" aria-live="polite">
             {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
+          </span>
+        </button>
       </div>
     );
   }

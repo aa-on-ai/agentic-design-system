@@ -1,72 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Github } from "lucide-react";
+import { InstallCommand } from "./InstallCommand";
 import { ThemeToggle } from "./ThemeToggle";
-
-const installCommand = "npx skills add aa-on-ai/agentic-design-system --yes --global";
-
-const loopSteps = [
-  {
-    label: "Define intent",
-    text: "Name the user need, the outcome, and the stop condition.",
-  },
-  {
-    label: "Capture baseline",
-    text: "Load the repo, route, screenshot, tokens, and current behavior.",
-  },
-  {
-    label: "Write rubric",
-    text: "Shape a project-specific lens before judging the work.",
-  },
-  {
-    label: "Run grader",
-    text: "Check the artifact against the rubric with receipts.",
-  },
-  {
-    label: "Revise",
-    text: "Do one bounded pass, then stop or escalate.",
-  },
-];
-
-const receiptItems = [
-  {
-    label: "Rubric",
-    value: "Modern ADS story: pass",
-  },
-  {
-    label: "Verdict",
-    value: "Satisfied after revision",
-  },
-  {
-    label: "Evidence",
-    value: "Build, screenshots, no overflow",
-  },
-];
 
 const parts = [
   {
-    title: "Skills",
-    body: "Design review, UX baseline checks, UI polish, and agent-friendly design.",
+    title: "Presets",
+    body: "Opinionated starters for utilitarian apps, dense dashboards, and editorial landing pages.",
   },
   {
-    title: "Templates",
-    body: "Outcome packets, grader reports, run receipts, and reference intake.",
+    title: "Reference intake",
+    body: "A contract for what to borrow, what to avoid, and how closely to follow a visual target.",
   },
   {
-    title: "Control flow",
-    body: "Explicit checkpoints so the agent is a component, not the whole system.",
+    title: "Design review",
+    body: "Checks for weak hierarchy, generic surfaces, missing context, and common AI-built UI tells.",
   },
   {
-    title: "Reports",
-    body: "Receipts that name checks run, changes made, and remaining risks.",
+    title: "State coverage",
+    body: "Loading, empty, error, and edge-state checks before the agent calls the interface finished.",
   },
   {
-    title: "Grader artifacts",
-    body: "Outcome and rubric reviews you can hand back to the builder.",
+    title: "Polish pass",
+    body: "A final sweep for spacing, alignment, typography, focus states, and responsive details.",
   },
   {
-    title: "Examples",
-    body: "Before/after fixtures that show the instructions changing real UI work.",
+    title: "Run reports",
+    body: "Markdown reports with checks run, scores, files changed, screenshots, and remaining risks.",
   },
 ];
 
@@ -79,7 +40,6 @@ export default function Home() {
 
       <nav aria-label="Primary navigation" className="site-nav">
         <Link href="/" aria-label="Agentic Design System home" className="wordmark focus-ring focus-visible:outline focus-visible:outline-2">
-          <span className="wordmark-mark" aria-hidden="true">A</span>
           <span className="wordmark-full">Agentic Design System</span>
           <span className="wordmark-short" aria-hidden="true">ADS</span>
         </Link>
@@ -87,8 +47,8 @@ export default function Home() {
           <a href="#parts" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
             Parts
           </a>
-          <a href="#install" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
-            Install
+          <a href="https://github.com/aa-on-ai/agentic-design-system#readme" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
+            README
           </a>
         </div>
         <div className="nav-actions">
@@ -128,63 +88,17 @@ export default function Home() {
 
         <div className="hero-grid">
           <div className="hero-copy">
-            <p className="eyebrow">Open-source agent design kit</p>
-            <h1>Design rules your coding agent can actually follow.</h1>
+            <p className="eyebrow">Agent skills for interface work</p>
+            <h1>Design support for your coding agent.</h1>
             <p className="hero-lede">
-              Agentic Design System gives Claude Code, Codex, and other builders the outcome, baseline, rubric, and
-              evidence loop they need before they change your interface.
+              Installable presets, reference intake, critique checks, state coverage, polish passes, and run reports
+              for Claude Code, Codex, OpenClaw, Hermes, Cursor, and other agentic builders.
             </p>
-            <div className="hero-badges" aria-label="ADS principles">
-              <span>open source</span>
-              <span>mix and match</span>
-              <span>receipts over vibes</span>
-            </div>
 
             <div className="hero-actions">
-              <label className="command-field" htmlFor="hero-install-command">
-                <span>Copy command</span>
-                <textarea id="hero-install-command" readOnly rows={2} value={installCommand} aria-label="Install Agentic Design System command" />
-              </label>
-              <a href="https://github.com/aa-on-ai/agentic-design-system" className="primary-link focus-ring focus-visible:outline focus-visible:outline-2">
-                GitHub
-              </a>
-              <a href="#parts" className="secondary-link focus-ring focus-visible:outline focus-visible:outline-2">
-                What you get
-              </a>
+              <InstallCommand variant="strip" />
             </div>
           </div>
-
-          <aside className="loop-card" aria-label="ADS build loop">
-            <div className="loop-card__header">
-              <p className="eyebrow">The loop</p>
-              <p>{"intent -> baseline -> rubric -> grader -> revise"}</p>
-            </div>
-            <ol className="loop-list">
-              {loopSteps.map((step, index) => (
-                <li key={step.label}>
-                  <span className="loop-index">{index + 1}</span>
-                  <div>
-                    <h2>{step.label}</h2>
-                    <p>{step.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <div className="receipt-strip" aria-label="Latest ADS receipt">
-              <div className="receipt-strip__topline">
-                <span>latest receipt</span>
-                <strong>satisfied</strong>
-              </div>
-              <dl>
-                {receiptItems.map((item) => (
-                  <div key={item.label}>
-                    <dt>{item.label}</dt>
-                    <dd>{item.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </aside>
         </div>
       </section>
 
@@ -193,8 +107,8 @@ export default function Home() {
           <p className="eyebrow">What you get</p>
           <h2>Composable files an agent can actually use.</h2>
           <p>
-            The package is intentionally plain: markdown, scripts, reports, and examples. Use the whole loop, or pick
-            the ingredients your stack needs.
+            The package is intentionally plain: markdown, scripts, reports, and examples. Pick the pieces your stack
+            needs and skip the rest.
           </p>
         </div>
         <div className="parts-grid">
@@ -207,42 +121,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="receipt" className="receipt-section" aria-label="Dogfood receipt">
-        <div className="receipt-card">
-          <span>Dogfood receipt</span>
-          <p>
-            This page is dogfooding the same loop: outcome packet, baseline diagnosis, custom rubric, grader report,
-            checks, and screenshots.
-          </p>
-        </div>
-      </section>
-
-      <section id="install" className="content-section install-section">
-        <div className="install-copy">
-          <p className="eyebrow">Install</p>
-          <h2>Install the parts your agent needs.</h2>
-          <p>
-            Start with the global skill pack, then mix in only the templates, checks, and receipts that fit your workflow.
-          </p>
-        </div>
-        <div className="install-panel">
-          <label className="command-field command-field--large" htmlFor="footer-install-command">
-            <span>Copy command</span>
-            <textarea id="footer-install-command" readOnly rows={2} value={installCommand} aria-label="Copy Agentic Design System install command" />
-          </label>
-          <div className="install-links">
-            <a href="https://github.com/aa-on-ai/agentic-design-system" className="secondary-link focus-ring focus-visible:outline focus-visible:outline-2">
-              GitHub
-            </a>
-            <a href="https://github.com/aa-on-ai/agentic-design-system#readme" className="secondary-link focus-ring focus-visible:outline focus-visible:outline-2">
-              README
-            </a>
-          </div>
-        </div>
-      </section>
-
       <footer className="site-footer">
-        <p>Built by <a href="https://github.com/aa-on-ai/agentic-design-system">aa-on-ai</a> for agents that need better design judgment.</p>
+        <p>Built by <a href="https://github.com/aa-on-ai/agentic-design-system">aa-on-ai</a> for coding agents that need better interface defaults.</p>
       </footer>
     </main>
   );
