@@ -37,8 +37,8 @@ const parts = [
     body: "Project identity, outcome, grader report, run report, and reference-intake shapes.",
   },
   {
-    title: "Routing",
-    body: "A lightweight way to pick the right design instruction before the agent starts building.",
+    title: "Control flow",
+    body: "Explicit steps, stop conditions, and checkpoints so the agent is a component, not the whole system.",
   },
   {
     title: "Reports",
@@ -120,6 +120,11 @@ export default function Home() {
               ADS is the skills, templates, and review artifacts an agent installs before it draws a screen, so UI work
               becomes an outcome-driven loop with a baseline, a custom rubric, and a grader.
             </p>
+            <div className="hero-badges" aria-label="ADS principles">
+              <span>control flow</span>
+              <span>not prompt soup</span>
+              <span>receipts over vibes</span>
+            </div>
 
             <div className="hero-actions">
               <label className="command-field" htmlFor="hero-install-command">
@@ -179,7 +184,7 @@ export default function Home() {
           <span>Dogfood receipt</span>
           <p>
             This page is dogfooding the ADS loop: outcome packet, baseline diagnosis, custom rubric, grader report,
-            checks, and screenshots.
+            checks, and screenshots. The page is the artifact; the receipt is the control flow.
           </p>
         </div>
       </section>

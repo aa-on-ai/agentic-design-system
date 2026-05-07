@@ -391,6 +391,36 @@ h3 {
   line-height: 1.52;
 }
 
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.hero-badges span {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 42%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-strong) 16%, var(--surface));
+  color: var(--muted-strong);
+  font-size: 0.78rem;
+  font-weight: 780;
+  letter-spacing: 0.02em;
+  padding: 0 12px;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-strong) 12%, transparent);
+}
+
+.hero-badges span:nth-child(2) {
+  transform: rotate(-1.5deg);
+}
+
+.hero-badges span:nth-child(3) {
+  transform: rotate(1.2deg);
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -501,6 +531,7 @@ h3 {
 }
 
 .loop-list li {
+  position: relative;
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
   gap: 14px;
@@ -508,6 +539,13 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 20px;
   background: color-mix(in srgb, var(--surface-strong) 58%, transparent);
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.loop-list li:hover {
+  transform: translateX(3px);
+  border-color: color-mix(in srgb, var(--accent-strong) 42%, var(--border));
+  background: color-mix(in srgb, var(--surface-strong) 78%, var(--accent-strong) 8%);
 }
 
 .loop-index {
@@ -592,9 +630,27 @@ h3 {
 }
 
 .part-card {
+  position: relative;
   min-width: 0;
   border-radius: 22px;
   padding: 20px;
+  overflow: hidden;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.part-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--accent-strong);
+  opacity: 0.72;
+}
+
+.part-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent-strong) 44%, var(--border));
+  background: color-mix(in srgb, var(--surface) 88%, var(--accent-strong) 8%);
 }
 
 .part-card h3 {
@@ -616,12 +672,27 @@ h3 {
 }
 
 .receipt-card {
+  position: relative;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
   gap: 20px;
   align-items: center;
   border-radius: 24px;
   padding: 20px;
+  overflow: hidden;
+}
+
+.receipt-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--accent-strong) 80%, transparent) 0 18px,
+    transparent 18px 30px
+  );
+  opacity: 0.62;
 }
 
 .receipt-card span {
@@ -731,6 +802,10 @@ h3 {
     font-size: 1rem;
     line-height: 1.46;
     margin-top: 18px;
+  }
+
+  .hero-badges {
+    margin-top: 14px;
   }
 
   .hero-actions {
