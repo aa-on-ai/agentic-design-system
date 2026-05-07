@@ -38,6 +38,8 @@ export function ThemeToggle() {
       data-theme-state={theme}
     >
       <span aria-hidden="true" className="mode-switch__track">
+        <span className="mode-switch__label mode-switch__label--light">Light</span>
+        <span className="mode-switch__label mode-switch__label--dark">Dark</span>
         <span className="mode-switch__knob" />
       </span>
     </button>
