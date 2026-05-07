@@ -27,6 +27,21 @@ const loopSteps = [
   },
 ];
 
+const receiptItems = [
+  {
+    label: "Rubric",
+    value: "Modern ADS story: pass",
+  },
+  {
+    label: "Verdict",
+    value: "Satisfied after revision",
+  },
+  {
+    label: "Evidence",
+    value: "Build, screenshots, no overflow",
+  },
+];
+
 const parts = [
   {
     title: "Skills",
@@ -117,11 +132,11 @@ export default function Home() {
             <p className="eyebrow">Installable design instructions</p>
             <h1>Design context for agents that build UI.</h1>
             <p className="hero-lede">
-              ADS is the skills, templates, and review artifacts an agent installs before it draws a screen, so UI work
-              becomes an outcome-driven loop with a baseline, a custom rubric, and a grader.
+              ADS gives UI agents a control loop: define the outcome, load the baseline, grade with a project rubric,
+              and revise with evidence.
             </p>
             <div className="hero-badges" aria-label="ADS principles">
-              <span>control flow</span>
+              <span>checkpoints, not chaos</span>
               <span>not prompt soup</span>
               <span>receipts over vibes</span>
             </div>
@@ -156,6 +171,20 @@ export default function Home() {
                 </li>
               ))}
             </ol>
+            <div className="receipt-strip" aria-label="Latest ADS receipt">
+              <div className="receipt-strip__topline">
+                <span>latest receipt</span>
+                <strong>satisfied</strong>
+              </div>
+              <dl>
+                {receiptItems.map((item) => (
+                  <div key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </aside>
         </div>
       </section>

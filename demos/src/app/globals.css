@@ -576,6 +576,99 @@ h3 {
   line-height: 1.48;
 }
 
+.receipt-strip {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px;
+  border-top: 1px dashed color-mix(in srgb, var(--accent-strong) 58%, var(--border));
+  border-bottom: 1px dashed color-mix(in srgb, var(--accent-strong) 48%, var(--border));
+  background:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent-strong) 12%, transparent) 0 10px,
+      transparent 10px 18px
+    ),
+    color-mix(in srgb, var(--surface-strong) 54%, transparent);
+}
+
+.receipt-strip::before,
+.receipt-strip::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-strong) 44%, var(--border));
+}
+
+.receipt-strip::before {
+  left: 14px;
+}
+
+.receipt-strip::after {
+  right: 14px;
+}
+
+.receipt-strip__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.receipt-strip__topline span,
+.receipt-strip dt {
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 820;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.receipt-strip__topline strong {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-strong) 24%, transparent);
+  color: var(--muted-strong);
+  font-size: 0.72rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  padding: 0 10px;
+  text-transform: uppercase;
+}
+
+.receipt-strip dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.receipt-strip dl > div {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  align-items: baseline;
+}
+
+.receipt-strip dt,
+.receipt-strip dd {
+  margin: 0;
+}
+
+.receipt-strip dd {
+  color: var(--muted-strong);
+  font-size: 0.86rem;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
 .content-section {
   display: grid;
   grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
@@ -859,6 +952,15 @@ h3 {
   .loop-index {
     width: 36px;
     height: 36px;
+  }
+
+  .receipt-strip {
+    padding: 12px;
+  }
+
+  .receipt-strip dl > div {
+    grid-template-columns: 74px minmax(0, 1fr);
+    gap: 10px;
   }
 
   .content-section,
