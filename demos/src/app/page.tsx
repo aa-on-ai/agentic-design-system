@@ -66,21 +66,24 @@ export default function Home() {
           <a href="#parts" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
             Parts
           </a>
-          <a href="#receipt" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
-            Receipt
-          </a>
           <a href="#install" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
             Install
           </a>
         </div>
         <div className="nav-actions">
-          <ThemeToggle />
+          <a
+            href="https://github.com/aa-on-ai/agentic-design-system#readme"
+            className="repo-link focus-ring focus-visible:outline focus-visible:outline-2"
+          >
+            Docs
+          </a>
           <a
             href="https://github.com/aa-on-ai/agentic-design-system"
             className="repo-link focus-ring focus-visible:outline focus-visible:outline-2"
           >
             GitHub
           </a>
+          <ThemeToggle />
         </div>
       </nav>
 
