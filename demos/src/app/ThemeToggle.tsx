@@ -16,33 +16,47 @@ function preferredTheme(): Theme {
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const next = preferredTheme();
     setTheme(next);
     document.documentElement.dataset.theme = next;
+    setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
     const next = theme === "dark" ? "light" : "dark";
+    const btn = event.currentTarget.getBoundingClientRect();
+    const root = document.documentElement;
+    const img = document.querySelector<HTMLElement>(".hero-image-dark");
+    const ref = img?.getBoundingClientRect();
+    const cx = btn.left + btn.width / 2;
+    const cy = btn.top + btn.height / 2;
+    const x = ref ? cx - ref.left : cx;
+    const y = ref ? cy - ref.top : cy;
+    root.style.setProperty("--reveal-x", `${x}px`);
+    root.style.setProperty("--reveal-y", `${y}px`);
     setTheme(next);
-    document.documentElement.dataset.theme = next;
+    root.dataset.theme = next;
     window.localStorage.setItem("ads-theme", next);
   };
+
+  const showMoon = mounted ? theme === "light" : true;
 
   return (
     <button
       type="button"
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
-      className="theme-toggle mode-switch rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 active:scale-[0.98]"
+      className="hero-pill hero-pill--icon focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
       data-theme-state={theme}
     >
-      <span aria-hidden="true" className="mode-switch__track">
-        <Sun className="mode-switch__icon mode-switch__icon--light" size={14} strokeWidth={2.2} />
-        <Moon className="mode-switch__icon mode-switch__icon--dark" size={14} strokeWidth={2.2} />
-        <span className="mode-switch__knob" />
-      </span>
+      {showMoon ? (
+        <Moon size={17} strokeWidth={2.2} aria-hidden="true" />
+      ) : (
+        <Sun size={17} strokeWidth={2.2} aria-hidden="true" />
+      )}
     </button>
   );
 }
