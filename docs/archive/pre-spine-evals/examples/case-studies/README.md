@@ -4,7 +4,7 @@ what the loop actually did, on three real prompts, with rule hits and rubric sco
 
 | case | type | before | after | delta | live route |
 |---|---|---:|---:|---:|---|
-| [canopy](./canopy.md) | landing | 16 | 40 | +24 | [`/before/canopy`](../../demos/src/app/before/canopy/page.tsx) · [`/after/canopy`](../../demos/src/app/after/canopy/page.tsx) |
+| [canopy](./canopy.md) | landing | 16 | 40 | +24 | [`/before/canopy`](../../../../../demos/src/app/before/canopy/page.tsx) · [`/after/canopy`](../../../../../demos/src/app/after/canopy/page.tsx) |
 | [pawprint](./pawprint.md) | dashboard | 15 | 41 | +26 | scored-only |
 | [notion-ai-settings](./notion-ai-settings.md) | settings | 17 | 40 | +23 | scored-only |
 | **average** |  | **16** | **40.3** | **+24.3** |  |
@@ -17,7 +17,7 @@ each case lists:
 - a short narrative on what the loop actually caught
 - follow-ups — what a human reviewer should still do
 
-source data is in `testing/results/` (`summary.json` per-prompt `scores.json`). rendered before/after pages are committed to `demos/` for canopy only in v1.1 — pawprint and notion-ai-settings render to the demos app in a follow-up (see [`PHASE-2.md`](../../PHASE-2.md)).
+source data is archived in [`testing/results/`](../../testing/results/) (`summary.json` per-prompt `scores.json`). rendered before/after pages are committed to `demos/`; this remains an archived fixture, not the current ADS public story.
 
 ## how to read these
 

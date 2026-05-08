@@ -55,7 +55,7 @@ Fix warnings before presenting. Screenshot the rendered result when possible. Fo
 
 ### Report
 
-After building, emit a `report.md` per `templates/run-report-template.md` — project/context status, reference contract when applicable, rule hits, rubric scores, verification, screenshots, follow-ups. This is the audit trail, not an optional extra.
+After building, emit a `report.md` per `templates/run-report-template.md` — project/context status, reference contract when applicable, rule hits, grader summary, verification, screenshots, follow-ups. This is the audit trail, not an optional extra.
 
 ### Key rule
 

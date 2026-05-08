@@ -11,8 +11,8 @@
 
 | variant | route | source |
 |---|---|---|
-| before | `/before/pawprint` | [`demos/src/app/before/pawprint/page.tsx`](../../demos/src/app/before/pawprint/page.tsx) |
-| after | `/after/pawprint` | [`demos/src/app/after/pawprint/page.tsx`](../../demos/src/app/after/pawprint/page.tsx) |
+| before | `/before/pawprint` | [`demos/src/app/before/pawprint/page.tsx`](../../../../../demos/src/app/before/pawprint/page.tsx) |
+| after | `/after/pawprint` | [`demos/src/app/after/pawprint/page.tsx`](../../../../../demos/src/app/after/pawprint/page.tsx) |
 
 to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
 

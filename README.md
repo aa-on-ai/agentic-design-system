@@ -20,7 +20,7 @@ Intent -> baseline -> rubric -> build with evidence -> grade and revise.
 | 4. Build with evidence | Routed skills, deterministic checks, changed files, screenshots or preview, known risks, and run report | skill + script + template |
 | 5. Grade and revise | Separate grader context when available, returning `satisfied`, `needs_revision`, `max_iterations`, or `failed` | template + pattern |
 
-That loop is the product. Presets, checks, and examples are support machinery.
+That loop is the product. Presets, checks, and archived fixtures are support machinery.
 
 ## Install
 
@@ -38,7 +38,7 @@ If you trust the repository default branch and want the shorthand:
 npx skills add aa-on-ai/agentic-design-system --yes
 ```
 
-Both paths assume a skills-compatible CLI. If your agent tool does not support `npx skills`, use the no-CLI install below and copy the repo's `skills/` directory into the location your agent reads. The full repo also includes presets, templates, examples, integration docs, and smoke tests.
+Both paths assume a skills-compatible CLI. If your agent tool does not support `npx skills`, use the no-CLI install below and copy the repo's `skills/` directory into the location your agent reads. The full repo also includes presets, templates, integration docs, smoke tests, and archived early eval fixtures for reference.
 
 Default path for a project:
 
@@ -126,9 +126,8 @@ The smoke test installs from the local repo into a temporary project and verifie
 ## Further reading
 
 - [PHILOSOPHY.md](./PHILOSOPHY.md) - design philosophy behind the system
-- [PHASE-2.md](./PHASE-2.md) - the control plane: presets, explainability, identity
-- [EXPLAINABILITY.md](./EXPLAINABILITY.md) - how `report.md` is generated and why it exists
 - [docs/influences.md](./docs/influences.md) - what ADS borrows from each source and what it does not copy
+- [docs/archive/](./docs/archive/) - pre-spine eval fixtures and earlier control-plane notes, kept for provenance
 
 ## Contributing
 

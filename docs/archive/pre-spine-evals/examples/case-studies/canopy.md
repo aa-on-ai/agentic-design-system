@@ -11,8 +11,8 @@
 
 | variant | route | source |
 |---|---|---|
-| before | `/before/canopy` | [`demos/src/app/before/canopy/page.tsx`](../../demos/src/app/before/canopy/page.tsx) |
-| after | `/after/canopy` | [`demos/src/app/after/canopy/page.tsx`](../../demos/src/app/after/canopy/page.tsx) |
+| before | `/before/canopy` | [`demos/src/app/before/canopy/page.tsx`](../../../../../demos/src/app/before/canopy/page.tsx) |
+| after | `/after/canopy` | [`demos/src/app/after/canopy/page.tsx`](../../../../../demos/src/app/after/canopy/page.tsx) |
 
 to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
 

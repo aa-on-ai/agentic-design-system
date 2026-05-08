@@ -11,8 +11,8 @@
 
 | variant | route | source |
 |---|---|---|
-| before | `/before/notion-ai-settings` | [`demos/src/app/before/notion-ai-settings/page.tsx`](../../demos/src/app/before/notion-ai-settings/page.tsx) |
-| after | `/after/notion-ai-settings` | [`demos/src/app/after/notion-ai-settings/page.tsx`](../../demos/src/app/after/notion-ai-settings/page.tsx) |
+| before | `/before/notion-ai-settings` | [`demos/src/app/before/notion-ai-settings/page.tsx`](../../../../../demos/src/app/before/notion-ai-settings/page.tsx) |
+| after | `/after/notion-ai-settings` | [`demos/src/app/after/notion-ai-settings/page.tsx`](../../../../../demos/src/app/after/notion-ai-settings/page.tsx) |
 
 to render locally: `cd demos && pnpm install && pnpm dev` then open the routes above.
 
