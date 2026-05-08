@@ -119,8 +119,8 @@ The smoke test installs from the local repo into a temporary project and verifie
 - [Intent Engineering](https://github.com/kylezantos/intent-engineering) - intent before output: user, situation, accomplish, notice, operational state
 - [Anthropic Managed Agents: Define outcomes](https://platform.claude.com/docs/en/managed-agents/define-outcomes) - outcome, rubric, separate grader, iteration loop
 - [Agentic Rubrics as Contextual Verifiers for SWE Agents](https://huggingface.co/papers/2601.04171) - repository-grounded rubrics and verifier signals for agent patches
+- [Karpathy autoresearch](https://github.com/karpathy/autoresearch) - fixed runtime, single editable target, metric, experiment log, and repeated agent loop; this is the closest reference for how ADS defines its loop structure
 - [DESIGN.md](https://github.com/google-labs-code/design.md) - structured project identity for agents
-- [Karpathy-style skill files](https://github.com/forrestchang/andrej-karpathy-skills) - portable skill files as agent behavior modules
 - [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) - micro-detail heuristics
 
 ## Further reading

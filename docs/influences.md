@@ -20,11 +20,11 @@ ADS is assembled from public ideas and local dogfooding. These are influences, n
 - What ADS borrows: repository-grounded rubrics, separate verifier signals, and context gathering before judging an agent patch.
 - What ADS changes: ADS applies the idea to UI/design artifacts and keeps execution-free rubric review as a reviewer signal, not a replacement for screenshots, builds, state checks, or accessibility checks.
 
-## Karpathy-style coding-agent discipline
+## Karpathy autoresearch
 
-- Source: <https://github.com/forrestchang/andrej-karpathy-skills>
-- What ADS borrows: clear task contracts, small scope, verification receipts, and completion evidence.
-- What ADS changes: ADS applies that discipline specifically to UI quality, reference fidelity, states, accessibility, and design review.
+- Source: <https://github.com/karpathy/autoresearch>
+- What ADS borrows: a fixed environment, one bounded editable surface, a clear metric/review target, an experiment log, and a repeated agent loop that changes the artifact, checks it, keeps or discards it, and repeats.
+- What ADS changes: ADS applies the loop structure to interface work instead of model training. The editable artifact is UI/design code, the metric is an outcome/baseline/rubric/grader contract, and the evidence is screenshots, checks, reports, and human review.
 
 ## DESIGN.md ecosystem
 
