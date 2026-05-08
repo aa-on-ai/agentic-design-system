@@ -13,11 +13,13 @@ Then paste this into `CLAUDE.md` or `AGENTS.md`:
 
 ```markdown
 Before presenting visual/UI work:
-1. Read guidelines.md, DESIGN.md, or the closest preset.
-2. If the project needs alignment, run Project Knowledge Intake and create/update DESIGN.md.
-3. If a visual reference matters, run Reference Intake before coding.
-4. Run design-review, ux-baseline-check, ui-polish-pass.
-5. Screenshot when possible and report checks/gaps.
+1. Read skills/agentic-design-system/SKILL.md.
+2. Read guidelines.md, DESIGN.md, or the closest preset.
+3. If the project needs alignment, run Project Knowledge Intake and create/update DESIGN.md.
+4. For substantial UI work, define outcome/intent first and use a separate grader when available.
+5. If a visual reference matters, run Reference Intake before coding.
+6. Run design-review, ux-baseline-check, ui-polish-pass.
+7. Screenshot when possible and report checks/gaps.
 Skip any gate that does not apply.
 ```
 

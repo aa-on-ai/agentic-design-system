@@ -22,11 +22,12 @@ with status indicators, activity feed, resource usage charts, and a kill
 switch for rogue agents.
 
 before presenting, follow the design quality chain:
-1. skills/design-review/SKILL.md
-2. skills/ux-baseline-check/SKILL.md
-3. skills/whimsical-design/SKILL.md
-4. skills/web-animation-design/SKILL.md
-5. skills/ui-polish-pass/SKILL.md
+1. skills/agentic-design-system/SKILL.md
+2. skills/design-review/SKILL.md
+3. skills/ux-baseline-check/SKILL.md
+4. skills/ui-polish-pass/SKILL.md
+
+only add creative-pack skills if the task explicitly calls for them.
 ```
 
 **step 2: review.** give a second agent the output + the skill files and ask it to audit.
@@ -36,11 +37,11 @@ review this UI against the agentic design system. for each skill, score
 pass/partial/fail and explain why.
 
 skills to check:
+- agentic-design-system: did it choose the right gates and skip irrelevant ones?
 - design-review: did it follow the pre-flight checklist? any anti-patterns?
 - ux-baseline-check: are all states covered? (empty, loading, error, edge cases)
-- whimsical-design: does it have personality? would someone screenshot this?
-- web-animation-design: are transitions intentional? any jarring state changes?
 - ui-polish-pass: spacing, alignment, hierarchy — does it feel finished?
+- creative pack: if used, did whimsical-design/world-build/web-animation-design fit the task?
 
 be specific. "looks good" is not a review.
 ```
@@ -48,13 +49,13 @@ be specific. "looks good" is not a review.
 **step 3: score.** the reviewer produces a structured assessment:
 
 ```
-design-review:     PASS — follows spacing scale, no anti-patterns detected
-ux-baseline-check: PARTIAL — has loading state, missing empty state for agent list
-whimsical-design:  FAIL — sterile dashboard, no personality, wouldn't screenshot
-web-animation-design: PARTIAL — hover states exist, no entrance animations
-ui-polish-pass:    PASS — alignment is clean, hierarchy reads well
+agentic-design-system: PASS — selected core gates and skipped creative pack
+design-review:         PASS — follows spacing scale, no anti-patterns detected
+ux-baseline-check:     PARTIAL — has loading state, missing empty state for agent list
+ui-polish-pass:        PASS — alignment is clean, hierarchy reads well
+creative pack:         N/A — not triggered by the task
 
-overall: 3/5 skills passed. main gap: personality and motion.
+overall: 3/4 applicable gates passed. main gap: missing empty state.
 ```
 
 ### what this catches
@@ -102,9 +103,10 @@ skills/ux-baseline-check/SKILL.md. pass/fail each with one-line reasons.
 
 **full audit** (5 min, comprehensive):
 ```
-review this against all 5 skills in the agentic design system.
+review this against the agentic design system.
 for each: pass/partial/fail with specific evidence.
 note any anti-patterns from skills/design-review/references/anti-patterns.md.
+mark creative-pack skills n/a unless the task explicitly triggered them.
 ```
 
 **creative audit** (for landing pages, immersive sites):

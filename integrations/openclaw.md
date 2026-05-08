@@ -13,11 +13,13 @@ Paste into workspace `AGENTS.md`:
 
 ```markdown
 For visual/UI work:
-1. Use guidelines.md, DESIGN.md, or the closest preset.
-2. Run Project Knowledge Intake only when the project needs alignment.
-3. Run Reference Intake only when a screenshot/site/CodePen/“feel like this” reference matters.
-4. Run design-review, ux-baseline-check, ui-polish-pass.
-5. Screenshot when possible and return verification/gaps.
+1. Read skills/agentic-design-system/SKILL.md.
+2. Use guidelines.md, DESIGN.md, or the closest preset.
+3. Run Project Knowledge Intake only when the project needs alignment.
+4. For substantial UI work, define outcome/intent before building and grade against it after evidence is attached.
+5. Run Reference Intake only when a screenshot/site/CodePen/“feel like this” reference matters.
+6. Run design-review, ux-baseline-check, ui-polish-pass.
+7. Screenshot when possible and return verification/gaps.
 Skip anything that does not apply.
 ```
 

@@ -18,9 +18,14 @@ Hard rule: if you cannot state what to borrow, what not to borrow, and the fidel
 
 ### Core pack (always active for visual work)
 
+0. `skills/agentic-design-system/SKILL.md` — routing and outcome/grader loop
 1. `skills/design-review/SKILL.md` — quality gate
 2. `skills/ux-baseline-check/SKILL.md` — state completeness
 3. `skills/ui-polish-pass/SKILL.md` — final polish
+
+### Outcome + Grader Loop
+
+For substantial UI work, define intent/outcome before building and grade the result after evidence is attached. Use `templates/outcome-template.md` and `templates/grader-report-template.md`. If this was installed as a skill pack and root templates are not present, use the bundled copies under `skills/agentic-design-system/templates/`.
 
 ### Creative pack (opt-in only — read each skill's trigger rules first)
 

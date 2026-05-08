@@ -51,6 +51,29 @@ then ask only the minimum clarifying questions needed to remove blocking ambigui
 
 order: **ingest/interview → generate → critique → verify → report**.
 
+## Outcome + Grader Loop (optional; run for substantial UI work)
+
+use this when a UI task has enough ambiguity or risk that the agent should not self-clear final quality. define the outcome before building, attach evidence after building, and grade from a separate context when possible.
+
+templates:
+- `templates/outcome-template.md`
+- `templates/grader-report-template.md`
+- installed-skill fallback: `skills/agentic-design-system/templates/`
+
+trigger when:
+- the user-facing intent is easy to blur
+- a visual regression would be expensive
+- a reference or taste target needs explicit judgment
+- multiple agents are involved
+- the work will be shared, demoed, or used as proof
+
+skip for:
+- tiny copy fixes
+- mechanical bug fixes with obvious pass/fail behavior
+- non-visual work
+
+order: **intent/outcome → build → evidence → separate grader → revise or stop**.
+
 ## Reference Intake Gate (optional; run when a visual target matters)
 
 if the prompt includes a visual reference, screenshot, site, CodePen, Dribbble shot, “make it feel like…”, marketing/editorial/launch art direction, or a previous output failed because the vibe was generic/sloppy/wrong, run `visual-reference-calibration` before building.

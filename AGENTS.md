@@ -2,13 +2,19 @@
 
 ## skills
 
-this repo contains 7 design skills split into two packs:
+this repo contains 9 design skills: one orchestrator plus core, reference, production, and creative packs.
+
+**orchestrator** (read first for visual work):
+- `skills/agentic-design-system/` — routing, gate order, verification expectations
 
 **core pack** (always active for visual work):
 - `skills/design-review/` — quality gate with verification scripts and 11 reference files
 - `skills/ux-baseline-check/` — state completeness (loading, empty, error)
 - `skills/ui-polish-pass/` — final visual polish pass
 - `skills/agent-friendly-design/` — make sites work for AI consumers
+
+**reference gate** (opt-in before coding):
+- `skills/visual-reference-calibration/` — reference contract for screenshots, sites, CodePens, or "make it feel like this" work
 
 **creative pack** (opt-in only — read each skill's trigger rules before using):
 - `skills/whimsical-design/` — personality and delight
@@ -28,6 +34,7 @@ after building, run:
 ```bash
 python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
 python3 skills/design-review/scripts/state-check.py <your-file.tsx>
+python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
 ```
 fix warnings before presenting work.
 
