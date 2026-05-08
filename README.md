@@ -80,27 +80,6 @@ Local/experimental docs also exist for [`OpenClaw`](./integrations/openclaw.md) 
 - Screenshot review depends on the project and agent environment. The templates require evidence; the runner is still your toolchain.
 - The system raises the floor and makes misses inspectable. It does not replace taste or product judgment.
 
-## Does it actually work?
-
-The older eval fixtures show why the review/check/report loop matters. They are proof of floor-raising, not the whole public story.
-
-**[Canopy](./examples/case-studies/canopy.md)** - agent-built landing page. **23 anti-patterns -> 0.** State coverage 0/3 -> 3/3. Rubric 16 -> 40 (out of 50).
-
-**[Pawprint](./examples/case-studies/pawprint.md)** - agent-built dashboard. **61 -> 0.** 0/3 -> 3/3 states. Rubric 15 -> 41.
-
-**[Notion AI Settings](./examples/case-studies/notion-ai-settings.md)** - agent-built settings surface. **123 -> 0.** 0/3 -> 3/3 states. Rubric 17 -> 40.
-
-| Prompt | Without | With | Delta |
-|---|---:|---:|---:|
-| Canopy (landing) | 16 | 40 | +24 |
-| Pawprint (dashboard) | 15 | 41 | +26 |
-| Notion AI (settings) | 17 | 40 | +23 |
-| **Average** | **16** | **40.3** | **+24.3** |
-
-Scored 0-50 across hierarchy, spacing, copy, product-fit, and screenshot-worthiness. Judged by Claude Sonnet on rendered output. [Reproduce it ->](./testing/)
-
-_n=3 prompts. Rendered output was judged by Claude Sonnet against a fixed 50-point rubric. Same prompt family; ADS skills/templates were the intervention. Judge and builder are in the same model family, so treat this as an internal floor-raising signal and reproducible fixture, not a benchmark suite._
-
 ## Why this works
 
 Agents are better at checking UI against explicit criteria than spontaneously holding every design constraint in mind while generating. ADS exploits that asymmetry, but starts with context instead of generic polish.
@@ -127,21 +106,6 @@ testing/install-smoke.sh
 
 The smoke test installs from the local repo into a temporary project and verifies all 9 skills plus the bundled outcome/grader templates are present. Success ends with `install smoke passed: 9 skills and bundled outcome/grader templates`.
 
-## What is in the box
-
-| | |
-|---|---|
-| **Orchestrator** | [agentic-design-system](./skills/agentic-design-system/) + routing, outcome/grader templates, and stop rules |
-| **Core skills** | [design-review](./skills/design-review/), [ux-baseline-check](./skills/ux-baseline-check/), [ui-polish-pass](./skills/ui-polish-pass/) |
-| **Reference gate** | [visual-reference-calibration](./skills/visual-reference-calibration/) + [reference intake contract](./templates/reference-intake-contract.md) |
-| **Creative skills** | [whimsical-design](./skills/whimsical-design/), [world-build](./skills/world-build/), [web-animation-design](./skills/web-animation-design/) |
-| **Agent-friendly design** | Semantic HTML, ARIA, structured data, llms.txt, MCP patterns |
-| **Verification scripts** | Anti-pattern / state / accessibility checks, Python stdlib only |
-| **Presets and contracts** | 3 starters, [project identity](./templates/project-identity-template.md), [outcome](./templates/outcome-template.md), [grader report](./templates/grader-report-template.md), [run report](./templates/run-report-template.md) |
-| **Explainability** | report artifacts, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
-| **Case studies** | [Canopy](./examples/case-studies/canopy.md) / [Pawprint](./examples/case-studies/pawprint.md) / [Notion AI Settings](./examples/case-studies/notion-ai-settings.md) |
-| **Integrations** | [Claude Code](./integrations/claude-code.md), [OpenClaw](./integrations/openclaw.md), [Codex CLI](./integrations/codex.md), [Cursor](./integrations/cursor.md), [Hermes](./integrations/hermes.md) |
-
 ## Limitations
 
 - Depends on agents actually following skill instructions. Works best with frontier models.
@@ -150,23 +114,21 @@ The smoke test installs from the local repo into a temporary project and verifie
 - Separate grader context is a workflow recommendation, not a hosted service.
 - Custom rubric generation is not fully automated yet.
 
-## How is this different from Impeccable?
+## Influences and prior art
 
-[Impeccable](https://impeccable.style) is a quality gate with slash commands for polish. ADS adds portable project context, reference calibration, outcome/grader templates, routed skills, verification scripts, and report artifacts.
-
-## Related
-
-- [react-grab](https://github.com/aidenybai/react-grab) - point an agent at exact components to fix
-- [Impeccable](https://impeccable.style) - ergonomic slash-command polish
+- [Intent Engineering](https://github.com/kylezantos/intent-engineering) - intent before output: user, situation, accomplish, notice, operational state
+- [Anthropic Managed Agents: Define outcomes](https://platform.claude.com/docs/en/managed-agents/define-outcomes) - outcome, rubric, separate grader, iteration loop
+- [Agentic Rubrics as Contextual Verifiers for SWE Agents](https://huggingface.co/papers/2601.04171) - repository-grounded rubrics and verifier signals for agent patches
+- [DESIGN.md](https://github.com/google-labs-code/design.md) - structured project identity for agents
+- [Karpathy-style skill files](https://github.com/forrestchang/andrej-karpathy-skills) - portable skill files as agent behavior modules
 - [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) - micro-detail heuristics
-- [userinterface.wiki](https://www.userinterface.wiki/) - UX theory and pattern reasoning
 
 ## Further reading
 
 - [PHILOSOPHY.md](./PHILOSOPHY.md) - design philosophy behind the system
 - [PHASE-2.md](./PHASE-2.md) - the control plane: presets, explainability, identity
 - [EXPLAINABILITY.md](./EXPLAINABILITY.md) - how `report.md` is generated and why it exists
-- [docs/influences.md](./docs/influences.md) - source influences and what ADS borrows from each
+- [docs/influences.md](./docs/influences.md) - what ADS borrows from each source and what it does not copy
 
 ## Contributing
 
@@ -174,4 +136,4 @@ If you find a recurring anti-pattern, a better routing rule, or a skill that sho
 
 ## License
 
-MIT
+[MIT](./LICENSE)

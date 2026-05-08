@@ -14,6 +14,12 @@ ADS is assembled from public ideas and local dogfooding. These are influences, n
 - What ADS borrows: define the outcome and rubric first, grade in a separate context, revise until satisfied or stop at an iteration limit.
 - What ADS changes: ADS keeps this as portable markdown templates and skill instructions, not a hosted harness dependency.
 
+## Agentic Rubrics as Contextual Verifiers for SWE Agents
+
+- Source: <https://huggingface.co/papers/2601.04171>
+- What ADS borrows: repository-grounded rubrics, separate verifier signals, and context gathering before judging an agent patch.
+- What ADS changes: ADS applies the idea to UI/design artifacts and keeps execution-free rubric review as a reviewer signal, not a replacement for screenshots, builds, state checks, or accessibility checks.
+
 ## Karpathy-style coding-agent discipline
 
 - Source: <https://github.com/forrestchang/andrej-karpathy-skills>
@@ -25,6 +31,12 @@ ADS is assembled from public ideas and local dogfooding. These are influences, n
 - Sources: <https://github.com/google-labs-code/design.md> and <https://github.com/VoltAgent/awesome-design-md>
 - What ADS borrows: project identity should be readable by agents as structured design context.
 - What ADS changes: ADS treats project identity as one input to a loop, not the whole system.
+
+## make-interfaces-feel-better
+
+- Source: <https://github.com/jakubkrehel/make-interfaces-feel-better>
+- What ADS borrows: small interface details matter, and agents benefit from explicit micro-quality heuristics.
+- What ADS changes: ADS places those heuristics inside a broader intent, baseline, rubric, evidence, and grader loop.
 
 ## Agent2Agent / A2A
 
