@@ -306,8 +306,7 @@ code {
 }
 
 .hero-card-inner > h1,
-.hero-card-inner > .hero-lede,
-.hero-card-inner > .hero-install {
+.hero-card-inner > .hero-lede {
   width: 100%;
 }
 
