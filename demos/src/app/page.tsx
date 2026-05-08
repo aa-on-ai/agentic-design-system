@@ -91,8 +91,8 @@ export default function Home() {
             <p className="eyebrow">Agent skills for interface work</p>
             <h1>Design support for your coding agent.</h1>
             <p className="hero-lede">
-              Installable presets, reference intake, critique checks, state coverage, polish passes, and run reports
-              for Claude Code, Codex, OpenClaw, Hermes, Cursor, and other agentic builders.
+              A small installable kit for your coding agent, whether it is Claude Code, OpenClaw, Hermes, or
+              something similar. It adds presets, reference intake, review checks, and run reports for interface work.
             </p>
 
             <div className="hero-actions">

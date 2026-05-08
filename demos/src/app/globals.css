@@ -993,6 +993,29 @@ h3 {
     border-radius: 18px;
   }
 
+  .hero-command-strip button {
+    align-items: center;
+  }
+
+  .hero-command-code {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: visible;
+    white-space: normal;
+    font-size: 0.76rem;
+    line-height: 1.28;
+  }
+
+  .hero-command-code span:first-child {
+    white-space: nowrap;
+  }
+
+  .hero-command-code span:last-child {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
   .command-field {
     flex-basis: 100%;
     padding: 10px;
