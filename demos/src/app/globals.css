@@ -1117,6 +1117,10 @@ h1, h2, h3 {
 }
 
 @media (max-width: 640px) {
+  .hero-section {
+    padding: 8px;
+  }
+
   .hero-toolbar {
     top: 14px;
     right: 14px;
@@ -1142,19 +1146,20 @@ h1, h2, h3 {
   }
 
   .hero-wordmark {
-    font-size: 0.82rem;
-    margin-bottom: 22px;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
   }
 
   .hero-card {
     border-radius: 18px;
-    height: calc(100svh - 28px);
-    min-height: 480px;
-    max-height: 760px;
+    height: auto;
+    min-height: calc(100svh - 16px);
+    max-height: none;
   }
 
   .hero-card-inner {
-    padding: 26px 24px 28px;
+    justify-content: flex-start;
+    padding: 102px 22px 26px;
     width: 100%;
     max-width: 100%;
   }
@@ -1164,23 +1169,24 @@ h1, h2, h3 {
   }
 
   .hero-card-inner h1 {
-    font-size: 1.55rem;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
+    font-size: clamp(1.72rem, 8.4vw, 2.16rem);
+    letter-spacing: -0.04em;
+    line-height: 1.02;
     width: 100%;
     max-width: 100%;
-    text-wrap: pretty;
+    text-wrap: balance;
     overflow-wrap: break-word;
   }
 
   .hero-lede {
-    font-size: 1rem;
-    line-height: 1.55;
-    margin-top: 18px;
+    font-size: 0.95rem;
+    line-height: 1.48;
+    margin-top: 16px;
     width: 100%;
     max-width: 100%;
     overflow-wrap: break-word;
     color: var(--text);
+    font-weight: 620;
   }
 
   .hero-card-inner h1 {
@@ -1193,20 +1199,18 @@ h1, h2, h3 {
     background:
       linear-gradient(180deg,
         color-mix(in srgb, var(--page) 98%, transparent) 0%,
-        color-mix(in srgb, var(--page) 94%, transparent) 42%,
-        color-mix(in srgb, var(--page) 76%, transparent) 66%,
-        color-mix(in srgb, var(--page) 20%, transparent) 90%,
-        transparent 100%);
+        color-mix(in srgb, var(--page) 96%, transparent) 48%,
+        color-mix(in srgb, var(--page) 82%, transparent) 74%,
+        color-mix(in srgb, var(--page) 44%, transparent) 100%);
   }
 
   :root[data-theme="dark"] .hero-scrim {
     background:
       linear-gradient(180deg,
         rgba(11, 18, 32, 0.98) 0%,
-        rgba(11, 18, 32, 0.90) 44%,
-        rgba(11, 18, 32, 0.68) 70%,
-        rgba(11, 18, 32, 0.38) 94%,
-        transparent 100%);
+        rgba(11, 18, 32, 0.94) 48%,
+        rgba(11, 18, 32, 0.78) 74%,
+        rgba(11, 18, 32, 0.54) 100%);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -1214,15 +1218,14 @@ h1, h2, h3 {
       background:
         linear-gradient(180deg,
           rgba(11, 18, 32, 0.98) 0%,
-          rgba(11, 18, 32, 0.90) 44%,
-          rgba(11, 18, 32, 0.68) 70%,
-          rgba(11, 18, 32, 0.38) 94%,
-          transparent 100%);
+          rgba(11, 18, 32, 0.94) 48%,
+          rgba(11, 18, 32, 0.78) 74%,
+          rgba(11, 18, 32, 0.54) 100%);
     }
   }
 
   .hero-install {
-    margin-top: 22px;
+    margin-top: 20px;
     width: 100%;
   }
 
@@ -1232,13 +1235,15 @@ h1, h2, h3 {
   }
 
   .hero-command-strip {
+    flex-direction: column;
     align-items: flex-start;
     padding: 10px 10px 10px 12px;
-    gap: 8px;
+    gap: 10px;
   }
 
   .hero-command-code {
     align-items: flex-start;
+    width: 100%;
     font-size: 0.76rem;
     line-height: 1.35;
     white-space: normal;
@@ -1257,6 +1262,7 @@ h1, h2, h3 {
   }
 
   .hero-command-copy {
+    align-self: flex-start;
     min-height: 26px;
     padding: 0 9px;
     font-size: 0.66rem;
