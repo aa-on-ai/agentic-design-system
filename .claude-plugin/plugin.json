@@ -1,15 +1,17 @@
 {
   "name": "agentic-design-system",
-  "version": "1.0.0",
-  "description": "A design system for AI agents that build UI. 7 skills, routing logic, and verification scripts that raise the quality floor on agent-generated interfaces.",
+  "version": "1.0.1",
+  "description": "A design system for AI agents that build UI. 9 skills, routing logic, templates, and verification scripts that raise the quality floor on agent-generated interfaces.",
   "author": "aa-on-ai",
   "license": "MIT",
   "homepage": "https://github.com/aa-on-ai/agentic-design-system",
   "skills": [
+    "skills/agentic-design-system",
     "skills/design-review",
     "skills/ux-baseline-check",
     "skills/ui-polish-pass",
     "skills/agent-friendly-design",
+    "skills/visual-reference-calibration",
     "skills/whimsical-design",
     "skills/world-build",
     "skills/web-animation-design"

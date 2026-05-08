@@ -30,11 +30,12 @@ the main agent (orchestrator) decides which chain to apply and includes the inst
 # spawning a sub-agent for UI work
 sessions_spawn({
   task: "Build the settings page. Before presenting, read and follow:
-    1. skills/design-review/SKILL.md
-    2. skills/ux-baseline-check/SKILL.md
-    3. skills/whimsical-design/SKILL.md
-    4. skills/web-animation-design/SKILL.md
-    5. skills/ui-polish-pass/SKILL.md
+    1. skills/agentic-design-system/SKILL.md
+    2. skills/design-review/SKILL.md
+    3. skills/ux-baseline-check/SKILL.md
+    4. skills/ui-polish-pass/SKILL.md
+    Add visual-reference-calibration only if a reference target matters.
+    Add creative-pack skills only if the task explicitly triggers them.
     Also read guidelines.md for project tokens and patterns.",
   model: "openai/gpt-5.4",
   thread: true

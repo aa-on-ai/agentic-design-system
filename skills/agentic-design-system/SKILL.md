@@ -15,7 +15,7 @@ you have a design system installed. this skill orchestrates it. read this BEFORE
 
 ## how it works
 
-the system has two packs of skills installed alongside this one. you don't need to read them all — this file tells you which ones to read for your current task.
+the system installs a routing skill plus focused helper skills. you don't need to read them all — this file tells you which ones to read for your current task.
 
 ### core pack (read these for ALL visual work)
 - `skills/design-review/SKILL.md` — quality gate, reference files, verification scripts
@@ -23,12 +23,37 @@ the system has two packs of skills installed alongside this one. you don't need 
 - `skills/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
 
 ### creative pack (read ONLY when triggered)
+- `skills/visual-reference-calibration/SKILL.md` — BEFORE coding when Aaron provides a screenshot, CodePen, website, visual reference, or says "make it feel like this." Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
 - `skills/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
 - `skills/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
 - `skills/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
 
 ### agent-friendly (read for production sites)
 - `skills/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
+
+### project knowledge intake (optional; run when context needs alignment)
+default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it.
+
+### reference intake gate (optional; run before reference-led visual work)
+if the user provides a visual reference/screenshot/site/CodePen, says "make it feel like...", the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `skills/visual-reference-calibration/SKILL.md` before generating UI.
+
+use `templates/reference-intake-contract.md`. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when Aaron already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
+
+### outcome + grader loop (optional; run for substantial UI work)
+for non-trivial UI, define the user-facing intent and outcome before building, then grade the artifact in a separate context when possible.
+
+use `templates/outcome-template.md` and `templates/grader-report-template.md` from the full repo. if this skill was installed without the repo templates, use the copies bundled at `skills/agentic-design-system/templates/`.
+
+minimum loop:
+
+1. define **intent**: user/situation, accomplish, notice, feel/operational state, alignment check
+2. define **done**: artifact, required evidence, deterministic checks, max iterations
+3. build
+4. attach evidence: changed files, checks, screenshots or preview, unresolved risks
+5. grade against the outcome using a separate agent/context when available
+6. stop at `satisfied`, `max_iterations`, or explicit human decision
+
+do not turn this into ceremony for tiny fixes. use it when unclear intent, visual quality, reference fidelity, or regression risk would otherwise cause churn.
 
 ## project handoff context (DESIGN.md)
 
@@ -50,11 +75,12 @@ prior art / ecosystem: https://github.com/VoltAgent/awesome-design-md — curate
 is this visual or frontend work?
 ├── no → skip everything, do the task
 └── yes
-    ├── new page/component → read core pack skills, then build
+    ├── new page/component → run project knowledge intake if context is thin, read core pack skills, then build
     ├── modification to existing UI → read design-review only
     └── non-visual (scripts, backend, config) → skip
     
     does it need creative direction?
+    ├── user provided a visual reference/screenshot/CodePen/site/"feel like this" → also read visual-reference-calibration BEFORE coding
     ├── user asked for personality/delight → also read whimsical-design
     ├── user asked for immersion/atmosphere → also read world-build  
     ├── task involves animation specifically → also read web-animation-design

@@ -11,6 +11,7 @@ how to decide which skills to run and when.
 - agent-friendly-design — make sites work for AI consumers
 
 **creative pack** (opt-in only):
+- visual-reference-calibration — reference contract before generation
 - whimsical-design — personality and delight
 - world-build — immersive atmosphere
 - web-animation-design — motion and interaction feel
@@ -25,6 +26,7 @@ is this visual or user-facing?
 └── yes → core pack always runs
     │
     does it need creative direction?
+    ├── visual reference/screenshot/site/CodePen/"feel like" prompt → add visual-reference-calibration BEFORE generation
     ├── user asked for personality/delight/whimsy → add whimsical-design
     ├── user asked for immersion/atmosphere/world → add world-build
     ├── user asked about animation/motion/feel → add web-animation-design
@@ -33,6 +35,66 @@ is this visual or user-facing?
 ```
 
 **the key rule:** if the default aesthetic is appropriate for the product, don't fight it. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. "different from defaults" is not always better. core pack makes the defaults excellent. creative pack makes them different. only add creative when different is actually what the product needs.
+
+## project knowledge intake (optional; run when alignment is needed)
+
+default path: use a preset when there is no project context, then build. run Project Knowledge Intake only when the task depends on product taste and the project needs shared context beyond a preset.
+
+intake gathers:
+- brand/design docs, product specs, and prior decisions
+- existing components, tokens, routes, and screenshots
+- audience, domain nouns, workflows, and product language
+- visual references and anti-references
+- constraints: accessibility, responsive behavior, performance, libraries, launch risk
+
+then ask only the minimum clarifying questions needed to remove blocking ambiguity. do not interview when files already answer the question. emit or update a project identity brief using `templates/project-identity-template.md`, then continue with the normal chain.
+
+order: **ingest/interview → generate → critique → verify → report**.
+
+## outcome + grader loop (optional; run for substantial UI work)
+
+use this when a UI task has enough ambiguity or risk that the agent should not self-clear final quality. define the outcome before building, attach evidence after building, and grade from a separate context when possible.
+
+templates:
+- `templates/outcome-template.md`
+- `templates/grader-report-template.md`
+- installed-skill fallback: `skills/agentic-design-system/templates/`
+
+trigger when:
+- the user-facing intent is easy to blur
+- a visual regression would be expensive
+- a reference or taste target needs explicit judgment
+- multiple agents are involved
+- the work will be shared, demoed, or used as proof
+
+skip for:
+- tiny copy fixes
+- mechanical bug fixes with obvious pass/fail behavior
+- non-visual work
+
+order: **intent/outcome → build → evidence → separate grader → revise or stop**.
+
+## reference intake gate (optional; run when a visual target matters)
+
+if the prompt includes a visual reference, screenshot, site, CodePen, Dribbble shot, "make it feel like...", marketing/editorial/launch art direction, or a previous output failed because the vibe was generic/sloppy/wrong, run `visual-reference-calibration` before building.
+
+create `templates/reference-intake-contract.md` or the same shape in the run report. the contract must state:
+- source/reference
+- primary borrowed layer: structure, scale, motion, mood, typography, art style, surface, or interaction model
+- secondary borrowed layers, if any
+- what not to borrow
+- fidelity target: close mimic, same spirit, or loose cue
+- product constraints
+- success cues and failure cues
+
+hard rule for reference-led work: if the agent cannot state what to borrow, what not to borrow, and the fidelity target, it cannot build. if the task is not reference-led, skip this gate.
+
+done gate for reference-led work:
+1. screenshot the result
+2. compare against the reference contract when cheap/easy
+3. report where it matched and where it drifted
+
+order for reference-led work: **project knowledge intake (if needed) → reference intake contract → generate → critique → screenshot comparison → report**.
 
 ## context pass (run first if applicable)
 

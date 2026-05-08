@@ -1,3 +1,11 @@
+---
+name: whimsical-design
+description: >
+  Creative pack — use only when a UI task explicitly needs personality, delight,
+  brand expression, marketing/editorial energy, or a non-default visual direction.
+  Skip for utility UI unless the default-safe output is the problem.
+---
+
 # Whimsical Design Skill
 
 ## ⚠️ Creative Pack — NOT auto-apply

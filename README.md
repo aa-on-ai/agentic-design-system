@@ -2,9 +2,9 @@
 
 your agent writes code. it writes UI that looks like every other AI-built UI — card grids, dark gradients, cramped spacing, missing error states.
 
-this is a loop your agent runs on every UI task: critique, fix, emit a report, then present. install one pack of skills, and your agent becomes its own design reviewer.
+this is a tool for your coding agent. Claude Code, OpenClaw, Hermes, Codex, or another agent shell can use it to define intent, collect project context, calibrate references, critique the UI, verify states/accessibility, attach evidence, and stop when the artifact clears the bar.
 
-works with Claude Code, Cursor, Codex CLI, OpenClaw, and any tool that reads the [Agent Skills](https://agentskills.io) spec.
+install the skill pack when you want the agent to carry the loop with it. clone the repo when you also want presets, templates, examples, and integration docs.
 
 ## pick your setup
 
@@ -20,25 +20,29 @@ no preset fits? the [project identity template](./templates/project-identity-tem
 
 ## what it actually does
 
-on every UI task, your agent runs three passes before presenting:
+on every UI task, your agent runs only the gates that apply:
 
+- **project identity** gives the agent a preset or `DESIGN.md`-shaped brief when context is thin
+- **outcome + grader** defines intent, evidence, stop conditions, and a separate review pass for substantial UI work
+- **reference intake** prevents cargo-culting when a screenshot, site, CodePen, or "make it feel like this" target matters
 - **design-review** catches anti-patterns, flags bad hierarchy, tests product-fit
 - **ux-baseline-check** makes sure loading, empty, error, and edge states exist (they usually don't)
 - **ui-polish-pass** tightens spacing and alignment as the final step
 
-three more skills (whimsical-design, world-build, web-animation-design) are opt-in when the task actually calls for them. [routing](./routing/ROUTING.md) decides which fire.
+creative skills (whimsical-design, world-build, web-animation-design) are opt-in when the task actually calls for them. [routing](./routing/ROUTING.md) decides which fire.
 
 every run emits a [`report.md`](./templates/run-report-template.md) — rule hits, rubric scores, what got fixed, what's still your call. you know why it looks the way it does.
 
 ## how this composes
 
-think of the system as one installable control plane with 8 skills doing different jobs in the loop:
+think of the system as one installable control plane with 9 skills doing different jobs in the loop:
 
 - **agentic-design-system** is the orchestrator. it tells the agent which skills exist, when to route into them, and how to leave behind a readable artifact instead of a mysterious "trust me."
 - **design-review** is the hard quality gate. it catches hierarchy, spacing, product-fit, and anti-pattern issues before the agent gets to call the work done.
 - **ux-baseline-check** forces boring-but-critical completeness: loading, empty, error, and edge states.
 - **ui-polish-pass** is the final tightening pass once the structural issues are solved.
 - **agent-friendly-design** keeps the output legible to agents and machines too: semantic HTML, ARIA, structured data, llms.txt, and MCP-aware patterns.
+- **visual-reference-calibration** is the reference gate. it forces the agent to say what to borrow, what not to borrow, and how close the output should be before coding.
 - **whimsical-design** is optional personality. it only fires when the brief actually benefits from delight instead of getting noisier.
 - **world-build** is optional atmosphere. it is for narrative environments and stronger visual framing, not default product chrome.
 - **web-animation-design** is optional motion direction. it handles when movement clarifies hierarchy or feel instead of becoming theater.
@@ -77,12 +81,12 @@ but a loop without a readable artifact is just a score. the `report.md` is the d
 ## install
 
 ```bash
-npx skills add aa-on-ai/agentic-design-system
+npx skills add aa-on-ai/agentic-design-system --yes
 ```
 
 then:
 
-1. paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, .cursorrules, .codex/instructions, etc.)
+1. paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into your agent's instruction file (AGENTS.md, CLAUDE.md, codex.md, etc.)
 2. copy your chosen [preset](./presets/) into the project as `guidelines.md`
 3. prompt normally — skills route themselves based on the task
 
@@ -101,18 +105,28 @@ cp -r agentic-design-system/skills your-project/skills/
 
 </details>
 
+## verify the package
+
+```bash
+testing/install-smoke.sh
+```
+
+the smoke test installs from the local repo into a temporary project and verifies all 9 skills plus the bundled outcome/grader templates are present.
+
 ## what's in the box
 
 | | |
 |---|---|
+| **orchestrator** | [agentic-design-system](./skills/agentic-design-system/) + routing, outcome/grader templates, and stop rules |
 | **core skills** | [design-review](./skills/design-review/), [ux-baseline-check](./skills/ux-baseline-check/), [ui-polish-pass](./skills/ui-polish-pass/) |
+| **reference gate** | [visual-reference-calibration](./skills/visual-reference-calibration/) + [reference intake contract](./templates/reference-intake-contract.md) |
 | **creative skills** | [whimsical-design](./skills/whimsical-design/), [world-build](./skills/world-build/), [web-animation-design](./skills/web-animation-design/) |
 | **agent-friendly-design** | semantic HTML, ARIA, structured data, llms.txt, MCP patterns |
 | **verification scripts** | anti-pattern / state / accessibility (Python, stdlib only) |
-| **presets** | 3 opinionated starters + [portable JSON](./schemas/preset.schema.json) + [identity template](./templates/project-identity-template.md) |
-| **explainability** | [`report.md`](./templates/run-report-template.md) per run, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
+| **presets and contracts** | 3 starters, [project identity](./templates/project-identity-template.md), [outcome](./templates/outcome-template.md), [grader report](./templates/grader-report-template.md), [run report](./templates/run-report-template.md) |
+| **explainability** | report artifacts, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
 | **case studies** | [canopy](./examples/case-studies/canopy.md) · [pawprint](./examples/case-studies/pawprint.md) · [notion-ai-settings](./examples/case-studies/notion-ai-settings.md) |
-| **integrations** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
+| **integrations** | [Claude Code](./integrations/claude-code.md), [Hermes](./integrations/hermes.md), [OpenClaw](./integrations/openclaw.md), [Codex CLI](./integrations/codex.md) |
 
 ## limitations
 
@@ -138,6 +152,7 @@ cp -r agentic-design-system/skills your-project/skills/
 - [PHILOSOPHY.md](./PHILOSOPHY.md) — design philosophy behind the system
 - [PHASE-2.md](./PHASE-2.md) — the control plane: presets, explainability, identity
 - [EXPLAINABILITY.md](./EXPLAINABILITY.md) — how `report.md` is generated and why it exists
+- [docs/influences.md](./docs/influences.md) — source influences and what ADS borrows from each
 
 ## contributing
 

@@ -27,15 +27,16 @@ minimal version:
 Before presenting any visual/UI work, run the appropriate skill chain:
 
 - **New visual work** → read and follow these in order:
-  1. skills/design-review/SKILL.md
-  2. skills/ux-baseline-check/SKILL.md
-  3. skills/whimsical-design/SKILL.md
-  4. skills/web-animation-design/SKILL.md
-  5. skills/ui-polish-pass/SKILL.md
+  1. skills/agentic-design-system/SKILL.md
+  2. skills/design-review/SKILL.md
+  3. skills/ux-baseline-check/SKILL.md
+  4. skills/ui-polish-pass/SKILL.md
 
 - **Modifying existing UI** → read and follow:
   1. skills/design-review/SKILL.md (pre-flight checklist only)
 
+- **Reference-led work** → also read skills/visual-reference-calibration/SKILL.md before coding
+- **Creative/motion work** → only then add whimsical-design, world-build, or web-animation-design
 - **Non-visual work** → skip the design chain
 
 Reference files are in skills/design-review/references/ — load only what's relevant.
