@@ -41,7 +41,7 @@ export default function Home() {
       <nav aria-label="Primary navigation" className="site-nav">
         <Link href="/" aria-label="Agentic Design System home" className="wordmark focus-ring focus-visible:outline focus-visible:outline-2">
           <span className="wordmark-full">Agentic Design System</span>
-          <span className="wordmark-short" aria-hidden="true">ADS</span>
+          <span className="wordmark-short" aria-hidden="true">Agentic DS</span>
         </Link>
         <div className="nav-links" aria-label="Page sections">
           <a href="#parts" className="nav-link focus-ring focus-visible:outline focus-visible:outline-2">
