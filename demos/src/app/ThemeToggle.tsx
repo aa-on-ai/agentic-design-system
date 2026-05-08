@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
@@ -14,31 +14,52 @@ function preferredTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
+function setRevealOrigin(button: HTMLElement) {
+  const root = document.documentElement;
+  const img = document.querySelector<HTMLElement>(".hero-image-dark");
+  const ref = img?.getBoundingClientRect();
+  const btn = button.getBoundingClientRect();
+  const cx = btn.left + btn.width / 2;
+  const cy = btn.top + btn.height / 2;
+  const x = ref ? cx - ref.left : cx;
+  const y = ref ? cy - ref.top : cy;
+  root.style.setProperty("--reveal-x", `${x}px`);
+  root.style.setProperty("--reveal-y", `${y}px`);
+}
+
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const next = preferredTheme();
     setTheme(next);
     document.documentElement.dataset.theme = next;
     setMounted(true);
+
+    // Set initial reveal origin to the button center so the first toggle
+    // animates from the correct point (not the CSS fallback).
+    if (buttonRef.current) {
+      setRevealOrigin(buttonRef.current);
+    }
   }, []);
+
+  // Keep the reveal origin in sync if the viewport resizes between toggles.
+  useEffect(() => {
+    if (!mounted) return;
+    const onResize = () => {
+      if (buttonRef.current) setRevealOrigin(buttonRef.current);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [mounted]);
 
   const toggleTheme = (event: React.MouseEvent<HTMLButtonElement>) => {
     const next = theme === "dark" ? "light" : "dark";
-    const btn = event.currentTarget.getBoundingClientRect();
-    const root = document.documentElement;
-    const img = document.querySelector<HTMLElement>(".hero-image-dark");
-    const ref = img?.getBoundingClientRect();
-    const cx = btn.left + btn.width / 2;
-    const cy = btn.top + btn.height / 2;
-    const x = ref ? cx - ref.left : cx;
-    const y = ref ? cy - ref.top : cy;
-    root.style.setProperty("--reveal-x", `${x}px`);
-    root.style.setProperty("--reveal-y", `${y}px`);
+    setRevealOrigin(event.currentTarget);
     setTheme(next);
-    root.dataset.theme = next;
+    document.documentElement.dataset.theme = next;
     window.localStorage.setItem("ads-theme", next);
   };
 
@@ -46,6 +67,7 @@ export function ThemeToggle() {
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       onClick={toggleTheme}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}

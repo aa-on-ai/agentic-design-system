@@ -274,18 +274,18 @@ code {
   /* Default (dark theme): full circle covers the light image.
      The reveal origin defaults to the toggle button area (top-right),
      and is updated to the click point on every theme toggle. */
-  clip-path: circle(160% at var(--reveal-x, calc(100% - 60px)) var(--reveal-y, 60px));
+  clip-path: circle(160% at var(--reveal-x, calc(100% - 40px)) var(--reveal-y, 40px));
   transition: clip-path 760ms cubic-bezier(0.65, 0, 0.35, 1);
   will-change: clip-path;
 }
 
 :root[data-theme="light"] .hero-image-dark {
-  clip-path: circle(0% at var(--reveal-x, calc(100% - 60px)) var(--reveal-y, 60px));
+  clip-path: circle(0% at var(--reveal-x, calc(100% - 40px)) var(--reveal-y, 40px));
 }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) .hero-image-dark {
-    clip-path: circle(0% at var(--reveal-x, calc(100% - 60px)) var(--reveal-y, 60px));
+    clip-path: circle(0% at var(--reveal-x, calc(100% - 40px)) var(--reveal-y, 40px));
   }
 }
 
