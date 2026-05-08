@@ -74,8 +74,9 @@ export default function Home() {
             </span>
             <h1>An open-source design kit your coding agent can borrow.</h1>
             <p className="hero-lede">
-              Design judgment is still yours. ADS is templates, skills, and checks your coding
-              agent reads while it works on UI. Use the whole kit, or copy one useful piece.
+              Agentic Design System (ADS) is templates, skills, and checks your coding agent
+              reads while it works on UI. Design judgment is still yours. Use the whole kit,
+              or copy one useful piece.
             </p>
 
             <div className="hero-install" role="group" aria-label="Install command">

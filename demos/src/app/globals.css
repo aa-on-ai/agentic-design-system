@@ -229,18 +229,18 @@ code {
   pointer-events: none;
   background:
     linear-gradient(98deg,
-      color-mix(in srgb, var(--page) 94%, transparent) 0%,
-      color-mix(in srgb, var(--page) 78%, transparent) 38%,
-      color-mix(in srgb, var(--page) 30%, transparent) 70%,
-      transparent 92%);
+      color-mix(in srgb, var(--page) 98%, transparent) 0%,
+      color-mix(in srgb, var(--page) 90%, transparent) 42%,
+      color-mix(in srgb, var(--page) 48%, transparent) 74%,
+      transparent 94%);
 }
 
 :root[data-theme="dark"] .hero-scrim {
   background:
     linear-gradient(98deg,
-      rgba(11, 18, 32, 0.92) 0%,
-      rgba(11, 18, 32, 0.66) 40%,
-      rgba(11, 18, 32, 0.18) 72%,
+      rgba(11, 18, 32, 0.96) 0%,
+      rgba(11, 18, 32, 0.78) 42%,
+      rgba(11, 18, 32, 0.32) 74%,
       transparent 96%);
 }
 
@@ -248,9 +248,9 @@ code {
   :root:not([data-theme="light"]) .hero-scrim {
     background:
       linear-gradient(98deg,
-        rgba(11, 18, 32, 0.92) 0%,
-        rgba(11, 18, 32, 0.66) 40%,
-        rgba(11, 18, 32, 0.18) 72%,
+        rgba(11, 18, 32, 0.96) 0%,
+        rgba(11, 18, 32, 0.78) 42%,
+        rgba(11, 18, 32, 0.32) 74%,
         transparent 96%);
   }
 }
@@ -324,10 +324,10 @@ code {
   align-self: flex-start;
   margin-bottom: 32px;
   color: var(--text);
-  font-size: 0.88rem;
-  font-weight: 720;
+  font-size: 0.96rem;
+  font-weight: 780;
   letter-spacing: -0.01em;
-  text-shadow: 0 1px 3px color-mix(in srgb, var(--page) 50%, transparent);
+  text-shadow: 0 1px 4px color-mix(in srgb, var(--page) 70%, transparent);
   pointer-events: none;
   user-select: none;
 }
@@ -367,9 +367,9 @@ h1, h2, h3 {
 .hero-lede {
   max-width: 50ch;
   margin: 24px 0 0;
-  color: var(--muted-strong);
+  color: var(--text);
   font-size: clamp(1rem, 1.45vw, 1.18rem);
-  font-weight: 600;
+  font-weight: 650;
   line-height: 1.45;
 }
 
@@ -401,20 +401,20 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: min(100%, 480px);
+  width: min(100%, 560px);
   margin-top: 32px;
 }
 
 .hero-install-label {
   margin: 0;
   padding: 0 4px;
-  color: var(--muted-strong);
+  color: var(--text);
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.74rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 760;
   letter-spacing: 0.04em;
   text-transform: lowercase;
-  text-shadow: 0 1px 2px color-mix(in srgb, var(--page) 50%, transparent);
+  text-shadow: 0 1px 3px color-mix(in srgb, var(--page) 70%, transparent);
 }
 
 /* Default install panel — solid surface, theme-adaptive (used in CTA section). */
@@ -506,20 +506,22 @@ h1, h2, h3 {
 }
 
 :root[data-theme="dark"] .hero-section .hero-command-strip {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.30);
+  background: rgba(6, 10, 18, 0.72);
+  border-color: rgba(255, 244, 223, 0.24);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 6px 18px rgba(0, 0, 0, 0.32);
+  color: #fff4df;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .hero-section .hero-command-strip {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.30);
+    background: rgba(6, 10, 18, 0.72);
+    border-color: rgba(255, 244, 223, 0.24);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
       0 6px 18px rgba(0, 0, 0, 0.32);
+    color: #fff4df;
   }
 }
 
@@ -529,14 +531,14 @@ h1, h2, h3 {
 }
 
 :root[data-theme="dark"] .hero-section .hero-command-strip:hover {
-  background: rgba(255, 255, 255, 0.26);
-  border-color: rgba(255, 255, 255, 0.44);
+  background: rgba(6, 10, 18, 0.84);
+  border-color: rgba(255, 244, 223, 0.34);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .hero-section .hero-command-strip:hover {
-    background: rgba(255, 255, 255, 0.26);
-    border-color: rgba(255, 255, 255, 0.44);
+    background: rgba(6, 10, 18, 0.84);
+    border-color: rgba(255, 244, 223, 0.34);
   }
 }
 
@@ -1190,22 +1192,33 @@ h1, h2, h3 {
   .hero-scrim {
     background:
       linear-gradient(180deg,
-        color-mix(in srgb, var(--page) 92%, transparent) 0%,
-        color-mix(in srgb, var(--page) 78%, transparent) 32%,
-        color-mix(in srgb, var(--page) 36%, transparent) 62%,
-        color-mix(in srgb, var(--page) 12%, transparent) 86%,
+        color-mix(in srgb, var(--page) 98%, transparent) 0%,
+        color-mix(in srgb, var(--page) 94%, transparent) 42%,
+        color-mix(in srgb, var(--page) 76%, transparent) 66%,
+        color-mix(in srgb, var(--page) 20%, transparent) 90%,
         transparent 100%);
   }
 
-  :root[data-theme="dark"] .hero-scrim,
-  :root:not([data-theme="light"]) .hero-scrim {
+  :root[data-theme="dark"] .hero-scrim {
     background:
       linear-gradient(180deg,
-        rgba(11, 18, 32, 0.95) 0%,
-        rgba(11, 18, 32, 0.82) 32%,
-        rgba(11, 18, 32, 0.42) 62%,
-        rgba(11, 18, 32, 0.16) 86%,
+        rgba(11, 18, 32, 0.98) 0%,
+        rgba(11, 18, 32, 0.90) 44%,
+        rgba(11, 18, 32, 0.68) 70%,
+        rgba(11, 18, 32, 0.38) 94%,
         transparent 100%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .hero-scrim {
+      background:
+        linear-gradient(180deg,
+          rgba(11, 18, 32, 0.98) 0%,
+          rgba(11, 18, 32, 0.90) 44%,
+          rgba(11, 18, 32, 0.68) 70%,
+          rgba(11, 18, 32, 0.38) 94%,
+          transparent 100%);
+    }
   }
 
   .hero-install {
@@ -1214,16 +1227,33 @@ h1, h2, h3 {
   }
 
   .hero-install-label {
-    font-size: 0.7rem;
+    font-size: 0.74rem;
+    font-weight: 780;
   }
 
   .hero-command-strip {
+    align-items: flex-start;
     padding: 10px 10px 10px 12px;
     gap: 8px;
   }
 
   .hero-command-code {
+    align-items: flex-start;
     font-size: 0.76rem;
+    line-height: 1.35;
+    white-space: normal;
+    overflow-x: visible;
+  }
+
+  .hero-command-prompt {
+    padding-top: 1px;
+  }
+
+  .hero-command-text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    overflow-wrap: anywhere;
   }
 
   .hero-command-copy {
