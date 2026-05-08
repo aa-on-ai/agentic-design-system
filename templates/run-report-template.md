@@ -17,6 +17,29 @@ copy this file into the project root as a template for the agent, or rely on the
 - **score:** judge total / 50 (before → after if comparing)
 - **verdict:** `ship` / `iterate` / `pivot` / `rebuild`
 
+## project knowledge intake
+
+record this before rule results when the task needed project context.
+
+- **context status:** existing brief used / intake updated brief / skipped because task was self-contained
+- **sources inspected:** docs, components, screenshots, references, prior decisions
+- **questions asked:** count + exact questions, or `0 — files answered the brief`
+- **identity artifact:** path to `DESIGN.md`, `guidelines.md`, preset, or project identity brief
+- **handoff summary:** audience, domain nouns, visual posture, constraints, anti-goals
+
+## reference intake (if applicable)
+
+record this before rule results when the task used a screenshot, site, CodePen, “make it feel like…” reference, or needed launch/editorial art direction.
+
+- **contract artifact:** path to `templates/reference-intake-contract.md`, copied contract, or `n/a`
+- **source/reference:** URL, screenshot path, file, or description
+- **primary borrowed layer:** structure / scale / motion / mood / typography / art style / surface / interaction model
+- **secondary borrowed layers:** list, or `none`
+- **do not borrow:** incidental chrome/content/structure that must stay out
+- **fidelity target:** close mimic / same spirit / loose cue
+- **comparison result:** screenshot path + 2–4 bullets on where the result matched the contract
+- **unresolved drift:** what still differs from the reference and whether that is acceptable, needs follow-up, or needs Aaron's decision
+
 ## rules fired
 
 surface every rule hit from the three deterministic scripts. count, severity, rule name, one-line description.

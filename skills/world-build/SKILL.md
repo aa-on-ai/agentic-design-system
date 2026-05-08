@@ -1,3 +1,11 @@
+---
+name: world-build
+description: >
+  Creative pack — use only when the user explicitly asks for immersion,
+  atmosphere, narrative depth, or a page that should feel like a place. Skip for
+  normal product UI, dashboards, forms, settings, and docs.
+---
+
 # World Build
 
 ## ⚠️ Creative Pack — NOT auto-apply
