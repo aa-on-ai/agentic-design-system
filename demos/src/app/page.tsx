@@ -223,7 +223,7 @@ export default function Home() {
               href="https://github.com/aa-on-ai/agentic-design-system"
               className="cta-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
             >
-              Read the README →
+              Review on GitHub
             </a>
           </div>
         </div>
