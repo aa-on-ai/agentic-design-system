@@ -6,6 +6,30 @@ copy this file into the project root as a template for the agent, or rely on the
 
 ---
 
+## outcome loop
+
+if this run used an outcome, link the outcome and grader artifacts.
+
+- **outcome:** path to `outcome.md` or `not used`
+- **grader report:** path to `grader-report.md` or `not used`
+- **grader:** model / lane, or `none`
+- **grader none reason:** required if no separate grader was used
+- **iteration:** current revision label or `n/a`
+- **loop verdict:** `satisfied` / `needs_revision` / `escalate` / `not used`
+
+event trail:
+
+```text
+outcome_defined | timestamp | note
+builder_started | timestamp | note
+artifact_created | timestamp | note
+grader_started | timestamp | note
+needs_revision | timestamp | note
+revision_started | timestamp | note
+satisfied | timestamp | note
+escalate | timestamp | note
+```
+
 ## header
 
 - **prompt:** one-line task description
@@ -91,5 +115,6 @@ only for benchmark runs. prose, 3–5 sentences. cite specific rule hits or rubr
 2. rubric buckets under 6 → `iterate` or `pivot` before presenting
 3. decisions worth preserving → propose diff to `guidelines.md`
 4. anything a human should double-check that a script cannot
+5. if a separate grader was not used, include the `grader none reason`
 
 keep follow-ups to ≤5 items. if you need more, the build probably needs another pass before a report is useful.

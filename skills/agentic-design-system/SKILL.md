@@ -5,17 +5,18 @@ description: >
   quality checks based on the task. Triggers on ANY visual, frontend, UI, design,
   component, page, layout, or styling work. Includes: anti-pattern detection,
   state completeness checks, accessibility verification, typography/color/spacing
-  guidance, and creative direction when needed. Install this one skill to get the
-  full system — it orchestrates everything else.
+  guidance, and creative direction when needed. The system is the loop: define
+  intent, build, grade, revise, and report evidence. This skill routes the
+  support tools inside that loop.
 ---
 
 # Agentic Design System
 
-you have a design system installed. this skill orchestrates it. read this BEFORE starting any visual work.
+you have ADS installed. using ADS means completing the operating loop — outcome, context, build, rubric/checks, revision, and evidence — not merely loading skills. read this BEFORE starting any visual work.
 
 ## how it works
 
-the system has two packs of skills installed alongside this one. you don't need to read them all — this file tells you which ones to read for your current task.
+the skills installed alongside this one are support tools for the ADS loop. you don't need to read them all — this file tells you which ones to call for your current task.
 
 ### core pack (read these for ALL visual work)
 - `skills/design-review/SKILL.md` — quality gate, reference files, verification scripts
@@ -65,6 +66,26 @@ is this visual or frontend work?
 
 if the default aesthetic is appropriate for the product, don't fight it. make it excellent, not different. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. core pack makes defaults excellent. creative pack makes them different. only add creative when different is what the product actually needs.
 
+## outcome + grader loop
+
+define the outcome before building when the task is a new page/component/flow, public or demo surface, broad layout/responsive/visual-system change, creative-pack task, touches two or more visual files, or the user explicitly asks to use ADS/the loop/a rubric/a grader. outcome means: artifact, rubric, revision limit, hard stops, and human escalation rule. use `templates/outcome-template.md` when available.
+
+the important split:
+
+- builder makes the artifact
+- grader evaluates the artifact in a separate context
+- builder revises from the grader's next prompt
+- human approves final judgment when the loop cannot clear or the decision is taste-sensitive
+- if no separate grader is available, write `grader: none` and `grader none reason` in the run report
+
+use `templates/grader-report-template.md` for the grader response. the grader returns:
+
+- `satisfied`
+- `needs_revision`
+- `escalate`
+
+when the revision limit is reached, return `escalate`. do not keep patching.
+
 ## design rubric (grade yourself before presenting)
 
 score your output on these 4 criteria before announcing. inspired by Anthropic's multi-agent harness research — separating generation from evaluation produces dramatically better work.
@@ -107,6 +128,20 @@ python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 
 fix any warnings before presenting work. these catch: agent default patterns (zinc palette, purple gradients, Inter font), missing states (loading, empty, error), and accessibility gaps (semantic HTML, aria labels, alt text, heading hierarchy).
+
+if an outcome was defined, update the run report with outcome events:
+
+```text
+outcome_defined
+builder_started
+artifact_created
+grader_started
+needs_revision
+revision_started
+satisfied
+escalate
+human_approved
+```
 
 ## what the reference files cover
 

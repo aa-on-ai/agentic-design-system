@@ -2,7 +2,7 @@
 
 your agent writes code. it writes UI that looks like every other AI-built UI — card grids, dark gradients, cramped spacing, missing error states.
 
-this is a loop your agent runs on every UI task: critique, fix, emit a report, then present. install one pack of skills, and your agent becomes its own design reviewer.
+ADS is the operating loop for agent-built UI: define intent, inspect context, build, grade against a rubric, revise, and leave evidence. the skills are support tools inside that loop, not the system by themselves.
 
 works with Claude Code, Cursor, Codex CLI, OpenClaw, and any tool that reads the [Agent Skills](https://agentskills.io) spec.
 
@@ -20,7 +20,7 @@ no preset fits? the [project identity template](./templates/project-identity-tem
 
 ## what it actually does
 
-on every UI task, your agent runs three passes before presenting:
+on every UI task, your agent runs the ADS loop before presenting: outcome, baseline/context, build, rubric/checks, revision, and report. the core skills provide the reusable checks inside that loop:
 
 - **design-review** catches anti-patterns, flags bad hierarchy, tests product-fit
 - **ux-baseline-check** makes sure loading, empty, error, and edge states exist (they usually don't)
@@ -28,11 +28,11 @@ on every UI task, your agent runs three passes before presenting:
 
 three more skills (whimsical-design, world-build, web-animation-design) are opt-in when the task actually calls for them. [routing](./routing/ROUTING.md) decides which fire.
 
-every run emits a [`report.md`](./templates/run-report-template.md) — rule hits, rubric scores, what got fixed, what's still your call. you know why it looks the way it does.
+every run emits a [`report.md`](./templates/run-report-template.md) — rule hits, rubric scores, what got fixed, what's still your call. for substantial work, start with an [`outcome.md`](./templates/outcome-template.md) and have a separate grader emit a [`grader-report.md`](./templates/grader-report-template.md). you know why it looks the way it does, who cleared it, and what the next revision prompt was.
 
 ## how this composes
 
-think of the system as one installable control plane with 8 skills doing different jobs in the loop:
+think of the system as one loop with 8 skills doing support jobs inside it:
 
 - **agentic-design-system** is the orchestrator. it tells the agent which skills exist, when to route into them, and how to leave behind a readable artifact instead of a mysterious "trust me."
 - **design-review** is the hard quality gate. it catches hierarchy, spacing, product-fit, and anti-pattern issues before the agent gets to call the work done.
@@ -43,7 +43,15 @@ think of the system as one installable control plane with 8 skills doing differe
 - **world-build** is optional atmosphere. it is for narrative environments and stronger visual framing, not default product chrome.
 - **web-animation-design** is optional motion direction. it handles when movement clarifies hierarchy or feel instead of becoming theater.
 
-that stack is the governance loop. the core skills raise the floor, the creative skills only enter when routing says they should, and the report explains what fired, what changed, and what still belongs to human judgment. phase 2 is basically making that loop visible enough that you can configure it, inspect it, and trust it without reading the whole repo first.
+that stack is the ADS loop. the core skills raise the floor, the creative skills only enter when routing says they should, and the report explains what fired, what changed, and what still belongs to human judgment. phase 2 is basically making that loop visible enough that you can configure it, inspect it, and trust it without reading the whole repo first.
+
+the newest primitive is the outcome + grader loop:
+
+```text
+outcome_defined -> builder_started -> artifact_created -> grader_started -> needs_revision -> revision_started -> satisfied
+```
+
+`outcome.md` defines what done means before work starts. `grader-report.md` keeps the evaluator in a separate context from the builder; if no separate grader is available, the run report must say `grader: none` and explain why. that split prevents the agent from rationalizing its own output and makes the next revision prompt explicit.
 
 for first-time setup, start with a preset plus [`project-identity-template.md`](./templates/project-identity-template.md). [`brand-guidelines-template.md`](./templates/brand-guidelines-template.md) stays around as a deprecated bridge for older integrations, but the project identity template is the current path.
 
@@ -110,7 +118,7 @@ cp -r agentic-design-system/skills your-project/skills/
 | **agent-friendly-design** | semantic HTML, ARIA, structured data, llms.txt, MCP patterns |
 | **verification scripts** | anti-pattern / state / accessibility (Python, stdlib only) |
 | **presets** | 3 opinionated starters + [portable JSON](./schemas/preset.schema.json) + [identity template](./templates/project-identity-template.md) |
-| **explainability** | [`report.md`](./templates/run-report-template.md) per run, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
+| **explainability** | [`outcome.md`](./templates/outcome-template.md), [`grader-report.md`](./templates/grader-report-template.md), [`report.md`](./templates/run-report-template.md) per run, [model](./EXPLAINABILITY.md), [examples](./examples/run-reports/) |
 | **case studies** | [canopy](./examples/case-studies/canopy.md) · [pawprint](./examples/case-studies/pawprint.md) · [notion-ai-settings](./examples/case-studies/notion-ai-settings.md) |
 | **integrations** | [Claude Code, Cursor, Codex CLI, OpenClaw](./integrations/) |
 
@@ -136,7 +144,7 @@ cp -r agentic-design-system/skills your-project/skills/
 ## further reading
 
 - [PHILOSOPHY.md](./PHILOSOPHY.md) — design philosophy behind the system
-- [PHASE-2.md](./PHASE-2.md) — the control plane: presets, explainability, identity
+- [PHASE-2.md](./PHASE-2.md) — presets, explainability, identity
 - [EXPLAINABILITY.md](./EXPLAINABILITY.md) — how `report.md` is generated and why it exists
 
 ## contributing

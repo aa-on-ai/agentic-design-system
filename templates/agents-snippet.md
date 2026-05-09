@@ -29,5 +29,13 @@ fix warnings before presenting.
 - read `guidelines.md` before building. if it doesn't exist, start from `templates/project-identity-template.md` (or a `presets/` starting point) and propose a draft.
 - after building, emit a `report.md` per `templates/run-report-template.md` — rule hits, rubric scores, follow-ups. this is the audit trail, not an optional extra.
 
+### outcome + grader loop
+- define an outcome before building when the task is a new page/component/flow, public or demo surface, broad layout/responsive/visual-system change, creative-pack task, touches 2+ visual files, or the user explicitly asks to use ADS/the loop/a rubric/a grader. use `templates/outcome-template.md`.
+- the outcome states the artifact, rubric, revision limit, hard stops, and human escalation rule.
+- use a separate grader context after the builder emits the artifact/report/screenshots. use `templates/grader-report-template.md`.
+- if no separate grader is available, write `grader: none` and a `grader none reason` in the report.
+- if the grader returns `needs_revision`, feed the `next revision prompt` back to the builder and run one bounded iteration.
+- if the loop cannot clear within the stated revision limit, record `escalate` and ask for human direction instead of patching forever.
+
 ### key rule
 if the default aesthetic is product-appropriate, don't fight it. make it excellent, not different.
