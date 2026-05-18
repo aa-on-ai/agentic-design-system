@@ -120,7 +120,7 @@ every audit should produce at least one update:
 
 - new anti-pattern discovered → add to `skills/design-review/references/anti-patterns.md`
 - missing state that keeps recurring → add to `skills/ux-baseline-check/SKILL.md` checklist
-- animation pattern that works well → add to `skills/web-animation-design/PRACTICAL-TIPS.md`
+- animation pattern that works well → add to `skills/web-animation-design/references/practical-tips.md`
 - project-specific learning → add to your `guidelines.md`
 
 the audit isn't just QA. it's the mechanism that makes the system smarter.

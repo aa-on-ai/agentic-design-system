@@ -69,7 +69,7 @@ surface every rule hit from the three deterministic scripts. count, severity, ru
 
 ## rubric
 
-two scoring frames. judge dimensions and the weighted 4-criterion rubric from `skills/agentic-design-system/SKILL.md`.
+two scoring frames. judge dimensions and the weighted 4-criterion rubric from `skills/agentic-design-system/references/rubric-and-loop.md`.
 
 ### judge dimensions (1–10)
 

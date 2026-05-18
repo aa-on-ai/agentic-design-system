@@ -1,116 +1,94 @@
 ---
 name: design-review
 description: >
-  Core pack — always active for visual work. Quality gate for UI, components, pages,
-  layouts, or frontend work. Triggers on any visual/design task automatically.
-  Use before presenting work, during builds, and for design QA.
+  Core visual quality gate for UI, components, pages, layouts, and frontend
+  work. Use before presenting visual work and during design QA.
 ---
 
-# Design Review Skill
+# Design Review
 
-## Core Pack — Always Active
-This is a core skill. Apply it on ALL visual and frontend work, no exceptions. You do not need permission or a specific trigger to use this.
+Apply this to visual/frontend work selected by the ADS router. It is a quality
+gate, not a taste manifesto.
 
-## When to Use
-- Before presenting ANY visual or UX work.
-- Treat this as a quality gate, not optional polish.
-- Sub-agents doing design/frontend work MUST run this before announcing completion.
+## When To Use
 
-## Pre-Work: Read Before Building
+- Before presenting visual or UX work.
+- During UI bug fixes, responsive fixes, screenshot review, and polish passes.
+- In sub-agents before they announce completion on design/frontend work.
 
-### 1. Read the project's guidelines
-- Read `guidelines.md` or equivalent design system doc first if it exists.
-- Follow the project's existing components, tokens, and patterns before inventing anything.
-- If no formal guidelines exist, inspect the existing product and match its logic.
+## When Not To Use
 
-### 2. Research before designing
-- Check how similar tools solve the same problem before inventing a pattern.
-- Use proven references when they exist.
-- Quality bar references:
-  - UX Tools — editorial restraint, typography, calm hierarchy
-  - Inflight by Ridd — motion, depth, data viz polish
-  - Linear — dense information, excellent hierarchy, no noise
-  - Vercel dashboard — spacing, typography, dark mode discipline
+- Non-visual backend, scripts, data, config, or dependency work.
+- Copy-only edits that do not affect UI hierarchy or presentation.
+- Motion-specific decisions; route those to web-animation-design.
 
-### 3. Check design memory
-- Read `memory/channels/{channel-name}.md` for prior design decisions.
-- If memory says Aaron rejected a pattern, don't repeat it.
-- If a project brain file is linked from channel memory, read that too.
+## Pre-Work
 
-## Aaron's Core Principles
-- Restraint IS the design.
-- Spacing is the #1 tell.
-- Typography hierarchy > color for information architecture.
-- Match references at pixel level before adding your own ideas.
-- Existing patterns > new patterns.
-- Interactive elements should feel polished, not dead.
-- If the foundation is wrong, no polish fixes it.
-- Good design is centripetal, not centrifugal.
+- Read project guidelines, DESIGN.md, or equivalent design system docs first.
+- Match existing components, tokens, and patterns before inventing new ones.
+- Inspect the existing product if formal guidelines do not exist.
+- Check relevant channel/project memory for rejected patterns or active direction.
+- Use real references when the brief names them or the pattern is well established.
+- Hot path: restraint, spacing, typography hierarchy, existing patterns, foundation before polish.
 
 ## Reference Files
-Read only what the task needs. Keep this SKILL lean, load detail on demand:
 
-- `references/typography.md` — hierarchy, scale, pairing, measure
-- `references/color.md` — restrained palettes, tinted neutrals, contrast, OKLCH
-- `references/spacing.md` — spacing system, rhythm, grouping, layout density
-- `references/motion.md` — timing, easing, reduced motion, interactive feel
-- `references/anti-patterns.md` — patterns Aaron will clock instantly and reject
+Load only what the task needs:
 
-### For sub-agents
-- Read the relevant reference files based on what you're building.
-- New layout or dashboard? Read spacing + anti-patterns.
-- Type-heavy screen? Read typography + spacing.
-- Color or theming work? Read color + anti-patterns.
-- Interactive polish? Read motion + anti-patterns.
-- If in doubt, at minimum read spacing + anti-patterns.
+- references/anti-patterns.md - common AI visual defaults to avoid
+- references/layout.md - composition, grids, and page structure
+- references/typography.md - hierarchy, scale, pairing, measure
+- references/color.md - restrained palettes, tinted neutrals, contrast
+- references/spacing.md - rhythm, grouping, layout density
+- references/alignment.md - radius, optical alignment, shadows, overlays
+- references/responsive.md - mobile and breakpoint checks
+- references/motion.md - baseline motion quality
+- references/ux-writing.md - labels, empty states, UI copy
+- references/mock-data.md - realistic product content
+- references/inspiration.md - reference priority and source handling
+
+Default references:
+
+- new layout or dashboard: spacing + anti-patterns
+- type-heavy screen: typography + spacing
+- color/theming: color + anti-patterns
+- interactive polish: motion + anti-patterns
+- unsure: spacing + anti-patterns
 
 ## Pre-Flight Checklist
-Run this EVERY TIME before presenting work to Aaron.
 
-### Step 1: Visual verification
-- [ ] Take a screenshot of the rendered result.
-- [ ] Compare side-by-side with the reference if one exists.
-- [ ] Check the target viewport, not an arbitrary devtools width.
+Before presenting work:
 
-### Step 2: Design audit
-- [ ] Spacing check — enough breathing room? Default to more.
-- [ ] Color check — did you add color that wasn't necessary?
-- [ ] Typography check — is hierarchy clear without leaning on color?
-- [ ] Pattern check — are you using the project's existing components?
-- [ ] Interaction check — hover, focus, active states exist and feel intentional.
-- [ ] Integrity check — no placeholders, dead states, broken assets, or missing data handling.
+- Render the result and inspect the target viewport.
+- Compare side by side with the reference or existing pattern.
+- Check spacing, color, typography, hierarchy, and component consistency.
+- Verify hover, focus, active, loading, empty, and error states when relevant.
+- Confirm no placeholders, broken assets, dead controls, or missing data handling.
+- Ask whether the work meets the brief, not an adjacent brief.
 
-### Step 3: Honesty check
-- [ ] Is it actually done?
-- [ ] Does it meet the brief, not an adjacent brief?
-- [ ] Would you be proud to show this to Aaron cold?
+## Scripts
 
-### Step 4: Run verification scripts
-if you have access to the scripts directory, run these before presenting:
+Run these when the scripts directory is available and the touched files are TSX:
 
 ```bash
-# check for common agent anti-patterns
-python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
-
-# verify loading, empty, and error states exist
-python3 skills/design-review/scripts/state-check.py <your-file.tsx>
-
-# check semantic HTML, aria labels, alt text, heading hierarchy
-python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
+python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 skills/design-review/scripts/state-check.py <file.tsx>
+python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 
-fix any warnings before presenting. these are the cheapest quality checks — they catch the obvious stuff so the human review can focus on judgment calls.
+Use ci/design-eval.py for PR integration.
 
-for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
+## Output
 
-### Step 5: Present with evidence
-- Screenshot of the result
-- What you referenced
-- Known gaps or uncertainties
-- Link to live/deployed version if applicable
+Report with evidence:
+
+- screenshot or visual inspection result
+- what changed
+- what reference or product pattern was used
+- verification commands run
+- known gaps or uncertainty
 
 ## Updating This Skill
-- After Aaron gives design feedback, capture it.
-- Add redirects to `references/anti-patterns.md` or the relevant reference file.
-- Add project-specific decisions to channel memory.
-- Goal: don't get the same design feedback twice.
+
+After durable design feedback, update the relevant reference file or project
+memory. Do not grow this SKILL.md with examples or doctrine.

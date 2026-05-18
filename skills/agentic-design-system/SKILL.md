@@ -1,164 +1,95 @@
 ---
 name: agentic-design-system
 description: >
-  Design system for AI agents that build UI. Automatically routes to the right
-  quality checks based on the task. Triggers on ANY visual, frontend, UI, design,
-  component, page, layout, or styling work. Includes: anti-pattern detection,
-  state completeness checks, accessibility verification, typography/color/spacing
-  guidance, and creative direction when needed. The system is the loop: define
-  intent, build, grade, revise, and report evidence. This skill routes the
-  support tools inside that loop.
+  Router for AI agents doing visual, frontend, UI, component, page, layout,
+  styling, or design work. ADS means define intent, gather context, build,
+  grade against a custom rubric, revise, and report evidence.
 ---
 
 # Agentic Design System
 
-you have ADS installed. using ADS means completing the operating loop — outcome, context, build, rubric/checks, revision, and evidence — not merely loading skills. read this BEFORE starting any visual work.
+Use ADS before visual work. Route narrowly, define the outcome when the work
+has meaningful visual risk, and report evidence. Do not load every skill by
+default.
 
-## how it works
+For visual work, the core quality path is the default. Creative, production,
+and motion skills are additive layers, not replacements.
 
-the skills installed alongside this one are support tools for the ADS loop. you don't need to read them all — this file tells you which ones to call for your current task.
+## When To Use
 
-### core pack (read these for ALL visual work)
-- `skills/design-review/SKILL.md` — quality gate, reference files, verification scripts
-- `skills/ux-baseline-check/SKILL.md` — loading, empty, error states
-- `skills/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
+- New or changed UI, frontend, component, page, layout, styling, motion, or visual system work.
+- Design QA, screenshot review, demo polish, responsive fixes, or public surface changes.
+- Any task where the user asks for ADS, a rubric, a grader, or evidence.
 
-### creative pack (read ONLY when triggered)
-- `skills/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
-- `skills/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
-- `skills/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
+## When Not To Use
 
-### agent-friendly (read for production sites)
-- `skills/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
+- Backend, scripts, data, config, docs, or research with no visual artifact.
+- Copy-only edits unless they affect UI hierarchy, UX writing, or presentation.
+- Mechanical dependency or formatting work.
 
-## project handoff context (DESIGN.md)
+## Project Context
 
-if a `DESIGN.md` file exists at the repo root — or at a path the orchestrator passes in — load it as handoff context **before** building. it is the normative source of truth for design tokens (colors, typography, spacing, rounded, components) and a prose overlay for atmosphere, component tone, and anti-goals.
+If DESIGN.md exists at the repo root, or the orchestrator passes one in, read
+it before building. It is the normative design handoff.
 
-- YAML frontmatter tokens win on conflicts with prose
-- prose gives the **why** so the agent can judge edge cases
-- unknown sections are preserved without error per the spec, so this repo's one extension (`Example Prompting Language`) is safe to use
+- YAML frontmatter tokens win over prose on direct conflicts.
+- Prose explains judgment, anti-goals, and edge cases.
+- Preserve unknown sections without error.
 
-the project-identity template for this repo lives at `templates/project-identity-template.md` and is DESIGN.md-shaped. worked examples live in `testing/fixtures/` — three bespoke (canopy, pawprint, notion-ai-settings) and three real from the ecosystem (airbnb, linear, notion).
+The DESIGN.md-shaped template lives at templates/project-identity-template.md.
 
-format reference: https://github.com/google-labs-code/design.md (alpha — this repo consumes the format, does not author tooling for it)
+## Routing
 
-prior art / ecosystem: https://github.com/VoltAgent/awesome-design-md — curated real-world DESIGN.md examples. the three real fixtures in `testing/fixtures/` were pulled via `npx getdesign@latest add <slug>`.
+Start with the smallest branch that matches, then add any extra layers that
+also apply:
 
-## routing decision
+- Non-visual task: skip ADS.
+- Existing UI modification: read design-review.
+- New page, component, or flow: read design-review, ux-baseline-check, and ui-polish-pass.
+- Production surface: add agent-friendly-design.
+- Animation, motion, or interaction feel: add web-animation-design.
+- Personality, delight, or brand expression: add whimsical-design.
+- Immersion, atmosphere, or world feel: add world-build.
 
-```
-is this visual or frontend work?
-├── no → skip everything, do the task
-└── yes
-    ├── new page/component → read core pack skills, then build
-    ├── modification to existing UI → read design-review only
-    └── non-visual (scripts, backend, config) → skip
-    
-    does it need creative direction?
-    ├── user asked for personality/delight → also read whimsical-design
-    ├── user asked for immersion/atmosphere → also read world-build  
-    ├── task involves animation specifically → also read web-animation-design
-    └── none of the above → core pack is enough
-```
+Creative skills are opt-in. If the product should be quiet and utilitarian,
+make the default excellent instead of making it different.
 
-## the key rule
+## Outcome And Grader Loop
 
-if the default aesthetic is appropriate for the product, don't fight it. make it excellent, not different. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. core pack makes defaults excellent. creative pack makes them different. only add creative when different is what the product actually needs.
+Define an outcome before building when the task is:
 
-## outcome + grader loop
+- a new page, component, flow, public/demo surface, or broad responsive/layout change
+- a creative-pack task
+- touching two or more visual files
+- explicitly asking for ADS, a rubric, a grader, or the loop
 
-define the outcome before building when the task is a new page/component/flow, public or demo surface, broad layout/responsive/visual-system change, creative-pack task, touches two or more visual files, or the user explicitly asks to use ADS/the loop/a rubric/a grader. outcome means: artifact, rubric, revision limit, hard stops, and human escalation rule. use `templates/outcome-template.md` when available.
-
-the important split:
+Use templates/outcome-template.md when available. The split is:
 
 - builder makes the artifact
-- grader evaluates the artifact in a separate context
-- builder revises from the grader's next prompt
-- human approves final judgment when the loop cannot clear or the decision is taste-sensitive
-- if no separate grader is available, write `grader: none` and `grader none reason` in the run report
+- grader evaluates in a separate context when available
+- builder revises from grader feedback
+- human approves final taste-sensitive calls
+- if no separate grader is available, write grader: none and grader none reason
 
-use `templates/grader-report-template.md` for the grader response. the grader returns:
+Use templates/grader-report-template.md for grader output and
+templates/run-report-template.md for the final receipt. Longer rubric guidance
+lives in references/rubric-and-loop.md.
 
-- `satisfied`
-- `needs_revision`
-- `escalate`
+## Required Checks
 
-when the revision limit is reached, return `escalate`. do not keep patching.
+Before presenting visual work:
 
-## design rubric (grade yourself before presenting)
+- Render it and inspect the target viewport.
+- Compare against the reference or existing product pattern.
+- Run the relevant design-review scripts when available.
+- State what changed, what was checked, and any remaining uncertainty.
 
-score your output on these 4 criteria before announcing. inspired by Anthropic's multi-agent harness research — separating generation from evaluation produces dramatically better work.
+If Design Quality or Originality would score below 6/10, revise before presenting.
 
-| Criteria | Weight | What it means | Failing looks like |
-|----------|--------|--------------|-------------------|
-| **Design Quality** | 35% | Does it feel like a coherent whole? Colors, typography, layout, spacing combine into a distinct mood and identity. | Components feel disconnected. No visual theme. "Collection of parts" energy. |
-| **Originality** | 30% | Evidence of custom decisions? Or is this template layouts, library defaults, and AI-generated patterns? A human designer should recognize deliberate creative choices. | Purple gradients over white cards. Unmodified shadcn. Zinc-800 everywhere. Stock hero sections. |
-| **Craft** | 20% | Technical execution: typography hierarchy, spacing consistency, color harmony, contrast ratios. Competence check. | Broken fundamentals. Inconsistent spacing. Missing hover states. Bad contrast. |
-| **Functionality** | 15% | Can users understand what it does, find primary actions, complete tasks without guessing? | Unclear CTAs. Hidden navigation. Confusing state transitions. |
+## References
 
-**Design Quality and Originality are weighted highest.** models already score well on Craft and Functionality by default. the gap is always in making something that feels intentional and distinctive vs. generic.
-
-### scoring guide
-- **8-10:** ship it. would impress a human designer.
-- **6-7:** functional but needs another pass. common for first iteration.
-- **4-5:** generic AI slop. needs a creative pivot, not polish.
-- **1-3:** broken fundamentals. rebuild.
-
-**if you score yourself below 6 on Design Quality or Originality, don't present. iterate.**
-
-## iteration philosophy
-
-more iterations with structured feedback produce breakthroughs. Anthropic's harness research found that on iteration 10 of a museum site, the model reimagined the entire approach as a 3D spatial experience — something that would never emerge from a single pass.
-
-**rules for iteration:**
-- don't stop at "good enough" on creative work. push for at least 3 passes on new pages/components.
-- after each pass, score yourself on the rubric. if Design Quality or Originality aren't improving, **pivot the aesthetic entirely** instead of refining the current direction.
-- refinement and pivoting are both valid. if scores trend up, refine. if scores plateau, pivot.
-- the "2 rounds of fixes = rebuild" rule applies to BUG FIXES, not creative iteration. creative exploration benefits from more rounds, not fewer.
-
-## verification (run before presenting)
-
-after building AND scoring yourself on the rubric, run these scripts:
-
-```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
-```
-
-fix any warnings before presenting work. these catch: agent default patterns (zinc palette, purple gradients, Inter font), missing states (loading, empty, error), and accessibility gaps (semantic HTML, aria labels, alt text, heading hierarchy).
-
-if an outcome was defined, update the run report with outcome events:
-
-```text
-outcome_defined
-builder_started
-artifact_created
-grader_started
-needs_revision
-revision_started
-satisfied
-escalate
-human_approved
-```
-
-## what the reference files cover
-
-when you read `skills/design-review/SKILL.md`, it points to reference files in `skills/design-review/references/`. you don't need to read all of them — only load what's relevant:
-
-- `anti-patterns.md` — what NOT to do (always worth reading)
-- `layout.md` — composition and grid-breaking (read for new pages)
-- `typography.md` — type hierarchy, pairing, text-wrap (read when type feels off)
-- `color.md` — palette strategy, tinted neutrals (read when color feels generic)
-- `spacing.md` — rhythm and judgment (read when spacing feels cramped or uniform)
-- `alignment.md` — concentric radius, optical alignment, shadows, image overlays (read for polish)
-- `responsive.md` — mobile failures and what to check (read for responsive work)
-- `motion.md` — interruptibility, enter/exit asymmetry (read when adding motion)
-- `ux-writing.md` — copy quality, button labels, empty states (read when writing UI text)
-- `mock-data.md` — realistic content, where humor goes (read when generating sample data)
-- `inspiration.md` — context pass, reference priority (read when building for a named company)
-
-## compounding
-
-after each build, if you learned something new — a pattern that worked, an anti-pattern you hit, a design decision worth preserving — add it to the relevant reference file. the system gets smarter every time it's used.
+- references/rubric-and-loop.md - detailed rubric, loop events, iteration rules
+- templates/outcome-template.md - outcome definition
+- templates/grader-report-template.md - separate grader response
+- templates/run-report-template.md - evidence receipt
+- routing/ROUTING.md - install/package routing details

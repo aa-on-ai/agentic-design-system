@@ -106,7 +106,7 @@ use for layout decisions and visual direction. not for button colors.
 
 - only load reference files you actually need
 - creative pack skills are short — low token cost when loaded
-- web-animation-design has a PRACTICAL-TIPS.md supplement — load only when doing animation work
+- web-animation-design has references/practical-tips.md — load only when doing animation work
 - if you're doing review-only, one skill file is all you need
 
 ## compounding

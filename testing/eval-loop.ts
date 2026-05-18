@@ -660,7 +660,7 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     '',
     '1. anti-pattern hits present on the after variant → candidates for `skills/design-review/references/anti-patterns.md`',
     '2. judge dimensions under 7 on after → iterate before shipping',
-    '3. rubric weights from `skills/agentic-design-system/SKILL.md` (Design Quality 35%, Originality 30%, Craft 20%, Functionality 15%) are not automatically scored here — apply manually before verdict',
+    '3. rubric weights from `skills/agentic-design-system/references/rubric-and-loop.md` (Design Quality 35%, Originality 30%, Craft 20%, Functionality 15%) are not automatically scored here — apply manually before verdict',
     '',
     '## raw',
     '',

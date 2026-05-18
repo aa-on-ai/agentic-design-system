@@ -49,7 +49,7 @@ Codex CLI (GPT-5.3/5.4) has a large context window (~1M tokens). you can be gene
 this is an advantage over smaller-context tools. lean into it:
 - load all relevant reference files when doing a full quality pass
 - include detailed examples in your guidelines.md
-- the PRACTICAL-TIPS.md supplement for animations is worth loading
+- the `skills/web-animation-design/references/practical-tips.md` supplement for animations is worth loading
 
 ### autonomous vs interactive
 
