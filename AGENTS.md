@@ -30,13 +30,23 @@ read `routing/ROUTING.md` before starting any visual task. it tells you:
 
 ## verification
 
-after building, run:
+two tiers — see `skills/design-review/scripts/README.md`.
+
+**pre-flight (source heuristics, gameable).** cheap grep over source; catch obvious defaults early:
 ```bash
 python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
 python3 skills/design-review/scripts/state-check.py <your-file.tsx>
 python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
 ```
-fix warnings before presenting work.
+
+**authoritative (rendered evidence — gate on this).** axe on the live DOM, screenshots per
+state/breakpoint, real overflow, computed fonts. a state passes only if it actually renders:
+```bash
+node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+  --states default,loading,empty,error --out evidence/<slug>
+```
+the verdict rests on rendered evidence; source heuristics are advisory. fix serious axe
+violations and overflow before presenting work.
 
 ## key rules
 - core pack is always-on for visual work. you don't need permission to use it.

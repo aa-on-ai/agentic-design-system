@@ -39,9 +39,25 @@ record this before rule results when the task used a screenshot, site, CodePen, 
 - **comparison result:** screenshot path + 2-4 bullets on where the result matched the contract
 - **unresolved drift:** what still differs from the reference and whether that is acceptable, needs follow-up, or needs Aaron's decision
 
-## rules fired
+## rendered evidence (authoritative — gate on this)
 
-surface every rule hit from the three deterministic scripts. count, severity, rule name, one-line description.
+from `capture.mjs` against the live route. this is the non-gameable tier: axe ran on the
+real DOM, overflow is measured, "rendered" means the state actually produced content.
+
+| signal | result | gate |
+|---|---|---|
+| serious/critical axe violations | (n) | fail if > 0 |
+| horizontal overflow | (none / state@WxH) | fail if any |
+| states rendered | loading=?, empty=?, error=? | fail if any required state did not render |
+| rendered font(s) | (computed font-family) | flag if a known agent default (Inter) actually renders |
+| screenshots | (paths) | required for verdict |
+
+> if no rendered evidence is attached, the verdict cannot be `satisfied`. source heuristics below are pre-flight only.
+
+## rules fired (source heuristics — pre-flight, gameable)
+
+these grep the `.tsx` source and can pass on a comment. treat as advisory, not sign-off.
+count, severity, rule name, one-line description.
 
 ### anti-pattern-check.py
 
