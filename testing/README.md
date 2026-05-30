@@ -26,28 +26,69 @@ Defaults: generator `claude-sonnet-4-6`, judge `claude-opus-4-8` (override with
 `--generator` / `--judge` or `EVAL_GENERATOR_MODEL` / `EVAL_JUDGE_MODEL`). Generator and
 judge are intentionally different — the judge must not be the builder.
 
-## Honest limitation (read this)
+`eval-loop.ts` still judges **TSX source**, not pixels (its `detectResponsiveClasses` greps
+`sm:`/`md:` classes; `judge-prompt.md` grades source). Treat its scores as directional. The
+render-based path below is the authoritative one.
 
-**Today the judge scores TSX source, not pixels.** `judge-prompt.md` says "judge from the
-TSX source and the likely UI it would produce," and `detectResponsiveClasses` greps for
-`sm:`/`md:` classes. The original `eval-spec.md` promised "viewport screenshots" — that was
-never implemented. So this eval shares the same source-only weakness the per-build gates had
-before `capture.mjs`.
+## render-eval.mjs — judge from screenshots, not source
 
-## Render-integration path (the real fix)
+`render-eval.mjs` mounts a generated variant as a real route, captures it with
+`capture.mjs` (axe on the live DOM, screenshots per state/breakpoint, real overflow), and
+feeds the **screenshots** to the judge. Same 5-dimension rubric as the source judge — only
+the input modality changes (`judge-render-prompt.md`).
 
-`skills/design-review/scripts/capture.mjs` is the rendered-evidence primitive (proven against
-`fixtures/states-demo.html`). To make this eval render-based:
+Pipeline per variant: **mount (esbuild → html) → capture.mjs → judge from screenshots.**
+Every stage failure becomes an explicit skip receipt — no silent drops.
 
-1. Mount each generated `before.tsx` / `after.tsx` as a route in `demos/` (the Next app),
-   or static-render it, so each variant has a reachable URL.
-2. Run `capture.mjs <url> --states default,empty,loading,error` per variant.
-3. Replace the source penalties (`detectResponsiveClasses`, the regex state/a11y greps) with
-   `evidence.json` gates (serious axe, real overflow, did the state render).
-4. Feed the **screenshots** to the judge instead of the TSX, mirroring
-   `workflows/new-page-component.mjs` (which already grades on screenshots).
+### Setup (once)
 
-Until step 4 lands, treat eval scores as directional, not authoritative — same two-tier rule
-as `skills/design-review/scripts/README.md`. Known build risk for step 1: generated pages
-often import icon/font libs, so the mount harness needs a tolerant build + a recorded skip
-list rather than silent drops.
+```bash
+npm install                      # playwright, @axe-core/playwright, esbuild (root manifest)
+npm run playwright:install       # chromium
+```
+
+Variants' own imports (`react`, `lucide-react`, `recharts`, …) resolve from
+`demos/node_modules`, so the demos app must have run `npm install` too.
+
+### Commands
+
+```bash
+# deterministic fixture path — no API key, no network:
+node testing/render-eval.mjs --fixture
+npm run render-eval:smoke         # runs the fixture path + asserts the receipts
+
+# a real variant (judge sends screenshots to the model when a key is set):
+node testing/render-eval.mjs --variant path/to/page.tsx --slug orders --name after \
+  --states default,empty,loading,error --prompt "build an orders page"
+```
+
+Judge: if `ANTHROPIC_API_KEY` is set, screenshots are sent to the model (`--judge` /
+`EVAL_JUDGE_MODEL`, default `claude-opus-4-8`). If **not** set, a deterministic stub records
+exactly which screenshots + gates *would* be sent — so the fixture path runs offline and the
+screenshot-wiring stays provable.
+
+### Output (under `evidence/render/<slug>/`, gitignored)
+
+- `<variant>/receipt.json` — gates + judge result (or stub) + mounted html + evidence path
+- `<variant>/capture/` — screenshots + `evidence.json` from `capture.mjs`
+- `skips.json` — every skipped variant with its stage and concrete reason
+- `render-report.md` — one-table summary
+
+### Limitations (read this)
+
+- **Per-state capture needs the component to honor `#state=`.** The fixture does (it reads
+  `location.hash`); arbitrary generated pages render their default, so capture still gets
+  breakpoints + axe + overflow but not distinct empty/loading/error frames unless the page
+  exposes them. This is a property of the generated page, not the harness.
+- **Tailwind:** fixtures use inline styles (offline). Real Tailwind variants need
+  `--tailwind cdn`, which injects the Tailwind Play CDN and therefore needs network at capture.
+- **Tolerant build:** a variant that imports a missing icon/font/chart lib fails the esbuild
+  stage and is recorded in `skips.json` with the unresolved specifier — never dropped silently.
+- The judge sends up to 4 screenshots per variant (default state across breakpoints first) to
+  bound tokens.
+
+## Still source-only (next step)
+
+`render-eval.mjs` grades a single rendered variant. The **A/B on-vs-off** comparison still
+lives in `eval-loop.ts` and judges source. Wiring `eval-loop`'s generated `before`/`after`
+through `render-eval` (render both, compare rendered scores) is the remaining step.

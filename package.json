@@ -1,0 +1,16 @@
+{
+  "name": "agentic-design-system-eval-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dev-only dependency manifest for the ADS render-based eval harness (capture.mjs + render-eval.mjs). Not part of the published skills package.",
+  "scripts": {
+    "render-eval:smoke": "node testing/render-eval-smoke.mjs",
+    "render-eval:fixture": "node testing/render-eval.mjs --fixture",
+    "playwright:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "esbuild": "^0.24.0",
+    "playwright": "^1.49.0"
+  }
+}
