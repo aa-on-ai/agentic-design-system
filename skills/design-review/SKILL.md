@@ -53,7 +53,8 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - `references/typography.md` — hierarchy, scale, pairing, measure
 - `references/color.md` — restrained palettes, tinted neutrals, contrast, OKLCH
 - `references/spacing.md` — spacing system, rhythm, grouping, layout density
-- `references/motion.md` — timing, easing, reduced motion, interactive feel
+- `references/motion.md` — timing, easing, reduced motion, interactive feel, named motion vocabulary
+- `references/mobile.md` — mobile review profile: design-judgment vs platform-defect passes, decision forks, severity tiers
 - `references/anti-patterns.md` — patterns Aaron will clock instantly and reject
 
 ### For sub-agents
@@ -62,6 +63,7 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - Type-heavy screen? Read typography + spacing.
 - Color or theming work? Read color + anti-patterns.
 - Interactive polish? Read motion + anti-patterns.
+- Mobile / responsive / app / PWA review? Read mobile + responsive.
 - If in doubt, at minimum read spacing + anti-patterns.
 
 ## Pre-Flight Checklist

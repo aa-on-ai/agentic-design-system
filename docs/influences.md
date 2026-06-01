@@ -38,6 +38,18 @@ ADS is assembled from public ideas and local dogfooding. These are influences, n
 - What ADS borrows: small interface details matter, and agents benefit from explicit micro-quality heuristics.
 - What ADS changes: ADS places those heuristics inside a broader intent, baseline, rubric, evidence, and grader loop.
 
+## thumb-first
+
+- Source: <https://github.com/kylezantos/thumb-first> (MIT, © Kyle Zantos)
+- What ADS borrows: the core structural idea that mobile review is two independent passes — subjective design judgment vs objective platform defects — with a strict separation rule ("a preference must never read as a must-fix"). Also the decision-forks framing (recurring mobile decisions with no universal right answer) and severity-tiered (P0–P3) defects with `file:line`.
+- What ADS does not copy: the three-skill pack, its named-designer lens roster, and repo files. MIT would permit vendoring, but ADS re-expresses the structure as a routing profile plus `skills/design-review/references/mobile.md` and report sections, keeping it inside ADS's existing orchestrator rather than adding a parallel skill suite. Lenses are re-stated as plain review questions, not attributed voices.
+
+## animations.dev vocabulary
+
+- Source: <https://animations.dev/vocabulary> (Emil Kowalski, "Animations on the Web")
+- What ADS borrows: a shared, promptable motion vocabulary — named patterns (crossfade, shared element transition, direction-aware transition, rubber-banding, stagger, …) so reviewers and agents use precise nouns instead of "make it smooth."
+- What ADS does not copy: course content or wording. ADS curates a review-relevant subset in `references/motion.md`, ties each name to one of four jobs (state / hierarchy / causality / feedback) with default timing/easing, a reduced-motion fallback, and an evidence expectation, and links out for the full lexicon and implementation depth (`web-animation-design`).
+
 ## Agent2Agent / A2A
 
 - Sources: <https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/> and <https://a2a-protocol.org/latest/specification/>

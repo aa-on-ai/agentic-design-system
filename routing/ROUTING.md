@@ -144,6 +144,33 @@ run:
 
 examples: adjusting spacing, updating copy, minor layout tweaks, checking a screen before merge.
 
+## Mobile + motion review
+
+trigger when the task is mobile/responsive review, or names: mobile, responsive, app, PWA,
+iOS, Android, safe area, notch, thumb zone/reach, touch targets, gesture, or "review this on a
+phone." also trigger the motion pass when the work involves animation/transition/interaction
+feel on any surface.
+
+split the review into two passes that stay in separate report sections (read
+`skills/design-review/references/mobile.md`):
+
+1. **design judgment** — opinions, ranked by user impact. thumb reach, focus, navigation
+   pattern, density, gesture discoverability, and the mobile decision forks (name the fork,
+   state the tradeoff, point to the signal — don't pick silently).
+2. **platform verification** — objective defects, severity-tiered P0–P3 with `file:line`.
+   viewport, safe area, touch-target size, hover-only bugs, PWA/web defects, perf/layout.
+
+**hard rule:** a preference must never read as a must-fix, and a P0 must never read as a matter
+of taste. keep opinions and defects visually distinct in the report.
+
+**motion vocabulary pass:** when reviewing motion, use the named patterns in
+`skills/design-review/references/motion.md` (shared vocabulary). for each animation, name the
+pattern, state which job it serves (state / hierarchy / causality / feedback), give default
+timing/easing, confirm a reduced-motion fallback, and say what the evidence is. motion that
+serves none of the four jobs gets cut. for implementation depth, add `web-animation-design`.
+
+report sections: `templates/run-report-template.md` → mobile review + motion vocabulary.
+
 ## Agent-friendly pass
 
 for any web project shipping to production where agents may consume or interact with the site. runs independently from the visual quality chain.
