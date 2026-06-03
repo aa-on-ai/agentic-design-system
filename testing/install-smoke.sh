@@ -48,4 +48,29 @@ for template in outcome-template.md grader-report-template.md; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills and bundled outcome/grader templates"
+# Runnable workflow runbooks must ship with the orchestrator skill AND stay byte-identical to the
+# canonical top-level workflows/ — otherwise installed agents get a stale steering wheel.
+runbooks=(
+  create-design-workflow.md
+  mobile-review.md
+  adversarial-design-review.md
+  install-usability-smoke.md
+  readme-docs-critique.md
+  cold-agent-usage-test.md
+)
+
+for runbook in "${runbooks[@]}"; do
+  installed="$TMP_DIR/.agents/skills/agentic-design-system/workflows/$runbook"
+  canonical="$ROOT/workflows/$runbook"
+  if [[ ! -f "$installed" ]]; then
+    echo "missing bundled workflow runbook: $runbook" >&2
+    exit 1
+  fi
+  if ! diff -q "$canonical" "$installed" >/dev/null; then
+    echo "workflow runbook drift: workflows/$runbook != bundled skills/agentic-design-system/workflows/$runbook" >&2
+    echo "  re-sync: cp workflows/$runbook skills/agentic-design-system/workflows/$runbook" >&2
+    exit 1
+  fi
+done
+
+echo "install smoke passed: ${#expected[@]} skills, bundled outcome/grader templates, and ${#runbooks[@]} workflow runbooks (in sync)"
