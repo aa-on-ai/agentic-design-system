@@ -40,7 +40,7 @@ for skill in "${expected[@]}"; do
   fi
 done
 
-for template in outcome-template.md grader-report-template.md; do
+for template in outcome-template.md grader-report-template.md run-report-template.md; do
   path="$TMP_DIR/.agents/skills/agentic-design-system/templates/$template"
   if [[ ! -f "$path" ]]; then
     echo "missing bundled template: $template" >&2
