@@ -2,6 +2,10 @@
 
 how to decide which skills to run and when.
 
+> Runnable entrypoint: [`workflows/create-design-workflow.md`](../workflows/create-design-workflow.md)
+> routes a task into the right profile or workflow by intent. this doc is the decision logic; the
+> [`workflows/`](../workflows/) runbooks are operational wrappers around it.
+
 ## Two packs
 
 **core pack** (always active for visual work):
