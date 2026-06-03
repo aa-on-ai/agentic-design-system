@@ -1,5 +1,12 @@
 # agentic design system — agent instructions
 
+## start here
+
+for any "help me design or review some UI" task, start at
+[`workflows/create-design-workflow.md`](workflows/create-design-workflow.md). it routes you into
+the right profile or workflow by intent. the runbooks in [`workflows/`](workflows/) are runnable
+wrappers around the routing logic below.
+
 ## skills
 
 this repo contains 9 design skills: one orchestrator plus core, reference, production, and creative packs.

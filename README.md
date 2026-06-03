@@ -22,6 +22,22 @@ Intent -> baseline -> rubric -> build with evidence -> grade and revise.
 
 That loop is the product. Presets, checks, and archived fixtures are support machinery.
 
+## Workflows
+
+If you just want to *use* ADS, start at [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.md).
+It's the default "help me design or review something" entrypoint and routes you into the right
+path by intent. Each runbook in [`workflows/`](./workflows/) is decision-shaped — when to use it,
+what to read, what to run, what evidence is required, what report to produce, and when to stop.
+
+| Workflow | Use it to |
+|---|---|
+| [create-design-workflow](./workflows/create-design-workflow.md) | route any design/review task to the right profile (start here) |
+| [mobile-review](./workflows/mobile-review.md) | review a mobile/responsive/app/PWA screen (judgment vs defects, two passes) |
+| [adversarial-design-review](./workflows/adversarial-design-review.md) | critique finished UI from a context that didn't build it |
+| [install-usability-smoke](./workflows/install-usability-smoke.md) | verify ADS installs and the bundled skills/templates are present |
+| [readme-docs-critique](./workflows/readme-docs-critique.md) | judge whether the docs let a newcomer onboard |
+| [cold-agent-usage-test](./workflows/cold-agent-usage-test.md) | test whether a brand-new agent can use ADS unaided |
+
 ## Install
 
 Most exact path from the version you are reviewing:
