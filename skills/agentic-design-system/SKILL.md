@@ -22,6 +22,19 @@ first, run, evidence, output, blocked when, stop when). these ship with this ski
 the canonical copies live at the repo root `workflows/` and the two are kept in sync by the
 install smoke's drift guard.
 
+> **Installed, not cloned? Read this.** Paths in ADS docs are written **repo-root-relative**
+> (`workflows/...`, `routing/ROUTING.md`, `templates/...`, `skills/design-review/scripts/...`).
+> If you installed ADS as skills rather than cloning the repo, those paths do **not** exist at
+> your project root — they live under your agent's skills directory. Resolve every ADS path
+> under that root (for the skills CLI that's `.agents/skills/`). So:
+> - `workflows/create-design-workflow.md` → `.agents/skills/agentic-design-system/workflows/create-design-workflow.md`
+> - `skills/design-review/scripts/capture.mjs` → `.agents/skills/design-review/scripts/capture.mjs`
+> - `skills/design-review/references/mobile.md` → `.agents/skills/design-review/references/mobile.md`
+> - `templates/run-report-template.md` → `.agents/skills/agentic-design-system/templates/run-report-template.md`
+>
+> `routing/ROUTING.md` and the top-level `README`/`AGENTS` are repo-only; the runbooks above
+> stand alone without them.
+
 ## How it works
 
 the system installs a routing skill plus focused helper skills. you don't need to read them all — this file tells you which ones to read for your current task.
