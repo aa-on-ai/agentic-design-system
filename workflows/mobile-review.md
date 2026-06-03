@@ -48,6 +48,12 @@ Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defect
 - `seriousAxeViolations > 0` → P0/P1 (by impact), cite the axe rule id
 - `horizontalOverflowAt` non-empty → P0 (overflow at that breakpoint)
 - a required state with `stateRendered: false` → P1 (the state never renders)
+- `touchTargetsUnder44` non-empty → **P1** for each entry (an interactive control under
+  44×44 CSS px), citing `selector size (state@breakpoint)` — **unless there is an explicit
+  exception**: the hit area is legitimately extended beyond the box (padding or a `::before`
+  pseudo-element), or the control is decorative/`aria-hidden`. capture can't see an extended
+  hit area, so when you downgrade one, name the reason and add `data-ads-target-ok` to the
+  control so it stops being flagged.
 
 Then eyeball the screenshots for what the gates don't measure: safe-area insets, touch-target
 size, hover-only traps, PWA manifest/offline. `capture.mjs` ships with the design-review skill,

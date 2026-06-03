@@ -109,7 +109,50 @@ async function readComputedFacts(page, selectors) {
     const body = document.body;
     // Landmark / state-render facts: did anything actually render for this state?
     const visibleText = (body?.innerText || '').replace(/\s+/g, ' ').trim();
+
+    // Touch-target gate: interactive controls whose RENDERED box is under 44x44 CSS px.
+    // We measure only interactive elements, so a small icon inside a large button is not
+    // flagged — the button's own box is what's measured. Opt out an element with
+    // data-ads-target-ok when its hit area is legitimately extended (e.g. a ::before
+    // pseudo-element) — that's the explicit-exception escape hatch.
+    const TARGET_MIN = 44;
+    const interactiveSel =
+      'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
+      '[role="button"],[role="link"],[role="checkbox"],[role="radio"],[role="switch"],' +
+      '[role="tab"],[role="menuitem"],[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
+    const cssPath = (el) => {
+      const tag = el.tagName.toLowerCase();
+      if (el.id) return `${tag}#${el.id}`;
+      const cls = (el.getAttribute('class') || '').trim().split(/\s+/).filter(Boolean)[0];
+      if (cls) return `${tag}.${cls}`;
+      const label = el.getAttribute('aria-label');
+      if (label) return `${tag}[aria-label="${label.slice(0, 30)}"]`;
+      return tag;
+    };
+    const smallTouchTargets = [];
+    for (const el of document.querySelectorAll(interactiveSel)) {
+      if (
+        el.hasAttribute('disabled') ||
+        el.getAttribute('aria-hidden') === 'true' ||
+        el.hasAttribute('data-ads-target-ok')
+      ) {
+        continue;
+      }
+      const cs = getComputedStyle(el);
+      if (cs.visibility === 'hidden' || cs.display === 'none') continue;
+      const r = el.getBoundingClientRect();
+      if (r.width === 0 && r.height === 0) continue; // not rendered
+      if (r.width < TARGET_MIN || r.height < TARGET_MIN) {
+        smallTouchTargets.push({
+          selector: cssPath(el),
+          width: Math.round(r.width),
+          height: Math.round(r.height),
+        });
+      }
+    }
+
     return {
+      smallTouchTargets,
       body: styleOf(body),
       landmarks: {
         main: !!document.querySelector('main'),
@@ -227,12 +270,22 @@ async function main() {
     stateRendered[state] = snaps.some((s) => s.renderedTextLength > 0);
   }
   const renderedFonts = [...new Set(evidence.snapshots.map((s) => s.body?.fontFamily).filter(Boolean))];
+  // interactive controls under 44x44 CSS px, with where they were seen (state@breakpoint).
+  const touchTargetsUnder44 = evidence.snapshots.flatMap((s) =>
+    (s.smallTouchTargets || []).map((t) => ({
+      selector: t.selector,
+      size: `${t.width}x${t.height}`,
+      state: s.state,
+      breakpoint: s.breakpoint,
+    })),
+  );
 
   evidence.gates = {
     seriousAxeViolations: seriousAxe,
     horizontalOverflowAt: overflowAt,
     stateRendered,
     renderedFonts,
+    touchTargetsUnder44,
   };
 
   await fs.writeFile(
@@ -246,6 +299,13 @@ async function main() {
   console.log(`  horizontal overflow: ${overflowAt.length ? overflowAt.join(', ') : 'none'}`);
   console.log(`  states rendered: ${Object.entries(stateRendered).map(([k, v]) => `${k}=${v ? 'yes' : 'NO'}`).join(', ')}`);
   console.log(`  rendered font(s): ${renderedFonts.join(' | ') || 'unknown'}`);
+  console.log(
+    `  touch targets < 44x44: ${
+      touchTargetsUnder44.length
+        ? touchTargetsUnder44.map((t) => `${t.selector} ${t.size} (${t.state}@${t.breakpoint})`).join(', ')
+        : 'none'
+    }`,
+  );
 }
 
 main().catch((e) => {
