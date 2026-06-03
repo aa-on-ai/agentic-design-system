@@ -29,6 +29,9 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
+
+const SETUP_SCRIPT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'setup-capture.mjs');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -56,17 +59,18 @@ function parseArgs(argv) {
 }
 
 async function loadDeps() {
-  // playwright + @axe-core/playwright are peer deps, kept out of the repo install.
-  // Install once in the project under test:  npm i -D playwright @axe-core/playwright && npx playwright install chromium
+  // playwright + @axe-core/playwright are peer deps, kept out of the skill install.
+  // One-command setup: node skills/design-review/scripts/setup-capture.mjs
   let chromium;
   let AxeBuilder = null;
   try {
     ({ chromium } = await import('playwright'));
   } catch {
     console.error(
-      'capture.mjs needs Playwright. Install in the project under test:\n' +
-        '  npm i -D playwright @axe-core/playwright\n' +
-        '  npx playwright install chromium',
+      'capture.mjs needs Playwright + @axe-core/playwright. One-command setup\n' +
+        '(run from your project root):\n' +
+        `  node ${SETUP_SCRIPT}\n` +
+        '  (verify only: add --check)',
     );
     process.exit(2);
   }

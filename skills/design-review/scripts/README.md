@@ -26,14 +26,18 @@ real horizontal-overflow, whether each state's content actually rendered, and th
 font/color computed from the page. None of this can be satisfied by a comment.
 
 ```bash
-# one-time, in the project under test:
-npm i -D playwright @axe-core/playwright && npx playwright install chromium
+# one-time setup (installs playwright + @axe-core/playwright + chromium, then verifies):
+node skills/design-review/scripts/setup-capture.mjs
+# verify only, no install:  node skills/design-review/scripts/setup-capture.mjs --check
 
 # capture a running route:
 node capture.mjs "http://localhost:3000/orders" \
   --states default,loading,empty,error \
   --out evidence/orders
 ```
+
+Run `setup-capture.mjs` from your project root so the deps land in a `node_modules` that
+`capture.mjs` resolves. If capture ever reports Playwright missing, it prints this same command.
 
 Output (`evidence/orders/`):
 - `evidence.json` — structured facts + a `gates` block (serious axe, overflow, state-render, fonts)

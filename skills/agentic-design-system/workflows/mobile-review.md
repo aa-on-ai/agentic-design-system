@@ -51,8 +51,10 @@ Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defect
 
 Then eyeball the screenshots for what the gates don't measure: safe-area insets, touch-target
 size, hover-only traps, PWA manifest/offline. `capture.mjs` ships with the design-review skill,
-so installed agents have it. If Playwright isn't installed, fall back to a manual 375px
-screenshot and **say capture was unavailable** — don't silently skip the rendered pass.
+so installed agents have it. If capture reports Playwright missing, run
+`node skills/design-review/scripts/setup-capture.mjs` once (from your project root) to install it,
+then re-run capture. If you genuinely can't install, fall back to a manual 375px screenshot and
+**say capture was unavailable** — don't silently skip the rendered pass.
 
 ## Evidence required
 
