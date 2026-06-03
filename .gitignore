@@ -13,3 +13,6 @@ out/
 # Generated eval output (re-generate with: npx tsx testing/eval-loop.ts)
 testing/results/*/before.tsx
 testing/results/*/after.tsx
+# Rendered evidence from capture.mjs (screenshots + json; re-generate on demand)
+evidence/
+**/evidence/

@@ -1,0 +1,71 @@
+<!doctype html>
+<!--
+  Self-contained fixture for smoke-testing capture.mjs with no dev server / no network.
+  States are toggled via the URL hash: #state=default | loading | empty | error.
+  Contains ONE deliberate accessibility violation (an <img> with no alt) so we can
+  prove axe runs against the rendered DOM, not the source.
+
+    node ../../skills/design-review/scripts/capture.mjs \
+      "file://$(pwd)/states-demo.html" \
+      --states default,loading,empty,error \
+      --out ./evidence/states-demo
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orders — states demo</title>
+    <style>
+      :root { color-scheme: light; }
+      body {
+        margin: 0;
+        font-family: "Spline Sans", ui-sans-serif, system-ui, sans-serif;
+        color: #1a1a1a;
+        background: #f7f6f3;
+      }
+      main { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+      h1 { font-size: 24px; margin: 0 0 16px; }
+      .row { padding: 14px 0; border-bottom: 1px solid #e7e4dd; }
+      .muted { color: #6b6b6b; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <header><nav aria-label="Primary"><strong>Acme Orders</strong></nav></header>
+    <main>
+      <h1>Orders</h1>
+
+      <section id="default" hidden>
+        <div class="row">#1042 — Maya Chen — shipped</div>
+        <div class="row">#1041 — Devon Park — processing</div>
+        <div class="row">#1040 — Lena Ortiz — delivered</div>
+        <!-- DELIBERATE a11y violation: image with no alt text -->
+        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="1" height="1" />
+      </section>
+
+      <section id="loading" hidden>
+        <div role="status" aria-live="polite" aria-busy="true">Loading your orders…</div>
+      </section>
+
+      <section id="empty" hidden>
+        <p class="muted">No orders yet. When customers buy, they'll show up here.</p>
+      </section>
+
+      <section id="error" hidden>
+        <div role="alert">Couldn't load orders. Check your connection and retry.</div>
+      </section>
+    </main>
+
+    <script>
+      function show() {
+        var state = (location.hash.match(/state=(\w+)/) || [])[1] || 'default';
+        ['default', 'loading', 'empty', 'error'].forEach(function (s) {
+          var el = document.getElementById(s);
+          if (el) el.hidden = s !== state;
+        });
+      }
+      window.addEventListener('hashchange', show);
+      show();
+    </script>
+  </body>
+</html>
