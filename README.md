@@ -120,7 +120,7 @@ cp -r agentic-design-system/skills your-project/skills/
 testing/install-smoke.sh
 ```
 
-The smoke test installs from the local repo into a temporary project and verifies all 9 skills plus the bundled outcome/grader templates are present. Success ends with `install smoke passed: 9 skills and bundled outcome/grader templates`.
+The smoke test installs from the local repo into a temporary project and verifies all 9 skills, the bundled outcome/grader templates, and the workflow runbooks bundled under the orchestrator skill (and that those runbooks stay byte-identical to the canonical top-level `workflows/`). Success ends with `install smoke passed: 9 skills, bundled outcome/grader templates, and 6 workflow runbooks (in sync)`.
 
 ## Limitations
 

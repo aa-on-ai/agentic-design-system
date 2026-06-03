@@ -13,6 +13,15 @@ description: >
 
 you have a design system installed. this skill orchestrates it. read this BEFORE starting any visual work.
 
+## Workflows (runnable runbooks)
+
+if you just want to *use* ADS, start at `workflows/create-design-workflow.md` — it routes a task
+to the right profile or workflow by intent. each runbook is decision-shaped (when to use, read
+first, run, evidence, output, blocked when, stop when). these ship with this skill at
+`skills/agentic-design-system/workflows/` so installed agents have them, not just repo clones;
+the canonical copies live at the repo root `workflows/` and the two are kept in sync by the
+install smoke's drift guard.
+
 ## How it works
 
 the system installs a routing skill plus focused helper skills. you don't need to read them all — this file tells you which ones to read for your current task.
