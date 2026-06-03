@@ -81,6 +81,32 @@ count, severity, rule name, one-line description.
 | warning | (name) | 0 |
 | info | (name) | 0 |
 
+## mobile review (if applicable)
+
+include for mobile/responsive/app/PWA review. keep the two passes in separate tables — opinions
+must not read as defects, defects must not read as taste. see `skills/design-review/references/mobile.md`.
+
+### design forks & opinions (ranked by user impact — judgments, not defects)
+
+| fork | call / opinion | impact | tradeoff + signal |
+|---|---|---|---|
+| (e.g. primary nav) | (the call) | high / med / low | (why this branch) |
+
+### platform defects (objective — severity-tiered, with file:line)
+
+| severity | issue | file:line | fix |
+|---|---|---|---|
+| P0 / P1 / P2 / P3 | (defect) | `path:line` | (concrete fix) |
+
+## motion vocabulary (if applicable)
+
+include when motion is part of the work. name patterns from `references/motion.md`; "make it
+smooth" is not a row. every row must serve state, hierarchy, causality, or feedback.
+
+| pattern | job | timing / easing | reduced-motion | evidence |
+|---|---|---|---|---|
+| (named pattern) | state / hierarchy / causality / feedback | (values) | (fallback present?) | (snippet / capture / values) |
+
 ## grader summary
 
 summarize the outcome/grader result. include task-specific criteria when the outcome defines them.
