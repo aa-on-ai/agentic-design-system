@@ -1,0 +1,1730 @@
+{
+  "url": "file:///tmp/ads-npc-green/orders.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "768x1024",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 4,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 201,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 36
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 817,
+      "renderedTextSample": "Orders (8) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today List of orders ORDER CUSTOMER STATUS ITEMS TOTAL DATE ORD-10482 Marcus Reilly m.reilly@northwind.co Paid 3 $1,240.00 Jun 5, 2026 O",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "768x1024",
+      "screenshot": "default-768x1024.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 4,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 443,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 817,
+      "renderedTextSample": "Orders (8) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today List of orders ORDER CUSTOMER STATUS ITEMS TOTAL DATE ORD-10482 Marcus Reilly m.reilly@northwind.co Paid 3 $1,240.00 Jun 5, 2026 O",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 4,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 795,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 817,
+      "renderedTextSample": "Orders (8) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today List of orders ORDER CUSTOMER STATUS ITEMS TOTAL DATE ORD-10482 Marcus Reilly m.reilly@northwind.co Paid 3 $1,240.00 Jun 5, 2026 O",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 201,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 36
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 200,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today ORDER CUSTOMER STATUS ITEMS TOTAL DATE Loading orders…",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "768x1024",
+      "screenshot": "loading-768x1024.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 443,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 200,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today ORDER CUSTOMER STATUS ITEMS TOTAL DATE Loading orders…",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 795,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 200,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today ORDER CUSTOMER STATUS ITEMS TOTAL DATE Loading orders…",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 201,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 36
+        },
+        {
+          "selector": "button.btn",
+          "width": 96,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 269,
+      "renderedTextSample": "Orders (0) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today No orders found No orders match your current filters. Try widening the date range or clearing the search. Clear filters",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "768x1024",
+      "screenshot": "empty-768x1024.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 443,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        },
+        {
+          "selector": "button.btn",
+          "width": 96,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 269,
+      "renderedTextSample": "Orders (0) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today No orders found No orders match your current filters. Try widening the date range or clearing the search. Clear filters",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 795,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        },
+        {
+          "selector": "button.btn",
+          "width": 96,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 269,
+      "renderedTextSample": "Orders (0) Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today No orders found No orders match your current filters. Try widening the date range or clearing the search. Clear filters",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 201,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 36
+        },
+        {
+          "selector": "button.btn",
+          "width": 58,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 298,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today Couldn't load orders The orders service didn't respond. Check your connection and try again. Error 503 — orders-api: upstream timeout ",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "768x1024",
+      "screenshot": "error-768x1024.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 443,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        },
+        {
+          "selector": "button.btn",
+          "width": 58,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 298,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today Couldn't load orders The orders service didn't respond. Check your connection and try again. Error 503 — orders-api: upstream timeout ",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "nodes": 3,
+            "help": "Elements must meet minimum color contrast ratio thresholds"
+          }
+        ],
+        "violationCount": 1,
+        "seriousOrCritical": 1
+      },
+      "smallTouchTargets": [
+        {
+          "selector": "button.btn",
+          "width": 66,
+          "height": 35
+        },
+        {
+          "selector": "button.btn",
+          "width": 89,
+          "height": 35
+        },
+        {
+          "selector": "a",
+          "width": 57,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 59,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 54,
+          "height": 25
+        },
+        {
+          "selector": "a",
+          "width": 46,
+          "height": 25
+        },
+        {
+          "selector": "input",
+          "width": 795,
+          "height": 36
+        },
+        {
+          "selector": "select.select",
+          "width": 113,
+          "height": 38
+        },
+        {
+          "selector": "select.select",
+          "width": 120,
+          "height": 38
+        },
+        {
+          "selector": "button.btn",
+          "width": 58,
+          "height": 35
+        }
+      ],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+        "color": "rgb(28, 37, 48)",
+        "backgroundColor": "rgb(244, 245, 247)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": false,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 298,
+      "renderedTextSample": "Orders Export New order State: default loading empty error Search orders All statuses Paid Pending Refunded Failed Last 30 days Last 7 days Today Couldn't load orders The orders service didn't respond. Check your connection and try again. Error 503 — orders-api: upstream timeout ",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "seriousAxeViolations": 12,
+    "horizontalOverflowAt": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
+    ],
+    "touchTargetsUnder44": [
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "input",
+        "size": "201x36",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x36",
+        "state": "default",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "input",
+        "size": "443x36",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "default",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "input",
+        "size": "795x36",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "default",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "input",
+        "size": "201x36",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x36",
+        "state": "loading",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "input",
+        "size": "443x36",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "loading",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "input",
+        "size": "795x36",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "loading",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "input",
+        "size": "201x36",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x36",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "96x35",
+        "state": "empty",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "input",
+        "size": "443x36",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "96x35",
+        "state": "empty",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "input",
+        "size": "795x36",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "96x35",
+        "state": "empty",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "input",
+        "size": "201x36",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x36",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "58x35",
+        "state": "error",
+        "breakpoint": "390x844"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "input",
+        "size": "443x36",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "58x35",
+        "state": "error",
+        "breakpoint": "768x1024"
+      },
+      {
+        "selector": "button.btn",
+        "size": "66x35",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "89x35",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "57x25",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "59x25",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "54x25",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "a",
+        "size": "46x25",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "input",
+        "size": "795x36",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "113x38",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "select.select",
+        "size": "120x38",
+        "state": "error",
+        "breakpoint": "1280x800"
+      },
+      {
+        "selector": "button.btn",
+        "size": "58x35",
+        "state": "error",
+        "breakpoint": "1280x800"
+      }
+    ]
+  }
+}
