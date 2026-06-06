@@ -19,24 +19,11 @@
       "screenshot": "default-390x844.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 4,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 201,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -61,24 +48,11 @@
       "screenshot": "default-768x1024.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 4,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 443,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -103,24 +77,11 @@
       "screenshot": "default-1280x800.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 4,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 795,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -145,24 +106,11 @@
       "screenshot": "loading-390x844.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 201,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -187,24 +135,11 @@
       "screenshot": "loading-768x1024.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 443,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -229,24 +164,11 @@
       "screenshot": "loading-1280x800.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 795,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -271,24 +193,11 @@
       "screenshot": "empty-390x844.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 201,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -313,24 +222,11 @@
       "screenshot": "empty-768x1024.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 443,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -355,24 +251,11 @@
       "screenshot": "empty-1280x800.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 795,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -397,24 +280,11 @@
       "screenshot": "error-390x844.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 201,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -439,24 +309,11 @@
       "screenshot": "error-768x1024.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 443,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -481,24 +338,11 @@
       "screenshot": "error-1280x800.png",
       "horizontalOverflow": false,
       "axe": {
-        "violations": [
-          {
-            "id": "color-contrast",
-            "impact": "serious",
-            "nodes": 3,
-            "help": "Elements must meet minimum color contrast ratio thresholds"
-          }
-        ],
-        "violationCount": 1,
-        "seriousOrCritical": 1
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
       },
-      "smallTouchTargets": [
-        {
-          "selector": "input",
-          "width": 795,
-          "height": 42
-        }
-      ],
+      "smallTouchTargets": [],
       "body": {
         "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "color": "rgb(28, 37, 48)",
@@ -519,7 +363,7 @@
     }
   ],
   "gates": {
-    "seriousAxeViolations": 12,
+    "seriousAxeViolations": 0,
     "horizontalOverflowAt": [],
     "stateRendered": {
       "default": true,
@@ -530,79 +374,6 @@
     "renderedFonts": [
       "-apple-system, \"system-ui\", \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
     ],
-    "touchTargetsUnder44": [
-      {
-        "selector": "input",
-        "size": "201x42",
-        "state": "default",
-        "breakpoint": "390x844"
-      },
-      {
-        "selector": "input",
-        "size": "443x42",
-        "state": "default",
-        "breakpoint": "768x1024"
-      },
-      {
-        "selector": "input",
-        "size": "795x42",
-        "state": "default",
-        "breakpoint": "1280x800"
-      },
-      {
-        "selector": "input",
-        "size": "201x42",
-        "state": "loading",
-        "breakpoint": "390x844"
-      },
-      {
-        "selector": "input",
-        "size": "443x42",
-        "state": "loading",
-        "breakpoint": "768x1024"
-      },
-      {
-        "selector": "input",
-        "size": "795x42",
-        "state": "loading",
-        "breakpoint": "1280x800"
-      },
-      {
-        "selector": "input",
-        "size": "201x42",
-        "state": "empty",
-        "breakpoint": "390x844"
-      },
-      {
-        "selector": "input",
-        "size": "443x42",
-        "state": "empty",
-        "breakpoint": "768x1024"
-      },
-      {
-        "selector": "input",
-        "size": "795x42",
-        "state": "empty",
-        "breakpoint": "1280x800"
-      },
-      {
-        "selector": "input",
-        "size": "201x42",
-        "state": "error",
-        "breakpoint": "390x844"
-      },
-      {
-        "selector": "input",
-        "size": "443x42",
-        "state": "error",
-        "breakpoint": "768x1024"
-      },
-      {
-        "selector": "input",
-        "size": "795x42",
-        "state": "error",
-        "breakpoint": "1280x800"
-      }
-    ]
+    "touchTargetsUnder44": []
   }
 }

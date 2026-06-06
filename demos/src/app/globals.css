@@ -727,6 +727,21 @@ h1, h2, h3 {
   }
 }
 
+.loop-snippet-line--fail {
+  color: color-mix(in srgb, #c0392b 62%, var(--text));
+  font-weight: 700;
+}
+
+:root[data-theme="dark"] .loop-snippet-line--fail {
+  color: #f0907f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .loop-snippet-line--fail {
+    color: #f0907f;
+  }
+}
+
 .loop-snippet-line--field {
   color: color-mix(in srgb, var(--text) 75%, transparent);
 }

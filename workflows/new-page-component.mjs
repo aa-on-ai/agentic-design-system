@@ -163,6 +163,8 @@ while (iteration < MAX_ITERS) {
     : `Revise ${ARTIFACT_MODE ? ARTIFACT : TARGET}. The independent grader returned needs_revision.\n\n` +
       `EXACT REVISION INSTRUCTION:\n${lastGrade.nextRevisionPrompt}\n\n` +
       `Do NOT introduce any new axe violations, and fix the specific rendered-evidence failure cited. ` +
+      `If touch targets are cited: give EVERY interactive control a >=44px target in every state — buttons/inputs/selects via min-height + padding, ` +
+      `and inline text links via display:inline-block with padding (or min-height/min-width) so the clickable box clears 44px. Don't miss row links. ` +
       `Return a one-line summary of what you changed.`;
 
   await agent(buildInstruction, { label: `build:iter${iteration}`, phase: 'Build' });
@@ -213,7 +215,10 @@ while (iteration < MAX_ITERS) {
       `touch targets <44px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}).\n\n` +
       `Rule: if the deterministic gate FAILED, you cannot return "satisfied". If touch targets failed, the nextRevisionPrompt MUST ` +
       `instruct enlarging the listed interactive controls (links, buttons, inputs, selects) to a minimum 44x44px target at mobile ` +
-      `(e.g. padding or min-height/min-width), without breaking layout. If Design Quality or Originality < 6, ` +
+      `(e.g. padding or min-height/min-width), without breaking layout. ` +
+      `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, axe issues, overflow) ` +
+      `and revise iterations remain — reserve "failed" for a genuinely wrong direction, not a fixable defect. ` +
+      `If Design Quality or Originality < 6, ` +
       `return needs_revision with a bounded, testable nextRevisionPrompt. Be direct; judge the artifact, not effort.`,
     { label: `grade:iter${iteration}`, phase: 'Grade', schema: GRADE_SCHEMA, agentType: 'Explore' },
   );
