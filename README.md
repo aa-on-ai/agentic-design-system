@@ -122,6 +122,10 @@ testing/install-smoke.sh
 
 The smoke test installs from the local repo into a temporary project and verifies all 9 skills, the bundled outcome/grader templates, and the workflow runbooks bundled under the orchestrator skill (and that those runbooks stay byte-identical to the canonical top-level `workflows/`). Success ends with `install smoke passed: 9 skills, bundled outcome/grader templates, and 6 workflow runbooks (in sync)`.
 
+## A worked example
+
+[`docs/loop-demo/`](./docs/loop-demo/) is a real run of the executable loop ([`workflows/new-page-component.mjs`](./workflows/new-page-component.mjs)) on an Orders screen gated at 390 / 768 / 1280px (preserved as a sample — generated `evidence/` is otherwise ignored and regenerated on demand). It is kept because it did **not** end green: the gates caught 12 axe violations and 102 sub-44px touch targets from the rendered DOM; the revise pass cleared the axe violations (12 → 0) but only shrank the touch-target failures (102 → 68); so the independent grader returned `failed` rather than ship a screen that still misses a hard gate. The verdict rests on rendered evidence, not source — which is exactly why a comment cannot satisfy it.
+
 ## Limitations
 
 - Depends on agents actually following skill instructions. Works best with frontier models.
