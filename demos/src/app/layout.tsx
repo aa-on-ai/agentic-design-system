@@ -13,10 +13,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://agentic-design-system.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Agentic Design System",
+  metadataBase: new URL(siteUrl),
+  title: "Agentic Design System — Review loops for agent-built UI",
   description:
-    "An installable design system for your coding agent. Skills and templates for intent, baseline, rubric, evidence, and grader loops on UI work.",
+    "An open-source control plane for coding agents that build UI: define intent, capture rendered evidence, grade the result, and revise until it clears.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    title: "Agentic Design System — Review loops for agent-built UI",
+    description:
+      "Open-source skills, templates, checks, and evidence loops for coding agents that build UI.",
+    siteName: "Agentic Design System",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Agentic Design System — Review loops for agent-built UI",
+    description:
+      "Open-source skills, templates, checks, and evidence loops for coding agents that build UI.",
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  name: "Agentic Design System",
+  description:
+    "An open-source control plane for coding agents that build UI, with intent templates, project baselines, rendered evidence checks, and grader-led revision loops.",
+  url: siteUrl,
+  codeRepository: "https://github.com/aa-on-ai/agentic-design-system",
+  license: "https://github.com/aa-on-ai/agentic-design-system/blob/main/LICENSE",
+  programmingLanguage: ["TypeScript", "JavaScript", "Python", "Markdown"],
 };
 
 export default function RootLayout({
@@ -53,6 +85,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
         {children}
       </body>
     </html>
