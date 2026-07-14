@@ -3,9 +3,18 @@ const verdictCards = [
   {
     tag: "needs_revision",
     tone: "warn",
-    body: "Builder iterates against the grader's note. Regrades.",
+    body: "A fixable miss with budget left. Builder revises and regrades.",
   },
-  { tag: "max_iterations", tone: "stop", body: "Stops out. Escalate to a human reviewer." },
+  {
+    tag: "max_iterations",
+    tone: "stop",
+    body: "The revision budget is exhausted. Return the evidence for human judgment.",
+  },
+  {
+    tag: "failed",
+    tone: "fail",
+    body: "The direction or run failed. Stop and do not ship it.",
+  },
 ];
 
 export function DecisionSections() {
@@ -30,19 +39,20 @@ function EvidenceSection() {
         <pre
           className="loop-snippet loop-snippet--big loop-snippet--terminal"
           tabIndex={0}
-          aria-label="Design verification command and run report example"
+          aria-label="Advisory source preflight and rendered evidence report example"
         >
-          <span className="loop-snippet-head">checks against the file the agent wrote</span>
-          <span className="loop-snippet-line loop-snippet-line--cmd">$ python3 anti-pattern-check.py App.tsx</span>
-          <span className="loop-snippet-line loop-snippet-line--pass">  PASS  state-check</span>
-          <span className="loop-snippet-line loop-snippet-line--pass">  PASS  accessibility-check</span>
+          <span className="loop-snippet-head">source preflight · advisory / gameable</span>
+          <span className="loop-snippet-line loop-snippet-line--cmd">$ python3 ci/design-eval.py --files App.tsx</span>
+          <span className="loop-snippet-line loop-snippet-line--field">  CHECK  anti-pattern · state · accessibility</span>
+          <span className="loop-snippet-line loop-snippet-line--field">  LIMIT  source grep can pass on comments</span>
+          <span className="loop-snippet-line loop-snippet-line--field">  GATE   none — rendered capture decides</span>
           <span className="loop-snippet-line"> </span>
           <span className="loop-snippet-line loop-snippet-line--field">- files:        list of paths changed</span>
           <span className="loop-snippet-line loop-snippet-line--field">- screenshots:  desktop + mobile attached</span>
           <span className="loop-snippet-line loop-snippet-line--field">- score:        judge total / 50</span>
         </pre>
         <p className="loop-foot-line">
-          <code>templates/run-report-template.md</code> · <code>skills/design-review/scripts/</code>
+          source checks catch cheap misses · <code>capture.mjs</code> + grader produce the verdict
         </p>
       </div>
     </section>
@@ -56,7 +66,7 @@ function GraderSection() {
         <p className="loop-eyebrow">05</p>
         <h2 className="loop-heading">grader / revision.</h2>
         <p className="loop-desc">
-          A separate pass scores the evidence against the rubric. Three verdicts. The builder
+          A separate pass scores the evidence against the rubric. Four verdicts. The builder
           does not ship on its own &mdash; the grader (or you) decides.
         </p>
         <div className="verdict-grid">

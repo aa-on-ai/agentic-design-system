@@ -1094,7 +1094,13 @@ h1, h2, h3 {
 
 @media (min-width: 720px) {
   .verdict-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .verdict-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1143,6 +1149,16 @@ h1, h2, h3 {
   border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
 }
 
+.verdict-card--fail .verdict-tag {
+  background: color-mix(in srgb, #b7372c 14%, transparent);
+  color: color-mix(in srgb, #8f241c 78%, var(--text));
+  border: 1px solid color-mix(in srgb, #b7372c 34%, transparent);
+}
+
+:root[data-theme="dark"] .verdict-card--fail .verdict-tag {
+  color: #ff9f91;
+}
+
 .verdict-card p {
   margin: 0;
   color: var(--muted-strong);
@@ -1156,6 +1172,10 @@ h1, h2, h3 {
 
 .verdict-card--warn {
   border-color: color-mix(in srgb, var(--accent-strong) 36%, var(--border));
+}
+
+.verdict-card--fail {
+  border-color: color-mix(in srgb, #b7372c 34%, var(--border));
 }
 
 /* ---------- CTA ---------- */
