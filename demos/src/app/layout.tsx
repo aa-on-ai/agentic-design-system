@@ -1,23 +1,30 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
+  weight: "400",
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const siteUrl = "https://agentic-design-system.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Agentic Design System — Review loops for agent-built UI",
+  title: "Agentic Design System — Evidence loops for agent-built UI",
   description:
     "An open-source control plane for coding agents that build UI: define intent, capture rendered evidence, grade the result, and revise until it clears.",
   alternates: {
@@ -26,14 +33,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Agentic Design System — Review loops for agent-built UI",
+    title: "Agentic Design System — Evidence loops for agent-built UI",
     description:
       "Open-source skills, templates, checks, and evidence loops for coding agents that build UI.",
     siteName: "Agentic Design System",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Agentic Design System — Review loops for agent-built UI",
+    title: "Agentic Design System — Evidence loops for agent-built UI",
     description:
       "Open-source skills, templates, checks, and evidence loops for coding agents that build UI.",
   },
@@ -83,7 +90,7 @@ export default function RootLayout({
         )}
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${manrope.variable} ${instrumentSerif.variable} ${ibmPlexMono.variable}`}
       >
         <script
           type="application/ld+json"
