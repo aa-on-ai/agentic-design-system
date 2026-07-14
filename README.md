@@ -120,7 +120,19 @@ cp -r agentic-design-system/skills your-project/skills/
 testing/install-smoke.sh
 ```
 
-The smoke test installs from the local repo into a temporary project and verifies all 9 skills, the bundled outcome/grader templates, and the workflow runbooks bundled under the orchestrator skill (and that those runbooks stay byte-identical to the canonical top-level `workflows/`). Success ends with `install smoke passed: 9 skills, bundled outcome/grader templates, and 6 workflow runbooks (in sync)`.
+The smoke test installs from the local repo into a temporary project and verifies all 9 skills, the three bundled report templates, the iteration-comparison protocol in canonical and bundled grader/run-report templates, and the workflow runbooks bundled under the orchestrator skill (including their sync guard). Success ends with `install smoke passed: 9 skills, 3 bundled templates with iteration comparison protocol, and 6 workflow runbooks (in sync)`.
+
+## Evidence contract
+
+The three Python source checks are an advisory preflight. They grep source, can be satisfied by
+comments or strings, and cannot prove that the rendered UI is accessible, complete, or visually
+good. `ci/design-eval.yml` is therefore named **ADS source preflight (advisory)**; a green check
+means only that its configured source heuristics ran without blocking findings.
+
+Rendered capture is the authoritative tier. A `satisfied` verdict requires screenshots and
+`evidence.json` from `capture.mjs`, including accessibility, required-state, overflow, and
+interaction gates. When revising an artifact, the grader must also compare it with the previous
+iteration: a previously passing hard gate cannot regress into a `satisfied` verdict.
 
 ## A worked example
 

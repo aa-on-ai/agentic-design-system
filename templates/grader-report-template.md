@@ -31,9 +31,39 @@ one paragraph. be direct. say whether the artifact clears the outcome, not wheth
 | Accessibility | pass/fail |  | pass / fail |  |
 | Evidence attached | pass/fail |  | pass / fail | screenshots or preview link for visible changes; diff for code changes |
 
+## iteration comparison
+
+required for iteration 2 and later. on the first iteration, set the previous artifact to `n/a`
+and comparison rows to `n/a - no previous artifact`.
+
+- **previous artifact / iteration:** path or screenshot set + iteration number
+- **current artifact / iteration:** path or screenshot set + iteration number
+
+| criterion | previous | current | comparison | evidence |
+|---|---:|---:|---|---|
+| Design Quality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Originality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Craft |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Functionality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Intent alignment |  |  | better / same / worse / n/a | observable outcome delta |
+| (task-specific criterion) |  |  | better / same / worse / n/a | evidence |
+
+### hard-gate regressions
+
+| hard gate | previous | current | regressed? | evidence |
+|---|---|---|---|---|
+| accessibility | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | axe rule id or receipt |
+| interaction | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | touch target, focus, or keyboard receipt |
+| required states | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | rendered state receipt |
+| horizontal overflow | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | state@breakpoint |
+
+- **next bounded change:** one testable revision, or `none - satisfied`
+
 ## hard stops reviewed
 
 - vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
+- `satisfied` is impossible if a previously passing accessibility, interaction, required-state,
+  or horizontal-overflow hard gate regressed in the current iteration
 
 ## missing criteria
 

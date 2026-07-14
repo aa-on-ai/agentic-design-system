@@ -18,6 +18,21 @@ python3 state-check.py /tmp/gamed.tsx     # → ✓ loading ✓ empty ✓ error
 That component renders `<div>Orders</div>`. The states exist only in a comment. The
 source heuristic passes anyway. A control plane cannot gate on this.
 
+### CI source preflight is advisory
+
+`ci/design-eval.py` runs the three source heuristics together. Its command and GitHub workflow
+are deliberately labeled **source preflight (advisory)**. Even a green strict run means only
+that the configured grep-based checks found no warnings in the eligible source files; it does
+not verify the rendered UI.
+
+```bash
+python3 ci/design-eval.py --strict
+```
+
+The wrapper reports `SOURCE PREFLIGHT NO_OP` when no eligible `.tsx` files exist. In strict
+mode, a missing checker reports `UNVERIFIED` and fails instead of silently skipping it. Neither
+state is an authoritative design verdict. Only the rendered tier below can support one.
+
 ## Tier 2 — rendered evidence (authoritative, non-gameable)
 
 `capture.mjs` loads the **live route** in a headless browser and records what the user

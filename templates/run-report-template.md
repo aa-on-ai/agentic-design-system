@@ -54,6 +54,37 @@ real DOM, overflow is measured, "rendered" means the state actually produced con
 
 > if no rendered evidence is attached, the verdict cannot be `satisfied`. source heuristics below are pre-flight only.
 
+## iteration comparison
+
+required for iteration 2 and later. compare rendered artifacts, not builder commentary. on the
+first iteration, set the previous artifact to `n/a` and comparison rows to `n/a - no previous artifact`.
+
+- **previous artifact / iteration:** path or screenshot set + iteration number
+- **current artifact / iteration:** path or screenshot set + iteration number
+
+| criterion | previous | current | comparison | evidence |
+|---|---:|---:|---|---|
+| Design Quality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Originality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Craft |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Functionality |  |  | better / same / worse / n/a | screenshot-specific delta |
+| Intent alignment |  |  | better / same / worse / n/a | observable outcome delta |
+| (task-specific criterion) |  |  | better / same / worse / n/a | evidence |
+
+### hard-gate regressions
+
+| hard gate | previous | current | regressed? | evidence |
+|---|---|---|---|---|
+| accessibility | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | axe rule id or receipt |
+| interaction | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | touch target, focus, or keyboard receipt |
+| required states | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | rendered state receipt |
+| horizontal overflow | pass / fail / n/a | pass / fail / n/a | yes / no / n/a | state@breakpoint |
+
+- **next bounded change:** one testable revision, or `none - satisfied`
+
+> `satisfied` is impossible if a previously passing accessibility, interaction, required-state,
+> or horizontal-overflow hard gate regressed in the current iteration.
+
 ## rules fired (source heuristics — pre-flight, gameable)
 
 these grep the `.tsx` source and can pass on a comment. treat as advisory, not sign-off.

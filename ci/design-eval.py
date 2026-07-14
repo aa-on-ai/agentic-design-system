@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Design eval CI wrapper.
-Runs all verification scripts against TSX files in your project.
-Use as a GitHub Actions check to gate PRs on design quality.
+ADS advisory source-preflight wrapper.
+Runs gameable source heuristics against TSX files in your project. A green exit
+means only that these source checks found no configured warnings; it is not
+evidence that the rendered UI is accessible, functional, or visually good.
 
 Usage:
   python3 ci/design-eval.py                  # scan default paths
@@ -64,28 +65,33 @@ def run_script(script_path, tsx_files):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Design eval CI check")
-    parser.add_argument("--strict", action="store_true", help="Fail on any warning")
+    parser = argparse.ArgumentParser(description="ADS advisory source preflight")
+    parser.add_argument("--strict", action="store_true",
+                        help="Fail on any heuristic warning or missing checker")
     parser.add_argument("--paths", nargs="+", default=["app", "src", "components", "pages"],
                         help="Directories to scan (default: app src components pages)")
     parser.add_argument("--files", nargs="+", help="Specific files to check")
+    parser.add_argument("--scripts-dir",
+                        help="Override the design-review scripts directory (primarily for testing)")
     args = parser.parse_args()
 
-    scripts_dir = find_scripts_dir()
+    scripts_dir = args.scripts_dir or find_scripts_dir()
     if not scripts_dir:
-        print("ERROR: Could not find design-review scripts directory.")
+        print("SOURCE PREFLIGHT UNVERIFIED — could not find the design-review scripts directory.")
         print("Install the agentic design system skills first.")
         sys.exit(1)
 
     tsx_files = args.files if args.files else find_tsx_files(args.paths)
     if not tsx_files:
-        print("No .tsx files found to check.")
+        print("SOURCE PREFLIGHT NO_OP — no eligible .tsx files found.")
+        print("Rendered UI was not evaluated; this result is not a design-quality verdict.")
         sys.exit(0)
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    print(f"Design eval — {now}")
+    print(f"ADS source preflight (advisory) — {now}")
     print(f"Skills: {scripts_dir}")
     print(f"Files: {len(tsx_files)}")
+    print("Scope: gameable source heuristics only; rendered UI was not evaluated.")
     print()
 
     scripts = [
@@ -95,11 +101,14 @@ def main():
     ]
 
     any_failed = False
+    had_findings = False
+    missing_scripts = []
 
     for script_name, label in scripts:
         script_path = os.path.join(scripts_dir, script_name)
         if not Path(script_path).exists():
-            print(f"=== {label} (skipped — {script_name} not found) ===\n")
+            missing_scripts.append(script_name)
+            print(f"=== {label} (UNVERIFIED — {script_name} not found) ===\n")
             continue
 
         exit_code, output = run_script(script_path, tsx_files)
@@ -109,15 +118,28 @@ def main():
             print(output)
         print()
 
-        if exit_code != 0 and args.strict:
-            any_failed = True
+        if exit_code != 0:
+            had_findings = True
+            if args.strict:
+                any_failed = True
 
-    if any_failed:
-        print("FAILED — warnings found in strict mode")
+    if args.strict and missing_scripts:
+        print("SOURCE PREFLIGHT FAILED — strict mode cannot verify all configured source checks.")
+        print("Missing checker(s): " + ", ".join(missing_scripts))
+        print("Rendered evidence remains required for any design-quality verdict.")
         sys.exit(1)
+    if any_failed:
+        print("SOURCE PREFLIGHT FAILED — heuristic warnings found in strict mode.")
+        print("Rendered evidence remains required for any design-quality verdict.")
+        sys.exit(1)
+    if missing_scripts:
+        print("SOURCE PREFLIGHT UNVERIFIED — one or more advisory checkers were unavailable.")
+    elif had_findings:
+        print("SOURCE PREFLIGHT COMPLETE WITH FINDINGS — review the advisory output above.")
     else:
-        print("PASSED — all checks clean")
-        sys.exit(0)
+        print("SOURCE PREFLIGHT COMPLETE — no heuristic findings in the checked source.")
+    print("ADVISORY ONLY — this does not verify rendered UI quality; use capture.mjs for authoritative evidence.")
+    sys.exit(0)
 
 
 if __name__ == "__main__":

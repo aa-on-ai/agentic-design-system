@@ -1,19 +1,21 @@
-# Design eval — GitHub Actions workflow
+# ADS source preflight — GitHub Actions workflow
 # Copy this file to .github/workflows/design-eval.yml in your project.
 #
-# Runs the agentic design system verification scripts on every PR.
-# Checks: anti-patterns, state completeness, accessibility.
+# Runs advisory, gameable source heuristics on every PR. A green result is not
+# proof that the rendered UI is accessible, functional, or visually good.
+# Authoritative evidence comes from capture.mjs against the rendered route.
 #
 # Prerequisites:
 #   Install the skills into your project first:
 #   cp -r agentic-design-system/skills ./skills
 #   (or .cursor/skills, .claude/skills, .codex/skills)
 
-name: Design eval
+name: ADS source preflight (advisory)
 on: [pull_request]
 
 jobs:
-  design-eval:
+  source-preflight:
+    name: Source preflight (advisory, not rendered evidence)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

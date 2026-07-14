@@ -48,6 +48,37 @@ for template in outcome-template.md grader-report-template.md run-report-templat
   fi
 done
 
+# The grader and run-report templates may use target-specific path wording, so verify the
+# non-regression protocol semantically instead of forcing naive byte identity.
+protocol_templates=(
+  grader-report-template.md
+  run-report-template.md
+)
+protocol_markers=(
+  "## iteration comparison"
+  "better / same / worse / n/a"
+  "### hard-gate regressions"
+  "**next bounded change:**"
+  '`satisfied` is impossible if a previously passing'
+)
+
+for template in "${protocol_templates[@]}"; do
+  for path in \
+    "$ROOT/templates/$template" \
+    "$TMP_DIR/.agents/skills/agentic-design-system/templates/$template"; do
+    if [[ ! -f "$path" ]]; then
+      echo "missing iteration comparison template: $path" >&2
+      exit 1
+    fi
+    for marker in "${protocol_markers[@]}"; do
+      if ! grep -Fq "$marker" "$path"; then
+        echo "missing iteration comparison protocol in $path: $marker" >&2
+        exit 1
+      fi
+    done
+  done
+done
+
 # Runnable workflow runbooks must ship with the orchestrator skill AND stay byte-identical to the
 # canonical top-level workflows/ — otherwise installed agents get a stale steering wheel.
 runbooks=(
@@ -73,4 +104,4 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, bundled outcome/grader templates, and ${#runbooks[@]} workflow runbooks (in sync)"
+echo "install smoke passed: ${#expected[@]} skills, 3 bundled templates with iteration comparison protocol, and ${#runbooks[@]} workflow runbooks (in sync)"
