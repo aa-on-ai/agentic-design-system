@@ -522,6 +522,41 @@ code {
   transform: translateX(-50%);
 }
 
+.assembly-climber {
+  --climber-bob: 0px;
+  --climber-flip: 1;
+  --climber-tilt: 0deg;
+  position: sticky;
+  z-index: 1;
+  top: 18vh;
+  width: 100%;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+
+.assembly-climber[data-active="true"] {
+  opacity: 1;
+}
+
+.assembly-climber-figure {
+  position: absolute;
+  top: -62px;
+  left: 50%;
+  width: 124px;
+  filter: drop-shadow(0 8px 9px rgba(38, 25, 17, 0.18));
+  transform: translate3d(-50%, var(--climber-bob), 0) scaleX(var(--climber-flip)) rotate(var(--climber-tilt));
+  transform-origin: 50% 58%;
+  will-change: transform;
+}
+
+.assembly-climber-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .line-intro {
   position: relative;
   z-index: 2;
@@ -1467,6 +1502,7 @@ code {
 }
 
 .site-footer {
+  position: relative;
   display: grid;
   min-height: 330px;
   padding: 72px max(24px, calc((100vw - 1180px) / 2)) 32px;
@@ -1475,6 +1511,31 @@ code {
   background: #1d1813;
   color: #d8c9ad;
   grid-template-columns: minmax(280px, 1.4fr) minmax(320px, 1fr);
+  overflow: hidden;
+}
+
+.footer-ember {
+  position: absolute;
+  z-index: 1;
+  bottom: -18px;
+  left: 50%;
+  width: 124px;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(1deg);
+}
+
+.footer-ember img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 -6px 10px rgba(0, 0, 0, 0.22));
+}
+
+.footer-brand,
+.footer-links,
+.footer-meta {
+  position: relative;
+  z-index: 2;
 }
 
 .site-footer a {
@@ -1636,6 +1697,11 @@ code {
     width: 78px;
   }
 
+  .assembly-climber-figure {
+    left: 48px;
+    width: 108px;
+  }
+
   .station-index {
     top: 118px;
     left: 48px;
@@ -1781,6 +1847,16 @@ code {
     background:
       repeating-linear-gradient(to bottom, transparent 0 22px, var(--rail-tie) 22px 28px, transparent 28px 48px),
       linear-gradient(90deg, transparent 0 8px, var(--rail) 8px 15px, transparent 15px 43px, var(--rail) 43px 50px, transparent 50px);
+  }
+
+  .assembly-climber {
+    top: 32vh;
+  }
+
+  .assembly-climber-figure {
+    top: -48px;
+    left: 38px;
+    width: 96px;
   }
 
   .line-intro {
@@ -1970,6 +2046,11 @@ code {
     grid-template-columns: 1fr;
   }
 
+  .footer-ember {
+    bottom: -12px;
+    width: 100px;
+  }
+
   .footer-links {
     gap: 24px;
   }
@@ -1992,5 +2073,9 @@ code {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .assembly-climber {
+    display: none;
   }
 }

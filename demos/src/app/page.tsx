@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Github } from "lucide-react";
+import { AssemblyLineClimber } from "./AssemblyLineClimber";
 import { InstallCommand } from "./InstallCommand";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
@@ -257,6 +258,7 @@ export default function Home() {
 
       <div className="factory-floor" id="assembly-line">
         <div className="continuous-track" aria-hidden="true"><span /></div>
+        <AssemblyLineClimber />
 
         <div className="line-intro">
           <p>THE ADS LINE / 01—05</p>
