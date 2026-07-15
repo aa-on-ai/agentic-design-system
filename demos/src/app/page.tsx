@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Github } from "lucide-react";
 import { InstallCommand } from "./InstallCommand";
+import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
 
 type ArtifactStage = "intent" | "baseline" | "rubric" | "evidence" | "release";
@@ -77,10 +78,10 @@ function OrderArtifact({ stage }: { stage: ArtifactStage }) {
         <div className="orders-ui">
           <div className="orders-sidebar" aria-hidden="true">
             <b>NS</b>
-            <span className="side-line side-line--short" />
-            <span className="side-line side-line--active" />
-            <span className="side-line" />
-            <span className="side-line side-line--short" />
+            <small>Workspace</small>
+            <span>Overview</span>
+            <span className="orders-side-active">Orders</span>
+            <span>Shipments</span>
           </div>
           <div className="orders-main">
             <div className="orders-titlebar">
@@ -347,14 +348,9 @@ export default function Home() {
             <Github size={18} aria-hidden="true" /> Review the workshop on GitHub
           </a>
         </div>
-        <div className="release-plate" aria-hidden="true"><b>ADS</b><span>OPEN SOURCE<br />DESIGN GOVERNANCE</span></div>
       </section>
 
-      <footer className="site-footer">
-        <span>Agentic Design System · 2026</span>
-        <span><a href="https://github.com/aa-on-ai/agentic-design-system/blob/main/LICENSE">MIT</a> · <a href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a></span>
-        <span>Built by <a href="https://github.com/aa-on-ai">Aaron Thomas</a></span>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
