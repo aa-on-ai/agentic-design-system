@@ -6,13 +6,15 @@ how to decide which skills to run and when.
 > routes a task into the right profile or workflow by intent. this doc is the decision logic; the
 > [`workflows/`](../workflows/) runbooks are operational wrappers around it.
 
-## Two packs
+## Three lanes
 
 **core pack** (always active for visual work):
 - design-review — quality gate
 - ux-baseline-check — state completeness
 - ui-polish-pass — final visual polish
-- agent-friendly-design — make sites work for AI consumers
+
+**production pass** (for public sites and products):
+- agent-friendly-design — semantic structure and machine-readable state for AI consumers
 
 **creative pack** (opt-in only):
 - visual-reference-calibration — reference contract before generation
@@ -20,7 +22,7 @@ how to decide which skills to run and when.
 - world-build — immersive atmosphere
 - web-animation-design — motion and interaction feel
 
-core pack runs on every visual task. creative pack runs only when triggered. each creative skill has its own trigger rules in its SKILL.md — read those, not just this doc.
+core pack runs on every visual task. the production pass runs when a web surface will ship. creative pack runs only when triggered. each creative skill has its own trigger rules in its SKILL.md — read those, not just this doc.
 
 ## The decision
 
@@ -29,8 +31,12 @@ is this visual or user-facing?
 ├── no → skip (scripts, backend, config, data)
 └── yes → core pack always runs
     │
+    will this web surface ship publicly or as a product?
+    ├── yes → also run agent-friendly-design
+    └── no → skip the production pass
+    │
     does it need creative direction?
-    ├── visual reference/screenshot/site/CodePen/"feel like" prompt → add visual-reference-calibration BEFORE generation
+    ├── desired visual reference/screenshot/site/CodePen/"feel like" prompt → add visual-reference-calibration BEFORE generation
     ├── user asked for personality/delight/whimsy → add whimsical-design
     ├── user asked for immersion/atmosphere/world → add world-build
     ├── user asked about animation/motion/feel → add web-animation-design
@@ -80,7 +86,7 @@ order: **intent/outcome → build → evidence → separate grader → revise or
 
 ## Reference Intake Gate (optional; run when a visual target matters)
 
-if the prompt includes a visual reference, screenshot, site, CodePen, Dribbble shot, “make it feel like…”, marketing/editorial/launch art direction, or a previous output failed because the vibe was generic/sloppy/wrong, run `visual-reference-calibration` before building.
+if the prompt includes a desired visual reference, screenshot, site, CodePen, Dribbble shot, “make it feel like…”, marketing/editorial/launch art direction, or a previous output failed because the vibe was generic/sloppy/wrong, run `visual-reference-calibration` before building. a screenshot used only to point at a defect is review evidence, not a visual target, and does not trigger this gate.
 
 create `templates/reference-intake-contract.md` or the same shape in the run report. the contract must state:
 - source/reference

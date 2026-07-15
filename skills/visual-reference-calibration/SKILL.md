@@ -1,11 +1,13 @@
 ---
 name: visual-reference-calibration
-description: Use before implementing UI/design from a visual reference, screenshot, CodePen, Dribbble shot, website, or “make it feel like this” request. Prevents cargo-culting mechanics, fake UI chrome, and code-first misses by forcing reference breakdown, user-question calibration, visual target approval, and side-by-side review before implementation.
+description: Use before implementing UI/design from an artifact supplied as a desired visual reference, such as a screenshot, CodePen, Dribbble shot, website, or “make it feel like this” request. Screenshots used only to point out a defect stay in the normal review path. Prevents cargo-culting mechanics, fake UI chrome, and code-first misses by forcing reference breakdown, user-question calibration, visual target approval, and side-by-side review before implementation.
 ---
 
 # Visual Reference Calibration
 
 Use this when Aaron points to a visual reference and wants a UI to borrow its feel, quality, interaction, surface treatment, motion, or style.
+
+Do not use this merely because a screenshot is attached. If the screenshot only marks a bug, awkward edge, or region to review, treat it as evidence for the existing UI and continue with design-review.
 
 This skill exists because we badly missed the Jhey CodePen portfolio-card task by translating a visual reference into implementation mechanics instead of design judgment.
 

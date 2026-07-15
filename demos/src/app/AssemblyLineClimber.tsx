@@ -1,12 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const RUNG_STEP = 28;
 
+function playEmberChirp() {
+  const WebAudioContext = window.AudioContext ??
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+  if (!WebAudioContext) return;
+
+  const context = new WebAudioContext();
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(330, now);
+  oscillator.frequency.exponentialRampToValueAtTime(610, now + 0.09);
+  oscillator.frequency.exponentialRampToValueAtTime(440, now + 0.16);
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.12, now + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.19);
+  oscillator.addEventListener("ended", () => void context.close(), { once: true });
+}
+
 export function AssemblyLineClimber() {
   const climberRef = useRef<HTMLDivElement>(null);
+  const [hopCount, setHopCount] = useState(0);
 
   useEffect(() => {
     const climber = climberRef.current;
@@ -21,15 +48,16 @@ export function AssemblyLineClimber() {
     const update = () => {
       frame = 0;
 
+      const rect = factoryFloor.getBoundingClientRect();
+      const active = rect.top < window.innerHeight * 0.78 && rect.bottom > window.innerHeight * 0.28;
+      climber.dataset.active = String(active);
+
       if (reduceMotion.matches) {
         climber.dataset.reducedMotion = "true";
         return;
       }
 
       climber.dataset.reducedMotion = "false";
-      const rect = factoryFloor.getBoundingClientRect();
-      const active = rect.top < window.innerHeight * 0.78 && rect.bottom > window.innerHeight * 0.28;
-      climber.dataset.active = String(active);
 
       const delta = window.scrollY - previousY;
       if (Math.abs(delta) > 1) {
@@ -81,17 +109,26 @@ export function AssemblyLineClimber() {
       data-active="false"
       data-direction="idle"
       data-reduced-motion="false"
-      aria-hidden="true"
     >
-      <div className="assembly-climber-figure">
-        <Image
-          src="/characters/ember-climbing.png"
-          alt=""
-          width={512}
-          height={512}
-          sizes="(max-width: 720px) 96px, (max-width: 1040px) 108px, 124px"
-        />
-      </div>
+      <button
+        type="button"
+        className="assembly-climber-figure focus-ring"
+        aria-label="Make Ember hop"
+        onClick={() => {
+          playEmberChirp();
+          setHopCount((count) => count + 1);
+        }}
+      >
+        <span key={hopCount} className="assembly-climber-image">
+          <Image
+            src="/characters/ember-climbing.png"
+            alt=""
+            width={512}
+            height={512}
+            sizes="(max-width: 720px) 96px, (max-width: 1040px) 108px, 124px"
+          />
+        </span>
+      </button>
     </div>
   );
 }

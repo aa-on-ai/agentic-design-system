@@ -18,6 +18,8 @@ this repo contains 9 design skills: one orchestrator plus core, reference, produ
 - `skills/design-review/` — quality gate with verification scripts and 11 reference files
 - `skills/ux-baseline-check/` — state completeness (loading, empty, error)
 - `skills/ui-polish-pass/` — final visual polish pass
+
+**production pass** (for public sites and products):
 - `skills/agent-friendly-design/` — make sites work for AI consumers
 
 **reference gate** (opt-in before coding):

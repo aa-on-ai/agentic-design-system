@@ -60,14 +60,14 @@ function OrderArtifact({ stage }: { stage: ArtifactStage }) {
 
       {isIntent && (
         <div className="intent-ticket">
-          <span>JOB 4821-A</span>
+          <span>Job 4821-A</span>
           <strong>Spot delayed orders before they miss dispatch.</strong>
         </div>
       )}
 
       {isBaseline && (
         <div className="baseline-tape" aria-label="Required screen states">
-          <span>LOADING</span><span>EMPTY</span><span>ERROR</span><span>390PX</span>
+          <span>Loading</span><span>Empty</span><span>Error</span><span>390px</span>
         </div>
       )}
 
@@ -142,16 +142,16 @@ function OrderArtifact({ stage }: { stage: ArtifactStage }) {
         </div>
       </div>
 
-      {isIntent && <span className="draft-stamp" aria-hidden="true">ROUGH / V0</span>}
-      {isBaseline && <span className="context-tag" aria-hidden="true">CONTEXT LOADED</span>}
-      {isRubric && <span className="caliper" aria-hidden="true"><i /><b>PASS LINE</b><i /></span>}
+      {isIntent && <span className="draft-stamp" aria-hidden="true">Rough / v0</span>}
+      {isBaseline && <span className="context-tag" aria-hidden="true">Context loaded</span>}
+      {isRubric && <span className="caliper" aria-hidden="true"><i /><b>Pass line</b><i /></span>}
       {isEvidence && (
         <div className="inspection-stamps" aria-hidden="true">
-          <span className="stamp-fail">FAIL 01</span>
-          <span className="stamp-fixed">REPAIRED</span>
+          <span className="stamp-fail">Fail 01</span>
+          <span className="stamp-fixed">Repaired</span>
         </div>
       )}
-      {isRelease && <span className="release-seal" aria-hidden="true">RELEASE<br />CLEARED</span>}
+      {isRelease && <span className="release-seal" aria-hidden="true">Release<br />cleared</span>}
     </div>
   );
 }
@@ -197,7 +197,7 @@ function Station({ number, id, eyebrow, title, description, notes, stage, side, 
           <span className="cart-wheel cart-wheel--right" aria-hidden="true" />
         </div>
         <div className="machine-footer" aria-hidden="true">
-          <span>ADS / {number}</span><i /><span>LINE 01</span>
+          <span>ADS / {number}</span><i /><span>Line 01</span>
         </div>
       </div>
     </section>
@@ -237,7 +237,7 @@ export default function Home() {
           <div className="hero-scrim" aria-hidden="true" />
 
           <div className="hero-copy">
-            <p className="hero-kicker"><span>OPEN SOURCE</span> UI QUALITY WORKSHOP</p>
+            <p className="hero-kicker"><span>Open source</span> UI quality workshop</p>
             <h1 id="hero-title">Your agent can build.<br /><em>ADS runs inspection.</em></h1>
             <p className="hero-lede">
               A design system your coding agent reads while it works. Put one screen through intent,
@@ -250,7 +250,7 @@ export default function Home() {
           </div>
 
           <div className="hero-job-ticket" aria-hidden="true">
-            <span>LIVE JOB</span><b>ORDERS / ADMIN</b><small>5 STATIONS · 1 ARTIFACT</small>
+            <span>Live job</span><b>Orders / admin</b><small>5 stations · 1 artifact</small>
           </div>
           <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>
@@ -261,7 +261,7 @@ export default function Home() {
         <AssemblyLineClimber />
 
         <div className="line-intro">
-          <p>THE ADS LINE / 01—05</p>
+          <p>The ADS line / 01–05</p>
           <h2>Watch the same screen<br />earn its release.</h2>
           <span>Scroll to advance the job</span>
         </div>
@@ -276,7 +276,7 @@ export default function Home() {
           stage="intent"
           side="left"
           lamp="ticketed"
-          machineLabel="INTAKE PRESS"
+          machineLabel="Intake press"
         />
 
         <Station
@@ -289,7 +289,7 @@ export default function Home() {
           stage="baseline"
           side="right"
           lamp="context on"
-          machineLabel="BASELINE FIXTURE"
+          machineLabel="Baseline fixture"
         />
 
         <Station
@@ -302,7 +302,7 @@ export default function Home() {
           stage="rubric"
           side="left"
           lamp="within spec"
-          machineLabel="OPTICAL CALIPER"
+          machineLabel="Optical caliper"
         />
 
         <Station
@@ -316,7 +316,7 @@ export default function Home() {
           side="right"
           lamp="recapture clear"
           lampTone="green"
-          machineLabel="TRI-VIEW LIGHT TABLE"
+          machineLabel="Tri-view light table"
         />
 
         <Station
@@ -330,16 +330,16 @@ export default function Home() {
           side="left"
           lamp="release cleared"
           lampTone="green"
-          machineLabel="FINAL RELEASE BAY"
+          machineLabel="Final release bay"
         />
 
-        <div className="track-end" aria-hidden="true"><span>END OF LINE</span></div>
+        <div className="track-end" aria-hidden="true"><span>End of line</span></div>
       </div>
 
       <section className="release-bay" aria-labelledby="release-title">
         <div className="release-door" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="release-copy">
-          <p>START A RUN / MIT LICENSED</p>
+          <p>Start a run / MIT licensed</p>
           <h2 id="release-title">Put your next screen<br />on the line.</h2>
           <span>Plain markdown, scripts, and templates. Use the full workshop or borrow one station.</span>
         </div>

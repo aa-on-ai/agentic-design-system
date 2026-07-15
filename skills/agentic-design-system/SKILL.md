@@ -45,7 +45,7 @@ the system installs a routing skill plus focused helper skills. you don't need t
 - `skills/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
 
 ### creative pack (read ONLY when triggered)
-- `skills/visual-reference-calibration/SKILL.md` — BEFORE coding when Aaron provides a screenshot, CodePen, website, visual reference, or says “make it feel like this.” Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
+- `skills/visual-reference-calibration/SKILL.md` — BEFORE coding when Aaron provides a screenshot, CodePen, website, or other artifact as a desired visual target, or says “make it feel like this.” A screenshot used only to point at a defect is review evidence, not a reference target. Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
 - `skills/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
 - `skills/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
 - `skills/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
@@ -57,7 +57,7 @@ the system installs a routing skill plus focused helper skills. you don't need t
 default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it.
 
 ### reference intake gate (optional; run before reference-led visual work)
-if the user provides a visual reference/screenshot/site/CodePen, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `skills/visual-reference-calibration/SKILL.md` before generating UI.
+if the user provides a visual reference/screenshot/site/CodePen as a desired target, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `skills/visual-reference-calibration/SKILL.md` before generating UI. screenshots used only to identify a bug or region of concern stay in the normal review path.
 
 use `templates/reference-intake-contract.md`. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when Aaron already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
 
@@ -102,7 +102,7 @@ is this visual or frontend work?
     └── non-visual (scripts, backend, config) → skip
     
     does it need creative direction?
-    ├── user provided a visual reference/screenshot/CodePen/site/"feel like this" → also read visual-reference-calibration BEFORE coding
+    ├── user provided a desired visual reference/screenshot/CodePen/site/"feel like this" → also read visual-reference-calibration BEFORE coding
     ├── user asked for personality/delight → also read whimsical-design
     ├── user asked for immersion/atmosphere → also read world-build  
     ├── task involves animation specifically → also read web-animation-design
@@ -146,7 +146,7 @@ more iterations with structured feedback produce breakthroughs. Anthropic's harn
 
 ## Verification (run before presenting)
 
-after ingest/interview (if needed), building, and scoring yourself on the rubric, run these scripts:
+after ingest/interview (if needed), building, and scoring yourself on the rubric, run these source pre-flight scripts:
 
 ```bash
 python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
@@ -154,7 +154,7 @@ python3 skills/design-review/scripts/state-check.py <file.tsx>
 python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 
-fix any warnings before presenting work. these catch: agent default patterns (zinc palette, purple gradients, Inter font), missing states (loading, empty, error), and accessibility gaps (semantic HTML, aria labels, alt text, heading hierarchy).
+investigate their warnings before presenting work. these are advisory source heuristics: they catch obvious defaults and missing source signals, but can both miss rendered defects and pass comments that merely contain the right words. when screenshot verification is in scope, gate the verdict on `skills/design-review/scripts/capture.mjs`, rendered screenshots, overflow, computed fonts, touch targets, and axe results.
 
 ## What the reference files cover
 
