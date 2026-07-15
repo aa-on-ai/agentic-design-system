@@ -236,8 +236,7 @@ code {
 }
 
 .hero-media,
-.hero-scrim,
-.hero-blueprint-grid {
+.hero-scrim {
   position: absolute;
   inset: 0;
 }
@@ -281,17 +280,6 @@ code {
   background:
     linear-gradient(90deg, rgba(7, 21, 36, 0.98) 0%, rgba(7, 21, 36, 0.9) 35%, rgba(7, 21, 36, 0.45) 63%, rgba(7, 21, 36, 0.08) 90%),
     linear-gradient(0deg, rgba(7, 21, 36, 0.62) 0%, transparent 48%);
-}
-
-.hero-blueprint-grid {
-  z-index: -1;
-  width: 54%;
-  opacity: 0.14;
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mask-image: linear-gradient(90deg, #000 0%, #000 48%, transparent 100%);
 }
 
 .hero-copy {
@@ -495,10 +483,7 @@ code {
   background:
     radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--orange) 10%, transparent), transparent 26%),
     radial-gradient(circle at 90% 68%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 24%),
-    linear-gradient(var(--line-soft) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line-soft) 1px, transparent 1px),
     var(--page);
-  background-size: auto, auto, 64px 64px, 64px 64px, auto;
 }
 
 .factory-floor::after {
@@ -1403,17 +1388,6 @@ code {
   grid-template-columns: minmax(0, 1.2fr) minmax(420px, 0.8fr);
 }
 
-.release-bay::before {
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255, 246, 228, 0.12) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 246, 228, 0.12) 2px, transparent 2px);
-  background-size: 80px 80px;
-  content: "";
-}
-
 .release-door {
   position: absolute;
   z-index: -1;
@@ -1783,8 +1757,6 @@ code {
     background: linear-gradient(180deg, rgba(7, 21, 36, 0.98) 0%, rgba(7, 21, 36, 0.86) 58%, rgba(7, 21, 36, 0.38) 100%);
   }
 
-  .hero-blueprint-grid { width: 100%; opacity: 0.1; }
-
   .hero-job-ticket {
     right: 22px;
     bottom: 52px;
@@ -1801,7 +1773,6 @@ code {
 
   .factory-floor {
     padding: 110px 0 150px;
-    background-size: auto, auto, 40px 40px, 40px 40px, auto;
   }
 
   .continuous-track {

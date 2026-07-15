@@ -234,7 +234,6 @@ export default function Home() {
             <Image src="/hero/creative-pipeline-dark.png" alt="" width={1536} height={1024} priority className="hero-image hero-image-dark" />
           </div>
           <div className="hero-scrim" aria-hidden="true" />
-          <div className="hero-blueprint-grid" aria-hidden="true" />
 
           <div className="hero-copy">
             <p className="hero-kicker"><span>OPEN SOURCE</span> UI QUALITY WORKSHOP</p>
