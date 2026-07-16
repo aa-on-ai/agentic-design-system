@@ -22,6 +22,8 @@
 //   H. width mismatch        -> same breakpoint but different widths is incomparable
 //                               (reason: width-mismatch), never force-diffed; height-only
 //                               differences keep the union-canvas accounting (case B)
+//   I. strict anti-aliasing  -> an AA-only numeric change fails a strict zero budget;
+//                               perceptual mode continues to ignore AA noise
 //
 //   node testing/compare-smoke.mjs
 //
@@ -63,6 +65,26 @@ function makePng(width, height, rgb, block = null) {
         png.data[i + 1] = block.rgb[1];
         png.data[i + 2] = block.rgb[2];
       }
+    }
+  }
+  return PNG.sync.write(png);
+}
+
+// A vertical black rule with gray anti-aliased shoulders. Changing only the
+// interior shoulder pixels is classified entirely as anti-aliasing by pixelmatch.
+function makeAaEdgePng(changed = false) {
+  const width = 7;
+  const height = 7;
+  const png = new PNG({ width, height });
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let value = x === 2 || x === 4 ? 192 : x === 3 ? 0 : 255;
+      if (changed && y >= 1 && y <= 5 && (x === 2 || x === 4)) value = 180;
+      const i = (y * width + x) * 4;
+      png.data[i] = value;
+      png.data[i + 1] = value;
+      png.data[i + 2] = value;
+      png.data[i + 3] = 255;
     }
   }
   return PNG.sync.write(png);
@@ -196,14 +218,16 @@ async function main() {
     eDefault.code === 0 && eDefaultJson.pairs[0].changedPixels === 0,
     `changed=${eDefaultJson.pairs[0].changedPixels}`);
   ok('E: default mode records pixelmatchThreshold 0.1',
-    eDefaultJson.pixelmatchThreshold === 0.1, `recorded=${eDefaultJson.pixelmatchThreshold}`);
+    eDefaultJson.pixelmatchThreshold === 0.1 && eDefaultJson.pixelmatchIncludeAA === false,
+    `threshold=${eDefaultJson.pixelmatchThreshold} includeAA=${eDefaultJson.pixelmatchIncludeAA}`);
   const eStrict = await runCompare(tintBaseDir, tintCandDir, ['--pixel-threshold', '0']);
   const eStrictJson = await readJson(path.join(tintCandDir, 'comparison', 'comparison.json'));
   ok('E: same tint shift registers fully in strict mode (--pixel-threshold 0)',
     eStrict.code === 0 && eStrictJson.pairs[0].changedPixels === W * H && eStrictJson.pairs[0].changedPct === 100,
     `changed=${eStrictJson.pairs[0].changedPixels}/${W * H} pct=${eStrictJson.pairs[0].changedPct}`);
   ok('E: strict mode records pixelmatchThreshold 0',
-    eStrictJson.pixelmatchThreshold === 0, `recorded=${eStrictJson.pixelmatchThreshold}`);
+    eStrictJson.pixelmatchThreshold === 0 && eStrictJson.pixelmatchIncludeAA === true,
+    `threshold=${eStrictJson.pixelmatchThreshold} includeAA=${eStrictJson.pixelmatchIncludeAA}`);
   ok('E: comparison.json carries toolVersion + schemaVersion',
     typeof eStrictJson.toolVersion === 'string' && eStrictJson.schemaVersion === 1,
     JSON.stringify({ tool: eStrictJson.toolVersion, schema: eStrictJson.schemaVersion }));
@@ -261,6 +285,24 @@ async function main() {
   ok('H: mismatched dimensions recorded on the incomparable entry',
     hIncomp?.baselineDimensions === `${W}x${H}` && hIncomp?.candidateDimensions === `${W + 20}x${H}`,
     JSON.stringify(hIncomp));
+
+  // --- Case I: strict mode must count anti-aliased-only numeric changes ---
+  const iBaseDir = await writeEvidenceDir(path.join(WORK, 'aa-baseline'), [
+    { state: 'default', breakpoint: '390x844', png: makeAaEdgePng(false) },
+  ]);
+  const iCandDir = await writeEvidenceDir(path.join(WORK, 'aa-candidate'), [
+    { state: 'default', breakpoint: '390x844', png: makeAaEdgePng(true) },
+  ]);
+  const iDefault = await runCompare(iBaseDir, iCandDir, ['--threshold', '0']);
+  const iDefaultJson = await readJson(path.join(iCandDir, 'comparison', 'comparison.json'));
+  ok('I: perceptual mode ignores AA-only noise',
+    iDefault.code === 0 && iDefaultJson.pairs[0].changedPixels === 0,
+    `exit=${iDefault.code} changed=${iDefaultJson.pairs[0].changedPixels}`);
+  const iStrict = await runCompare(iBaseDir, iCandDir, ['--pixel-threshold', '0', '--threshold', '0']);
+  const iStrictJson = await readJson(path.join(iCandDir, 'comparison', 'comparison.json'));
+  ok('I: strict mode fails a zero budget on AA-only numeric changes',
+    iStrict.code === 1 && iStrictJson.pairs[0].changedPixels > 0 && iStrictJson.threshold?.passed === false,
+    `exit=${iStrict.code} changed=${iStrictJson.pairs[0].changedPixels}`);
 
   const passed = checks.filter((x) => x.pass).length;
   console.log('\n[compare-smoke] results:');

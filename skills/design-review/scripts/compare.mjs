@@ -30,7 +30,8 @@
 //                            noise and imperceptible tint shifts (e.g. #f7f6f3 vs
 //                            #e8f0e8) do NOT count as changed. Pass 0 for strict
 //                            fidelity/polish reviews where any numeric color drift
-//                            must register. The value used is recorded in comparison.json.
+//                            must register. Strict mode also includes anti-aliased
+//                            pixels. Both settings are recorded in comparison.json.
 //
 // Output (in --out):
 //   comparison.json          structured pairs + metrics + incomparable list
@@ -59,7 +60,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const SETUP_SCRIPT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'setup-capture.mjs');
-const TOOL_VERSION = '0.3.0'; // bump when metrics/semantics change
+const TOOL_VERSION = '0.4.0'; // bump when metrics/semantics change
 const SCHEMA_VERSION = 1; // comparison.json shape version
 const DEFAULT_PIXELMATCH_THRESHOLD = 0.1; // "visibly changed": pixelmatch's perceptual default
 
@@ -94,6 +95,10 @@ function parseArgs(argv) {
     out: get('--out', null),
     threshold,
     pixelThreshold,
+    // pixelmatch ignores pixels it classifies as anti-aliasing by default. That
+    // is useful for perceptual comparisons, but it would make the documented
+    // strict mode capable of passing a zero budget despite numeric differences.
+    pixelmatchIncludeAA: pixelThreshold === 0,
   };
 }
 
@@ -224,7 +229,7 @@ async function main() {
       interDiff.data,
       iw,
       ih,
-      { threshold: opts.pixelThreshold },
+      { threshold: opts.pixelThreshold, includeAA: opts.pixelmatchIncludeAA },
     );
 
     // Diff image on the union canvas: intersection diff top-left, out-of-bounds
@@ -283,8 +288,10 @@ async function main() {
     baselineUrl: baseline.url || null,
     candidateUrl: candidate.url || null,
     // per-pixel color tolerance used for this run. 0.1 (default) = "visibly changed"
-    // semantics; 0 = strict fidelity mode where any numeric color drift registers.
+    // semantics; 0 = strict fidelity mode where any numeric color drift registers,
+    // including pixels pixelmatch classifies as anti-aliasing.
     pixelmatchThreshold: opts.pixelThreshold,
+    pixelmatchIncludeAA: opts.pixelmatchIncludeAA,
     pairsCompared: pairs.length,
     pairsIdentical: pairs.filter((p) => p.identical).length,
     maxChangedPct: comparedPcts.length ? Number(Math.max(...comparedPcts).toFixed(3)) : null,

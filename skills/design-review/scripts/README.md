@@ -77,8 +77,10 @@ perceptual tolerance (0.1) ignores anti-aliasing noise **and imperceptible tint 
 `#f7f6f3` → `#e8f0e8` reads as identical. That is the right semantic for "did the layout
 change," and it is the documented meaning of `identical` in the output. For strict-fidelity
 work (1:1 ports, polish passes, token adherence) where any numeric color drift must register,
-pass `--pixel-threshold 0`. The threshold actually used, plus `toolVersion`/`schemaVersion`,
-are recorded in `comparison.json` so a report can always say which mode produced the numbers.
+pass `--pixel-threshold 0`. Strict mode also counts pixels that pixelmatch classifies as
+anti-aliasing; perceptual mode ignores them. The threshold and anti-aliasing policy actually
+used, plus `toolVersion`/`schemaVersion`, are recorded in `comparison.json` so a report can
+always say which mode produced the numbers.
 
 Smoke test (no browser, no network): `node testing/compare-smoke.mjs`.
 

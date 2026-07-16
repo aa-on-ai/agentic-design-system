@@ -171,8 +171,8 @@ the only case where the comparison itself fails.
 
 the default metric is "visibly changed" (perceptual tolerance — subtle tint drift does not
 register). for strict-fidelity reviews (1:1 ports, polish passes, token adherence) add
-`--pixel-threshold 0` so any numeric color drift counts; the mode used is recorded in
-`comparison.json`.
+`--pixel-threshold 0` so any numeric color drift counts, including anti-aliased pixels; the
+pixel threshold and anti-aliasing policy are recorded in `comparison.json`.
 
 skip the compare for: pure copy fixes, changes with no rendered surface, or work where no
 baseline exists yet (first build of a screen goes through the core chain instead).
