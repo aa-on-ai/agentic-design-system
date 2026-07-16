@@ -84,6 +84,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -98,6 +99,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 button,
