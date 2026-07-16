@@ -16,11 +16,11 @@ that ADS "didn't show up" in their agent.
 ## Run
 
 ```bash
-# installs from the local repo into a temp project, checks all 9 skills + bundled templates
+# installs from the local repo into a temp project, checks all 9 skills + 5 bundled templates
 testing/install-smoke.sh
 ```
 
-Success ends with: `install smoke passed: 9 skills and bundled outcome/grader templates`.
+Success ends with: `install smoke passed: 9 skills, 5 bundled templates, and 6 workflow runbooks (all in sync)`.
 
 Then confirm the verification scripts a consumer would run actually execute:
 
@@ -32,8 +32,8 @@ python3 skills/design-review/scripts/accessibility-check.py <any-sample.tsx>
 
 ## Evidence required
 
-- The smoke test's final line (pass) or the exact `missing installed skill: …` / `missing
-  bundled template: …` line (fail).
+- The smoke test's final line (pass) or the exact `missing installed skill: …`, `missing
+  bundled template: …`, or drift line (fail).
 - Confirmation the three scripts run without a Python error on a sample file.
 
 ## Output
