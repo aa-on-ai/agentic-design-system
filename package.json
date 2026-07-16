@@ -7,6 +7,7 @@
     "render-eval:smoke": "node testing/render-eval-smoke.mjs",
     "render-eval:fixture": "node testing/render-eval.mjs --fixture",
     "compare:smoke": "node testing/compare-smoke.mjs",
+    "homepage:smoke": "node testing/homepage-regression.mjs",
     "playwright:install": "playwright install chromium"
   },
   "devDependencies": {

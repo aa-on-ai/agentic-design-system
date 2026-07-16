@@ -1,11 +1,9 @@
-import Image from "next/image";
+import { FooterEmber } from "./FooterEmber";
 
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="footer-ember" aria-hidden="true">
-        <Image src="/characters/ember-peek.png" alt="" width={512} height={512} sizes="120px" />
-      </div>
+      <FooterEmber />
       <div className="footer-brand">
         <a className="footer-wordmark focus-ring" href="#top" aria-label="Back to the top">
           <span className="footer-wordmark-mark" aria-hidden="true">A</span>

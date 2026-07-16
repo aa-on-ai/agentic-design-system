@@ -1,46 +1,46 @@
 # Agentic Design System
 
-Agentic Design System is a set of installable skills, markdown templates, checks, and examples for coding agents that build UI.
+Design governance for coding agents that build UI.
 
-It is for Claude Code, Codex, OpenClaw, Hermes, Cursor, and similar agent shells. The point is simple: before an agent declares a screen done, it should define the user-facing intent, read the project baseline, judge the artifact against a task-specific rubric, attach evidence, and revise when the result misses.
+[See the live workshop](https://agentic-design-system.vercel.app) · [Read the design philosophy](./PHILOSOPHY.md)
 
-This is repo-local control flow, not a hosted design agent. Some parts are runnable skills and scripts. Some parts are templates the agent fills in. Some parts are dogfooded patterns that make the work inspectable until they become tighter automation.
+Coding agents can produce a screen quickly. Agentic Design System gives them a repeatable way to decide what the screen is for, load the right product context, review the rendered result, attach evidence, and revise before calling it done.
 
-Status: early public package. The skills and templates are usable now; the grader loop is still workflow-driven, not a hosted service.
-
-## How it works
-
-Intent -> baseline -> rubric -> build with evidence -> grade and revise.
-
-| Step | What ADS gives the agent | Status |
-|---|---|---|
-| 1. Define intent / outcome | [`templates/outcome-template.md`](./templates/outcome-template.md): user, situation, accomplish, notice, operational state, stop condition | template |
-| 2. Capture background / baseline | Project Knowledge Intake, `DESIGN.md`-shaped project identity, presets, references, routes, screenshots, prior decisions | skill + template |
-| 3. Write the review lens | [`templates/grader-report-template.md`](./templates/grader-report-template.md): fixed quality rows plus task-specific criteria | template + pattern |
-| 4. Build with evidence | Routed skills, deterministic checks, changed files, screenshots or preview, known risks, and run report | skill + script + template |
-| 5. Grade and revise | Separate grader context when available, returning `satisfied`, `needs_revision`, `max_iterations`, or `failed` | template + pattern |
-
-That loop is the product. Presets, checks, and archived fixtures are support machinery.
-
-## Workflows
-
-If you just want to *use* ADS, start at [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.md).
-It's the default "help me design or review something" entrypoint and routes you into the right
-path by intent. Each runbook in [`workflows/`](./workflows/) is decision-shaped — when to use it,
-what to read, what to run, what evidence is required, what report to produce, and when to stop.
-
-| Workflow | Use it to |
-|---|---|
-| [create-design-workflow](./workflows/create-design-workflow.md) | route any design/review task to the right profile (start here) |
-| [mobile-review](./workflows/mobile-review.md) | review a mobile/responsive/app/PWA screen (judgment vs defects, two passes) |
-| [adversarial-design-review](./workflows/adversarial-design-review.md) | critique finished UI from a context that didn't build it |
-| [install-usability-smoke](./workflows/install-usability-smoke.md) | verify ADS installs and the bundled skills/templates are present |
-| [readme-docs-critique](./workflows/readme-docs-critique.md) | judge whether the docs let a newcomer onboard |
-| [cold-agent-usage-test](./workflows/cold-agent-usage-test.md) | test whether a brand-new agent can use ADS unaided |
+ADS is a repo-local skill pack. It is not a hosted design agent or a UI generator.
 
 ## Install
 
-Most exact path from the version you are reviewing:
+From the project where your coding agent works:
+
+```bash
+npx skills add aa-on-ai/agentic-design-system --yes
+```
+
+Verify what was installed:
+
+```bash
+npx skills list
+```
+
+The installer currently adds nine skills under `.agents/skills/`. It does not create or replace your project’s `AGENTS.md`, `CLAUDE.md`, or other instruction file.
+
+For one task, tell your agent:
+
+```text
+Use the agentic-design-system skill for this UI task. Define the outcome, read the project baseline, run the applicable review chain, and return rendered evidence before calling it done.
+```
+
+For an always-on project setup, add this to the instruction file your agent reads:
+
+```markdown
+For visual or UI work, read `.agents/skills/agentic-design-system/SKILL.md` first and follow its routing and verification contract.
+```
+
+The fuller [`templates/agents-snippet.md`](./templates/agents-snippet.md) is useful when you clone the repository and keep the complete `skills/`, `workflows/`, and `templates/` tree in your project.
+
+### Install an exact checkout
+
+Use this when you are reviewing a branch or local change:
 
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
@@ -48,110 +48,163 @@ cd agentic-design-system
 npx skills add . --yes
 ```
 
-If you trust the repository default branch and want the shorthand:
+If `npx skills` is unavailable in your agent shell, use the [manual integration guide](#agent-integrations).
 
-```bash
-npx skills add aa-on-ai/agentic-design-system --yes
+## The loop
+
+```text
+intent → baseline → rubric → build → rendered evidence → review → revise or release
 ```
 
-Both paths assume a skills-compatible CLI. If your agent tool does not support `npx skills`, use the no-CLI install below and copy the repo's `skills/` directory into the location your agent reads. The full repo also includes presets, templates, integration docs, smoke tests, and archived early eval fixtures for reference.
+| Stage | What the agent must establish |
+|---|---|
+| Intent | The user, situation, desired outcome, and stop condition |
+| Baseline | Existing product rules, components, tokens, screenshots, and prior decisions |
+| Rubric | Fixed quality gates plus criteria specific to this task |
+| Evidence | Rendered states and breakpoints, accessibility, overflow, touch targets, and screenshots |
+| Review | A verdict that can send the artifact back for revision |
 
-Default path for a project:
+The report is part of the product. “Looks good” is not evidence.
 
-1. Paste [`templates/agents-snippet.md`](./templates/agents-snippet.md) into the agent instruction file for your tool.
-2. Pick or create a baseline for the project.
-3. For substantial UI work, start from [`templates/outcome-template.md`](./templates/outcome-template.md) and grade with [`templates/grader-report-template.md`](./templates/grader-report-template.md).
-4. Prompt normally, then require the report/evidence before accepting the work.
+## What installs
 
-Day one file to paste: [`templates/agents-snippet.md`](./templates/agents-snippet.md).
+### Orchestrator
 
-## Choose a baseline
+- [`agentic-design-system`](./skills/agentic-design-system) routes the task, defines the outcome, and orders the gates.
 
-The agent needs something to judge against. Use the lightest baseline that fits the task.
+### Core pack
 
-| Baseline | Use when | Artifact |
-|---|---|---|
-| Existing project context | The repo already has design docs, components, tokens, screenshots, or prior decisions | Agent reads the source files directly |
-| Project Knowledge Intake | The project needs shared taste/context before UI work | [`templates/project-identity-template.md`](./templates/project-identity-template.md) or `DESIGN.md` |
-| Reference Intake | A screenshot, site, CodePen, "make it feel like...", or prior miss matters | [`templates/reference-intake-contract.md`](./templates/reference-intake-contract.md) |
+- [`design-review`](./skills/design-review) checks hierarchy, product fit, anti-patterns, accessibility, and rendered quality.
+- [`ux-baseline-check`](./skills/ux-baseline-check) checks loading, empty, error, interaction, responsive, and edge states.
+- [`ui-polish-pass`](./skills/ui-polish-pass) finishes spacing, alignment, typography, and interaction details.
 
-No project context yet? See [`presets/`](./presets/) for utilitarian, dashboard, or editorial starters. Replace them with real project context as soon as you have it.
+### Production and reference gates
 
-## Integration paths
+- [`agent-friendly-design`](./skills/agent-friendly-design) covers semantic structure and machine-readable state for public products.
+- [`visual-reference-calibration`](./skills/visual-reference-calibration) defines what to borrow from a screenshot, site, or visual reference before code is written.
 
-First-class docs:
+### Creative pack
 
-| Tool | Put the instructions here | Notes |
-|---|---|---|
-| [Claude Code](./integrations/claude-code.md) | `CLAUDE.md` or `AGENTS.md` | Paste the snippet, add a baseline, prompt normally. |
-| [Codex CLI](./integrations/codex.md) | `AGENTS.md` or `codex.md` | Large context helps with full-chain review and reference comparisons. |
-| [Cursor](./integrations/cursor.md) | Rules or agent instructions | Keep the skills readable and paste the snippet. |
+- [`whimsical-design`](./skills/whimsical-design) is opt-in for personality, delight, and expressive marketing work.
+- [`world-build`](./skills/world-build) is opt-in for immersion and atmosphere.
+- [`web-animation-design`](./skills/web-animation-design) is opt-in for motion and interaction feel.
 
-Local/experimental docs also exist for [`OpenClaw`](./integrations/openclaw.md) and [`Hermes`](./integrations/hermes.md). They follow the same snippet/gate pattern, but they depend more on the local agent runtime.
+Creative skills are not a default styling layer. Their trigger rules decide when they belong.
 
-## What is still a pattern
+## Start a task
 
-- Custom rubric generation is template-driven. The agent fills in task-specific criteria from the outcome and baseline.
-- A separate grader is recommended when the host workflow supports it. ADS does not yet run a hosted grader service.
-- Screenshot review depends on the project and agent environment. The templates require evidence; the runner is still your toolchain.
-- The system raises the floor and makes misses inspectable. It does not replace taste or product judgment.
+Use [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.md) as the entrypoint.
 
-## Why this works
+| Need | Workflow |
+|---|---|
+| Route a design or review task | [`create-design-workflow`](./workflows/create-design-workflow.md) |
+| Review mobile or responsive UI | [`mobile-review`](./workflows/mobile-review.md) |
+| Critique finished UI from a separate context | [`adversarial-design-review`](./workflows/adversarial-design-review.md) |
+| Check package installation | [`install-usability-smoke`](./workflows/install-usability-smoke.md) |
+| Critique onboarding docs | [`readme-docs-critique`](./workflows/readme-docs-critique.md) |
+| Test whether a cold agent can use ADS | [`cold-agent-usage-test`](./workflows/cold-agent-usage-test.md) |
 
-Agents are better at checking UI against explicit criteria than spontaneously holding every design constraint in mind while generating. ADS exploits that asymmetry, but starts with context instead of generic polish.
+A source checkout includes the full template set under [`templates/`](./templates/). The installed orchestrator also bundles the outcome, grader, and run-report templates it needs at runtime. The most useful starting artifacts are:
 
-Define intent, gather the baseline, calibrate references when needed, build with routed skills, attach evidence, then grade the result. The report is the difference between "my agent got better" and "here is what changed, what passed, and what still needs human judgment."
+- [`outcome-template.md`](./templates/outcome-template.md)
+- [`project-identity-template.md`](./templates/project-identity-template.md)
+- [`reference-intake-contract.md`](./templates/reference-intake-contract.md)
+- [`grader-report-template.md`](./templates/grader-report-template.md)
+- [`run-report-template.md`](./templates/run-report-template.md)
 
-## No-CLI install
+## Rendered verification
+
+Source checks are an inexpensive pre-flight. Rendered evidence is the real gate.
 
 ```bash
-git clone https://github.com/aa-on-ai/agentic-design-system.git
+python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 skills/design-review/scripts/state-check.py <file.tsx>
+python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 
-# Global, if your agent reads shared skills
-cp -r agentic-design-system/skills ~/.claude/skills/
-
-# Or project-level
-cp -r agentic-design-system/skills your-project/skills/
+node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+  --states default,loading,empty,error \
+  --out evidence/<task>
 ```
 
-## Verify the package
+For a meaningful modification, capture the baseline and candidate with the same states and breakpoints, then compare them:
+
+```bash
+node skills/design-review/scripts/compare.mjs \
+  evidence/<task>-baseline \
+  evidence/<task>-candidate
+```
+
+The comparison records what changed. It does not decide whether the change was good.
+
+## Worked example
+
+[`docs/loop-demo/`](./docs/loop-demo/) preserves a real three-pass run on an Orders screen at 390, 768, and 1280px.
+
+- Iteration 1: 12 axe violations and 114 undersized touch targets
+- Iteration 2: 12 undersized touch targets remained
+- Iteration 3: zero axe violations and zero undersized touch targets
+
+Only then did the grader return `satisfied`.
+
+## Agent integrations
+
+- [Claude Code](./integrations/claude-code.md)
+- [Codex CLI](./integrations/codex.md)
+- [Cursor](./integrations/cursor.md)
+- [OpenClaw](./integrations/openclaw.md)
+- [Hermes](./integrations/hermes.md)
+
+## Repository map
+
+```text
+skills/        installable agent skills and rendered checks
+workflows/     task entrypoints and review runbooks
+templates/     outcome, project identity, reference, grader, and report shapes
+presets/       starter baselines for common product types
+testing/       package and evidence-loop smoke tests
+demos/         the public workshop site and worked UI examples
+docs/          influences, current audits, and archived provenance
+```
+
+Historical eval fixtures are intentionally kept under [`docs/archive/`](./docs/archive/) instead of mixed into the current product path.
+
+## Verify a source checkout
 
 ```bash
 testing/install-smoke.sh
+npm run compare:smoke
+npm run render-eval:smoke
 ```
 
-The smoke test installs from the local repo into a temporary project and verifies all 9 skills, the bundled outcome/grader templates, and the workflow runbooks bundled under the orchestrator skill (and that those runbooks stay byte-identical to the canonical top-level `workflows/`). Success ends with `install smoke passed: 9 skills, bundled outcome/grader templates, and 6 workflow runbooks (in sync)`.
+To exercise the public GitHub shorthand rather than the local checkout:
 
-## A worked example
+```bash
+testing/install-smoke.sh aa-on-ai/agentic-design-system
+```
 
-[`docs/loop-demo/`](./docs/loop-demo/) is a real run of the executable loop ([`workflows/new-page-component.mjs`](./workflows/new-page-component.mjs)) on an Orders screen gated at 390 / 768 / 1280px (preserved as a sample — generated `evidence/` is otherwise ignored and regenerated on demand). It took three passes to converge: iter1 failed with 12 axe violations and 114 sub-44px touch targets measured from the rendered DOM; iter2 cleared most of the touch targets (114 → 12); iter3 closed the rest and every axe violation (→ 0), and only then did the independent grader return `satisfied`. The verdict rests on rendered evidence, not source — which is exactly why a comment cannot satisfy it, and why the same loop returns `failed` rather than ship a screen that still misses a hard gate.
+## Status and limits
 
-## Limitations
+ADS is an early public package. The skills, templates, runbooks, and rendered checks are usable now. The grader loop is workflow-driven, not a hosted service.
 
-- Depends on agents actually following skill instructions. Works best with frontier models.
-- Verification scripts catch structural issues, not aesthetic ones. Reference Intake and screenshot review are the craft layer.
-- Creative passes can over-steer utilitarian UI. That is why they are opt-in.
-- Separate grader context is a workflow recommendation, not a hosted service.
-- Custom rubric generation is not fully automated yet.
+- Agents still need real product context and human judgment.
+- Structural checks cannot decide whether a visual direction is tasteful.
+- Separate grader context is recommended when the host supports it.
+- Creative passes can over-steer utility UI, so they stay opt-in.
 
-## Influences and prior art
+## Influences
 
-- [Intent Engineering](https://github.com/kylezantos/intent-engineering) - intent before output: user, situation, accomplish, notice, operational state
-- [Anthropic Managed Agents: Define outcomes](https://platform.claude.com/docs/en/managed-agents/define-outcomes) - outcome, rubric, separate grader, iteration loop
-- [Agentic Rubrics as Contextual Verifiers for SWE Agents](https://huggingface.co/papers/2601.04171) - repository-grounded rubrics and verifier signals for agent patches
-- [Karpathy autoresearch](https://github.com/karpathy/autoresearch) - fixed runtime, single editable target, metric, experiment log, and repeated agent loop; this is the closest reference for how ADS defines its loop structure
-- [DESIGN.md](https://github.com/google-labs-code/design.md) - structured project identity for agents
-- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better) - micro-detail heuristics
+- [Intent Engineering](https://github.com/kylezantos/intent-engineering)
+- [Anthropic Managed Agents: Define outcomes](https://platform.claude.com/docs/en/managed-agents/define-outcomes)
+- [Agentic Rubrics as Contextual Verifiers for SWE Agents](https://huggingface.co/papers/2601.04171)
+- [Karpathy autoresearch](https://github.com/karpathy/autoresearch)
+- [DESIGN.md](https://github.com/google-labs-code/design.md)
+- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better)
 
-## Further reading
-
-- [PHILOSOPHY.md](./PHILOSOPHY.md) - design philosophy behind the system
-- [docs/influences.md](./docs/influences.md) - what ADS borrows from each source and what it does not copy
-- [docs/archive/](./docs/archive/) - pre-spine eval fixtures and earlier control-plane notes, kept for provenance
+See [`docs/influences.md`](./docs/influences.md) for what ADS borrows from each source.
 
 ## Contributing
 
-If you find a recurring anti-pattern, a better routing rule, or a skill that should exist, open a PR.
+If you find a recurring anti-pattern, a better routing rule, or a missing verification step, open an issue or pull request.
 
 ## License
 

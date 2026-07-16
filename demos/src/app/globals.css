@@ -30,6 +30,10 @@
   --accent: var(--orange);
   --accent-strong: var(--orange-bright);
   --accent-text: #1c1711;
+  --leading-display: 1;
+  --leading-heading: 1.08;
+  --leading-body: 1.56;
+  --leading-label: 1.4;
 }
 
 :root[data-theme="dark"] {
@@ -90,7 +94,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
-  line-height: 1.5;
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -306,7 +310,7 @@ code {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.035em;
-  line-height: 1.4;
+  line-height: var(--leading-label);
 }
 
 .hero-kicker span {
@@ -327,7 +331,7 @@ code {
   font-size: clamp(3.25rem, 6.1vw, 6.35rem);
   font-weight: 680;
   letter-spacing: -0.06em;
-  line-height: 0.94;
+  line-height: var(--leading-display);
   text-wrap: balance;
 }
 
@@ -345,7 +349,7 @@ code {
   color: var(--muted);
   font-size: clamp(1rem, 1.3vw, 1.18rem);
   font-weight: 560;
-  line-height: 1.62;
+  line-height: var(--leading-body);
   text-wrap: pretty;
 }
 
@@ -617,7 +621,7 @@ code {
   font-size: clamp(3.2rem, 5.8vw, 6rem);
   font-weight: 640;
   letter-spacing: -0.052em;
-  line-height: 0.98;
+  line-height: 1.02;
   text-wrap: balance;
 }
 
@@ -696,7 +700,7 @@ code {
   font-size: clamp(2.2rem, 3.35vw, 3.65rem);
   font-weight: 620;
   letter-spacing: -0.045em;
-  line-height: 1.04;
+  line-height: var(--leading-heading);
   text-wrap: balance;
 }
 
@@ -708,7 +712,7 @@ code {
   font-size: clamp(1.95rem, 2.65vw, 2.8rem);
   font-weight: 560;
   letter-spacing: -0.03em;
-  line-height: 1.08;
+  line-height: var(--leading-heading);
 }
 
 .station-description {
@@ -716,7 +720,7 @@ code {
   color: var(--muted);
   font-size: 1rem;
   font-weight: 520;
-  line-height: 1.64;
+  line-height: var(--leading-body);
   text-wrap: pretty;
 }
 
@@ -1493,7 +1497,7 @@ code {
   font-size: clamp(3.5rem, 6.2vw, 6.7rem);
   font-weight: 600;
   letter-spacing: -0.052em;
-  line-height: 0.97;
+  line-height: var(--leading-display);
   text-wrap: balance;
 }
 
@@ -1504,7 +1508,7 @@ code {
   color: var(--release-text);
   font-size: 1.05rem;
   font-weight: 560;
-  line-height: 1.58;
+  line-height: var(--leading-body);
 }
 
 .release-actions {
@@ -1548,19 +1552,39 @@ code {
 
 .footer-ember {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   bottom: -18px;
   left: 50%;
+  display: block;
   width: 124px;
-  pointer-events: none;
+  min-height: 124px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
   transform: translateX(-50%) rotate(1deg);
 }
 
-.footer-ember img {
+.footer-ember-image {
+  display: block;
+  animation: ember-peek-pop 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: 50% 100%;
+}
+
+.footer-ember-image img {
   display: block;
   width: 100%;
   height: auto;
   filter: drop-shadow(0 -6px 10px rgba(0, 0, 0, 0.22));
+}
+
+@keyframes ember-peek-pop {
+  0% { transform: translateY(0) rotate(0) scale(1); }
+  38% { transform: translateY(-34px) rotate(-3deg) scale(1.035, 0.97); }
+  70% { transform: translateY(-8px) rotate(1deg) scale(0.99, 1.01); }
+  100% { transform: translateY(0) rotate(0) scale(1); }
 }
 
 .footer-brand,
@@ -1620,6 +1644,7 @@ code {
   font-size: 1.02rem;
   font-weight: 620;
   letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 .footer-wordmark small {
@@ -1627,6 +1652,7 @@ code {
   font-family: var(--font-label), monospace;
   font-size: 0.56rem;
   letter-spacing: 0.025em;
+  line-height: 1.35;
 }
 
 .footer-brand p {
@@ -1634,7 +1660,7 @@ code {
   margin: 28px 0 0;
   color: #a99a83;
   font-size: 0.92rem;
-  line-height: 1.62;
+  line-height: var(--leading-body);
   text-wrap: pretty;
 }
 
@@ -1661,6 +1687,7 @@ code {
 
 .footer-links a {
   font-size: 0.86rem;
+  line-height: 1.45;
   text-decoration: none;
 }
 
@@ -1674,6 +1701,7 @@ code {
   font-family: var(--font-label), monospace;
   font-size: 0.57rem;
   letter-spacing: 0.015em;
+  line-height: var(--leading-label);
   grid-column: 1 / -1;
 }
 
@@ -1776,7 +1804,7 @@ code {
   .wordmark {
     max-width: 170px;
     font-size: 0.7rem;
-    line-height: 1.05;
+    line-height: 1.2;
   }
 
   .wordmark-mark {
@@ -1805,14 +1833,14 @@ code {
 
   .hero-copy h1 {
     font-size: clamp(3.1rem, 14.8vw, 4.2rem);
-    line-height: 0.96;
+    line-height: var(--leading-display);
   }
 
   .hero-lede {
     max-width: 440px;
     margin-top: 22px;
     font-size: 0.95rem;
-    line-height: 1.48;
+    line-height: var(--leading-body);
   }
 
   .hero-actions {
