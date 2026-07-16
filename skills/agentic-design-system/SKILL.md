@@ -48,6 +48,7 @@ the system installs a routing skill plus focused helper skills. you don't need t
 
 ### creative pack (read ONLY when triggered)
 - `skills/visual-reference-calibration/SKILL.md` — BEFORE coding when Aaron provides a screenshot, CodePen, website, or other artifact as a desired visual target, or says “make it feel like this.” A screenshot used only to point at a defect is review evidence, not a reference target. Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
+- `skills/design-variations/SKILL.md` — BEFORE production implementation when the user asks for options, variations, concepts, mockups, or help choosing a direction. Build one disposable browser artifact, let the human choose or blend, then promote only the winner.
 - `skills/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
 - `skills/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
 - `skills/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
@@ -105,6 +106,7 @@ is this visual or frontend work?
     
     does it need creative direction?
     ├── user provided a desired visual reference/screenshot/CodePen/site/"feel like this" → also read visual-reference-calibration BEFORE coding
+    ├── user asked for options/variations/concepts or the direction is undecided → run design-variations BEFORE production implementation
     ├── user asked for personality/delight → also read whimsical-design
     ├── user asked for immersion/atmosphere → also read world-build  
     ├── task involves animation specifically → also read web-animation-design

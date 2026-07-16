@@ -55,7 +55,7 @@ this is an advantage over smaller-context tools. lean into it:
 ### autonomous vs interactive
 
 - **autonomous mode** — Codex runs without check-ins. the design system is critical here because there's no human steering mid-task. the quality chain is the safety net.
-- **interactive mode** — Codex asks questions along the way. use this for divergent exploration: "explore 3 directions and ask me which to pursue before refining."
+- **interactive mode** — Codex asks questions along the way. for divergent exploration, have it read `skills/design-variations/SKILL.md`, build the disposable comparison artifact, and ask which direction to promote.
 
 ### multi-agent with codex
 
@@ -73,8 +73,9 @@ each agent loads the same design system. the quality floor is consistent. the cr
 
 ```
 this page could go several directions. build 3 distinct layout approaches
-with a version selector component at the top of the page. make them genuinely
-different — not variations on a theme. I'll pick one to refine.
+using skills/design-variations/SKILL.md. keep the same content and state,
+make each direction structurally distinct, and recommend one. I'll choose or
+blend before you modify production code.
 ```
 
 ## tips

@@ -24,6 +24,7 @@ expected=(
   agent-friendly-design
   agentic-design-system
   design-review
+  design-variations
   ui-polish-pass
   ux-baseline-check
   visual-reference-calibration
@@ -39,6 +40,16 @@ for skill in "${expected[@]}"; do
     exit 1
   fi
 done
+
+variation_asset="$TMP_DIR/.agents/skills/design-variations/assets/variations.html"
+if [[ ! -f "$variation_asset" ]]; then
+  echo "missing installed skill asset: design-variations/assets/variations.html" >&2
+  exit 1
+fi
+if ! diff -q "$ROOT/skills/design-variations/assets/variations.html" "$variation_asset" >/dev/null; then
+  echo "installed skill asset drift: skills/design-variations/assets/variations.html" >&2
+  exit 1
+fi
 
 bundled_templates=(
   outcome-template.md
@@ -86,4 +97,4 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
+echo "install smoke passed: ${#expected[@]} skills, 1 skill asset, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"

@@ -12,7 +12,8 @@ testing/install-smoke.sh
 
 the smoke test installs from the local repo into a temporary project and verifies:
 
-- all 9 skills are present
+- all 10 skills are present
+- the `design-variations` browser scaffold is installed under its `assets/` directory
 - all 5 runtime templates are bundled: outcome, project identity, reference intake, grader report, and run report
 - bundled templates and all 6 workflow runbooks match their canonical top-level copies
 
@@ -21,7 +22,7 @@ the installer does not generate or replace `AGENTS.md`. project instructions rem
 success ends with:
 
 ```text
-install smoke passed: 9 skills, 5 bundled templates, and 6 workflow runbooks (all in sync)
+install smoke passed: 10 skills, 1 skill asset, 5 bundled templates, and 6 workflow runbooks (all in sync)
 ```
 
 to exercise the public github shorthand instead of the current checkout:
