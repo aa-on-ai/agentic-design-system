@@ -150,7 +150,32 @@ add creative skills on top of core when the triggers are met:
 for modifications to existing UI where the structure already exists.
 
 run:
-1. **design-review** — pre-flight checklist only
+1. **design-review** — pre-flight checklist
+2. **before/after rendered evidence** — required for meaningful visual modifications
+   (anything beyond a pure copy fix or a single specified value change). capture the
+   baseline from the pre-change revision (merge-base worktree, production URL, or the
+   unmodified route) and the candidate from the change, with the **same states and
+   breakpoints**, then compare:
+
+```bash
+node skills/design-review/scripts/capture.mjs "<baseline-url>"  --states ... --out evidence/<slug>-baseline
+node skills/design-review/scripts/capture.mjs "<candidate-url>" --states ... --out evidence/<slug>-candidate
+node skills/design-review/scripts/compare.mjs evidence/<slug>-baseline evidence/<slug>-candidate
+```
+
+the comparison is **evidence, not a verdict**: the report states what changed, what stayed
+identical, and whether the delta matches the stated intent — a "polish pass" or a "1:1 port"
+with a large unexplained delta is a restructure wearing a polish label. pass `--threshold <pct>`
+only when an explicit "nothing should visibly change more than X%" budget was agreed; that is
+the only case where the comparison itself fails.
+
+the default metric is "visibly changed" (perceptual tolerance — subtle tint drift does not
+register). for strict-fidelity reviews (1:1 ports, polish passes, token adherence) add
+`--pixel-threshold 0` so any numeric color drift counts; the mode used is recorded in
+`comparison.json`.
+
+skip the compare for: pure copy fixes, changes with no rendered surface, or work where no
+baseline exists yet (first build of a screen goes through the core chain instead).
 
 examples: adjusting spacing, updating copy, minor layout tweaks, checking a screen before merge.
 
