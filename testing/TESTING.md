@@ -13,15 +13,15 @@ testing/install-smoke.sh
 the smoke test installs from the local repo into a temporary project and verifies:
 
 - all 9 skills are present
-- the bundled outcome, grader, and run-report templates are present
-- all 6 bundled workflow runbooks are present and match the canonical top-level copies
+- all 5 runtime templates are bundled: outcome, project identity, reference intake, grader report, and run report
+- bundled templates and all 6 workflow runbooks match their canonical top-level copies
 
 the installer does not generate or replace `AGENTS.md`. project instructions remain an explicit setup step.
 
 success ends with:
 
 ```text
-install smoke passed: 9 skills, bundled outcome/grader templates, and 6 workflow runbooks (in sync)
+install smoke passed: 9 skills, 5 bundled templates, and 6 workflow runbooks (all in sync)
 ```
 
 to exercise the public github shorthand instead of the current checkout:

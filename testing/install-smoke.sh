@@ -40,10 +40,23 @@ for skill in "${expected[@]}"; do
   fi
 done
 
-for template in outcome-template.md grader-report-template.md run-report-template.md; do
+bundled_templates=(
+  outcome-template.md
+  project-identity-template.md
+  reference-intake-contract.md
+  grader-report-template.md
+  run-report-template.md
+)
+
+for template in "${bundled_templates[@]}"; do
   path="$TMP_DIR/.agents/skills/agentic-design-system/templates/$template"
   if [[ ! -f "$path" ]]; then
     echo "missing bundled template: $template" >&2
+    exit 1
+  fi
+  if ! diff -q "$ROOT/templates/$template" "$path" >/dev/null; then
+    echo "bundled template drift: templates/$template != installed skills/agentic-design-system/templates/$template" >&2
+    echo "  re-sync: cp templates/$template skills/agentic-design-system/templates/$template" >&2
     exit 1
   fi
 done
@@ -73,4 +86,4 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, bundled outcome/grader templates, and ${#runbooks[@]} workflow runbooks (in sync)"
+echo "install smoke passed: ${#expected[@]} skills, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"

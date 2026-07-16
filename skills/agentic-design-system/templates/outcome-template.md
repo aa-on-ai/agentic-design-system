@@ -83,7 +83,7 @@ the grader must be a separate context from the builder when possible. the grader
 3. relevant `DESIGN.md` or project identity
 4. verification output
 
-the grader does not rewrite code. it returns `templates/grader-report-template.md` or this bundled `skills/agentic-design-system/templates/grader-report-template.md` copy.
+the grader does not rewrite code. it returns `templates/grader-report-template.md` or the bundled installed-skill copy at `skills/agentic-design-system/templates/grader-report-template.md`.
 
 ## event log
 

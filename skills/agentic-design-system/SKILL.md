@@ -31,6 +31,8 @@ install smoke's drift guard.
 > - `skills/design-review/scripts/capture.mjs` → `.agents/skills/design-review/scripts/capture.mjs`
 > - `skills/design-review/references/mobile.md` → `.agents/skills/design-review/references/mobile.md`
 > - `templates/run-report-template.md` → `.agents/skills/agentic-design-system/templates/run-report-template.md`
+> - `templates/project-identity-template.md` → `.agents/skills/agentic-design-system/templates/project-identity-template.md`
+> - `templates/reference-intake-contract.md` → `.agents/skills/agentic-design-system/templates/reference-intake-contract.md`
 >
 > `routing/ROUTING.md` and the top-level `README`/`AGENTS` are repo-only; the runbooks above
 > stand alone without them.
@@ -54,17 +56,17 @@ the system installs a routing skill plus focused helper skills. you don't need t
 - `skills/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
 
 ### project knowledge intake (optional; run when context needs alignment)
-default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it.
+default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it. installed copies live under this skill's `templates/` directory.
 
 ### reference intake gate (optional; run before reference-led visual work)
 if the user provides a visual reference/screenshot/site/CodePen as a desired target, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `skills/visual-reference-calibration/SKILL.md` before generating UI. screenshots used only to identify a bug or region of concern stay in the normal review path.
 
-use `templates/reference-intake-contract.md`. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when Aaron already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
+use `templates/reference-intake-contract.md`; installed copies live under this skill's `templates/` directory. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when Aaron already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
 
 ### outcome + grader loop (optional; run for substantial UI work)
 for non-trivial UI, define the user-facing intent and outcome before building, then grade the artifact in a separate context when possible.
 
-use `templates/outcome-template.md` and `templates/grader-report-template.md` from the full repo. if this skill was installed without the repo templates, use the copies bundled at `skills/agentic-design-system/templates/`.
+use `templates/outcome-template.md` and `templates/grader-report-template.md` from the full repo. installed copies of all five runtime templates — outcome, project identity, reference intake, grader report, and run report — are bundled under this skill's `templates/` directory.
 
 minimum loop:
 
@@ -85,7 +87,7 @@ if a `DESIGN.md` file exists at the repo root — or at a path the orchestrator 
 - prose gives the **why** so the agent can judge edge cases
 - unknown sections are preserved without error per the spec, so this repo's one extension (`Example Prompting Language`) is safe to use
 
-the project-identity template for this repo lives at `templates/project-identity-template.md` and is DESIGN.md-shaped.
+the project-identity template is DESIGN.md-shaped. source checkouts use `templates/project-identity-template.md`; installed agents use the copy under this skill's `templates/` directory.
 
 format reference: https://github.com/google-labs-code/design.md (alpha — this repo consumes the format, does not author tooling for it)
 

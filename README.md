@@ -104,7 +104,7 @@ Use [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.m
 | Critique onboarding docs | [`readme-docs-critique`](./workflows/readme-docs-critique.md) |
 | Test whether a cold agent can use ADS | [`cold-agent-usage-test`](./workflows/cold-agent-usage-test.md) |
 
-A source checkout includes the full template set under [`templates/`](./templates/). The installed orchestrator also bundles the outcome, grader, and run-report templates it needs at runtime. The most useful starting artifacts are:
+A source checkout includes the full template set under [`templates/`](./templates/). The installed orchestrator bundles the five runtime templates it references: outcome, project identity, reference intake, grader report, and run report. The most useful starting artifacts are:
 
 - [`outcome-template.md`](./templates/outcome-template.md)
 - [`project-identity-template.md`](./templates/project-identity-template.md)
