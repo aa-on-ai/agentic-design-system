@@ -148,6 +148,14 @@ Why C1 beats the alternatives (judgment):
 
 *(A second candidate skill — design-source intake / token extraction — was considered and deliberately classified as an extension of Project Knowledge Intake instead; see §4/C4. Speccing it as a skill would duplicate an existing trigger.)*
 
+### Disposition (2026-07-16)
+
+`design-variations` was approved and added as the pack's tenth skill. The shipped version keeps
+the audit's divergent-before-convergent posture while scaling the default artifact to four
+directions, with three for narrow decisions and five only for genuinely broad spaces. It includes
+the reusable `assets/variations.html` switcher and is now routed from the orchestrator, entrypoint,
+Codex integration, and divergent-exploration docs.
+
 ---
 
 ## 7. Fix before adding anything new

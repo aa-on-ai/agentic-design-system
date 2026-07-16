@@ -13,6 +13,7 @@ wrappers around it.
 | You want to… | Go to | Profile it runs |
 |---|---|---|
 | Build a new page / component | `workflows/new-page-component.mjs` — runnable route → build → capture → independent-grade → revise (Claude Code Workflow tool). Optional dynamic Route phase; gates on responsive breakpoints **and** touch-target size; runs against a live `devUrl` **or** a self-contained `artifactPath` (no dev server). Or `routing/ROUTING.md` → **Core chain** + **Outcome + Grader loop** by hand | core pack + capture + grader |
+| Explore options before choosing a direction | `skills/design-variations/SKILL.md` → build one disposable browser artifact → choose or blend → promote only the winner | divergence before core pack |
 | Review existing UI before merge | [`adversarial-design-review.md`](./adversarial-design-review.md) | separate-context critique |
 | Review a mobile / responsive / app / PWA screen | [`mobile-review.md`](./mobile-review.md) | two-pass mobile review |
 | Add or review motion / animation | `routing/ROUTING.md` → **motion vocabulary pass**; deep work → `web-animation-design` | motion vocabulary |

@@ -224,12 +224,15 @@ don't run the design chain for non-visual work:
 
 ## Divergent exploration mode
 
-when the task is creative or the direction is unclear, don't commit to one approach. instead:
+when the user asks for options, variations, concepts, mockups, or help choosing a direction, read
+`skills/design-variations/SKILL.md` before production implementation. use its disposable browser
+artifact to diverge without creating long-lived variant architecture.
 
-1. ask the builder: "this could go a few directions — want me to explore 2-3 options or pick one?"
-2. if exploring: build multiple versions with a navigation element (version selector, tabs, URL variants)
-3. different agents can work on different directions simultaneously
-4. the builder picks a winner or hybridizes, then run the quality chain on the chosen direction
+1. frame the decision and identify the invariant content and state
+2. build 3–5 directions with distinct structural or interaction theses in one artifact
+3. render every direction at the same desktop and mobile viewports
+4. recommend one direction with tradeoffs; the human chooses, blends, or rejects
+5. promote only the winner, then run the normal quality chain on production code
 
 use for layout decisions and visual direction. not for button colors.
 

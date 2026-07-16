@@ -7,7 +7,11 @@ if (!url) {
   process.exit(2);
 }
 
-const browser = await chromium.launch({ headless: true });
+const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+const browser = await chromium.launch({
+  headless: true,
+  ...(executablePath ? { executablePath } : {}),
+});
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const issues = [];
 
@@ -57,6 +61,37 @@ try {
     issues.push(`station heading line-height ratios drift by ${headingSpread.toFixed(3)} (expected <= 0.010)`);
   }
 
+  const scrollBoundary = await page.evaluate(() => {
+    const footer = document.querySelector(".site-footer");
+    const rootStyle = getComputedStyle(document.documentElement);
+    const bodyStyle = getComputedStyle(document.body);
+
+    return {
+      rootOverscrollY: rootStyle.overscrollBehaviorY,
+      bodyOverscrollY: bodyStyle.overscrollBehaviorY,
+      footerBottom: footer?.getBoundingClientRect().bottom ?? null,
+      documentBottom: document.documentElement.scrollHeight,
+      scrollY: window.scrollY,
+    };
+  });
+
+  if (scrollBoundary.rootOverscrollY !== "none" || scrollBoundary.bodyOverscrollY !== "none") {
+    issues.push(
+      `page overscroll boundary is ${scrollBoundary.rootOverscrollY}/${scrollBoundary.bodyOverscrollY} (expected none/none)`,
+    );
+  }
+
+  if (scrollBoundary.footerBottom === null) {
+    issues.push("missing footer scroll-boundary target");
+  } else {
+    const footerDocumentBottom = scrollBoundary.footerBottom + scrollBoundary.scrollY;
+    if (Math.abs(footerDocumentBottom - scrollBoundary.documentBottom) > 1) {
+      issues.push(
+        `footer ends at ${footerDocumentBottom}px but document ends at ${scrollBoundary.documentBottom}px`,
+      );
+    }
+  }
+
   const footerEmber = page.getByRole("button", { name: "Make Ember pop up" });
   if (await footerEmber.count() !== 1) {
     issues.push("footer Ember is not an accessible button");
@@ -82,4 +117,4 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log("homepage regression passed: typography rhythm + footer Ember interaction");
+console.log("homepage regression passed: typography rhythm + footer boundary + Ember interaction");

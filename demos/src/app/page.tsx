@@ -162,6 +162,7 @@ type StationProps = {
   eyebrow: string;
   title: string;
   description: string;
+  proof: string;
   notes: string[];
   stage: ArtifactStage;
   side: "left" | "right";
@@ -170,7 +171,7 @@ type StationProps = {
   machineLabel: string;
 };
 
-function Station({ number, id, eyebrow, title, description, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
+function Station({ number, id, eyebrow, title, description, proof, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
   return (
     <section className={`station station--${side} station--${stage}`} aria-labelledby={id}>
       <div className="station-index" aria-hidden="true">
@@ -180,9 +181,14 @@ function Station({ number, id, eyebrow, title, description, notes, stage, side, 
         <p className="station-eyebrow">{eyebrow}</p>
         <h2 id={id}>{title}</h2>
         <p className="station-description">{description}</p>
-        <ul className="station-notes">
-          {notes.map((note) => <li key={note}>{note}</li>)}
-        </ul>
+        <div className="station-proof">
+          <span className="station-proof-mark" aria-hidden="true">+</span>
+          <div>
+            <p>New on this screen</p>
+            <strong>{proof}</strong>
+            <span>{notes.join(" · ")}</span>
+          </div>
+        </div>
       </div>
       <div className="machine-bay">
         <div className="machine-header">
@@ -271,7 +277,8 @@ export default function Home() {
           id="station-intent"
           eyebrow="Job ticket / intent"
           title="Name the job before shaping the screen."
-          description="The first draft works, but it does not know what matters. The ticket pins one outcome to the artifact: surface delayed orders before dispatch closes."
+          description="The first draft works, but it cannot tell urgent from ordinary. The job ticket locks one outcome: surface delayed orders before dispatch closes."
+          proof="One job. One visible outcome."
           notes={["One user outcome", "One operational priority"]}
           stage="intent"
           side="left"
@@ -284,7 +291,8 @@ export default function Home() {
           id="station-baseline"
           eyebrow="Fixture rack / baseline"
           title="Load context and every state."
-          description="ADS gives the builder the real nouns, constraints, references, and edge cases. Loading, empty, error, focus, and mobile enter the build before polish can hide them."
+          description="Real nouns, constraints, references, and edge cases arrive before polish. Loading, empty, error, focus, and mobile become required."
+          proof="Five required states before polish."
           notes={["Project context attached", "Recovery states packed"]}
           stage="baseline"
           side="right"
@@ -297,7 +305,8 @@ export default function Home() {
           id="station-rubric"
           eyebrow="Tolerance bench / rubric"
           title="Set the pass line for this screen."
-          description="The screen gains hierarchy, generous targets, and a dispatch deadline because the rubric measures the actual job, not abstract taste words."
+          description="The rubric turns taste into screen-specific thresholds: at-risk orders lead, targets stay generous, and the dispatch deadline remains visible."
+          proof="A visible, measurable pass line."
           notes={["At-risk orders lead", "48px controls · 24px gutters"]}
           stage="rubric"
           side="left"
@@ -310,7 +319,8 @@ export default function Home() {
           id="station-evidence"
           eyebrow="Light table / evidence"
           title="Inspect pixels, not promises."
-          description="The rendered screen is captured at phone, tablet, and desktop. A failed mobile edge is stamped, repaired, and recaptured before the artifact moves on."
+          description="Phone, tablet, and desktop renders expose a failed mobile edge. ADS repairs and recaptures it before the artifact moves."
+          proof="Three rendered viewports, one repaired failure."
           notes={["390 / 768 / 1280 captured", "Axe · overflow · touch checked"]}
           stage="evidence"
           side="right"
@@ -324,7 +334,8 @@ export default function Home() {
           id="station-release"
           eyebrow="Release gate / review"
           title="Release it, or send it around again."
-          description="A separate review judges the rendered artifact against the job ticket. The verdict is small by design. What matters is the visible screen that earned it."
+          description="A separate review compares the rendered artifact with the job ticket. It clears release or sends the screen back."
+          proof="A human verdict: release or revise."
           notes={["Human judgment stays in the loop", "Revision remains a valid outcome"]}
           stage="release"
           side="left"
@@ -344,9 +355,13 @@ export default function Home() {
           <span>Plain markdown, scripts, and templates. Use the full workshop or borrow one station.</span>
         </div>
         <div className="release-actions">
-          <InstallCommand variant="strip" />
+          <div className="release-primary-action">
+            <span>Primary action / install all 10 skills</span>
+            <InstallCommand variant="strip" />
+            <small>One command copies the full workshop into your agent&apos;s project.</small>
+          </div>
           <a className="release-github focus-ring" href="https://github.com/aa-on-ai/agentic-design-system">
-            <Github size={18} aria-hidden="true" /> Review the workshop on GitHub
+            <Github size={18} aria-hidden="true" /> Prefer to inspect first? View the source
           </a>
         </div>
       </section>

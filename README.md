@@ -22,7 +22,7 @@ Verify what was installed:
 npx skills list
 ```
 
-The installer currently adds nine skills under `.agents/skills/`. It does not create or replace your project’s `AGENTS.md`, `CLAUDE.md`, or other instruction file.
+The installer currently adds ten skills under `.agents/skills/`. It does not create or replace your project’s `AGENTS.md`, `CLAUDE.md`, or other instruction file.
 
 For one task, tell your agent:
 
@@ -85,6 +85,7 @@ The report is part of the product. “Looks good” is not evidence.
 
 ### Creative pack
 
+- [`design-variations`](./skills/design-variations) creates 3–5 structurally distinct directions in one disposable browser artifact before production implementation.
 - [`whimsical-design`](./skills/whimsical-design) is opt-in for personality, delight, and expressive marketing work.
 - [`world-build`](./skills/world-build) is opt-in for immersion and atmosphere.
 - [`web-animation-design`](./skills/web-animation-design) is opt-in for motion and interaction feel.
