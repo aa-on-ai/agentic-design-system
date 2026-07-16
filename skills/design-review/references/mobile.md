@@ -69,7 +69,8 @@ the device-specific surface:
   `@media (hover: hover) and (pointer: fine)` so a tap doesn't leave a stuck hover state.
 - **PWA / web defects** — manifest, icons, and `theme-color` present if installable; offline /
   service-worker behavior works if claimed; no sticky-`100vh` scroll jump on iOS Safari.
-- **performance / layout** — images sized and lazy-loaded; layout shift (CLS) controlled;
+- **performance / layout** — images sized and lazy-loaded; layout shift (CLS) controlled
+  (checked by observation — capture.mjs does not measure CLS);
   no runtime jank on scroll/drag; no rigid fixed widths (`max-width`, not `width`).
 
 ### Severity tiers

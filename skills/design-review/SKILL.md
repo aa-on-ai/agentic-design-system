@@ -33,7 +33,7 @@ This is a core skill. Apply it on ALL visual and frontend work, no exceptions. Y
   - Vercel dashboard — spacing, typography, dark mode discipline
 
 ### 3. Check design memory
-- Read `memory/channels/{channel-name}.md` for prior design decisions.
+- If your environment keeps design memory (prior decisions, rejected patterns), read it before building. In this system's home setup that lives at `memory/channels/{channel-name}.md`; installed elsewhere, look for the project's own decision log or `DESIGN.md` history. Skip if no such file exists.
 - If memory says Aaron rejected a pattern, don't repeat it.
 - If a project brain file is linked from channel memory, read that too.
 

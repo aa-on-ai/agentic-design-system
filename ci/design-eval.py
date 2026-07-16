@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 Design eval CI wrapper.
-Runs all verification scripts against TSX files in your project.
-Use as a GitHub Actions check to gate PRs on design quality.
+Runs the Tier-1 source heuristics (anti-pattern, state, accessibility) against
+TSX files in your project. These are advisory greps over source — cheap and
+gameable. The authoritative rendered-evidence gates (capture.mjs: axe, overflow,
+states, touch targets) need a running route or built artifact and are NOT run here.
 
 Usage:
   python3 ci/design-eval.py                  # scan default paths
@@ -94,7 +96,7 @@ def main():
         ("accessibility-check.py", "Accessibility check"),
     ]
 
-    any_failed = False
+    scripts_with_warnings = 0
 
     for script_name, label in scripts:
         script_path = os.path.join(scripts_dir, script_name)
@@ -109,14 +111,18 @@ def main():
             print(output)
         print()
 
-        if exit_code != 0 and args.strict:
-            any_failed = True
+        if exit_code != 0:
+            scripts_with_warnings += 1
 
-    if any_failed:
-        print("FAILED — warnings found in strict mode")
+    if scripts_with_warnings and args.strict:
+        print(f"FAILED — {scripts_with_warnings} check(s) reported warnings (strict mode)")
         sys.exit(1)
+    elif scripts_with_warnings:
+        print(f"COMPLETED — {scripts_with_warnings} check(s) reported warnings (advisory; not failing without --strict)")
+        print("Note: these are source heuristics only. Rendered-evidence gates (capture.mjs) do not run in CI.")
+        sys.exit(0)
     else:
-        print("PASSED — all checks clean")
+        print("PASSED — all source heuristics clean (rendered-evidence gates not run in CI)")
         sys.exit(0)
 
 

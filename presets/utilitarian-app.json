@@ -17,8 +17,8 @@
     "ui-polish-pass",
     "agent-friendly-design when production-facing",
     "responsive.md",
-    "ai-css-failure-patterns.md",
-    "sticky-scroll-patterns.md when sticky regions, drawers, or tables are present"
+    "anti-patterns.md",
+    "responsive.md — sticky & scroll containers section — when sticky regions, drawers, or tables are present"
   ],
   "skips": [
     "whimsical-design by default",
@@ -76,8 +76,7 @@
     "referencesConsulted": [
       "spacing.md",
       "anti-patterns.md",
-      "responsive.md",
-      "ai-css-failure-patterns.md"
+      "responsive.md"
     ],
     "issuesDetected": [
       "hierarchy flattening",

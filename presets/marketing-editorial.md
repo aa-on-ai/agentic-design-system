@@ -13,7 +13,7 @@ use this when mood, identity, and point of view matter as much as correctness.
 - `ui-polish-pass`
 - `agent-friendly-design` when shipping to production
 - `responsive.md`
-- `ai-css-failure-patterns.md`
+- `anti-patterns.md`
 - `whimsical-design` when the brief wants personality or delight
 - `world-build` when the brief explicitly wants atmosphere or immersion
 - `web-animation-design` when motion is part of the concept
@@ -60,7 +60,7 @@ when this preset is active, the run report should usually emphasize:
 - **task classification:** marketing page / editorial surface / storytelling UI / launch page
 - **skills fired:** `design-review`, `ux-baseline-check`, `ui-polish-pass`, plus `whimsical-design`, `world-build`, or `web-animation-design` only when the brief earns them
 - **skills skipped:** dense utilitarian defaults as aesthetic guidance unless the brief mixes modes
-- **references consulted:** `spacing.md`, `typography.md`, `anti-patterns.md`, `responsive.md`, `ai-css-failure-patterns.md`, plus creative references as needed
+- **references consulted:** `spacing.md`, `typography.md`, `anti-patterns.md`, `responsive.md`, plus creative references as needed
 - **issues detected:** generic saas tropes, weak visual rhythm, atmosphere collapse on mobile, decorative motion without purpose, loudness without point of view
 - **fixes applied:** stronger composition, clearer atmosphere, better section pacing, more intentional responsive translation, tighter motion use
 - **human judgment required:** whether the concept has a real point of view and how far to push expression
