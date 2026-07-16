@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADS homepage comparison: single evolving screen</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f1e4ca;
+      --page-deep: #e7d4b3;
+      --panel: #fff8e8;
+      --ink: #1c1711;
+      --muted: #685744;
+      --line: #3f3325;
+      --line-soft: rgba(63, 51, 37, 0.22);
+      --orange: #c94518;
+      --orange-ink: #a93612;
+      --orange-bright: #f57830;
+      --blue: #234c66;
+      --green: #287354;
+      --machine: #d4bd96;
+      --machine-deep: #a88961;
+      --shadow: rgba(83, 55, 24, 0.2);
+      font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+      background: var(--page);
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; background: var(--page); }
+    button, a { font: inherit; }
+
+    .prototype-banner {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      min-height: 56px;
+      padding: 8px clamp(18px, 4vw, 56px);
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(255, 248, 232, 0.16);
+      background: #1d1813;
+      color: #fff8e8;
+      font-size: 0.78rem;
+    }
+
+    .prototype-banner strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .prototype-banner span { color: #cfc0a5; }
+
+    .prototype-intro {
+      display: grid;
+      min-height: 68vh;
+      padding: clamp(70px, 10vw, 150px) clamp(24px, 7vw, 110px);
+      align-content: center;
+      background:
+        radial-gradient(circle at 82% 20%, rgba(201, 69, 24, 0.16), transparent 28%),
+        radial-gradient(circle at 12% 84%, rgba(35, 76, 102, 0.12), transparent 24%),
+        var(--page);
+    }
+
+    .prototype-intro p {
+      margin: 0 0 18px;
+      color: var(--orange);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.72rem;
+      font-weight: 750;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .prototype-intro h1 {
+      max-width: 920px;
+      margin: 0;
+      font-size: clamp(3.4rem, 8vw, 7.8rem);
+      font-weight: 680;
+      letter-spacing: -0.065em;
+      line-height: 0.95;
+      text-wrap: balance;
+    }
+
+    .prototype-intro h1 em {
+      color: var(--orange);
+      font-family: Georgia, serif;
+      font-weight: 600;
+    }
+
+    .prototype-intro > span {
+      display: block;
+      max-width: 680px;
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.4vw, 1.2rem);
+      font-weight: 560;
+      line-height: 1.58;
+    }
+
+    .journey {
+      position: relative;
+      display: grid;
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 80px clamp(24px, 5vw, 72px) 140px;
+      gap: clamp(54px, 7vw, 110px);
+      grid-template-columns: minmax(300px, 0.82fr) minmax(560px, 1.18fr);
+    }
+
+    .steps { min-width: 0; }
+
+    .step {
+      display: grid;
+      min-height: 78vh;
+      padding: 80px 0;
+      align-content: center;
+      border-bottom: 1px solid var(--line-soft);
+      scroll-margin-top: 72px;
+    }
+
+    .step:last-child { border-bottom: 0; }
+
+    .step-number {
+      display: inline-grid;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 26px;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 6px 6px 0 var(--machine-deep);
+      color: #fff8e8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.74rem;
+      font-weight: 850;
+    }
+
+    .step-kicker,
+    .step-proof p {
+      margin: 0;
+      color: var(--orange-ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.7rem;
+      font-weight: 760;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .step h2 {
+      max-width: 600px;
+      margin: 14px 0 0;
+      font-size: clamp(2.5rem, 4.4vw, 4.7rem);
+      font-weight: 650;
+      letter-spacing: -0.05em;
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+
+    .step-description {
+      max-width: 560px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 540;
+      line-height: 1.58;
+    }
+
+    .step-proof {
+      display: grid;
+      max-width: 560px;
+      margin-top: 32px;
+      padding: 18px 0;
+      gap: 6px;
+      border-top: 2px solid var(--orange);
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .step-proof strong {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .step.is-active .step-number {
+      transform: rotate(-4deg) scale(1.08);
+      box-shadow: 8px 9px 0 var(--machine-deep);
+    }
+
+    .sticky-preview {
+      position: sticky;
+      top: 32px;
+      display: grid;
+      height: calc(100vh - 64px);
+      min-height: 650px;
+      align-content: center;
+    }
+
+    .machine {
+      position: relative;
+      width: 100%;
+      padding: 12px 14px 20px;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      background: var(--machine);
+      box-shadow: 14px 18px 0 var(--machine-deep), 0 34px 70px var(--shadow);
+      transform: rotate(0.25deg);
+    }
+
+    .machine-header,
+    .machine-footer {
+      display: flex;
+      min-height: 38px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--line);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .machine-lamp {
+      display: inline-flex;
+      min-height: 30px;
+      padding: 0 10px;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      background: rgba(255, 248, 232, 0.34);
+    }
+
+    .machine-lamp::before {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--orange-bright);
+      box-shadow: 0 0 0 3px rgba(245, 120, 48, 0.14), 0 0 12px rgba(245, 120, 48, 0.72);
+      content: "";
+    }
+
+    .machine[data-stage="evidence"] .machine-lamp::before,
+    .machine[data-stage="release"] .machine-lamp::before {
+      background: #49bd78;
+      box-shadow: 0 0 0 3px rgba(73, 189, 120, 0.14), 0 0 12px rgba(73, 189, 120, 0.72);
+    }
+
+    .artifact-cart {
+      position: relative;
+      padding: 24px;
+      border: 2px solid var(--line);
+      border-radius: 9px;
+      background: #ead8b8;
+      box-shadow: inset 0 0 0 6px rgba(255, 248, 232, 0.3);
+    }
+
+    .orders-window {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #382f25;
+      border-radius: 8px;
+      background: #fbf8f1;
+      box-shadow: 0 10px 0 rgba(66, 48, 28, 0.2), 0 24px 34px rgba(66, 48, 28, 0.16);
+      color: #211d17;
+    }
+
+    .browserbar {
+      display: flex;
+      height: 28px;
+      padding: 0 10px;
+      align-items: center;
+      gap: 5px;
+      border-bottom: 1px solid #cfc5b5;
+      background: #e8e2d7;
+    }
+
+    .browserbar i {
+      width: 7px;
+      height: 7px;
+      border: 1px solid #5e5448;
+      border-radius: 50%;
+      background: #cbbfaf;
+    }
+
+    .browserbar i:first-child { background: #ed7955; }
+    .browserbar i:nth-child(2) { background: #e2b159; }
+    .browserbar small {
+      margin-left: 6px;
+      color: #756b5e;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.5rem;
+    }
+
+    .orders-ui {
+      display: grid;
+      min-height: 390px;
+      grid-template-columns: 92px 1fr;
+    }
+
+    .sidebar {
+      display: flex;
+      padding: 18px 12px;
+      flex-direction: column;
+      gap: 9px;
+      border-right: 1px solid #d9d0c3;
+      background: #f0ece4;
+      color: #73695c;
+      font-size: 0.55rem;
+    }
+
+    .sidebar b {
+      display: grid;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 10px;
+      place-items: center;
+      border-radius: 6px;
+      background: #1f2e38;
+      color: #fff4df;
+    }
+
+    .sidebar .active {
+      margin: 0 -6px;
+      padding: 7px 6px;
+      background: #e8d8c6;
+      box-shadow: inset 2px 0 #df6934;
+      color: #2d261f;
+      font-weight: 760;
+    }
+
+    .orders-main { position: relative; padding: 20px; }
+
+    .titlebar {
+      display: flex;
+      min-height: 50px;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .titlebar small { color: #6e6356; font-size: 0.54rem; font-weight: 750; }
+    .titlebar h3 { margin: 2px 0 0; font-size: 1.35rem; letter-spacing: -0.04em; }
+    .titlebar button {
+      min-height: 44px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 5px;
+      background: var(--blue);
+      color: #fff8e8;
+      font-size: 0.66rem;
+      font-weight: 740;
+    }
+
+    .summary {
+      display: grid;
+      margin: 12px 0 16px;
+      border-top: 1px solid #d7cec0;
+      border-bottom: 1px solid #d7cec0;
+      grid-template-columns: 0.7fr 0.7fr 1.2fr;
+    }
+
+    .summary div {
+      display: grid;
+      min-height: 56px;
+      padding: 10px;
+      align-content: center;
+      border-right: 1px solid #d7cec0;
+    }
+
+    .summary div:last-child { border-right: 0; }
+    .summary strong { font-size: 0.95rem; }
+    .summary span { margin-top: 2px; color: #776d60; font-size: 0.54rem; }
+    .summary .deadline strong { color: #a23c2c; }
+
+    .rows { border-top: 1px solid #d8d0c4; }
+    .row {
+      display: grid;
+      min-height: 43px;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #e1dad0;
+      color: #4d4439;
+      font-size: 0.62rem;
+      grid-template-columns: 0.7fr 1.35fr 0.9fr 0.65fr;
+    }
+
+    .row.head { min-height: 30px; color: #6e6356; font-size: 0.5rem; font-weight: 720; }
+    .row .total { text-align: right; }
+    .row.at-risk { margin: 0 -8px; padding: 0 8px; background: #fff0e4; box-shadow: inset 3px 0 #e15b27; }
+    .status { display: inline-flex; min-height: 22px; padding: 0 7px; align-items: center; border-radius: 999px; background: #f7d9d2; color: #98372e; font-size: 0.5rem; font-weight: 750; }
+
+    .layer {
+      position: absolute;
+      z-index: 8;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px) scale(0.97);
+      transition: opacity 220ms ease-out, transform 220ms ease-out;
+    }
+
+    .layer.is-visible { opacity: 1; transform: none; }
+
+    .layer-intent {
+      top: -18px;
+      left: 42px;
+      display: grid;
+      width: 250px;
+      padding: 11px 14px;
+      gap: 4px;
+      border: 1px solid #825427;
+      background: #f4c878;
+      box-shadow: 4px 4px 0 rgba(75, 45, 19, 0.2);
+      color: #4b301a;
+      font-size: 0.67rem;
+      transform: rotate(-1.5deg);
+    }
+
+    .layer-intent small,
+    .layer-baseline,
+    .layer-rubric,
+    .layer-evidence,
+    .layer-release {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .layer-baseline {
+      top: 52px;
+      right: 8px;
+      display: flex;
+      padding: 8px 10px;
+      gap: 10px;
+      border: 1px solid #72511e;
+      background: #f1c65f;
+      color: #453015;
+      font-size: 0.5rem;
+      font-weight: 800;
+      transform: rotate(1deg);
+    }
+
+    .layer-rubric {
+      top: 128px;
+      right: -2px;
+      padding: 7px 9px;
+      background: var(--orange-bright);
+      color: #fff8e8;
+      font-size: 0.55rem;
+      font-weight: 850;
+    }
+
+    .layer-evidence {
+      right: 8px;
+      bottom: 76px;
+      display: grid;
+      padding: 8px 10px;
+      gap: 3px;
+      border: 2px solid var(--green);
+      background: #edf6ed;
+      color: #2d6142;
+      font-size: 0.52rem;
+      font-weight: 780;
+      transform: rotate(-3deg);
+    }
+
+    .layer-release {
+      right: -18px;
+      bottom: -18px;
+      display: grid;
+      width: 92px;
+      height: 92px;
+      place-items: center;
+      border: 3px double var(--green);
+      border-radius: 50%;
+      background: #eef6e6;
+      box-shadow: 0 7px 0 rgba(39, 109, 77, 0.18);
+      color: var(--green);
+      font-size: 0.62rem;
+      font-weight: 900;
+      line-height: 1.25;
+      text-align: center;
+      transform: rotate(-8deg);
+    }
+
+    .machine-footer { padding-top: 8px; }
+
+    .stage-progress {
+      display: grid;
+      margin: 22px 0 0;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .stage-progress a {
+      display: grid;
+      min-height: 44px;
+      place-items: center;
+      border-top: 1px solid var(--line-soft);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.62rem;
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .stage-progress a.is-active {
+      border-top: 3px solid var(--orange);
+      color: var(--ink);
+    }
+
+    .preview-caption {
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .preview-caption strong { color: var(--ink); }
+
+    @media (max-width: 960px) {
+      .journey {
+        padding: 32px 18px 100px;
+        gap: 34px;
+        grid-template-columns: 1fr;
+      }
+
+      .sticky-preview {
+        z-index: 10;
+        top: 0;
+        height: auto;
+        min-height: 0;
+        padding: 14px 0 22px;
+        order: -1;
+        background: linear-gradient(var(--page) 88%, transparent);
+      }
+
+      .machine { width: min(700px, calc(100% - 10px)); margin: 0 auto; }
+      .orders-ui { min-height: 300px; }
+      .step { min-height: 62vh; padding: 64px 14px; }
+      .preview-caption { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .prototype-banner { align-items: flex-start; flex-direction: column; padding-block: 12px; }
+      .prototype-intro { min-height: 76vh; padding: 72px 20px; }
+      .prototype-intro h1 { font-size: clamp(3.4rem, 16vw, 5rem); }
+      .journey { padding-inline: 12px; }
+      .sticky-preview { padding-top: 8px; }
+      .machine { padding: 8px 8px 12px; border-radius: 12px; box-shadow: 8px 10px 0 var(--machine-deep), 0 22px 46px var(--shadow); }
+      .machine-header { min-height: 31px; font-size: 0.54rem; }
+      .machine-lamp { min-height: 26px; padding-inline: 7px; }
+      .artifact-cart { padding: 7px; box-shadow: inset 0 0 0 3px rgba(255, 248, 232, 0.3); }
+      .orders-ui { min-height: 225px; grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .orders-main { padding: 10px; }
+      .titlebar { min-height: 40px; }
+      .titlebar h3 { font-size: 1.08rem; }
+      .titlebar button { padding-inline: 9px; font-size: 0.56rem; }
+      .summary { margin: 6px 0 8px; }
+      .summary div { min-height: 40px; padding: 5px; }
+      .summary strong { font-size: 0.78rem; }
+      .summary span { font-size: 0.46rem; }
+      .row { min-height: 32px; font-size: 0.5rem; }
+      .row.head { min-height: 23px; font-size: 0.44rem; }
+      .status { min-height: 20px; font-size: 0.43rem; }
+      .machine-footer { display: none; }
+      .layer-intent { top: -13px; left: 16px; width: 210px; padding: 8px 9px; font-size: 0.58rem; }
+      .layer-baseline { top: 38px; right: 2px; gap: 6px; padding: 6px; font-size: 0.43rem; }
+      .layer-rubric { top: 102px; font-size: 0.46rem; }
+      .layer-evidence { right: 2px; bottom: 24px; font-size: 0.44rem; }
+      .layer-release { right: -6px; bottom: -12px; width: 70px; height: 70px; font-size: 0.48rem; }
+      .stage-progress { margin-top: 12px; }
+      .stage-progress a { min-height: 44px; font-size: 0.55rem; }
+      .step { min-height: 58vh; padding: 56px 14px; }
+      .step-number { width: 48px; height: 48px; margin-bottom: 22px; }
+      .step h2 { font-size: clamp(2.5rem, 12vw, 3.3rem); }
+      .step-description { font-size: 0.98rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="prototype-banner">
+    <strong>Comparison prototype / single evolving screen</strong>
+    <span>Review artifact only. The tightened assembly line remains the production direction.</span>
+  </header>
+
+  <section class="prototype-intro">
+    <p>Structural comparison / sticky artifact</p>
+    <h1>One screen.<br /><em>Five visible layers.</em></h1>
+    <span>The workshop story stays the same, but the artifact stops repeating. Scroll through each decision while one sticky screen accumulates the job ticket, context, rubric, rendered evidence, and release verdict.</span>
+  </section>
+
+  <main class="journey" data-variant-thesis="Single evolving screen">
+    <div class="steps">
+      <article class="step is-active" id="step-intent" data-stage="intent" data-index="0">
+        <span class="step-number">01</span>
+        <p class="step-kicker">Job ticket / intent</p>
+        <h2>Name the job before shaping the screen.</h2>
+        <p class="step-description">The first draft works, but it cannot tell urgent from ordinary. The job ticket locks one outcome: surface delayed orders before dispatch closes.</p>
+        <div class="step-proof"><p>New on this screen</p><strong>One job. One visible outcome.</strong></div>
+      </article>
+
+      <article class="step" id="step-baseline" data-stage="baseline" data-index="1">
+        <span class="step-number">02</span>
+        <p class="step-kicker">Fixture rack / baseline</p>
+        <h2>Load context and every state.</h2>
+        <p class="step-description">Real nouns, constraints, references, and edge cases arrive before polish. Loading, empty, error, focus, and mobile become required.</p>
+        <div class="step-proof"><p>New on this screen</p><strong>Five required states before polish.</strong></div>
+      </article>
+
+      <article class="step" id="step-rubric" data-stage="rubric" data-index="2">
+        <span class="step-number">03</span>
+        <p class="step-kicker">Tolerance bench / rubric</p>
+        <h2>Set the pass line for this screen.</h2>
+        <p class="step-description">The rubric turns taste into screen-specific thresholds: at-risk orders lead, targets stay generous, and the dispatch deadline remains visible.</p>
+        <div class="step-proof"><p>New on this screen</p><strong>A visible, measurable pass line.</strong></div>
+      </article>
+
+      <article class="step" id="step-evidence" data-stage="evidence" data-index="3">
+        <span class="step-number">04</span>
+        <p class="step-kicker">Light table / evidence</p>
+        <h2>Inspect pixels, not promises.</h2>
+        <p class="step-description">Phone, tablet, and desktop renders expose a failed mobile edge. ADS repairs and recaptures it before the artifact moves on.</p>
+        <div class="step-proof"><p>New on this screen</p><strong>Three rendered viewports, one repaired failure.</strong></div>
+      </article>
+
+      <article class="step" id="step-release" data-stage="release" data-index="4">
+        <span class="step-number">05</span>
+        <p class="step-kicker">Release gate / review</p>
+        <h2>Release it, or send it around again.</h2>
+        <p class="step-description">A separate review compares the rendered artifact with the job ticket. It clears release or sends the screen back.</p>
+        <div class="step-proof"><p>New on this screen</p><strong>A human verdict: release or revise.</strong></div>
+      </article>
+    </div>
+
+    <aside class="sticky-preview" aria-label="The orders screen accumulating evidence">
+      <div class="machine" data-stage="intent" data-index="0">
+        <div class="machine-header"><span>Single artifact / cumulative proof</span><span class="machine-lamp">Ticketed</span></div>
+        <div class="artifact-cart">
+          <div class="orders-window">
+            <div class="browserbar" aria-hidden="true"><i></i><i></i><i></i><small>northstar / admin / orders</small></div>
+            <div class="orders-ui">
+              <nav class="sidebar" aria-label="Preview navigation"><b>NS</b><span>Overview</span><span class="active">Orders</span><span>Shipments</span></nav>
+              <div class="orders-main">
+                <div class="titlebar"><div><small>Operations</small><h3>Orders</h3></div><button type="button">New order</button></div>
+                <div class="summary" aria-label="Order summary"><div><strong>12</strong><span>open</span></div><div><strong>03</strong><span>at risk</span></div><div class="deadline"><strong>2h 14m</strong><span>dispatch closes</span></div></div>
+                <div class="rows" role="table" aria-label="Recent orders">
+                  <div class="row head" role="row"><span role="columnheader">Order</span><span role="columnheader">Customer</span><span role="columnheader">Status</span><span role="columnheader" class="total">Total</span></div>
+                  <div class="row at-risk" role="row"><strong role="cell">#4821</strong><span role="cell">Mara Chen</span><span role="cell"><span class="status">Delayed</span></span><span role="cell" class="total">$184.00</span></div>
+                  <div class="row" role="row"><strong role="cell">#4819</strong><span role="cell">Field Notes Co.</span><span role="cell">Packing</span><span role="cell" class="total">$96.50</span></div>
+                  <div class="row" role="row"><strong role="cell">#4816</strong><span role="cell">Owen Bell</span><span role="cell">Shipped</span><span role="cell" class="total">$242.00</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layer layer-intent is-visible" data-layer="0"><small>Job 4821-A</small><strong>Spot delayed orders before they miss dispatch.</strong></div>
+          <div class="layer layer-baseline" data-layer="1"><span>Loading</span><span>Empty</span><span>Error</span><span>390px</span></div>
+          <div class="layer layer-rubric" data-layer="2">48px targets / at-risk leads</div>
+          <div class="layer layer-evidence" data-layer="3"><span>390 no overflow</span><span>768 touch clear</span><span>1280 axe clean</span></div>
+          <div class="layer layer-release" data-layer="4">Release<br />cleared</div>
+        </div>
+        <div class="machine-footer"><span>ADS / <b class="stage-number">01</b></span><span class="stage-name">Intent locked</span></div>
+      </div>
+
+      <nav class="stage-progress" aria-label="Jump to a stage">
+        <a class="is-active" href="#step-intent" data-progress="0">01</a>
+        <a href="#step-baseline" data-progress="1">02</a>
+        <a href="#step-rubric" data-progress="2">03</a>
+        <a href="#step-evidence" data-progress="3">04</a>
+        <a href="#step-release" data-progress="4">05</a>
+      </nav>
+      <p class="preview-caption" aria-live="polite"><strong>Stage 01:</strong> <span>Intent locked</span>. The evidence remains visible as the next layer arrives.</p>
+    </aside>
+  </main>
+
+  <script>
+    const stageNames = ["Intent locked", "Context loaded", "Pass line visible", "Rendered proof attached", "Release cleared"];
+    const lampNames = ["Ticketed", "Context on", "Within spec", "Recapture clear", "Release cleared"];
+    const steps = [...document.querySelectorAll(".step")];
+    const machine = document.querySelector(".machine");
+    const layers = [...document.querySelectorAll("[data-layer]")];
+    const progressLinks = [...document.querySelectorAll("[data-progress]")];
+    const caption = document.querySelector(".preview-caption");
+
+    function setStage(index) {
+      const step = steps[index];
+      machine.dataset.stage = step.dataset.stage;
+      machine.dataset.index = String(index);
+      machine.querySelector(".stage-number").textContent = String(index + 1).padStart(2, "0");
+      machine.querySelector(".stage-name").textContent = stageNames[index];
+      machine.querySelector(".machine-lamp").textContent = lampNames[index];
+      caption.querySelector("strong").textContent = `Stage ${String(index + 1).padStart(2, "0")}:`;
+      caption.querySelector("span").textContent = stageNames[index];
+
+      steps.forEach((item, itemIndex) => item.classList.toggle("is-active", itemIndex === index));
+      layers.forEach((layer) => layer.classList.toggle("is-visible", Number(layer.dataset.layer) <= index));
+      progressLinks.forEach((link) => {
+        const active = Number(link.dataset.progress) === index;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "step");
+        else link.removeAttribute("aria-current");
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible) setStage(Number(visible.target.dataset.index));
+    }, { rootMargin: "-30% 0px -45%", threshold: [0.1, 0.35, 0.6] });
+
+    steps.forEach((step) => observer.observe(step));
+    setStage(0);
+  </script>
+</body>
+</html>
