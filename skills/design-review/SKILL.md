@@ -33,7 +33,7 @@ This is a core skill. Apply it on ALL visual and frontend work, no exceptions. Y
   - Vercel dashboard — spacing, typography, dark mode discipline
 
 ### 3. Check design memory
-- Read `memory/channels/{channel-name}.md` for prior design decisions.
+- If your environment keeps design memory (prior decisions, rejected patterns), read it before building. In this system's home setup that lives at `memory/channels/{channel-name}.md`; installed elsewhere, look for the project's own decision log or `DESIGN.md` history. Skip if no such file exists.
 - If memory says Aaron rejected a pattern, don't repeat it.
 - If a project brain file is linked from channel memory, read that too.
 
@@ -87,8 +87,8 @@ Run this EVERY TIME before presenting work to Aaron.
 - [ ] Does it meet the brief, not an adjacent brief?
 - [ ] Would you be proud to show this to Aaron cold?
 
-### Step 4: Run verification scripts
-if you have access to the scripts directory, run these before presenting:
+### Step 4: Run source pre-flight scripts
+if you have access to the scripts directory, run these advisory checks before presenting:
 
 ```bash
 # check for common agent anti-patterns
@@ -101,7 +101,16 @@ python3 skills/design-review/scripts/state-check.py <your-file.tsx>
 python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
 ```
 
-fix any warnings before presenting. these are the cheapest quality checks — they catch the obvious stuff so the human review can focus on judgment calls.
+investigate the warnings before presenting. these checks grep source and are intentionally cheap and gameable; a comment containing “loading, empty, error” can satisfy the state check without rendering any state. they advise, but they do not clear the work.
+
+when visual verification is in scope, run the authoritative rendered capture:
+
+```bash
+node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+  --states default,loading,empty,error --out evidence/<slug>
+```
+
+gate the verdict on the rendered screenshots, axe results, horizontal overflow, computed fonts, touch-target sizes, and whether each required state actually appeared. fix serious rendered violations before presenting, or name the exact remaining gap.
 
 for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 

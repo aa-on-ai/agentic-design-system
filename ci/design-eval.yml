@@ -1,8 +1,9 @@
 # Design eval — GitHub Actions workflow
 # Copy this file to .github/workflows/design-eval.yml in your project.
 #
-# Runs the agentic design system verification scripts on every PR.
-# Checks: anti-patterns, state completeness, accessibility.
+# Runs the agentic design system Tier-1 source heuristics on every PR.
+# Checks: anti-patterns, state completeness, accessibility (advisory greps —
+# the authoritative rendered gates in capture.mjs need a running app and are not run here).
 #
 # Prerequisites:
 #   Install the skills into your project first:

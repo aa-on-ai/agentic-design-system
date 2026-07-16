@@ -17,9 +17,9 @@
     "ui-polish-pass",
     "agent-friendly-design when production-facing",
     "responsive.md",
-    "ai-css-failure-patterns.md",
-    "responsive-design-forks.md",
-    "sticky-scroll-patterns.md"
+    "responsive.md — sticky & scroll containers section",
+    "anti-patterns.md",
+    "mobile.md"
   ],
   "skips": [
     "whimsical-design by default",
@@ -68,8 +68,6 @@
       "design-review",
       "ux-baseline-check",
       "ui-polish-pass",
-      "responsive-design-forks",
-      "sticky-scroll-patterns",
       "agent-friendly-design when relevant"
     ],
     "skillsSkipped": [
@@ -79,9 +77,7 @@
       "spacing.md",
       "anti-patterns.md",
       "responsive.md",
-      "ai-css-failure-patterns.md",
-      "responsive-design-forks.md",
-      "sticky-scroll-patterns.md"
+      "mobile.md"
     ],
     "issuesDetected": [
       "equal-weight cards",

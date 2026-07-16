@@ -12,10 +12,9 @@ use this when users need to scan, compare, and maintain context across many sign
 - `ux-baseline-check`
 - `ui-polish-pass`
 - `agent-friendly-design` when the work is production-facing
-- `responsive.md`
-- `ai-css-failure-patterns.md`
-- `responsive-design-forks.md`
-- `sticky-scroll-patterns.md`
+- `responsive.md` (including the sticky & scroll containers section)
+- `anti-patterns.md`
+- `mobile.md`
 
 ## intentionally skips
 
@@ -58,9 +57,9 @@ use this when users need to scan, compare, and maintain context across many sign
 when this preset is active, the run report should usually emphasize:
 
 - **task classification:** dense dashboard / analytics / comparison-heavy interface
-- **skills fired:** `design-review`, `ux-baseline-check`, `ui-polish-pass`, `responsive-design-forks`, `sticky-scroll-patterns`, plus `agent-friendly-design` when relevant
+- **skills fired:** `design-review`, `ux-baseline-check`, `ui-polish-pass`, plus `agent-friendly-design` when relevant
 - **skills skipped:** creative skills unless the brief explicitly calls for motion or brand expression
-- **references consulted:** `spacing.md`, `anti-patterns.md`, `responsive.md`, `ai-css-failure-patterns.md`, `responsive-design-forks.md`, `sticky-scroll-patterns.md`
+- **references consulted:** `spacing.md`, `anti-patterns.md`, `responsive.md`, `mobile.md`
 - **issues detected:** equal-weight cards, broken sticky behavior, bad table translation on mobile, hidden comparison context, cramped density
 - **fixes applied:** clearer composition, explicit mobile fork choice, sticky repair, table strategy, better visual weighting
 - **human judgment required:** what must stay visible on mobile and which metrics deserve dominant placement

@@ -18,7 +18,7 @@
     "ui-polish-pass",
     "agent-friendly-design when shipping to production",
     "responsive.md",
-    "ai-css-failure-patterns.md",
+    "anti-patterns.md",
     "whimsical-design when personality is requested",
     "world-build when immersion is requested",
     "web-animation-design when motion is part of the concept"
@@ -79,7 +79,6 @@
       "typography.md",
       "anti-patterns.md",
       "responsive.md",
-      "ai-css-failure-patterns.md",
       "creative references as needed"
     ],
     "issuesDetected": [

@@ -13,8 +13,8 @@ this is the default preset when the product should feel clear, competent, and re
 - `ui-polish-pass`
 - `agent-friendly-design` when the work is production-facing
 - `responsive.md`
-- `ai-css-failure-patterns.md`
-- `sticky-scroll-patterns.md` when layout includes sticky regions, drawers, dashboards, or tables
+- `anti-patterns.md`
+- `responsive.md` — sticky & scroll containers section — when layout includes sticky regions, drawers, dashboards, or tables
 
 ## intentionally skips
 
@@ -58,7 +58,7 @@ when this preset is active, the run report should usually emphasize:
 - **task classification:** utilitarian app / product UI / settings / operational surface
 - **skills fired:** `design-review`, `ux-baseline-check`, `ui-polish-pass`, plus `agent-friendly-design` when shipping to production
 - **skills skipped:** creative skills unless the brief explicitly asks for them
-- **references consulted:** `spacing.md`, `anti-patterns.md`, `responsive.md`, `ai-css-failure-patterns.md`
+- **references consulted:** `spacing.md`, `anti-patterns.md`, `responsive.md`
 - **issues detected:** hierarchy flattening, missing states, hover-only affordances, decorative color misuse, mobile focus problems
 - **fixes applied:** simplified layout, stronger type hierarchy, state coverage, cleaner responsive behavior
 - **human judgment required:** whether the interface needs more personality or should stay restrained

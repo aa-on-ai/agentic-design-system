@@ -39,7 +39,7 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
   return (
     <div className="install-command-card rounded-[2rem] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.16)] backdrop-blur-md">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--accent)]">Install</p>
+        <p className="text-xs font-bold tracking-[0.04em] text-[var(--accent)]">Install</p>
         <button
           type="button"
           onClick={copy}

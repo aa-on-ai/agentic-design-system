@@ -1,286 +1,357 @@
 import Image from "next/image";
 import { Github } from "lucide-react";
+import { AssemblyLineClimber } from "./AssemblyLineClimber";
 import { InstallCommand } from "./InstallCommand";
+import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
 
-const baselineCards = [
-  { title: "Audience", body: "Who's reading this UI and what they came to do." },
-  { title: "Domain", body: "Domain nouns, core workflows, hard constraints." },
-  { title: "States", body: "Loading · empty · error · focus · mobile." },
-  { title: "References", body: "Screenshots or sites that matter — optional." },
+type ArtifactStage = "intent" | "baseline" | "rubric" | "evidence" | "release";
+
+const orders = [
+  { id: "#4821", customer: "Mara Chen", destination: "Portland", total: "$184.00", state: "Delayed" },
+  { id: "#4819", customer: "Field Notes Co.", destination: "Austin", total: "$96.50", state: "Packing" },
+  { id: "#4816", customer: "Owen Bell", destination: "Chicago", total: "$242.00", state: "Shipped" },
 ];
 
-const verdictCards = [
-  {
-    tag: "satisfied",
-    tone: "ok",
-    body: "Ships. The evidence cleared the rubric.",
-  },
-  {
-    tag: "needs_revision",
-    tone: "warn",
-    body: "Builder iterates against the grader's note. Regrades.",
-  },
-  {
-    tag: "max_iterations",
-    tone: "stop",
-    body: "Stops out. Escalate to a human reviewer.",
-  },
-];
+function InspectionLamp({ label, tone = "amber" }: { label: string; tone?: "amber" | "green" | "red" }) {
+  return (
+    <span className={`inspection-lamp inspection-lamp--${tone}`}>
+      <span className="inspection-lamp-bulb" aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
+function OrderRows({ final = false }: { final?: boolean }) {
+  return (
+    <div className="order-rows" role="table" aria-label="Recent orders">
+      <div className="order-row order-row--head" role="row">
+        <span role="columnheader">Order</span>
+        <span role="columnheader">Customer</span>
+        <span className="order-destination" role="columnheader">Destination</span>
+        <span role="columnheader">Status</span>
+        <span role="columnheader">Total</span>
+      </div>
+      {orders.map((order, index) => (
+        <div className={`order-row ${final && index === 0 ? "order-row--selected" : ""}`} role="row" key={order.id}>
+          <strong role="cell">{order.id}</strong>
+          <span role="cell">{order.customer}</span>
+          <span className="order-destination" role="cell">{order.destination}</span>
+          <span role="cell"><span className={`status status--${order.state.toLowerCase()}`}>{order.state}</span></span>
+          <span role="cell">{order.total}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OrderArtifact({ stage }: { stage: ArtifactStage }) {
+  const isIntent = stage === "intent";
+  const isBaseline = stage === "baseline";
+  const isRubric = stage === "rubric";
+  const isEvidence = stage === "evidence";
+  const isRelease = stage === "release";
+
+  return (
+    <div className={`order-artifact order-artifact--${stage}`}>
+      <div className="artifact-registration" aria-hidden="true">
+        <i /><i /><i /><i />
+      </div>
+
+      {isIntent && (
+        <div className="intent-ticket">
+          <span>Job 4821-A</span>
+          <strong>Spot delayed orders before they miss dispatch.</strong>
+        </div>
+      )}
+
+      {isBaseline && (
+        <div className="baseline-tape" aria-label="Required screen states">
+          <span>Loading</span><span>Empty</span><span>Error</span><span>390px</span>
+        </div>
+      )}
+
+      <div className="orders-window">
+        <div className="orders-browserbar" aria-hidden="true">
+          <span /><span /><span />
+          <small>northstar / admin / orders</small>
+        </div>
+        <div className="orders-ui">
+          <div className="orders-sidebar" aria-hidden="true">
+            <b>NS</b>
+            <small>Workspace</small>
+            <span>Overview</span>
+            <span className="orders-side-active">Orders</span>
+            <span>Shipments</span>
+          </div>
+          <div className="orders-main">
+            <div className="orders-titlebar">
+              <div>
+                <span className="orders-kicker">Operations</span>
+                <h3>Orders</h3>
+              </div>
+              {!isIntent && <button type="button" className="new-order-button">New order</button>}
+            </div>
+
+            {isIntent && (
+              <p className="orders-raw-note">A working first draft. No priority, no recovery states, no mobile decision.</p>
+            )}
+
+            {(isRubric || isEvidence || isRelease) && (
+              <div className="orders-summary" aria-label="Order summary">
+                <div><strong>12</strong><span>open</span></div>
+                <div><strong>03</strong><span>at risk</span></div>
+                <div className="summary-deadline"><strong>2h 14m</strong><span>dispatch closes</span></div>
+              </div>
+            )}
+
+            {isBaseline && (
+              <div className="state-shelf">
+                <span><i className="state-spinner" aria-hidden="true" />Loading</span>
+                <span><i aria-hidden="true">○</i>Empty</span>
+                <span><i aria-hidden="true">!</i>Error</span>
+                <small>states packed before build</small>
+              </div>
+            )}
+
+            <OrderRows final={isRelease} />
+
+            {isRubric && (
+              <div className="rubric-overlay" aria-hidden="true">
+                <span className="measure measure--target">48</span>
+                <span className="measure measure--gutter">24</span>
+                <span className="rubric-flag">at-risk orders lead</span>
+              </div>
+            )}
+
+            {isEvidence && (
+              <div className="viewport-proof" aria-label="Viewport evidence">
+                <span><b>390</b> no overflow</span>
+                <span><b>768</b> touch clear</span>
+                <span><b>1280</b> axe clean</span>
+              </div>
+            )}
+
+            {isRelease && (
+              <div className="release-detail">
+                <span><b>Order #4821</b> requires dispatch review</span>
+                <button type="button">Review delay</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {isIntent && <span className="draft-stamp" aria-hidden="true">Rough / v0</span>}
+      {isBaseline && <span className="context-tag" aria-hidden="true">Context loaded</span>}
+      {isRubric && <span className="caliper" aria-hidden="true"><i /><b>Pass line</b><i /></span>}
+      {isEvidence && (
+        <div className="inspection-stamps" aria-hidden="true">
+          <span className="stamp-fail">Fail 01</span>
+          <span className="stamp-fixed">Repaired</span>
+        </div>
+      )}
+      {isRelease && <span className="release-seal" aria-hidden="true">Release<br />cleared</span>}
+    </div>
+  );
+}
+
+type StationProps = {
+  number: string;
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  notes: string[];
+  stage: ArtifactStage;
+  side: "left" | "right";
+  lamp: string;
+  lampTone?: "amber" | "green" | "red";
+  machineLabel: string;
+};
+
+function Station({ number, id, eyebrow, title, description, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
+  return (
+    <section className={`station station--${side} station--${stage}`} aria-labelledby={id}>
+      <div className="station-index" aria-hidden="true">
+        <span>{number}</span>
+      </div>
+      <div className="station-copy">
+        <p className="station-eyebrow">{eyebrow}</p>
+        <h2 id={id}>{title}</h2>
+        <p className="station-description">{description}</p>
+        <ul className="station-notes">
+          {notes.map((note) => <li key={note}>{note}</li>)}
+        </ul>
+      </div>
+      <div className="machine-bay">
+        <div className="machine-header">
+          <span>{machineLabel}</span>
+          <InspectionLamp label={lamp} tone={lampTone} />
+        </div>
+        <div className="artifact-cart">
+          <span className="cart-handle cart-handle--left" aria-hidden="true" />
+          <OrderArtifact stage={stage} />
+          <span className="cart-handle cart-handle--right" aria-hidden="true" />
+          <span className="cart-wheel cart-wheel--left" aria-hidden="true" />
+          <span className="cart-wheel cart-wheel--right" aria-hidden="true" />
+        </div>
+        <div className="machine-footer" aria-hidden="true">
+          <span>ADS / {number}</span><i /><span>Line 01</span>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
   return (
-    <main className="theme-page min-h-screen selection:bg-[var(--accent-strong)] selection:text-[var(--accent-text)]">
-      <div className="sr-only">
-        Loading, empty, and error states are part of the agentic design system verification scripts.
-      </div>
+    <main className="theme-page sm:min-h-screen">
+      <p className="sr-only">
+        This demonstration includes loaded, loading, empty, and error states, keyboard focus, and mobile behavior.
+      </p>
 
-      <section className="hero-section">
-        <div className="hero-card">
-          <div className="hero-media" aria-hidden="true">
-            <Image
-              src="/hero/creative-pipeline-light.png"
-              alt=""
-              width={1536}
-              height={1024}
-              priority
-              className="hero-image hero-image-light"
-            />
-            <Image
-              src="/hero/creative-pipeline-dark.png"
-              alt=""
-              width={1536}
-              height={1024}
-              priority
-              className="hero-image hero-image-dark"
-            />
-          </div>
-          <div className="hero-scrim" aria-hidden="true" />
-
-          <div className="hero-toolbar">
+      <section className="hero-section" aria-labelledby="hero-title">
+        <header className="site-header">
+          <a className="wordmark focus-ring" href="#top" aria-label="Agentic Design System home">
+            <span className="wordmark-mark" aria-hidden="true">A</span>
+            <span>Agentic Design System</span>
+          </a>
+          <nav className="hero-toolbar" aria-label="Primary navigation">
             <a
               href="https://github.com/aa-on-ai/agentic-design-system"
               aria-label="Agentic Design System on GitHub"
-              className="hero-pill hero-pill--icon focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+              className="hero-pill hero-pill--icon focus-ring focus-visible:outline"
             >
-              <Github size={17} strokeWidth={2.2} aria-hidden="true" />
+              <Github size={18} strokeWidth={2.1} aria-hidden="true" />
             </a>
             <ThemeToggle />
-          </div>
+          </nav>
+        </header>
 
-          <div className="hero-card-inner">
-            <span className="hero-wordmark" aria-label="Agentic Design System">
-              Agentic Design System
-            </span>
-            <h1>An open-source design kit your coding agent can borrow.</h1>
+        <div className="hero-workshop" id="top">
+          <div className="hero-media" aria-hidden="true">
+            <Image src="/hero/creative-pipeline-light.png" alt="" width={1536} height={1024} priority className="hero-image hero-image-light" />
+            <Image src="/hero/creative-pipeline-dark.png" alt="" width={1536} height={1024} priority className="hero-image hero-image-dark" />
+          </div>
+          <div className="hero-scrim" aria-hidden="true" />
+
+          <div className="hero-copy">
+            <p className="hero-kicker"><span>Open source</span> UI quality workshop</p>
+            <h1 id="hero-title">Your agent can build.<br /><em>ADS runs inspection.</em></h1>
             <p className="hero-lede">
-              Design judgment is still yours. ADS is templates, skills, and checks your coding
-              agent reads while it works on UI. Use the whole kit, or copy one useful piece.
+              A design system your coding agent reads while it works. Put one screen through intent,
+              context, rubric, evidence, and review until the pixels are ready to release.
             </p>
-
-            <div className="hero-install" role="group" aria-label="Install command">
-              <p className="hero-install-label">give this to your agent</p>
+            <div className="hero-actions">
               <InstallCommand variant="strip" />
+              <a className="tour-link focus-ring" href="#assembly-line">Tour the line <span aria-hidden="true">↓</span></a>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section id="loop" className="loop-section loop-section--intent">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">01</p>
-          <h2 className="loop-heading">intent.</h2>
-          <p className="loop-desc">
-            Name what the user is doing, what the UI must make obvious, and the operational state
-            the screen has to create. The builder fills this before generating anything.
-          </p>
-          <pre className="loop-snippet loop-snippet--big">
-            <span className="loop-snippet-head">templates/outcome-template.md</span>
-            <span className="loop-snippet-line">- accomplish:    what the user needs to do</span>
-            <span className="loop-snippet-line">- notice:        what the UI must make obvious first</span>
-            <span className="loop-snippet-line">- feel:          confident / calm / oriented / safe</span>
-            <span className="loop-snippet-line"> </span>
-            <span className="loop-snippet-line">alignment check: notice → feel → accomplish</span>
-          </pre>
-        </div>
-      </section>
-
-      <section className="loop-section loop-section--baseline">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">02</p>
-          <h2 className="loop-heading">baseline.</h2>
-          <p className="loop-desc">
-            What the agent reads before writing anything. Project context, hard constraints, and
-            the states that must be in scope. A visual reference is optional and only when it
-            actually matters.
-          </p>
-          <div className="baseline-grid">
-            {baselineCards.map((card) => (
-              <article key={card.title} className="baseline-card">
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </article>
-            ))}
+          <div className="hero-job-ticket" aria-hidden="true">
+            <span>Live job</span><b>Orders / admin</b><small>5 stations · 1 artifact</small>
           </div>
-          <p className="loop-foot-line">
-            <code>templates/project-identity-template.md</code> · <code>presets/</code> ·{" "}
-            <code>reference-intake-contract.md</code>
-          </p>
+          <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>
       </section>
 
-      <section className="loop-section loop-section--rubric">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">03</p>
-          <h2 className="loop-heading">rubric.</h2>
-          <p className="loop-desc">
-            Define what good means for <em>this specific task</em> before the agent builds. The
-            task-specific criteria do most of the work. The default quality lens is the floor,
-            not the whole judgment.
-          </p>
-          <div className="rubric-card">
-            <div className="rubric-block rubric-block--task">
-              <p className="rubric-block-label">task-specific criteria</p>
-              <ul className="rubric-list">
-                <li><span className="rubric-bullet" aria-hidden="true">·</span>What does &ldquo;done&rdquo; mean for this screen?</li>
-                <li><span className="rubric-bullet" aria-hidden="true">·</span>What must the user be able to do, decide, or trust?</li>
-                <li><span className="rubric-bullet" aria-hidden="true">·</span>What would make this fail even if all the boxes checked?</li>
-              </ul>
-              <p className="rubric-block-source">written in <code>outcome-template.md</code></p>
-            </div>
-            <div className="rubric-divider" aria-hidden="true" />
-            <div className="rubric-block rubric-block--default">
-              <p className="rubric-block-label">+ default quality lens (floor)</p>
-              <ul className="rubric-weights">
-                <li><span>Design Quality</span><span>35%</span></li>
-                <li><span>Originality</span><span>30%</span></li>
-                <li><span>Craft</span><span>20%</span></li>
-                <li><span>Functionality</span><span>15%</span></li>
-              </ul>
-              <p className="rubric-block-source">in <code>grader-report-template.md</code></p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="factory-floor" id="assembly-line">
+        <div className="continuous-track" aria-hidden="true"><span /></div>
+        <AssemblyLineClimber />
 
-      <section className="loop-section loop-section--evidence">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">04</p>
-          <h2 className="loop-heading">evidence.</h2>
-          <p className="loop-desc">
-            Receipts, not promises. Files changed, checks run, screenshots, run report fields.
-            The agent attaches the artifacts before saying &ldquo;done.&rdquo;
-          </p>
-          <pre className="loop-snippet loop-snippet--big loop-snippet--terminal">
-            <span className="loop-snippet-head">checks against the file the agent wrote</span>
-            <span className="loop-snippet-line loop-snippet-line--cmd">$ python3 anti-pattern-check.py App.tsx</span>
-            <span className="loop-snippet-line loop-snippet-line--pass">  PASS  state-check</span>
-            <span className="loop-snippet-line loop-snippet-line--pass">  PASS  accessibility-check</span>
-            <span className="loop-snippet-line"> </span>
-            <span className="loop-snippet-line loop-snippet-line--field">- files:        list of paths changed</span>
-            <span className="loop-snippet-line loop-snippet-line--field">- screenshots:  desktop + mobile attached</span>
-            <span className="loop-snippet-line loop-snippet-line--field">- score:        judge total / 50</span>
-          </pre>
-          <p className="loop-foot-line">
-            <code>templates/run-report-template.md</code> · <code>skills/design-review/scripts/</code>
-          </p>
+        <div className="line-intro">
+          <p>The ADS line / 01–05</p>
+          <h2>Watch the same screen<br />earn its release.</h2>
+          <span>Scroll to advance the job</span>
         </div>
-      </section>
 
-      <section className="loop-section loop-section--grader">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">05</p>
-          <h2 className="loop-heading">grader / revision.</h2>
-          <p className="loop-desc">
-            A separate pass scores the evidence against the rubric. Three verdicts. The builder
-            does not ship on its own &mdash; the grader (or you) decides.
-          </p>
-          <div className="verdict-grid">
-            {verdictCards.map((v) => (
-              <article key={v.tag} className={`verdict-card verdict-card--${v.tone}`}>
-                <span className="verdict-tag">{v.tag}</span>
-                <p>{v.body}</p>
-              </article>
-            ))}
-          </div>
-          <p className="loop-foot-line">
-            <code>templates/grader-report-template.md</code>
-          </p>
+        <Station
+          number="01"
+          id="station-intent"
+          eyebrow="Job ticket / intent"
+          title="Name the job before shaping the screen."
+          description="The first draft works, but it does not know what matters. The ticket pins one outcome to the artifact: surface delayed orders before dispatch closes."
+          notes={["One user outcome", "One operational priority"]}
+          stage="intent"
+          side="left"
+          lamp="ticketed"
+          machineLabel="Intake press"
+        />
+
+        <Station
+          number="02"
+          id="station-baseline"
+          eyebrow="Fixture rack / baseline"
+          title="Load context and every state."
+          description="ADS gives the builder the real nouns, constraints, references, and edge cases. Loading, empty, error, focus, and mobile enter the build before polish can hide them."
+          notes={["Project context attached", "Recovery states packed"]}
+          stage="baseline"
+          side="right"
+          lamp="context on"
+          machineLabel="Baseline fixture"
+        />
+
+        <Station
+          number="03"
+          id="station-rubric"
+          eyebrow="Tolerance bench / rubric"
+          title="Set the pass line for this screen."
+          description="The screen gains hierarchy, generous targets, and a dispatch deadline because the rubric measures the actual job, not abstract taste words."
+          notes={["At-risk orders lead", "48px controls · 24px gutters"]}
+          stage="rubric"
+          side="left"
+          lamp="within spec"
+          machineLabel="Optical caliper"
+        />
+
+        <Station
+          number="04"
+          id="station-evidence"
+          eyebrow="Light table / evidence"
+          title="Inspect pixels, not promises."
+          description="The rendered screen is captured at phone, tablet, and desktop. A failed mobile edge is stamped, repaired, and recaptured before the artifact moves on."
+          notes={["390 / 768 / 1280 captured", "Axe · overflow · touch checked"]}
+          stage="evidence"
+          side="right"
+          lamp="recapture clear"
+          lampTone="green"
+          machineLabel="Tri-view light table"
+        />
+
+        <Station
+          number="05"
+          id="station-release"
+          eyebrow="Release gate / review"
+          title="Release it, or send it around again."
+          description="A separate review judges the rendered artifact against the job ticket. The verdict is small by design. What matters is the visible screen that earned it."
+          notes={["Human judgment stays in the loop", "Revision remains a valid outcome"]}
+          stage="release"
+          side="left"
+          lamp="release cleared"
+          lampTone="green"
+          machineLabel="Final release bay"
+        />
+
+        <div className="track-end" aria-hidden="true"><span>End of line</span></div>
+      </div>
+
+      <section className="release-bay" aria-labelledby="release-title">
+        <div className="release-door" aria-hidden="true"><i /><i /><i /><i /></div>
+        <div className="release-copy">
+          <p>Start a run / MIT licensed</p>
+          <h2 id="release-title">Put your next screen<br />on the line.</h2>
+          <span>Plain markdown, scripts, and templates. Use the full workshop or borrow one station.</span>
         </div>
-      </section>
-
-      <section className="loop-section loop-section--proof">
-        <div className="loop-inner">
-          <p className="loop-eyebrow">the loop, executed</p>
-          <h2 className="loop-heading">run it for real.</h2>
-          <p className="loop-desc">
-            The five steps aren&rsquo;t a diagram &mdash; they compile to a runnable workflow. An agent
-            builds, a headless browser captures what actually renders, deterministic gates run on that
-            evidence, and a <em>separate</em> grader judges the screenshots &mdash; not the source. The
-            builder never signs off on its own work; it revises until the evidence clears.
-          </p>
-          <pre className="loop-snippet loop-snippet--big loop-snippet--terminal">
-            <span className="loop-snippet-head">orders screen · gated at 390 / 768 / 1280px · from evidence.json, not source</span>
-            <span className="loop-snippet-line loop-snippet-line--cmd">iter1  build → capture → gate</span>
-            <span className="loop-snippet-line loop-snippet-line--fail">  FAIL  12 axe · 114 touch targets &lt;44px        → needs_revision</span>
-            <span className="loop-snippet-line loop-snippet-line--cmd">iter2  revise → re-capture → gate</span>
-            <span className="loop-snippet-line loop-snippet-line--fail">  FAIL  touch 114 → 12 · axe still 12            → needs_revision</span>
-            <span className="loop-snippet-line loop-snippet-line--cmd">iter3  revise → re-capture → gate</span>
-            <span className="loop-snippet-line loop-snippet-line--pass">  axe 12 → 0 · touch 12 → 0 · overflow clean</span>
-            <span className="loop-snippet-line loop-snippet-line--pass">  PASS  every gate clears at all 3 breakpoints   → satisfied</span>
-            <span className="loop-snippet-line"> </span>
-            <span className="loop-snippet-line loop-snippet-line--field">verdict: satisfied — three passes; ships only once the rendered evidence clears every gate</span>
-          </pre>
-          <p className="loop-desc">
-            Because the gate reads rendered evidence, it can&rsquo;t be satisfied by a comment that
-            says <code>{"// handles loading, empty, error"}</code>. It iterates against what actually
-            renders and ships only when every gate clears &mdash; and if it can&rsquo;t close them, it
-            returns <code>failed</code> rather than rubber-stamp. The difference between &ldquo;my agent
-            got better&rdquo; and a receipt you can audit.
-          </p>
-          <p className="loop-foot-line">
-            <code>workflows/new-page-component.mjs</code> · <code>docs/loop-demo/</code>
-          </p>
-        </div>
-      </section>
-
-      <section className="cta-section">
-        <div className="cta-inner">
-          <p className="eyebrow">Get started</p>
-          <h2>See how it fits your setup.</h2>
-          <p>
-            The kit is plain markdown, scripts, and templates. Use the whole thing, or copy one
-            useful piece into your repo. Open source, MIT.
-          </p>
-          <div className="cta-actions">
-            <InstallCommand variant="strip" />
-            <a
-              href="https://github.com/aa-on-ai/agentic-design-system"
-              className="cta-link focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              Review on GitHub
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <footer className="site-footer">
-        <span className="site-footer-mark">Agentic Design System · 2026</span>
-        <span className="site-footer-trust">
-          <a href="https://github.com/aa-on-ai/agentic-design-system/blob/main/LICENSE">MIT</a>
-          {" · "}
-          <a href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a>
-        </span>
-        <span className="site-footer-author">
-          Built by{" "}
-          <a
-            href="https://github.com/aa-on-ai"
-            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
-          >
-            Aaron Thomas
+        <div className="release-actions">
+          <InstallCommand variant="strip" />
+          <a className="release-github focus-ring" href="https://github.com/aa-on-ai/agentic-design-system">
+            <Github size={18} aria-hidden="true" /> Review the workshop on GitHub
           </a>
-        </span>
-      </footer>
+        </div>
+      </section>
+
+      <SiteFooter />
     </main>
   );
 }

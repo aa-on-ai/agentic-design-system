@@ -66,6 +66,10 @@ Every world-build site needs these layers. They're what separate "a page with ni
 ### Layer 1: Background Texture
 The canvas is never blank white or flat black.
 
+The noise technique below is the same recipe as whimsical-design §4 "Background Atmosphere"
+(canonical copy lives there — keep the SVG data-URI in sync). This is the fixed full-screen
+overlay variant for immersive pages.
+
 ```css
 /* Noise overlay — subtle grain that makes everything feel tactile */
 .noise-overlay {

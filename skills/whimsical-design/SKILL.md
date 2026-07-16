@@ -86,7 +86,8 @@ techniques:
 - **layered transparencies** — overlapping semi-transparent shapes in the background. creates depth and atmosphere.
 
 ```css
-/* noise texture overlay */
+/* noise texture overlay — canonical copy of this recipe; world-build Layer 1 reuses the same
+   SVG data-URI as a fixed full-screen variant. If you change it here, sync it there. */
 .textured {
   position: relative;
 }

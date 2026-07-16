@@ -34,15 +34,19 @@ export function ThemeToggle() {
 
   useEffect(() => {
     const next = preferredTheme();
-    setTheme(next);
     document.documentElement.dataset.theme = next;
-    setMounted(true);
+    const frame = window.requestAnimationFrame(() => {
+      setTheme(next);
+      setMounted(true);
 
-    // Set initial reveal origin to the button center so the first toggle
-    // animates from the correct point (not the CSS fallback).
-    if (buttonRef.current) {
-      setRevealOrigin(buttonRef.current);
-    }
+      // Set initial reveal origin to the button center so the first toggle
+      // animates from the correct point (not the CSS fallback).
+      if (buttonRef.current) {
+        setRevealOrigin(buttonRef.current);
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   // Keep the reveal origin in sync if the viewport resizes between toggles.
