@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "runId": "phase6-prospective-dogfood-2026-07-17",
+  "context": "Prospective ADS v1.2.0 run. The manifest was captured before implementation; the decisions below survived the final rendered review.",
+  "manifestPath": "docs/phase6-dogfood/skill-manifest.json",
+  "manifestSha256": "b67c4bcd604e9458bece0b3cad5864a564759420332f71b4d81e379d313467e1",
+  "decisions": [
+    {
+      "id": "match-existing-ads-language",
+      "decision": "The new trace surface reuses the site's typography, tokens, theme control, wordmark, footer, and workshop-paper visual language so it reads as ADS product UI.",
+      "artifact": {
+        "path": "demos/src/app/trace/trace.module.css",
+        "location": "Shared ADS tokens and page chrome"
+      },
+      "rule": {
+        "fileId": "skill-skills-design-review",
+        "excerpt": "- Follow the project's existing components, tokens, and patterns before inventing anything.",
+        "excerptSha256": "469211b6aff40833985b625056ee7ef4afc4e3c792374eff4e46af441bf93b06"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-docs-phase6-dogfood-outcome",
+        "excerpt": "- Use the existing ADS visual language and site chrome; this is part of the product, not a synthetic fixture.",
+        "excerptSha256": "cffdf623b6bf05b6526510b78b8195478929099489adc6838d1b22152fc25f67"
+      },
+      "evidence": [
+        {
+          "type": "desktop screenshot",
+          "path": "docs/phase6-dogfood/evidence/default-1280x800.png"
+        },
+        {
+          "type": "rendered gate receipt",
+          "path": "docs/phase6-dogfood/evidence/evidence.json"
+        }
+      ],
+      "reviewStatus": "verified"
+    },
+    {
+      "id": "focused-mobile-reading-spine",
+      "decision": "Decision receipts collapse into a single vertical reading spine on small screens instead of compressing the desktop composition.",
+      "artifact": {
+        "path": "demos/src/app/trace/trace.module.css",
+        "location": "Mobile receipt chain"
+      },
+      "rule": {
+        "fileId": "skill-skills-design-review-references-responsive",
+        "excerpt": "- Small screens need prioritization, not a desktop layout compressed until it cries.",
+        "excerptSha256": "fa0f9a6566118236d7900b06cc23d0e696652640dfd8ad0a1b10fdd66bf0f2bd"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-docs-phase6-dogfood-outcome",
+        "excerpt": "- Use one focused reading spine on small screens rather than compressing a dashboard or table.",
+        "excerptSha256": "54d0bd79b45e89883a59f2381ed7f61f4c0dddad16fd9f4c2a48e5a9c66c29bc"
+      },
+      "evidence": [
+        {
+          "type": "mobile screenshot",
+          "path": "docs/phase6-dogfood/evidence/default-390x844.png"
+        },
+        {
+          "type": "rendered overflow and target gates",
+          "path": "docs/phase6-dogfood/evidence/evidence.json"
+        }
+      ],
+      "reviewStatus": "verified"
+    },
+    {
+      "id": "semantic-readable-chain",
+      "decision": "The trace is a server-rendered article with landmarks, ordered decisions, headed receipts, and real evidence links that remain understandable without styling.",
+      "artifact": {
+        "path": "demos/src/app/trace/page.tsx",
+        "location": "Trace document landmarks and evidence links"
+      },
+      "rule": {
+        "fileId": "skill-skills-agent-friendly-design",
+        "excerpt": "ARIA supplements semantic HTML — it doesn't replace it. use it when native elements can't express the interaction.",
+        "excerptSha256": "da8be16840e07244c5caf4a675c2aa037fe6f150c5093ec3c406866882e74bbe"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-docs-phase6-dogfood-outcome",
+        "excerpt": "- Keep the page server-rendered and semantic, with real links to the preserved artifacts.",
+        "excerptSha256": "7c26c1b96aa3f0f26aa0132d65d86d735d080c6ec9890c37797852107f613231"
+      },
+      "evidence": [
+        {
+          "type": "rendered landmark and axe gates",
+          "path": "docs/phase6-dogfood/evidence/evidence.json"
+        },
+        {
+          "type": "tablet screenshot",
+          "path": "docs/phase6-dogfood/evidence/default-768x1024.png"
+        }
+      ],
+      "reviewStatus": "verified"
+    },
+    {
+      "id": "honest-historical-status",
+      "decision": "The preserved Phase 5 rows are labeled reviewed and paired with a visible caveat that they are historical mapping, not prospective proof.",
+      "artifact": {
+        "path": "demos/src/app/trace/page.tsx",
+        "location": "Historical mapping caveat and reviewed badges"
+      },
+      "rule": {
+        "fileId": "skill-skills-design-review",
+        "excerpt": "- [ ] Does it meet the brief, not an adjacent brief?",
+        "excerptSha256": "66a797cb5d9f3be6631fdebe6c2fe6639d63a3cd0b2bd6da77c39b7cd4262215"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-docs-phase6-dogfood-outcome",
+        "excerpt": "- Present the preserved loop demo as historical evidence with `reviewed` status, never as prospective proof.",
+        "excerptSha256": "1182d8fd3e2dcfdbf3af06f5ac2d79cf989b01efa07fe15475dff4eebd535c4b"
+      },
+      "evidence": [
+        {
+          "type": "desktop screenshot",
+          "path": "docs/phase6-dogfood/evidence/default-1280x800.png"
+        },
+        {
+          "type": "mobile screenshot",
+          "path": "docs/phase6-dogfood/evidence/default-390x844.png"
+        }
+      ],
+      "reviewStatus": "verified"
+    }
+  ]
+}

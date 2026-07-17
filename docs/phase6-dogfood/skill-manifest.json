@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "captureMode": "pre-run",
+  "generatedAt": "2026-07-17T21:17:44.740Z",
+  "projectRoot": ".",
+  "adsRelease": "v1.2.0",
+  "skillFiles": [
+    {
+      "id": "skill-skills-agent-friendly-design",
+      "path": "skills/agent-friendly-design/SKILL.md",
+      "sha256": "4d03ef014984758afe8d847f5d7652afff8d060131436202044f673ef3a44847",
+      "bytes": 9839,
+      "kind": "skill",
+      "skill": "agent-friendly-design",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-agentic-design-system",
+      "path": "skills/agentic-design-system/SKILL.md",
+      "sha256": "029d6d73f4763b844af03179e3a00062fdbaff21018ab01d3aa198b500147814",
+      "bytes": 14893,
+      "kind": "skill",
+      "skill": "agentic-design-system",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review-references-layout",
+      "path": "skills/design-review/references/layout.md",
+      "sha256": "6513835e75af4e2d10264a2c917b719d7cd0a1cb21e6b0dc4d9ab864d9fe483a",
+      "bytes": 6821,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review-references-responsive",
+      "path": "skills/design-review/references/responsive.md",
+      "sha256": "089d06a936fd3aef5f117ab437c435d9616cf7539ceab6079fe956f9572ce49b",
+      "bytes": 2960,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review-references-spacing",
+      "path": "skills/design-review/references/spacing.md",
+      "sha256": "398af9808f675e7aaeaee8796fcdfe1908108a7d0ecbe7d4de6f40621ccd1836",
+      "bytes": 1493,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review-references-typography",
+      "path": "skills/design-review/references/typography.md",
+      "sha256": "4deb30f4ff703eff284336c45b1857d6b007a6aa3815a08a3dc942392e49663d",
+      "bytes": 1630,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review",
+      "path": "skills/design-review/SKILL.md",
+      "sha256": "546806cbfbdd96963cabb656b2706387ebf7b3a1c4ac9e3ed47955df74f57ee8",
+      "bytes": 6051,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-ui-polish-pass",
+      "path": "skills/ui-polish-pass/SKILL.md",
+      "sha256": "7b8880c12d9a89f8f9102da142956d66bbc7abc4acb5c9b847ff03fbcdd19376",
+      "bytes": 5301,
+      "kind": "skill",
+      "skill": "ui-polish-pass",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-ux-baseline-check",
+      "path": "skills/ux-baseline-check/SKILL.md",
+      "sha256": "0cd0438deeff414de2aca74041b3df7102a4a4903027fa03aeee2ce46bd4ee76",
+      "bytes": 3448,
+      "kind": "skill",
+      "skill": "ux-baseline-check",
+      "loadStatus": "observed"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "id": "source-docs-loop-demo-decision-trace",
+      "path": "docs/loop-demo/decision-trace.json",
+      "sha256": "4555086a17170f32cb7a7fa24afd1df9d1b2b2d78947270f20828140665dd238",
+      "bytes": 4040,
+      "kind": "source"
+    },
+    {
+      "id": "source-docs-loop-demo-readme",
+      "path": "docs/loop-demo/README.md",
+      "sha256": "9da613d7c9e2a5b321da490edd0ce90d723c3938d2aa9ef8fc5574181bbaf26f",
+      "bytes": 2969,
+      "kind": "source"
+    },
+    {
+      "id": "source-docs-loop-demo-skill-manifest",
+      "path": "docs/loop-demo/skill-manifest.json",
+      "sha256": "8d77f04b6f50759858bfed23f9eda837ffd40f4688041a12218d1fc34aea3b6d",
+      "bytes": 2088,
+      "kind": "source"
+    },
+    {
+      "id": "source-docs-phase6-dogfood-outcome",
+      "path": "docs/phase6-dogfood/OUTCOME.md",
+      "sha256": "938f1e399cdb0cb6d4595ea7041f32141852e165cadf9dd52ad9ab40f8229013",
+      "bytes": 1733,
+      "kind": "source"
+    }
+  ],
+  "performance": {
+    "operation": "local-hash-capture",
+    "elapsedMs": 8.477,
+    "budgetMs": 250,
+    "withinBudget": true,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "browserCalls": 0
+  }
+}
