@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-17T21:32:39.763Z",
+  "valid": true,
+  "manifest": "docs/phase6-dogfood/skill-manifest.json",
+  "trace": "docs/phase6-dogfood/decision-trace.json",
+  "decisions": 4,
+  "errors": [],
+  "performance": {
+    "operation": "local-trace-verification",
+    "elapsedMs": 3.435,
+    "budgetMs": 250,
+    "withinBudget": true,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "browserCalls": 0
+  }
+}

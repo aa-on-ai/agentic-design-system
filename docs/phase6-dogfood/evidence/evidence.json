@@ -1,0 +1,137 @@
+{
+  "url": "http://127.0.0.1:3217/trace",
+  "capturedStates": [
+    "default"
+  ],
+  "breakpoints": [
+    "390x844",
+    "768x1024",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2688,
+      "renderedTextSample": "A Agentic Design System DECISION PROVENANCE / TRACE 001 A paper trail for interface decisions. Follow one ADS run from the choice that survived, through the exact rule and product constraint, to the rendered evidence a reviewer can inspect. PRESERVED RUN REVIEWED Orders / iter3 D",
+      "renderSignature": "1b5e5cd3",
+      "probe": {
+        "h1": {
+          "fontFamily": "Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "color": "rgb(28, 23, 17)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "768x1024",
+      "screenshot": "default-768x1024.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2699,
+      "renderedTextSample": "A Agentic Design System One UI run DECISION PROVENANCE / TRACE 001 A paper trail for interface decisions. Follow one ADS run from the choice that survived, through the exact rule and product constraint, to the rendered evidence a reviewer can inspect. PRESERVED RUN REVIEWED Order",
+      "renderSignature": "22d9a148",
+      "probe": {
+        "h1": {
+          "fontFamily": "Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "color": "rgb(28, 23, 17)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2699,
+      "renderedTextSample": "A Agentic Design System One UI run DECISION PROVENANCE / TRACE 001 A paper trail for interface decisions. Follow one ADS run from the choice that survived, through the exact rule and product constraint, to the rendered evidence a reviewer can inspect. PRESERVED RUN REVIEWED Order",
+      "renderSignature": "22d9a148",
+      "probe": {
+        "h1": {
+          "fontFamily": "Newsreader, \"Newsreader Fallback\", Georgia, serif",
+          "color": "rgb(28, 23, 17)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "stateRendered": {
+      "default": true
+    },
+    "renderedFonts": [
+      "\"DM Sans\", \"DM Sans Fallback\", sans-serif"
+    ],
+    "touchTargetsUnder44": []
+  }
+}

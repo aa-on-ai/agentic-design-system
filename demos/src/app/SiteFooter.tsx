@@ -1,24 +1,31 @@
+import Link from "next/link";
 import { FooterEmber } from "./FooterEmber";
 
-export function SiteFooter() {
+type SiteFooterProps = {
+  topHref?: string;
+  assemblyHref?: string;
+};
+
+export function SiteFooter({ topHref = "#top", assemblyHref = "#assembly-line" }: SiteFooterProps = {}) {
   return (
     <footer className="site-footer">
       <FooterEmber />
       <div className="footer-brand">
-        <a className="footer-wordmark focus-ring" href="#top" aria-label="Back to the top">
+        <Link className="footer-wordmark focus-ring" href={topHref} aria-label="Back to the top">
           <span className="footer-wordmark-mark" aria-hidden="true">A</span>
           <span>
             <strong>Agentic Design System</strong>
             <small>Open-source design governance</small>
           </span>
-        </a>
+        </Link>
         <p>Design judgment, made repeatable for coding agents.</p>
       </div>
 
       <nav className="footer-links" aria-label="Footer navigation">
         <div>
           <span>Explore</span>
-          <a className="focus-ring" href="#assembly-line">The assembly line</a>
+          <Link className="focus-ring" href={assemblyHref}>The assembly line</Link>
+          <Link className="focus-ring" href="/trace">Decision trace</Link>
           <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a>
         </div>
         <div>
