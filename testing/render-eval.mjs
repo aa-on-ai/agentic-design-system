@@ -11,13 +11,13 @@
 //   node testing/render-eval.mjs --variant path/to/x.tsx --slug myslug --name after \
 //        --states default,empty,loading,error --prompt "build an orders page"
 //
-// Judge: sends screenshots to ANTHROPIC_API_KEY if set; otherwise a deterministic stub
-// records which screenshots + gates WOULD be sent. Override model with --judge / EVAL_JUDGE_MODEL.
+// Judge: sends screenshots to the provider selected by --judge / EVAL_JUDGE_MODEL. Without
+// a matching API key, the receipt is unresolved and requires human review.
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mountVariant } from './lib/mount.mjs';
@@ -27,7 +27,7 @@ const execFileAsync = promisify(execFile);
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, '..');
 const CAPTURE = path.join(REPO_ROOT, 'skills', 'design-review', 'scripts', 'capture.mjs');
-const EVIDENCE_ROOT = path.join(REPO_ROOT, 'evidence', 'render');
+export const EVIDENCE_ROOT = path.join(REPO_ROOT, 'evidence', 'render');
 
 // Bundled fixture manifest — proves the path with no creds and no network.
 // `good` honors #state= (multi-state capture); `broken` imports a missing lib (forced skip).
@@ -73,10 +73,25 @@ async function captureMounted({ url, states, outDir }) {
   }
 }
 
-async function runVariant({ slug, name, src, states, prompt, judgeModel, tailwind }) {
-  const workDir = path.join(EVIDENCE_ROOT, slug, name);
+export async function runVariant({
+  slug,
+  name,
+  src,
+  states,
+  prompt,
+  judgeModel,
+  judgeFallbackModel,
+  tailwind,
+  evidenceRoot = EVIDENCE_ROOT,
+  apiKeys,
+  judgeVariant,
+}) {
+  const workDir = path.join(evidenceRoot, slug, name);
   const mountDir = path.join(workDir, 'mount');
   const captureDir = path.join(workDir, 'capture');
+
+  // A failed rerun must not inherit a stale success receipt from an earlier run.
+  await fs.rm(workDir, { recursive: true, force: true });
 
   log(`mount ${slug}/${name} <- ${src}`);
   const mounted = await mountVariant({ src: path.resolve(REPO_ROOT, src), outDir: mountDir, title: `${slug}/${name}`, tailwind });
@@ -100,9 +115,32 @@ async function runVariant({ slug, name, src, states, prompt, judgeModel, tailwin
   log(`judge ${slug}/${name}`);
   let receipt;
   try {
-    receipt = await judgeFromScreenshots({ slug, variant: name, prompt, evidence, outDir: captureDir, model: judgeModel });
+    receipt = judgeVariant
+      ? await judgeVariant({ slug, variant: name, prompt, evidence, outDir: captureDir, model: judgeModel })
+      : await judgeFromScreenshots({
+          slug,
+          variant: name,
+          prompt,
+          evidence,
+          outDir: captureDir,
+          model: judgeModel,
+          fallbackModel: judgeFallbackModel,
+          apiKeys,
+        });
   } catch (e) {
-    return { slug, name, src, skipped: true, stage: 'judge', reason: `judge failed: ${e.message}`, evidencePath: path.join(captureDir, 'evidence.json') };
+    receipt = {
+      slug,
+      variant: name,
+      judgeModel,
+      judged: false,
+      scores: null,
+      reason: `judge failed: ${e instanceof Error ? e.message : String(e)}; human review required`,
+      screenshotsSent: (evidence.snapshots || []).map((snapshot) => ({
+        label: `${snapshot.state}@${snapshot.breakpoint}`,
+        path: path.join(captureDir, snapshot.screenshot),
+      })),
+      gates: evidence.gates || {},
+    };
   }
 
   const out = {
@@ -129,15 +167,15 @@ function buildReport(slug, results) {
     '',
     '## rendered variants',
     '',
-    '| variant | serious axe | overflow | states rendered | judge |',
-    '|---|---:|---|---|---|',
+    '| variant | serious axe | overflow | small targets | states rendered | judge |',
+    '|---|---:|---|---:|---|---|',
     ...rendered.map((r) => {
       const g = r.gates || {};
       const states = Object.entries(g.stateRendered || {}).map(([k, v]) => `${k}=${v ? 'y' : 'N'}`).join(' ');
       const judge = r.judge?.judged
         ? `scored ${r.judge.scoreTotal}/50`
-        : `stub (${r.judge?.screenshotsSent?.length || 0} shots ready)`;
-      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${states} | ${judge} |`;
+        : `needs human (${r.judge?.screenshotsSent?.length || 0} shots ready)`;
+      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${(g.touchTargetsUnder44 || []).length} | ${states} | ${judge} |`;
     }),
     '',
     '## skipped variants (explicit — no silent drops)',
@@ -152,7 +190,7 @@ function buildReport(slug, results) {
 async function main() {
   const args = parseArgs(process.argv);
   const judgeModel = args.judge || process.env.EVAL_JUDGE_MODEL || 'claude-opus-4-8';
-  const hasKey = !!process.env.ANTHROPIC_API_KEY?.trim();
+  const hasKey = !!(process.env.ANTHROPIC_API_KEY?.trim() || process.env.OPENAI_API_KEY?.trim());
 
   let batch;
   if (args.fixture) {
@@ -160,36 +198,74 @@ async function main() {
   } else if (args.variant && args.slug) {
     batch = { slug: args.slug, prompt: args.prompt, variants: [{ name: args.name, src: args.variant, states: args.states }] };
   } else {
-    console.error('Usage: render-eval.mjs --fixture | --variant <file> --slug <slug> [--name --states --prompt --judge]');
+    console.error('Usage: render-eval.mjs --fixture | --variant <file> --slug <slug> [--name --states --prompt --judge --tailwind]');
     process.exit(2);
   }
 
   if (args.dryRun) {
-    log(`Dry run. slug=${batch.slug}, judge=${judgeModel}, ANTHROPIC_API_KEY=${hasKey ? 'present' : 'absent (stub judge)'}`);
+    log(`Dry run. slug=${batch.slug}, judge=${judgeModel}, judge key=${hasKey ? 'present' : 'absent (human review)'}`);
     for (const v of batch.variants) log(`  would mount+capture+judge: ${v.name} <- ${v.src} [states: ${v.states}]`);
     log(`Real run drops --dry-run. Needs: npm i -D esbuild playwright @axe-core/playwright && npx playwright install chromium.`);
     return;
   }
 
-  await fs.mkdir(path.join(EVIDENCE_ROOT, batch.slug), { recursive: true });
+  const outcome = await runRenderBatch({
+    slug: batch.slug,
+    prompt: batch.prompt,
+    variants: batch.variants,
+    judgeModel,
+    judgeFallbackModel: process.env.EVAL_JUDGE_FALLBACK_MODEL?.trim() || null,
+    tailwind: args.tailwind,
+  });
+
+  log(`done. rendered=${outcome.results.length - outcome.skips.length}, skipped=${outcome.skips.length}`);
+  for (const s of outcome.skips) log(`  SKIP ${s.name} [${s.stage}]: ${s.reason}`);
+  log(`receipts + report under evidence/render/${batch.slug}/`);
+
+  // An explicit skip receipt is evidence, not success. Exploratory callers can inspect the
+  // packet, while authoritative callers receive a non-zero exit for any incomplete batch.
+  if (outcome.skips.length > 0) process.exitCode = 1;
+}
+
+export async function runRenderBatch({
+  slug,
+  prompt,
+  variants,
+  judgeModel,
+  judgeFallbackModel = null,
+  tailwind = 'none',
+  evidenceRoot = EVIDENCE_ROOT,
+  apiKeys,
+  judgeVariant,
+}) {
+  const batchDir = path.join(evidenceRoot, slug);
+  await fs.mkdir(batchDir, { recursive: true });
   const results = [];
-  for (const v of batch.variants) {
+  for (const variant of variants) {
     results.push(await runVariant({
-      slug: batch.slug, name: v.name, src: v.src, states: v.states || 'default',
-      prompt: batch.prompt, judgeModel, tailwind: args.tailwind,
+      slug,
+      name: variant.name,
+      src: variant.src,
+      states: variant.states || 'default',
+      prompt,
+      judgeModel,
+      judgeFallbackModel,
+      tailwind,
+      evidenceRoot,
+      apiKeys,
+      judgeVariant,
     }));
   }
 
-  const skips = results.filter((r) => r.skipped).map(({ name, src, stage, reason }) => ({ name, src, stage, reason }));
-  await fs.writeFile(path.join(EVIDENCE_ROOT, batch.slug, 'skips.json'), `${JSON.stringify(skips, null, 2)}\n`, 'utf8');
-  await fs.writeFile(path.join(EVIDENCE_ROOT, batch.slug, 'render-report.md'), buildReport(batch.slug, results), 'utf8');
-
-  log(`done. rendered=${results.length - skips.length}, skipped=${skips.length}`);
-  for (const s of skips) log(`  SKIP ${s.name} [${s.stage}]: ${s.reason}`);
-  log(`receipts + report under evidence/render/${batch.slug}/`);
-
-  // Non-zero only if NOTHING rendered — a partial batch with explicit skips is success.
-  if (results.every((r) => r.skipped)) process.exit(1);
+  const skips = results
+    .filter((result) => result.skipped)
+    .map(({ name, src, stage, reason }) => ({ name, src, stage, reason }));
+  await fs.writeFile(path.join(batchDir, 'skips.json'), `${JSON.stringify(skips, null, 2)}\n`, 'utf8');
+  await fs.writeFile(path.join(batchDir, 'render-report.md'), buildReport(slug, results), 'utf8');
+  return { slug, evidenceDir: batchDir, results, skips };
 }
 
-main().catch((e) => { console.error(`[render-eval] fatal: ${e?.stack || e}`); process.exit(2); });
+const invokedAsScript = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+if (invokedAsScript) {
+  main().catch((e) => { console.error(`[render-eval] fatal: ${e?.stack || e}`); process.exit(2); });
+}

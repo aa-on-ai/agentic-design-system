@@ -175,6 +175,7 @@ Historical eval fixtures are intentionally kept under [`docs/archive/`](./docs/a
 testing/install-smoke.sh
 npm run compare:smoke
 npm run render-eval:smoke
+npm run eval-loop:render-smoke
 ```
 
 To exercise the public GitHub shorthand rather than the local checkout:

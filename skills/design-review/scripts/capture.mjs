@@ -109,6 +109,12 @@ async function readComputedFacts(page, selectors) {
     const body = document.body;
     // Landmark / state-render facts: did anything actually render for this state?
     const visibleText = (body?.innerText || '').replace(/\s+/g, ' ').trim();
+    const signatureInput = `${visibleText}\n${(body?.innerHTML || '').replace(/\s+/g, ' ').trim()}`;
+    let signatureHash = 2166136261;
+    for (let index = 0; index < signatureInput.length; index += 1) {
+      signatureHash ^= signatureInput.charCodeAt(index);
+      signatureHash = Math.imul(signatureHash, 16777619);
+    }
 
     // Touch-target gate: interactive controls whose RENDERED box is under 44x44 CSS px.
     // We measure only interactive elements, so a small icon inside a large button is not
@@ -166,6 +172,7 @@ async function readComputedFacts(page, selectors) {
       alertRegion: !!document.querySelector('[role="alert"]'),
       renderedTextLength: visibleText.length,
       renderedTextSample: visibleText.slice(0, 280),
+      renderSignature: (signatureHash >>> 0).toString(16).padStart(8, '0'),
       probe,
     };
   }, selectors);
@@ -263,11 +270,23 @@ async function main() {
     0,
   );
   const overflowAt = evidence.snapshots.filter((s) => s.horizontalOverflow).map((s) => `${s.state}@${s.breakpoint}`);
-  // a state "rendered" if it produced meaningfully different / non-trivial content
+  // Default must render non-trivial content. Every requested non-default state must also
+  // differ from default at the same breakpoint; repeating the default page no longer passes.
   const stateRendered = {};
   for (const state of opts.states) {
     const snaps = evidence.snapshots.filter((s) => s.state === state);
-    stateRendered[state] = snaps.some((s) => s.renderedTextLength > 0);
+    if (state === 'default') {
+      stateRendered[state] = snaps.some((s) => s.renderedTextLength > 0);
+      continue;
+    }
+    stateRendered[state] = snaps.some((snapshot) => {
+      const defaultSnapshot = evidence.snapshots.find(
+        (candidate) => candidate.state === 'default' && candidate.breakpoint === snapshot.breakpoint,
+      );
+      return snapshot.renderedTextLength > 0 &&
+        !!defaultSnapshot &&
+        snapshot.renderSignature !== defaultSnapshot.renderSignature;
+    });
   }
   const renderedFonts = [...new Set(evidence.snapshots.map((s) => s.body?.fontFamily).filter(Boolean))];
   // interactive controls under 44x44 CSS px, with where they were seen (state@breakpoint).
@@ -281,6 +300,7 @@ async function main() {
   );
 
   evidence.gates = {
+    axeAvailable: evidence.axeAvailable,
     seriousAxeViolations: seriousAxe,
     horizontalOverflowAt: overflowAt,
     stateRendered,
