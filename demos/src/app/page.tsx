@@ -195,6 +195,7 @@ type StationProps = {
   eyebrow: string;
   title: string;
   description: string;
+  proofLabel: string;
   proof: string;
   notes: string[];
   stage: ArtifactStage;
@@ -204,7 +205,7 @@ type StationProps = {
   machineLabel: string;
 };
 
-function Station({ number, id, eyebrow, title, description, proof, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
+function Station({ number, id, eyebrow, title, description, proofLabel, proof, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
   return (
     <section
       className={`station station--${side} station--${stage}`}
@@ -222,7 +223,7 @@ function Station({ number, id, eyebrow, title, description, proof, notes, stage,
         <div className="station-proof">
           <span className="station-proof-mark" aria-hidden="true">+</span>
           <div>
-            <p>New on this screen</p>
+            <p>{proofLabel}</p>
             <strong>{proof}</strong>
             <span>{notes.join(" · ")}</span>
           </div>
@@ -316,6 +317,7 @@ export default function Home() {
           eyebrow="Job ticket / intent"
           title="Name the job before shaping the screen."
           description="The first draft works, but it cannot tell urgent from ordinary. The job ticket locks one outcome: surface delayed orders before dispatch closes."
+          proofLabel="Ticket"
           proof="One job. One visible outcome."
           notes={["One user outcome", "One operational priority"]}
           stage="intent"
@@ -330,6 +332,7 @@ export default function Home() {
           eyebrow="Fixture rack / baseline"
           title="Load context and every state."
           description="Real nouns, constraints, references, and edge cases arrive before polish. Loading, empty, error, focus, and mobile become required."
+          proofLabel="Context"
           proof="Five required states before polish."
           notes={["Project context attached", "Recovery states packed"]}
           stage="baseline"
@@ -344,6 +347,7 @@ export default function Home() {
           eyebrow="Tolerance bench / rubric"
           title="Set the pass line for this screen."
           description="The rubric turns taste into screen-specific thresholds: at-risk orders lead, targets stay generous, and the dispatch deadline remains visible."
+          proofLabel="Pass line"
           proof="A visible, measurable pass line."
           notes={["At-risk orders lead", "48px controls · 24px gutters"]}
           stage="rubric"
@@ -358,6 +362,7 @@ export default function Home() {
           eyebrow="Light table / evidence"
           title="Inspect pixels, not promises."
           description="Phone, tablet, and desktop renders expose a failed mobile edge. ADS repairs and recaptures it before the artifact moves."
+          proofLabel="Evidence"
           proof="Three rendered viewports, one repaired failure."
           notes={["390 / 768 / 1280 captured", "Axe · overflow · touch checked"]}
           stage="evidence"
@@ -373,6 +378,7 @@ export default function Home() {
           eyebrow="Release gate / review"
           title="Release it, or send it around again."
           description="A separate review compares the rendered artifact with the job ticket. It clears release or sends the screen back."
+          proofLabel="Verdict"
           proof="A human verdict: release or revise."
           notes={["Human judgment stays in the loop", "Revision remains a valid outcome"]}
           stage="release"
