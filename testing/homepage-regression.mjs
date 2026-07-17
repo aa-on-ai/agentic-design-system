@@ -107,6 +107,58 @@ try {
       issues.push(`footer Ember did not react after click (reaction count: ${reactionCount ?? "missing"})`);
     }
   }
+
+  const stationPoses = {
+    intent: "reach",
+    baseline: "contact",
+    rubric: "inspect",
+    evidence: "inspect",
+    release: "release",
+  };
+
+  for (const [stage, expectedPose] of Object.entries(stationPoses)) {
+    await page.evaluate((nextStage) => {
+      document.documentElement.style.scrollBehavior = "auto";
+      const station = document.querySelector(`.station--${nextStage}`);
+      station?.scrollIntoView({ block: "center" });
+    }, stage);
+    await page.waitForTimeout(220);
+
+    const motionState = await page.evaluate(() => {
+      const active = document.querySelector('.station[data-active="true"]');
+      const climber = document.querySelector(".assembly-climber");
+      const screen = active?.querySelector(".orders-window");
+      const scale = screen ? new DOMMatrix(getComputedStyle(screen).transform).a : null;
+      return {
+        activeStage: active?.getAttribute("data-stage") ?? null,
+        pose: climber?.getAttribute("data-pose") ?? null,
+        screenScale: scale,
+      };
+    });
+
+    if (motionState.activeStage !== stage) {
+      issues.push(`active product is ${motionState.activeStage ?? "missing"} at ${stage} (expected ${stage})`);
+    }
+    if (motionState.pose !== expectedPose) {
+      issues.push(`Ember pose is ${motionState.pose ?? "missing"} at ${stage} (expected ${expectedPose})`);
+    }
+    if (motionState.screenScale === null || motionState.screenScale < 1.01) {
+      issues.push(`active product scale is ${motionState.screenScale ?? "missing"} at ${stage} (expected >= 1.01)`);
+    }
+  }
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.evaluate(() => document.querySelector(".station--baseline")?.scrollIntoView({ block: "center" }));
+  await page.waitForTimeout(60);
+  const reducedMotionState = await page.locator(".assembly-climber").evaluate((element) => ({
+    enabled: element.getAttribute("data-reduced-motion"),
+    pose: element.getAttribute("data-pose"),
+  }));
+  if (reducedMotionState.enabled !== "true" || reducedMotionState.pose !== "contact") {
+    issues.push(
+      `reduced-motion Ember state is ${reducedMotionState.enabled}/${reducedMotionState.pose} (expected true/contact)`,
+    );
+  }
 } finally {
   await browser.close();
 }
@@ -117,4 +169,4 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log("homepage regression passed: typography rhythm + footer boundary + Ember interaction");
+console.log("homepage regression passed: typography + footer + Ember poses + active product focus");
