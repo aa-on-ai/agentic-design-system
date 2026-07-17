@@ -2,6 +2,20 @@
 
 current verification for the public package.
 
+## release gate
+
+run the complete release gate from a clean checkout:
+
+```bash
+npm ci
+npm run playwright:install
+npm run release:check
+```
+
+the gate checks release metadata, the single-project install smoke, the five-agent install matrix,
+and the comparison/render/eval-loop authority smokes. the install scripts default to
+`skills@1.5.19`; override `SKILLS_CLI_PACKAGE` only when deliberately certifying a newer CLI.
+
 ## install smoke
 
 run this before publishing package changes:
@@ -31,7 +45,37 @@ to exercise the public github shorthand instead of the current checkout:
 testing/install-smoke.sh aa-on-ai/agentic-design-system
 ```
 
-this verifies the actual `npx skills add aa-on-ai/agentic-design-system --yes` path in a clean temporary project.
+this verifies the public GitHub source through an explicit Codex copy install in a clean temporary
+project.
+
+## install matrix
+
+run this before a release or after changing install paths, skills, templates, or bundled runbooks:
+
+```bash
+testing/install-matrix.sh
+```
+
+the matrix creates separate clean projects and explicitly installs to:
+
+- Claude Code: `.claude/skills/`
+- Codex: `.agents/skills/`
+- Cursor: `.agents/skills/`
+- OpenClaw: `skills/`
+- Hermes (`hermes-agent`): `.hermes/skills/`
+
+every target must contain all 10 skills, the variation asset, 5 bundled templates, 6 bundled
+workflow runbooks, and `skills-lock.json`. success ends with:
+
+```text
+install matrix passed: 5 agents x 10 skills, with assets, templates, workflow runbooks, and lockfiles verified
+```
+
+exercise the public source with:
+
+```bash
+testing/install-matrix.sh aa-on-ai/agentic-design-system
+```
 
 ## UI work checks
 

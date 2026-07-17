@@ -10,19 +10,31 @@ ADS is a repo-local skill pack. It is not a hosted design agent or a UI generato
 
 ## Install
 
-From the project where your coding agent works:
+From the project where your coding agent works, choose the agent explicitly:
 
 ```bash
-npx skills add aa-on-ai/agentic-design-system --yes
+npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes
 ```
 
 Verify what was installed:
 
 ```bash
-npx skills list
+npx skills list --agent codex --json
 ```
 
-The installer currently adds ten skills under `.agents/skills/`. It does not create or replace your project’s `AGENTS.md`, `CLAUDE.md`, or other instruction file.
+ADS supports these release-tested installer targets:
+
+| Agent | Installer ID | Project skill directory |
+|---|---|---|
+| Claude Code | `claude-code` | `.claude/skills/` |
+| Codex | `codex` | `.agents/skills/` |
+| Cursor | `cursor` | `.agents/skills/` |
+| OpenClaw | `openclaw` | `skills/` |
+| Hermes | `hermes-agent` | `.hermes/skills/` |
+
+Replace `codex` in the command with the installer ID for your agent. The installer adds all ten
+skills and writes `skills-lock.json`; it does not create or replace `AGENTS.md`, `CLAUDE.md`,
+Cursor rules, or other project instructions.
 
 For one task, tell your agent:
 
@@ -33,10 +45,13 @@ Use the agentic-design-system skill for this UI task. Define the outcome, read t
 For an always-on project setup, add this to the instruction file your agent reads:
 
 ```markdown
-For visual or UI work, read `.agents/skills/agentic-design-system/SKILL.md` first and follow its routing and verification contract.
+For visual or UI work, load the installed `agentic-design-system` skill first and follow its routing and rendered-verification contract.
 ```
 
-The fuller [`templates/agents-snippet.md`](./templates/agents-snippet.md) is useful when you clone the repository and keep the complete `skills/`, `workflows/`, and `templates/` tree in your project.
+See the [canonical install guide](./docs/INSTALL.md) for exact per-agent commands, destination
+paths, activation instructions, updates, and a no-CLI fallback. The fuller
+[`templates/agents-snippet.md`](./templates/agents-snippet.md) is useful when you clone the
+repository and keep the complete `skills/`, `workflows/`, and `templates/` tree in your project.
 
 ### Install an exact checkout
 
@@ -45,10 +60,11 @@ Use this when you are reviewing a branch or local change:
 ```bash
 git clone https://github.com/aa-on-ai/agentic-design-system.git
 cd agentic-design-system
-npx skills add . --yes
+npx skills add . --agent codex --copy --yes
 ```
 
-If `npx skills` is unavailable in your agent shell, use the [manual integration guide](#agent-integrations).
+If `npx skills` is unavailable in your agent shell, use the
+[no-CLI install](./docs/INSTALL.md#no-cli-install).
 
 ## The loop
 
@@ -149,6 +165,7 @@ Only then did the grader return `satisfied`.
 
 ## Agent integrations
 
+- [Canonical install guide](./docs/INSTALL.md)
 - [Claude Code](./integrations/claude-code.md)
 - [Codex CLI](./integrations/codex.md)
 - [Cursor](./integrations/cursor.md)
@@ -172,16 +189,19 @@ Historical eval fixtures are intentionally kept under [`docs/archive/`](./docs/a
 ## Verify a source checkout
 
 ```bash
-testing/install-smoke.sh
-npm run compare:smoke
-npm run render-eval:smoke
-npm run eval-loop:render-smoke
+npm ci
+npm run playwright:install
+npm run release:check
 ```
+
+The release gate aligns version and skill manifests, installs a clean copy for all five supported
+agents, and reruns the comparison, render-authority, and eval-loop authority smokes.
 
 To exercise the public GitHub shorthand rather than the local checkout:
 
 ```bash
 testing/install-smoke.sh aa-on-ai/agentic-design-system
+testing/install-matrix.sh aa-on-ai/agentic-design-system
 ```
 
 ## Status and limits

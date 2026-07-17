@@ -1,85 +1,33 @@
-# codex cli
+# Codex
 
-how to wire the agentic design system into OpenAI's Codex CLI.
+The canonical setup contract is [`docs/INSTALL.md`](../docs/INSTALL.md). Codex's installer ID and
+project skill directory are release-tested by `testing/install-matrix.sh`.
 
-## setup
+## Install
 
-Codex CLI reads `AGENTS.md` (or `codex.md`) from your project root for system instructions.
-
-### 1. copy skills into your project
+Run from the target project:
 
 ```bash
-cp -r skills/ /path/to/your/project/skills/
+npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes
 ```
 
-### 2. add to AGENTS.md
-
-paste the contents of `templates/agents-snippet.md` into your `AGENTS.md`.
-
-minimal version:
+ADS installs under `.agents/skills/`. Add this to the project's `AGENTS.md`:
 
 ```markdown
-## Design Quality Chain
-
-Before presenting any visual/UI work, run the appropriate skill chain:
-
-- **New visual work** → read and follow in order:
-  1. skills/agentic-design-system/SKILL.md
-  2. skills/design-review/SKILL.md
-  3. skills/ux-baseline-check/SKILL.md
-  4. skills/ui-polish-pass/SKILL.md
-
-- **Modifying existing UI** → read skills/design-review/SKILL.md (pre-flight only)
-- **Reference-led work** → also read skills/visual-reference-calibration/SKILL.md before coding
-- **Creative/motion work** → only then add whimsical-design, world-build, or web-animation-design
-- **Non-visual work** → skip
-
-Reference files: skills/design-review/references/ (load only what's relevant)
+For visual or UI work, load `.agents/skills/agentic-design-system/SKILL.md` first and follow its routing and rendered-verification contract.
 ```
 
-### 3. add brand guidelines
+## Use
 
-copy `templates/brand-guidelines-template.md` as `guidelines.md` in your project root.
-
-## codex-specific notes
-
-### context window
-
-Codex CLI (GPT-5.3/5.4) has a large context window (~1M tokens). you can be generous with skill loading — it can handle the full chain without truncation issues.
-
-this is an advantage over smaller-context tools. lean into it:
-- load all relevant reference files when doing a full quality pass
-- include detailed examples in your guidelines.md
-- the PRACTICAL-TIPS.md supplement for animations is worth loading
-
-### autonomous vs interactive
-
-- **autonomous mode** — Codex runs without check-ins. the design system is critical here because there's no human steering mid-task. the quality chain is the safety net.
-- **interactive mode** — Codex asks questions along the way. for divergent exploration, have it read `skills/design-variations/SKILL.md`, build the disposable comparison artifact, and ask which direction to promote.
-
-### multi-agent with codex
-
-if you're running multiple Codex instances (e.g., via OpenClaw or custom orchestration):
-
-```
-agent 1: "build layout option A — minimal, lots of whitespace, content-first"
-agent 2: "build layout option B — dense, sidebar nav, power-user oriented"
-agent 3: "build layout option C — progressive disclosure, starts simple, reveals depth"
+```text
+Use the agentic-design-system skill for this UI task. Define the outcome, read the project baseline, run the applicable review chain, and return rendered evidence before calling it done.
 ```
 
-each agent loads the same design system. the quality floor is consistent. the creative direction diverges. human picks the winner.
+For direction exploration, ask Codex to use `design-variations` before changing production files.
 
-## divergent exploration
+## Verify
 
+```bash
+npx skills list --agent codex --json
+test -f .agents/skills/agentic-design-system/SKILL.md
 ```
-this page could go several directions. build 3 distinct layout approaches
-using skills/design-variations/SKILL.md. keep the same content and state,
-make each direction structurally distinct, and recommend one. I'll choose or
-blend before you modify production code.
-```
-
-## tips
-
-- **prompt specificity is the biggest quality multiplier.** 3x detail = dramatically better output. include exact text, exact spacing values, what NOT to do, and why previous versions failed.
-- **Codex in autonomous mode will rewrite files.** scope your prompts: "modify only [these files], do not touch [these files]."
-- **compound after sessions.** Codex is especially prone to visual anti-patterns (emoji instead of icons, colored circles, Bootstrap-style cards). add these to anti-patterns.md when you catch them.
