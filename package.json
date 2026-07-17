@@ -1,9 +1,13 @@
 {
   "name": "agentic-design-system-eval-harness",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Dev-only dependency manifest for the ADS render-based eval harness (capture.mjs + render-eval.mjs). Not part of the published skills package.",
   "scripts": {
+    "install:smoke": "testing/install-smoke.sh",
+    "install:matrix": "testing/install-matrix.sh",
+    "release:metadata": "node testing/check-release-metadata.mjs",
+    "release:check": "testing/release-check.sh",
     "render-eval:smoke": "node testing/render-eval-smoke.mjs",
     "render-eval:fixture": "node testing/render-eval.mjs --fixture",
     "eval-loop:render-smoke": "node testing/eval-loop-render-smoke.mjs",
@@ -15,10 +19,12 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.28.1",
     "pixelmatch": "^6.0.0",
     "playwright": "^1.49.0",
     "pngjs": "^7.0.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "tsx": "^4.23.1"
   }
 }

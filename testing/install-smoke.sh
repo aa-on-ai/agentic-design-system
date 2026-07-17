@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SOURCE="${1:-$ROOT}"
+SKILLS_CLI_PACKAGE="${SKILLS_CLI_PACKAGE:-skills@1.5.19}"
 TMP_DIR="$(mktemp -d /tmp/ads-install-smoke-XXXXXX)"
 
 cleanup() {
@@ -17,7 +18,7 @@ mkdir -p "$TMP_DIR/home" "$TMP_DIR/config" "$TMP_DIR/data"
   HOME="$TMP_DIR/home" \
     XDG_CONFIG_HOME="$TMP_DIR/config" \
     XDG_DATA_HOME="$TMP_DIR/data" \
-    npx skills add "$SOURCE" --yes
+    npx --yes "$SKILLS_CLI_PACKAGE" add "$SOURCE" --agent codex --copy --yes
 )
 
 expected=(

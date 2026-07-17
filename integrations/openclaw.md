@@ -1,43 +1,30 @@
 # OpenClaw
 
-OpenClaw agents read workspace instructions and sub-agent handoffs. Put the design system in `AGENTS.md`, then include only the relevant gates in UI handoffs.
+The canonical setup contract is [`docs/INSTALL.md`](../docs/INSTALL.md). OpenClaw's installer ID
+and workspace skill directory are release-tested by `testing/install-matrix.sh`.
 
-## Copy-paste setup
+## Install
+
+Run from the target workspace:
 
 ```bash
-cp -r skills/ ~/your-workspace/skills/
-cp presets/utilitarian-app.md ~/your-workspace/guidelines.md
+npx skills add aa-on-ai/agentic-design-system --agent openclaw --copy --yes
 ```
 
-Paste into workspace `AGENTS.md`:
+ADS installs under `skills/`. Add this to the workspace `AGENTS.md`:
 
 ```markdown
-For visual/UI work:
-1. Read skills/agentic-design-system/SKILL.md.
-2. Use guidelines.md, DESIGN.md, or the closest preset.
-3. Run Project Knowledge Intake only when the project needs alignment.
-4. For substantial UI work, define outcome/intent before building and grade against it after evidence is attached.
-5. Run Reference Intake only when a screenshot/site/CodePen/“feel like this” reference matters.
-6. Run design-review, ux-baseline-check, ui-polish-pass.
-7. Screenshot when possible and return verification/gaps.
-Skip anything that does not apply.
+For visual or UI work, load `skills/agentic-design-system/SKILL.md` first and follow its routing and rendered-verification contract.
 ```
 
-## UI sub-agent handoff
+## Handoffs
 
-```text
-Build [screen/component].
-Context: use guidelines.md or DESIGN.md.
-Gates: core design checks only.
-Optional: run Project Intake if context is insufficient. Run Reference Intake only if the provided visual reference changes the direction.
-Return: files changed, verification output, screenshot path or why unavailable, unresolved gaps.
+When delegating UI work, pass the outcome, project baseline, applicable gates, and required evidence.
+The final owner still verifies screenshots and test receipts before reporting completion.
+
+## Verify
+
+```bash
+npx skills list --agent openclaw --json
+test -f skills/agentic-design-system/SKILL.md
 ```
-
-## Default path
-
-Preset → threaded UI sub-agent → core checks → completion packet.
-
-## Optional layers
-
-- **Project Knowledge Intake** when the sub-agent needs shared product taste or constraints.
-- **Reference Intake** when the sub-agent must preserve a specific visual feel.

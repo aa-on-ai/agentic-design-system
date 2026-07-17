@@ -24,15 +24,15 @@ install smoke's drift guard.
 
 > **Installed, not cloned? Read this.** Paths in ADS docs are written **repo-root-relative**
 > (`workflows/...`, `routing/ROUTING.md`, `templates/...`, `skills/design-review/scripts/...`).
-> If you installed ADS as skills rather than cloning the repo, those paths do **not** exist at
-> your project root — they live under your agent's skills directory. Resolve every ADS path
-> under that root (for the skills CLI that's `.agents/skills/`). So:
-> - `workflows/create-design-workflow.md` → `.agents/skills/agentic-design-system/workflows/create-design-workflow.md`
-> - `skills/design-review/scripts/capture.mjs` → `.agents/skills/design-review/scripts/capture.mjs`
-> - `skills/design-review/references/mobile.md` → `.agents/skills/design-review/references/mobile.md`
-> - `templates/run-report-template.md` → `.agents/skills/agentic-design-system/templates/run-report-template.md`
-> - `templates/project-identity-template.md` → `.agents/skills/agentic-design-system/templates/project-identity-template.md`
-> - `templates/reference-intake-contract.md` → `.agents/skills/agentic-design-system/templates/reference-intake-contract.md`
+> If you installed ADS as skills rather than cloning the repo, resolve them from the directory
+> containing this `SKILL.md`; that location is portable even when agents use different install
+> roots. From this file:
+> - `workflows/create-design-workflow.md` → `./workflows/create-design-workflow.md`
+> - `skills/design-review/scripts/capture.mjs` → `../design-review/scripts/capture.mjs`
+> - `skills/design-review/references/mobile.md` → `../design-review/references/mobile.md`
+> - `templates/run-report-template.md` → `./templates/run-report-template.md`
+> - `templates/project-identity-template.md` → `./templates/project-identity-template.md`
+> - `templates/reference-intake-contract.md` → `./templates/reference-intake-contract.md`
 >
 > `routing/ROUTING.md` and the top-level `README`/`AGENTS` are repo-only; the runbooks above
 > stand alone without them.

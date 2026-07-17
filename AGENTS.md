@@ -9,7 +9,7 @@ wrappers around the routing logic below.
 
 ## skills
 
-this repo contains 9 design skills: one orchestrator plus core, reference, production, and creative packs.
+this repo contains 10 design skills: one orchestrator plus core, reference, production, and creative packs.
 
 **orchestrator** (read first for visual work):
 - `skills/agentic-design-system/` — routing, gate order, verification expectations
