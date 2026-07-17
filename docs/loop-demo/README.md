@@ -32,7 +32,14 @@ than ship it — the verdict always rests on what rendered, never on the source.
 - `iter{1,2,3}/evidence.json` — the authoritative rendered facts the gates ran on.
 - `iter{1,2,3}/default-390x844.png`, `default-1280x800.png` — representative screenshots (mobile + desktop).
   The full run captured 4 states × 3 breakpoints per iteration; these are the lean subset.
+- `skill-manifest.json` + `decision-trace.json` — the Phase 5 provenance pilot: exact loaded-file
+  hashes, governing excerpts, product constraints, artifact locations, and evidence links.
 - `RUN-REPORT.md` — the run report the workflow emitted.
+
+The provenance pilot was added on 2026-07-17 against this preserved artifact. It proves the current
+rule/excerpt/evidence mapping and the lightweight capture path; it is not historical proof that the
+original 2026-06-05 builder loaded these exact file hashes. Prospective runs capture that before
+building.
 
 ## Why this matters
 

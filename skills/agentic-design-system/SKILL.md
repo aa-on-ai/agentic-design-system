@@ -80,6 +80,17 @@ minimum loop:
 
 do not turn this into ceremony for tiny fixes. use it when unclear intent, visual quality, reference fidelity, or regression risk would otherwise cause churn.
 
+### decision provenance (optional; substantial work only)
+
+when a reviewer needs inspectable causality, read `workflows/decision-provenance.md`. capture the
+loaded skill/source hashes once after routing and before building, then verify 3-7 consequential
+decisions once at report time. do not trace every CSS property or repeat provenance capture inside
+the revision loop.
+
+skip this for copy-only changes, tiny mechanical fixes, and routine polish unless the user or risk
+profile explicitly requires traceability. the provenance path has a 250ms budget per deterministic
+operation and adds zero agent, model, browser, or network calls.
+
 ## Project handoff context (DESIGN.md)
 
 if a `DESIGN.md` file exists at the repo root — or at a path the orchestrator passes in — load it as handoff context **before** building. it is the normative source of truth for design tokens (colors, typography, spacing, rounded, components) and a prose overlay for atmosphere, component tone, and anti-goals. if it does not exist and the task needs project taste, run project knowledge intake before generation.
