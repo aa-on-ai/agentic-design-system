@@ -2264,13 +2264,21 @@ code {
   }
 
   .hero-command-code {
+    flex: 1;
     overflow: hidden;
     font-size: 0.62rem;
+    white-space: normal;
   }
 
   .hero-command-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+
+  .hero-command-text > span {
+    white-space: nowrap;
   }
 
   .tour-link { min-height: 44px; }
@@ -2329,7 +2337,7 @@ code {
   .line-intro {
     width: calc(100% - 32px);
     margin-bottom: 80px;
-    padding-left: 78px;
+    padding-left: 64px;
   }
 
   .line-intro h2 {
@@ -2342,7 +2350,7 @@ code {
   .station--right {
     width: 100%;
     margin-bottom: 50px;
-    padding: 0 16px 0 96px;
+    padding: 0 16px 0 82px;
     gap: 20px;
   }
 
@@ -2550,21 +2558,25 @@ code {
   .track-end { margin-top: -70px; }
 
   .release-bay {
-    min-height: 720px;
-    padding: 90px 20px 120px;
+    min-height: 0;
+    padding: 64px 20px 72px;
+    gap: 30px;
   }
 
   .release-copy h2 {
-    font-size: clamp(3.6rem, 17vw, 5.2rem);
+    font-size: clamp(3.2rem, 15vw, 4.5rem);
   }
 
-  .release-copy > span { font-size: 0.95rem; }
-  .release-actions { width: 100%; }
-  .release-primary-action .hero-command-code { flex: 1; }
-  .release-primary-action .hero-command-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .release-copy > span {
+    margin-top: 18px;
+    font-size: 0.9rem;
   }
+  .release-actions {
+    width: 100%;
+    gap: 20px;
+  }
+  .release-primary-action { gap: 10px; }
+  .release-primary-action .hero-command-code { flex: 1; }
   .release-primary-action > small { overflow-wrap: anywhere; }
   .release-door { right: -34%; width: 90%; opacity: 0.44; }
   .site-footer {

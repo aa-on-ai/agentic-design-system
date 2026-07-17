@@ -27,7 +27,10 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
       >
         <code className="hero-command-code" aria-label={command}>
           <span className="hero-command-prompt" aria-hidden="true">$</span>
-          <span className="hero-command-text">{command}</span>
+          <span className="hero-command-text">
+            <span>npx skills add</span>{" "}
+            <span>aa-on-ai/agentic-design-system --yes</span>
+          </span>
         </code>
         <span className="hero-command-copy" aria-live="polite">
           {copied ? "Copied" : "Copy"}
