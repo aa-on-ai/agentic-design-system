@@ -25,7 +25,7 @@
 <!-- ads-decision-provenance:start -->
 ## decision provenance
 
-- **manifest:** `docs/loop-demo/skill-manifest.json` (sha256 `2cfeb1319526…`)
+- **manifest:** `docs/loop-demo/skill-manifest.json` (sha256 `8d77f04b6f50…`)
 - **scope:** Prospective Phase 5 provenance review over a preserved 2026-06-05 artifact. This verifies the current rule, source, artifact, and evidence mapping; it does not prove the original builder loaded these exact hashes.
 - **capture status:** 4 observed, 0 declared
 - **deterministic overhead:** 8.182ms total (6.492ms capture + 1.69ms verify), budget 250ms per operation

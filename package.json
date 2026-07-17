@@ -1,6 +1,6 @@
 {
   "name": "agentic-design-system-eval-harness",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Dev-only dependency manifest for the ADS render-based eval harness (capture.mjs + render-eval.mjs). Not part of the published skills package.",
   "scripts": {

@@ -32,14 +32,15 @@ the deterministic rendered-evidence smokes. Do not tag a commit that fails this 
 After the release PR is merged to `main` and the GitHub release-gate check passes:
 
 ```bash
+RELEASE_VERSION=1.2.0
 git switch main
 git pull --ff-only
-git tag -a v1.1.0 -m "Agentic Design System v1.1.0"
-git push origin v1.1.0
-gh release create v1.1.0 \
+git tag -a "v$RELEASE_VERSION" -m "Agentic Design System v$RELEASE_VERSION"
+git push origin "v$RELEASE_VERSION"
+gh release create "v$RELEASE_VERSION" \
   --verify-tag \
-  --title "Agentic Design System v1.1.0" \
-  --notes-file docs/releases/v1.1.0.md
+  --title "Agentic Design System v$RELEASE_VERSION" \
+  --notes-file "docs/releases/v$RELEASE_VERSION.md"
 ```
 
 Verify the tag and release point at the same commit as `main`. A release is complete only after a

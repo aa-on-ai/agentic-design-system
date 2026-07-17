@@ -3,7 +3,7 @@
   "runId": "loop-demo-provenance-pilot-2026-07-17",
   "context": "Prospective Phase 5 provenance review over a preserved 2026-06-05 artifact. This verifies the current rule, source, artifact, and evidence mapping; it does not prove the original builder loaded these exact hashes.",
   "manifestPath": "docs/loop-demo/skill-manifest.json",
-  "manifestSha256": "2cfeb13195263c76bff106fac666aab8be0e5982bd0a08d7175705a335f5ede0",
+  "manifestSha256": "8d77f04b6f50759858bfed23f9eda837ffd40f4688041a12218d1fc34aea3b6d",
   "decisions": [
     {
       "id": "complete-state-model",

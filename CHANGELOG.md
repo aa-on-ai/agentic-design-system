@@ -2,7 +2,7 @@
 
 All notable changes to Agentic Design System are recorded here.
 
-## [Unreleased]
+## [1.2.0] - 2026-07-17
 
 ### Added
 
