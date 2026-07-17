@@ -20,6 +20,7 @@ wrappers around it.
 | Check that ADS itself installs and is usable | [`install-usability-smoke.md`](./install-usability-smoke.md) | package smoke |
 | Critique the README / docs for onboarding | [`readme-docs-critique.md`](./readme-docs-critique.md) | docs critique |
 | Test whether a cold agent can use ADS | [`cold-agent-usage-test.md`](./cold-agent-usage-test.md) | usability eval |
+| Explain why consequential UI decisions exist | [`decision-provenance.md`](./decision-provenance.md) — substantial work only; capture once before build, verify once at report time | lightweight provenance |
 
 If two rows apply (e.g. a new mobile component), run the build path first, then the review
 workflow as a separate pass — never let the builder self-clear its own review.
@@ -46,7 +47,7 @@ Every workflow in this directory is decision-shaped and answers the same seven q
 
 `npx skills add` installs the `skills/` tree, so installed agents get:
 
-- the verification scripts — `capture.mjs` and the three source checks (under `skills/design-review/scripts/`)
+- the verification scripts — `capture.mjs`, the three source checks, and the lightweight decision-trace script
 - the reference docs — `references/mobile.md`, `references/motion.md`, etc.
 - bundled copies of these runbooks at `skills/agentic-design-system/workflows/` (kept byte-identical to the top-level `workflows/` by the install smoke's drift guard)
 

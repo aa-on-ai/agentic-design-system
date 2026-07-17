@@ -29,14 +29,15 @@ the smoke test installs from the local repo into a temporary project and verifie
 - all 10 skills are present
 - the `design-variations` browser scaffold is installed under its `assets/` directory
 - all 5 runtime templates are bundled: outcome, project identity, reference intake, grader report, and run report
-- bundled templates and all 6 workflow runbooks match their canonical top-level copies
+- bundled templates and all 7 workflow runbooks match their canonical top-level copies
+- the deterministic decision-trace script is present and byte-identical in the installed orchestrator
 
 the installer does not generate or replace `AGENTS.md`. project instructions remain an explicit setup step.
 
 success ends with:
 
 ```text
-install smoke passed: 10 skills, 1 skill asset, 5 bundled templates, and 6 workflow runbooks (all in sync)
+install smoke passed: 10 skills, 2 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
 ```
 
 to exercise the public github shorthand instead of the current checkout:
@@ -96,6 +97,7 @@ verify the A/B evidence boundary without API spend:
 ```bash
 npm run render-eval:smoke
 npm run eval-loop:render-smoke
+npm run decision-trace:smoke
 npx tsx testing/eval-loop.ts --dry-run --slug canopy
 ```
 

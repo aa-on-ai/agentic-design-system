@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "captureMode": "pre-run",
+  "generatedAt": "2026-07-17T19:33:29.172Z",
+  "projectRoot": ".",
+  "adsRelease": "v1.2.0",
+  "skillFiles": [
+    {
+      "id": "skill-skills-agentic-design-system",
+      "path": "skills/agentic-design-system/SKILL.md",
+      "sha256": "029d6d73f4763b844af03179e3a00062fdbaff21018ab01d3aa198b500147814",
+      "bytes": 14893,
+      "kind": "skill",
+      "skill": "agentic-design-system",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review-references-mobile",
+      "path": "skills/design-review/references/mobile.md",
+      "sha256": "e2b379b31153ceede49e60f4deb59fedc947e5daf4c15ad2b0b29078475eefa8",
+      "bytes": 4907,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-design-review",
+      "path": "skills/design-review/SKILL.md",
+      "sha256": "546806cbfbdd96963cabb656b2706387ebf7b3a1c4ac9e3ed47955df74f57ee8",
+      "bytes": 6051,
+      "kind": "skill",
+      "skill": "design-review",
+      "loadStatus": "observed"
+    },
+    {
+      "id": "skill-skills-ux-baseline-check",
+      "path": "skills/ux-baseline-check/SKILL.md",
+      "sha256": "0cd0438deeff414de2aca74041b3df7102a4a4903027fa03aeee2ce46bd4ee76",
+      "bytes": 3448,
+      "kind": "skill",
+      "skill": "ux-baseline-check",
+      "loadStatus": "observed"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "id": "source-docs-loop-demo-readme",
+      "path": "docs/loop-demo/README.md",
+      "sha256": "9da613d7c9e2a5b321da490edd0ce90d723c3938d2aa9ef8fc5574181bbaf26f",
+      "bytes": 2969,
+      "kind": "source"
+    },
+    {
+      "id": "source-presets-utilitarian-app",
+      "path": "presets/utilitarian-app.md",
+      "sha256": "3f51a911d93f0712131a605047e094e2504110eceeddaf8f2d77a709e8d58380",
+      "bytes": 2596,
+      "kind": "source"
+    }
+  ],
+  "performance": {
+    "operation": "local-hash-capture",
+    "elapsedMs": 6.492,
+    "budgetMs": 250,
+    "withinBudget": true,
+    "networkCalls": 0,
+    "modelCalls": 0,
+    "browserCalls": 0
+  }
+}

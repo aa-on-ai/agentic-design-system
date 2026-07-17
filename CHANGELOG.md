@@ -2,6 +2,16 @@
 
 All notable changes to Agentic Design System are recorded here.
 
+## [1.2.0] - 2026-07-17
+
+### Added
+
+- Lightweight decision provenance: pre-run hashes for observed vs. declared skill files, exact
+  excerpt/source verification, evidence-linked report enrichment, and a 250ms deterministic
+  overhead budget with no added model, browser, or network calls.
+- A worked trace inside the existing loop demo and a smoke test that rejects invented excerpts and
+  declared-only causal claims.
+
 ## [1.1.0] - 2026-07-17
 
 ### Added

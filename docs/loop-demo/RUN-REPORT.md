@@ -22,6 +22,24 @@
 
 - n/a — no visual reference supplied; utilitarian preset used as baseline.
 
+<!-- ads-decision-provenance:start -->
+## decision provenance
+
+- **manifest:** `docs/loop-demo/skill-manifest.json` (sha256 `8d77f04b6f50…`)
+- **scope:** Prospective Phase 5 provenance review over a preserved 2026-06-05 artifact. This verifies the current rule, source, artifact, and evidence mapping; it does not prove the original builder loaded these exact hashes.
+- **capture status:** 4 observed, 0 declared
+- **deterministic overhead:** 8.182ms total (6.492ms capture + 1.69ms verify), budget 250ms per operation
+- **external work added:** 0 model calls, 0 browser calls, 0 network calls
+
+| decision | artifact | governing skill + excerpt | source constraint | evidence | review |
+|---|---|---|---|---|---|
+| The Orders screen includes default, loading, empty, and error states instead of treating the happy path as the whole product. | [Orders screen state model](iter3/default-1280x800.png) | ux-baseline-check · `0cd0438dee`<br>Every screen ships with ALL states covered. No exceptions. This is the minimum bar. | Task: an "Orders" admin screen with default/loading/empty/error states, gated at 390 / 768 / 1280px. | [rendered state gate](iter3/evidence.json), [desktop screenshot](iter3/default-1280x800.png) | reviewed |
+| Interactive controls were enlarged until every measured mobile target cleared the 44px gate. | [Mobile Orders controls](iter3/default-390x844.png) | design-review · `e2b379b311`<br>- **touch targets** — ≥ 44×44 (iOS) / 48×48 (Android) with a visible hit area; enough spacing between adjacent targets to avoid mis-taps. | - touch targets and responsive behavior handled cleanly | [rendered touch-target gate](iter3/evidence.json), [mobile screenshot](iter3/default-390x844.png) | reviewed |
+| The final screen uses spacing and typography for hierarchy instead of decorative color noise. | [Desktop Orders hierarchy](iter3/default-1280x800.png) | design-review · `546806cbfb`<br>- [ ] Typography check — is hierarchy clear without leaning on color? | - hierarchy through spacing and type before color | [final desktop screenshot](iter3/default-1280x800.png), [final rendered gates](iter3/evidence.json) | reviewed |
+
+> `observed` means the file was explicitly recorded as loaded before the provenance review. Because the artifact predates Phase 5, these rows remain `reviewed`; prospective runs can reach `verified` from a true pre-build manifest.
+<!-- ads-decision-provenance:end -->
+
 ## rendered evidence (authoritative — gate on this)
 
 This is the non-gameable tier. The gates below were **computed from the rendered DOM** (axe ran on the real DOM, overflow and touch targets measured at render), and the grader judged the **rendered screenshots**. This is the tier the verdict gates on.

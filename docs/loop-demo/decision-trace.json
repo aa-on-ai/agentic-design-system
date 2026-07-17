@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "runId": "loop-demo-provenance-pilot-2026-07-17",
+  "context": "Prospective Phase 5 provenance review over a preserved 2026-06-05 artifact. This verifies the current rule, source, artifact, and evidence mapping; it does not prove the original builder loaded these exact hashes.",
+  "manifestPath": "docs/loop-demo/skill-manifest.json",
+  "manifestSha256": "8d77f04b6f50759858bfed23f9eda837ffd40f4688041a12218d1fc34aea3b6d",
+  "decisions": [
+    {
+      "id": "complete-state-model",
+      "decision": "The Orders screen includes default, loading, empty, and error states instead of treating the happy path as the whole product.",
+      "artifact": {
+        "path": "docs/loop-demo/iter3/default-1280x800.png",
+        "location": "Orders screen state model"
+      },
+      "rule": {
+        "fileId": "skill-skills-ux-baseline-check",
+        "excerpt": "Every screen ships with ALL states covered. No exceptions. This is the minimum bar.",
+        "excerptSha256": "d60988310423ae3882d81b1cbd7d61fcd39338af642dffb659ca7d081396e44f"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-docs-loop-demo-readme",
+        "excerpt": "Task: an \"Orders\" admin screen with default/loading/empty/error states, gated at\n390 / 768 / 1280px.",
+        "excerptSha256": "3afad72ea70e8abad044d95cfde4957eccc50bc2cfd194c7609fa57acb5d6df5"
+      },
+      "evidence": [
+        {
+          "type": "rendered state gate",
+          "path": "docs/loop-demo/iter3/evidence.json"
+        },
+        {
+          "type": "desktop screenshot",
+          "path": "docs/loop-demo/iter3/default-1280x800.png"
+        }
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "mobile-touch-targets",
+      "decision": "Interactive controls were enlarged until every measured mobile target cleared the 44px gate.",
+      "artifact": {
+        "path": "docs/loop-demo/iter3/default-390x844.png",
+        "location": "Mobile Orders controls"
+      },
+      "rule": {
+        "fileId": "skill-skills-design-review-references-mobile",
+        "excerpt": "- **touch targets** — ≥ 44×44 (iOS) / 48×48 (Android) with a visible hit area; enough spacing\n  between adjacent targets to avoid mis-taps.",
+        "excerptSha256": "801886d99c577d7fdae127ec068adce1e3890caa2222a846258d4369e1e674a8"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-presets-utilitarian-app",
+        "excerpt": "- touch targets and responsive behavior handled cleanly",
+        "excerptSha256": "b2e061a71ac386896badee6ae367f416efb31e4c728f686258de25edbd8c8358"
+      },
+      "evidence": [
+        {
+          "type": "rendered touch-target gate",
+          "path": "docs/loop-demo/iter3/evidence.json"
+        },
+        {
+          "type": "mobile screenshot",
+          "path": "docs/loop-demo/iter3/default-390x844.png"
+        }
+      ],
+      "reviewStatus": "reviewed"
+    },
+    {
+      "id": "restrained-utilitarian-hierarchy",
+      "decision": "The final screen uses spacing and typography for hierarchy instead of decorative color noise.",
+      "artifact": {
+        "path": "docs/loop-demo/iter3/default-1280x800.png",
+        "location": "Desktop Orders hierarchy"
+      },
+      "rule": {
+        "fileId": "skill-skills-design-review",
+        "excerpt": "- [ ] Typography check — is hierarchy clear without leaning on color?",
+        "excerptSha256": "0393d67ef4de941e29bb6879f5f85c0fe8d37379f1ea0de09030ca31502f5777"
+      },
+      "sourceConstraint": {
+        "sourceId": "source-presets-utilitarian-app",
+        "excerpt": "- hierarchy through spacing and type before color",
+        "excerptSha256": "ea2df12b146ab457cb0833bfa3ba13ffa2c91038841fb1f4d6aea32c9a2bc317"
+      },
+      "evidence": [
+        {
+          "type": "final desktop screenshot",
+          "path": "docs/loop-demo/iter3/default-1280x800.png"
+        },
+        {
+          "type": "final rendered gates",
+          "path": "docs/loop-demo/iter3/evidence.json"
+        }
+      ],
+      "reviewStatus": "reviewed"
+    }
+  ]
+}

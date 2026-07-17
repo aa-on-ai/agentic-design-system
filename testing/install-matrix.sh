@@ -39,6 +39,7 @@ runbooks=(
   install-usability-smoke.md
   readme-docs-critique.md
   cold-agent-usage-test.md
+  decision-provenance.md
 )
 
 agent_specs=(
@@ -88,6 +89,16 @@ for spec in "${agent_specs[@]}"; do
   fi
   if ! diff -q "$ROOT/skills/design-variations/assets/variations.html" "$variation_asset" >/dev/null; then
     echo "installed variation asset drift for $agent" >&2
+    exit 1
+  fi
+
+  trace_script="$project/$install_root/agentic-design-system/scripts/decision-trace.mjs"
+  if [[ ! -f "$trace_script" ]]; then
+    echo "missing installed decision-trace script for $agent" >&2
+    exit 1
+  fi
+  if ! diff -q "$ROOT/skills/agentic-design-system/scripts/decision-trace.mjs" "$trace_script" >/dev/null; then
+    echo "installed decision-trace script drift for $agent" >&2
     exit 1
   fi
 

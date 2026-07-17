@@ -1,6 +1,6 @@
 {
   "name": "agentic-design-system-eval-harness",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Dev-only dependency manifest for the ADS render-based eval harness (capture.mjs + render-eval.mjs). Not part of the published skills package.",
   "scripts": {
@@ -11,6 +11,7 @@
     "render-eval:smoke": "node testing/render-eval-smoke.mjs",
     "render-eval:fixture": "node testing/render-eval.mjs --fixture",
     "eval-loop:render-smoke": "node testing/eval-loop-render-smoke.mjs",
+    "decision-trace:smoke": "node testing/decision-trace-smoke.mjs",
     "compare:smoke": "node testing/compare-smoke.mjs",
     "homepage:smoke": "node testing/homepage-regression.mjs",
     "homepage:hardening": "node testing/homepage-hardening.mjs",

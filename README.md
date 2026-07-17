@@ -120,6 +120,7 @@ Use [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.m
 | Check package installation | [`install-usability-smoke`](./workflows/install-usability-smoke.md) |
 | Critique onboarding docs | [`readme-docs-critique`](./workflows/readme-docs-critique.md) |
 | Test whether a cold agent can use ADS | [`cold-agent-usage-test`](./workflows/cold-agent-usage-test.md) |
+| Trace consequential decisions to exact loaded rules | [`decision-provenance`](./workflows/decision-provenance.md) |
 
 A source checkout includes the full template set under [`templates/`](./templates/). The installed orchestrator bundles the five runtime templates it references: outcome, project identity, reference intake, grader report, and run report. The most useful starting artifacts are:
 
@@ -152,6 +153,17 @@ node skills/design-review/scripts/compare.mjs \
 ```
 
 The comparison records what changed. It does not decide whether the change was good.
+
+For substantial runs that need causal traceability, capture loaded skill/source hashes once before
+the build and verify 3-7 final decisions once at report time. The provenance path is deterministic,
+adds no model/browser/network calls, and enforces a 250ms budget per operation:
+
+```bash
+node skills/agentic-design-system/scripts/decision-trace.mjs capture --help
+```
+
+See [`workflows/decision-provenance.md`](./workflows/decision-provenance.md) for the manifest, trace,
+and report commands. Tiny fixes and routine polish skip this path by default.
 
 ## Worked example
 

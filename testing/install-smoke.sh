@@ -52,6 +52,16 @@ if ! diff -q "$ROOT/skills/design-variations/assets/variations.html" "$variation
   exit 1
 fi
 
+trace_script="$TMP_DIR/.agents/skills/agentic-design-system/scripts/decision-trace.mjs"
+if [[ ! -f "$trace_script" ]]; then
+  echo "missing installed skill asset: agentic-design-system/scripts/decision-trace.mjs" >&2
+  exit 1
+fi
+if ! diff -q "$ROOT/skills/agentic-design-system/scripts/decision-trace.mjs" "$trace_script" >/dev/null; then
+  echo "installed skill asset drift: agentic-design-system/scripts/decision-trace.mjs" >&2
+  exit 1
+fi
+
 bundled_templates=(
   outcome-template.md
   project-identity-template.md
@@ -82,6 +92,7 @@ runbooks=(
   install-usability-smoke.md
   readme-docs-critique.md
   cold-agent-usage-test.md
+  decision-provenance.md
 )
 
 for runbook in "${runbooks[@]}"; do
@@ -98,4 +109,4 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, 1 skill asset, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
+echo "install smoke passed: ${#expected[@]} skills, 2 skill assets, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
