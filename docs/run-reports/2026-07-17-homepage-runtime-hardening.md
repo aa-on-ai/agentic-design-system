@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Goal: harden the recovered homepage runtime without changing the explanatory structure or reintroducing scroll choreography.
+Goal: harden the recovered homepage runtime without changing the explanatory structure or reintroducing pose swaps and event-loop scroll choreography.
 
 Success means:
 
@@ -10,6 +10,7 @@ Success means:
 - mobile LCP is at most 2.5 seconds, CLS is at most 0.1, and tested interactions stay under 200ms
 - Chromium and WebKit pass at 390, 768, and 1280px
 - reduced motion, keyboard focus, copy feedback, and theme persistence pass
+- Ember visibly travels with the assembly rail using one stable image and compositor-driven motion
 - the recovery visuals remain effectively unchanged
 
 Stop when: the same production build has a before/after performance packet, a cross-browser interaction matrix, rendered captures, and a bounded next decision.
@@ -24,6 +25,7 @@ Stop when: the same production build has a before/after performance packet, a cr
 - Added copy failure feedback with a fixed-width live region.
 - Disabled both Ember reactions and control transforms under reduced motion.
 - Raised the assembly Ember above the intro layer so its direct-interaction button is actually clickable.
+- Restored visible rail progress with native sticky positioning and a 3px scroll-timeline climb cadence. There is no scroll listener, timer, React state, pose swap, or extra image request.
 - Added repeatable runtime and browser hardening scripts.
 
 ## Performance receipt
@@ -47,6 +49,8 @@ Environment: Chromium 148, three runs per profile. Mobile is 390x844 at DPR 2 wi
 
 Mobile LCP improved 38.2%. The interaction variance stayed comfortably inside the 200ms gate.
 
+After restoring Ember's rail-follow motion, the same profile measured 2296ms mobile LCP, CLS 0, and 72ms interaction latency. Desktop measured 100ms LCP, CLS 0, and 48ms interaction latency.
+
 ### First-load hero request chain at 390px
 
 | Theme | Baseline | Candidate |
@@ -68,9 +72,9 @@ Passed in Chromium and WebKit at 390x844, 768x1024, and 1280x900:
 
 - one first-load hero matching the active and persisted theme
 - no horizontal overflow or page errors
-- full-page scroll with stable Ember transform and CLS 0
+- full-page scroll with sticky Ember rail progress, at least three compositor transform states, and CLS 0
 - five distinct ADS artifacts, orange release bay, no handoff, and no active station state
-- reduced-motion Ember reactions and theme transitions disabled
+- reduced-motion rail following, Ember reactions, and theme transitions disabled
 - all 15 interactive controls keyboard-reachable with visible focus in Chromium
 - copy feedback announced without resizing the install action
 
@@ -95,6 +99,8 @@ Local packet:
 - `evidence/phase-2-runtime/candidate.json`
 - `evidence/phase-2-runtime/captures-light/`
 - `evidence/phase-2-runtime/captures-dark/`
+- `evidence/phase-2-runtime/after-ember-motion.json`
+- `evidence/phase-2-ember-motion-scroll/`
 
 All six candidate captures have zero serious or critical axe violations, no horizontal overflow, and no touch targets below 44x44.
 
@@ -103,7 +109,7 @@ Perceptual comparison against recovery `671fc1f`:
 - light: 0.040% to 0.062% changed pixels
 - dark: 0.025% to 0.105% changed pixels
 
-The small delta is limited to the hero encoding and the assembly Ember stacking fix. The five-artifact story, warm orange release treatment, spacing, typography, and breakpoints remain intact.
+The top-of-page delta after the rail-follow fix is 0.031% on mobile and 0.014% on desktop, limited to Ember's 1–3px cadence. At the evidence station, Ember advances 3249px on mobile and 2563px on desktop while staying at a stable viewport position. The five-artifact story, warm orange release treatment, spacing, typography, and breakpoints remain intact.
 
 ## Known tradeoff
 

@@ -113,29 +113,39 @@ try {
     issues.push(`Ember renders ${await climberImages.count()} pose images (expected one stable image)`);
   }
 
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
+  await page.waitForTimeout(80);
   const initialClimber = await page.locator(".assembly-climber").evaluate((element) => ({
     motion: element.getAttribute("data-motion"),
     position: getComputedStyle(element).position,
+    documentTop: window.scrollY + element.getBoundingClientRect().top,
     transform: getComputedStyle(element.querySelector(".assembly-climber-figure")).transform,
   }));
   await page.evaluate(() => {
-    document.documentElement.style.scrollBehavior = "auto";
     document.querySelector(".station--evidence")?.scrollIntoView({ block: "center" });
   });
   await page.waitForTimeout(220);
   const scrolledClimber = await page.locator(".assembly-climber").evaluate((element) => ({
     motion: element.getAttribute("data-motion"),
+    documentTop: window.scrollY + element.getBoundingClientRect().top,
     transform: getComputedStyle(element.querySelector(".assembly-climber-figure")).transform,
   }));
 
-  if (initialClimber.motion !== "stable" || scrolledClimber.motion !== "stable") {
-    issues.push(`Ember motion mode is ${initialClimber.motion}/${scrolledClimber.motion} (expected stable/stable)`);
+  if (initialClimber.motion !== "rail-follow" || scrolledClimber.motion !== "rail-follow") {
+    issues.push(`Ember motion mode is ${initialClimber.motion}/${scrolledClimber.motion} (expected rail-follow/rail-follow)`);
   }
-  if (initialClimber.position !== "absolute") {
-    issues.push(`Ember position is ${initialClimber.position} (expected absolute, not scroll-following)`);
+  if (initialClimber.position !== "sticky") {
+    issues.push(`Ember position is ${initialClimber.position} (expected sticky rail-following)`);
   }
-  if (initialClimber.transform !== scrolledClimber.transform) {
-    issues.push(`Ember transform changes while scrolling (${initialClimber.transform} -> ${scrolledClimber.transform})`);
+  if (scrolledClimber.documentTop - initialClimber.documentTop < 200) {
+    issues.push(`Ember only traveled ${Math.round(scrolledClimber.documentTop - initialClimber.documentTop)}px with the rail (expected >= 200px)`);
+  }
+  if (initialClimber.transform === scrolledClimber.transform) {
+    issues.push(`Ember climb cadence did not respond to scroll (${initialClimber.transform})`);
   }
   if (await page.locator(".station[data-active]").count() !== 0) {
     issues.push("stations still carry scroll-driven active state");
@@ -318,5 +328,5 @@ if (issues.length > 0) {
 }
 
 console.log(
-  "homepage regression passed: typography + footer + stable Ember + legible ADS artifacts + mobile pacing + orange release + proof labels",
+  "homepage regression passed: typography + footer + smooth rail-following Ember + legible ADS artifacts + mobile pacing + orange release + proof labels",
 );

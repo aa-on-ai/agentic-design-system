@@ -132,6 +132,10 @@ async function verifyReducedMotion(browser, browserName) {
     duration: getComputedStyle(node).animationDuration,
   }));
   if (climberAnimation.name !== "none") fail(scope, `climber animation is ${climberAnimation.name}`);
+  const climberCadence = await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).animationName);
+  if (climberCadence !== "none") fail(scope, `reduced-motion climber cadence is ${climberCadence}`);
+  const climberPosition = await page.locator(".assembly-climber").evaluate((node) => getComputedStyle(node).position);
+  if (climberPosition !== "absolute") fail(scope, `reduced-motion climber position is ${climberPosition}`);
 
   await page.getByRole("button", { name: "Make Ember pop up" }).click();
   const footerAnimation = await page.locator(".footer-ember-image").evaluate((node) => ({
@@ -144,7 +148,7 @@ async function verifyReducedMotion(browser, browserName) {
   const longestTransition = Math.max(...pageTransition.split(",").map((value) => Number.parseFloat(value)));
   if (longestTransition > 0.00002) fail(scope, `theme transition duration is ${pageTransition}`);
 
-  receipts.push({ scope, climberAnimation, footerAnimation, pageTransition });
+  receipts.push({ scope, climberAnimation, climberCadence, climberPosition, footerAnimation, pageTransition });
   await context.close();
 }
 
@@ -178,21 +182,38 @@ for (const [browserName, browserType] of browserTypes) {
         fail(scope, `rendered heroes are ${initial.heroImages.join(" | ") || "missing"}`);
       }
 
-      const initialClimberTransform = await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform);
+      const initialClimber = await page.locator(".assembly-climber").evaluate((node) => ({
+        motion: node.getAttribute("data-motion"),
+        position: getComputedStyle(node).position,
+        documentTop: window.scrollY + node.getBoundingClientRect().top,
+        transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
+      }));
       const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+      const climberTransforms = new Set([initialClimber.transform]);
       for (let step = 0; step <= 16; step += 1) {
-        await page.evaluate(({ step, pageHeight }) => scrollTo(0, (pageHeight * step) / 16), { step, pageHeight });
+        await page.evaluate(({ step, pageHeight }) => {
+          document.documentElement.style.scrollBehavior = "auto";
+          document.documentElement.scrollTop = (pageHeight * step) / 16;
+          document.body.scrollTop = (pageHeight * step) / 16;
+        }, { step, pageHeight });
         await page.waitForTimeout(24);
+        climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
       }
-      const finalClimberTransform = await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform);
+      const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
+        documentTop: window.scrollY + node.getBoundingClientRect().top,
+      }));
       const scrolled = await inspectPage(page);
 
       if (errors.length) fail(scope, `page errors: ${errors.join(" | ")}`);
       if (scrolled.overflow > 0) fail(scope, `horizontal overflow ${scrolled.overflow}px`);
       if (scrolled.cls > 0.1) fail(scope, `CLS ${scrolled.cls.toFixed(3)} exceeds 0.1`);
-      if (initialClimberTransform !== finalClimberTransform) {
-        fail(scope, `Ember transform changed while scrolling: ${initialClimberTransform} -> ${finalClimberTransform}`);
+      if (initialClimber.motion !== "rail-follow" || initialClimber.position !== "sticky") {
+        fail(scope, `Ember motion is ${initialClimber.motion}/${initialClimber.position}, expected rail-follow/sticky`);
       }
+      if (finalClimber.documentTop - initialClimber.documentTop < 200) {
+        fail(scope, `Ember only traveled ${Math.round(finalClimber.documentTop - initialClimber.documentTop)}px with the rail`);
+      }
+      if (climberTransforms.size < 3) fail(scope, `Ember climb cadence only produced ${climberTransforms.size} transform state(s)`);
       if (new Set(scrolled.artifacts).size !== 5) fail(scope, `artifact count is ${new Set(scrolled.artifacts).size}`);
       if (scrolled.handoffs) fail(scope, "release handoff returned");
       if (scrolled.activeStations) fail(scope, "scroll-driven station state returned");
@@ -236,6 +257,8 @@ for (const [browserName, browserType] of browserTypes) {
         cls: scrolled.cls,
         initialHero: initial.heroResources,
         persistedHero: persisted.heroResources,
+        emberTravel: Math.round(finalClimber.documentTop - initialClimber.documentTop),
+        emberCadenceStates: climberTransforms.size,
         keyboardControls: keyboardOrder.length,
         copyFeedback: copyFeedback?.trim() ?? null,
       });
@@ -255,4 +278,4 @@ if (failures.length) {
 }
 
 console.log(JSON.stringify(receipts, null, 2));
-console.log("homepage hardening passed: Chromium + WebKit at 390/768/1280, active-theme hero, stable scroll, reduced motion, keyboard focus, copy feedback, and theme persistence");
+console.log("homepage hardening passed: Chromium + WebKit at 390/768/1280, active-theme hero, smooth Ember rail motion, reduced motion, keyboard focus, copy feedback, and theme persistence");
