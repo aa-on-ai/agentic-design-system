@@ -159,6 +159,70 @@ try {
       `reduced-motion Ember state is ${reducedMotionState.enabled}/${reducedMotionState.pose} (expected true/contact)`,
     );
   }
+
+  const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  mobilePage.on("pageerror", (error) => issues.push(`mobile page error: ${error.message}`));
+  await mobilePage.goto(url, { waitUntil: "networkidle" });
+
+  const mobilePacing = await mobilePage.evaluate(() => {
+    const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect() ?? null;
+    const command = document.querySelector(".release-primary-action .hero-command-text");
+    const commandLines = command
+      ? Array.from(command.children).map((line) => {
+          const box = line.getBoundingClientRect();
+          return {
+            top: box.top,
+            scrollWidth: line.scrollWidth,
+            clientWidth: line.clientWidth,
+          };
+        })
+      : [];
+    const track = rect(".continuous-track");
+    const stationIndex = rect(".station-index");
+    const stationCopy = rect(".station-copy");
+    const releaseBay = rect(".release-bay");
+
+    return {
+      pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      commandLineCount: commandLines.length,
+      commandLinesFit: commandLines.every((line) => line.scrollWidth <= line.clientWidth),
+      commandUsesTwoRows: commandLines.length === 2 && commandLines[0].top < commandLines[1].top,
+      trackCenter: track ? track.left + track.width / 2 : null,
+      stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
+      stationContentLeft: stationCopy?.left ?? null,
+      releaseHeight: releaseBay?.height ?? null,
+    };
+  });
+
+  if (mobilePacing.pageOverflow > 0) {
+    issues.push(`mobile page overflows by ${mobilePacing.pageOverflow}px`);
+  }
+  if (!mobilePacing.commandLinesFit || !mobilePacing.commandUsesTwoRows) {
+    issues.push(
+      `mobile install command is ${mobilePacing.commandLineCount} line segment(s), ` +
+      `fit=${mobilePacing.commandLinesFit}, twoRows=${mobilePacing.commandUsesTwoRows}`,
+    );
+  }
+  if (
+    mobilePacing.trackCenter === null ||
+    mobilePacing.stationIndexCenter === null ||
+    Math.abs(mobilePacing.trackCenter - mobilePacing.stationIndexCenter) > 1
+  ) {
+    issues.push(
+      `mobile rail/index centers are ${mobilePacing.trackCenter ?? "missing"}/` +
+      `${mobilePacing.stationIndexCenter ?? "missing"} (expected aligned)`,
+    );
+  }
+  if (mobilePacing.stationContentLeft === null || mobilePacing.stationContentLeft < 80 || mobilePacing.stationContentLeft > 84) {
+    issues.push(
+      `mobile station content starts at ${mobilePacing.stationContentLeft ?? "missing"}px (expected 80-84px)`,
+    );
+  }
+  if (mobilePacing.releaseHeight === null || mobilePacing.releaseHeight > 660) {
+    issues.push(`mobile release CTA is ${mobilePacing.releaseHeight ?? "missing"}px tall (expected <= 660px)`);
+  }
+
+  await mobilePage.close();
 } finally {
   await browser.close();
 }
@@ -169,4 +233,4 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log("homepage regression passed: typography + footer + Ember poses + active product focus");
+console.log("homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing");
