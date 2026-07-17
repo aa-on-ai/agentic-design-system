@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import Script from "next/script";
 import { DM_Sans, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
@@ -26,25 +27,32 @@ export const metadata: Metadata = {
     "An installable design system for your coding agent. Skills and templates for intent, baseline, rubric, evidence, and grader loops on UI work.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const storedTheme = cookieStore.get("ads-theme")?.value;
+  const initialTheme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme={initialTheme} suppressHydrationWarning>
       <head>
         <Script id="ads-theme-init" strategy="beforeInteractive">
           {`(() => {
             try {
               const params = new URLSearchParams(window.location.search);
               const paramTheme = params.get('theme');
-              const storedTheme = window.localStorage.getItem('ads-theme');
+              const cookieTheme = document.cookie
+                .split('; ')
+                .find((entry) => entry.startsWith('ads-theme='))
+                ?.split('=')[1];
               const theme = paramTheme === 'light' || paramTheme === 'dark'
                 ? paramTheme
-                : storedTheme === 'light' || storedTheme === 'dark'
-                  ? storedTheme
-                  : window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+                : cookieTheme === 'light' || cookieTheme === 'dark'
+                  ? cookieTheme
+                  : 'light';
               document.documentElement.dataset.theme = theme;
             } catch (_) {}
           })();`}
