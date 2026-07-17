@@ -108,56 +108,37 @@ try {
     }
   }
 
-  const stationPoses = {
-    intent: "reach",
-    baseline: "contact",
-    rubric: "inspect",
-    evidence: "inspect",
-    release: "release",
-  };
-
-  for (const [stage, expectedPose] of Object.entries(stationPoses)) {
-    await page.evaluate((nextStage) => {
-      document.documentElement.style.scrollBehavior = "auto";
-      const station = document.querySelector(`.station--${nextStage}`);
-      station?.scrollIntoView({ block: "center" });
-    }, stage);
-    await page.waitForTimeout(220);
-
-    const motionState = await page.evaluate(() => {
-      const active = document.querySelector('.station[data-active="true"]');
-      const climber = document.querySelector(".assembly-climber");
-      const screen = active?.querySelector(".orders-window");
-      const scale = screen ? new DOMMatrix(getComputedStyle(screen).transform).a : null;
-      return {
-        activeStage: active?.getAttribute("data-stage") ?? null,
-        pose: climber?.getAttribute("data-pose") ?? null,
-        screenScale: scale,
-      };
-    });
-
-    if (motionState.activeStage !== stage) {
-      issues.push(`active product is ${motionState.activeStage ?? "missing"} at ${stage} (expected ${stage})`);
-    }
-    if (motionState.pose !== expectedPose) {
-      issues.push(`Ember pose is ${motionState.pose ?? "missing"} at ${stage} (expected ${expectedPose})`);
-    }
-    if (motionState.screenScale === null || motionState.screenScale < 1.01) {
-      issues.push(`active product scale is ${motionState.screenScale ?? "missing"} at ${stage} (expected >= 1.01)`);
-    }
+  const climberImages = page.locator(".assembly-climber img");
+  if (await climberImages.count() !== 1) {
+    issues.push(`Ember renders ${await climberImages.count()} pose images (expected one stable image)`);
   }
 
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.evaluate(() => document.querySelector(".station--baseline")?.scrollIntoView({ block: "center" }));
-  await page.waitForTimeout(60);
-  const reducedMotionState = await page.locator(".assembly-climber").evaluate((element) => ({
-    enabled: element.getAttribute("data-reduced-motion"),
-    pose: element.getAttribute("data-pose"),
+  const initialClimber = await page.locator(".assembly-climber").evaluate((element) => ({
+    motion: element.getAttribute("data-motion"),
+    position: getComputedStyle(element).position,
+    transform: getComputedStyle(element.querySelector(".assembly-climber-figure")).transform,
   }));
-  if (reducedMotionState.enabled !== "true" || reducedMotionState.pose !== "contact") {
-    issues.push(
-      `reduced-motion Ember state is ${reducedMotionState.enabled}/${reducedMotionState.pose} (expected true/contact)`,
-    );
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+    document.querySelector(".station--evidence")?.scrollIntoView({ block: "center" });
+  });
+  await page.waitForTimeout(220);
+  const scrolledClimber = await page.locator(".assembly-climber").evaluate((element) => ({
+    motion: element.getAttribute("data-motion"),
+    transform: getComputedStyle(element.querySelector(".assembly-climber-figure")).transform,
+  }));
+
+  if (initialClimber.motion !== "stable" || scrolledClimber.motion !== "stable") {
+    issues.push(`Ember motion mode is ${initialClimber.motion}/${scrolledClimber.motion} (expected stable/stable)`);
+  }
+  if (initialClimber.position !== "absolute") {
+    issues.push(`Ember position is ${initialClimber.position} (expected absolute, not scroll-following)`);
+  }
+  if (initialClimber.transform !== scrolledClimber.transform) {
+    issues.push(`Ember transform changes while scrolling (${initialClimber.transform} -> ${scrolledClimber.transform})`);
+  }
+  if (await page.locator(".station[data-active]").count() !== 0) {
+    issues.push("stations still carry scroll-driven active state");
   }
 
   const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -181,12 +162,26 @@ try {
     const stationIndex = rect(".station-index");
     const stationCopy = rect(".station-copy");
     const releaseBay = rect(".release-bay");
+    const heroTicket = document.querySelector(".hero-job-ticket");
+    const heroCommand = rect(".hero-actions .hero-command-strip");
     const proofLabels = Array.from(document.querySelectorAll(".station-proof p")).map((label) => {
       const style = getComputedStyle(label);
       const lineHeight = Number.parseFloat(style.lineHeight);
       return {
         text: label.textContent?.trim() ?? "",
         lines: lineHeight > 0 ? Math.round(label.getBoundingClientRect().height / lineHeight) : null,
+      };
+    });
+    const artifacts = Array.from(document.querySelectorAll(".ads-artifact")).map((artifact) => {
+      const label = artifact.querySelector(".ads-artifact-label");
+      const summary = artifact.querySelector(".ads-artifact-summary");
+      return {
+        id: artifact.getAttribute("data-artifact"),
+        label: label?.textContent?.trim() ?? "",
+        summary: summary?.textContent?.trim() ?? "",
+        labelSize: label ? Number.parseFloat(getComputedStyle(label).fontSize) : 0,
+        summarySize: summary ? Number.parseFloat(getComputedStyle(summary).fontSize) : 0,
+        overflow: artifact.scrollWidth - artifact.clientWidth,
       };
     });
 
@@ -199,7 +194,10 @@ try {
       stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
       stationContentLeft: stationCopy?.left ?? null,
       releaseHeight: releaseBay?.height ?? null,
+      heroTicketVisible: heroTicket ? getComputedStyle(heroTicket).display !== "none" : false,
+      heroCommandWidth: heroCommand?.width ?? null,
       proofLabels,
+      artifacts,
     };
   });
 
@@ -230,8 +228,14 @@ try {
   if (mobilePacing.releaseHeight === null || mobilePacing.releaseHeight > 660) {
     issues.push(`mobile release CTA is ${mobilePacing.releaseHeight ?? "missing"}px tall (expected <= 660px)`);
   }
+  if (mobilePacing.heroTicketVisible) {
+    issues.push("mobile decorative job ticket is visible and can overlap the install action");
+  }
+  if (mobilePacing.heroCommandWidth === null || mobilePacing.heroCommandWidth < 340) {
+    issues.push(`mobile hero install action is ${mobilePacing.heroCommandWidth ?? "missing"}px wide (expected >= 340px)`);
+  }
 
-  const expectedProofLabels = ["Ticket", "Context", "Pass line", "Evidence", "Verdict"];
+  const expectedProofLabels = ["Input", "Failed check", "Corrected screen", "Evidence report", "Grader verdict"];
   const renderedProofLabels = mobilePacing.proofLabels.map(({ text }) => text);
   if (JSON.stringify(renderedProofLabels) !== JSON.stringify(expectedProofLabels)) {
     issues.push(
@@ -246,70 +250,63 @@ try {
     );
   }
 
+  const expectedArtifacts = ["input", "failed-check", "corrected-screen", "evidence-report", "grader-verdict"];
+  const renderedArtifacts = mobilePacing.artifacts.map(({ id }) => id);
+  if (JSON.stringify(renderedArtifacts) !== JSON.stringify(expectedArtifacts)) {
+    issues.push(
+      `ADS artifacts are ${renderedArtifacts.join(" / ") || "missing"} ` +
+      `(expected ${expectedArtifacts.join(" / ")})`,
+    );
+  }
+  for (const artifact of mobilePacing.artifacts) {
+    if (!artifact.label || !artifact.summary) {
+      issues.push(`${artifact.id ?? "unknown"} artifact is missing a visible label or summary`);
+    }
+    if (artifact.labelSize < 10 || artifact.summarySize < 11) {
+      issues.push(
+        `${artifact.id ?? "unknown"} artifact type is ${artifact.labelSize}/${artifact.summarySize}px ` +
+        `(expected label >= 10px and summary >= 11px)`,
+      );
+    }
+    if (artifact.overflow > 0) {
+      issues.push(`${artifact.id ?? "unknown"} artifact overflows by ${artifact.overflow}px`);
+    }
+  }
+
   await mobilePage.close();
 
-  const handoffPage = await browser.newPage({
-    viewport: { width: 390, height: 844 },
-    reducedMotion: "no-preference",
-  });
-  handoffPage.on("pageerror", (error) => issues.push(`handoff page error: ${error.message}`));
-  await handoffPage.goto(url, { waitUntil: "networkidle" });
-
-  const initialHandoff = await handoffPage.locator(".release-handoff").evaluate((element) => ({
-    active: element.getAttribute("data-active"),
-    translateY: new DOMMatrix(getComputedStyle(element).transform).m42,
-  }));
-  await handoffPage.locator(".release-bay").scrollIntoViewIfNeeded();
-  await handoffPage.waitForTimeout(620);
-  const completedHandoff = await handoffPage.evaluate(() => {
-    const handoff = document.querySelector(".release-handoff");
-    const releaseCopy = document.querySelector(".release-copy");
-    if (!handoff || !releaseCopy) return null;
-    const handoffBox = handoff.getBoundingClientRect();
-    const copyBox = releaseCopy.getBoundingClientRect();
-    const style = getComputedStyle(handoff);
-    return {
-      active: handoff.getAttribute("data-active"),
-      opacity: Number.parseFloat(style.opacity),
-      translateY: new DOMMatrix(style.transform).m42,
-      clearsCopy: handoffBox.bottom <= copyBox.top,
-    };
-  });
-
-  if (initialHandoff.active !== "false" || initialHandoff.translateY > -100) {
-    issues.push(
-      `release handoff starts at ${initialHandoff.active}/${initialHandoff.translateY}px (expected false/< -100px)`,
-    );
-  }
-  if (
-    !completedHandoff ||
-    completedHandoff.active !== "true" ||
-    completedHandoff.opacity < 0.99 ||
-    Math.abs(completedHandoff.translateY + 38) > 1 ||
-    !completedHandoff.clearsCopy
-  ) {
-    issues.push(`release handoff did not settle cleanly: ${JSON.stringify(completedHandoff)}`);
-  }
-  await handoffPage.close();
-
-  const staticHandoffPage = await browser.newPage({
-    viewport: { width: 390, height: 844 },
-    reducedMotion: "reduce",
-  });
-  await staticHandoffPage.goto(url, { waitUntil: "networkidle" });
-  const staticHandoff = await staticHandoffPage.locator(".release-handoff").evaluate((element) => {
+  const tabletPage = await browser.newPage({ viewport: { width: 768, height: 1024 } });
+  await tabletPage.goto(url, { waitUntil: "networkidle" });
+  const tabletTour = await tabletPage.locator(".tour-link").evaluate((element) => {
     const style = getComputedStyle(element);
     return {
-      opacity: Number.parseFloat(style.opacity),
-      translateY: new DOMMatrix(style.transform).m42,
+      whiteSpace: style.whiteSpace,
+      fits: element.scrollWidth <= element.clientWidth,
+      width: element.getBoundingClientRect().width,
     };
   });
-  if (staticHandoff.opacity < 0.99 || Math.abs(staticHandoff.translateY + 38) > 1) {
+  if (tabletTour.whiteSpace !== "nowrap" || !tabletTour.fits || tabletTour.width < 110) {
     issues.push(
-      `reduced-motion release handoff is ${staticHandoff.opacity}/${staticHandoff.translateY}px (expected 1/-38px)`,
+      `tablet tour link is white-space=${tabletTour.whiteSpace}, fits=${tabletTour.fits}, ` +
+      `width=${tabletTour.width}px (expected one readable line)`,
     );
   }
-  await staticHandoffPage.close();
+  await tabletPage.close();
+
+  if (await page.locator(".release-handoff").count() !== 0) {
+    issues.push("clipped release handoff still renders");
+  }
+
+  const releaseTreatment = await page.locator(".release-bay").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, color: style.color };
+  });
+  if (releaseTreatment.background !== "rgb(232, 93, 38)") {
+    issues.push(`release bay background is ${releaseTreatment.background} (expected warm orange rgb(232, 93, 38))`);
+  }
+  if (releaseTreatment.color !== "rgb(44, 26, 16)") {
+    issues.push(`release bay text is ${releaseTreatment.color} (expected dark ink rgb(44, 26, 16))`);
+  }
 } finally {
   await browser.close();
 }
@@ -321,5 +318,5 @@ if (issues.length > 0) {
 }
 
 console.log(
-  "homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing + release handoff + proof labels",
+  "homepage regression passed: typography + footer + stable Ember + legible ADS artifacts + mobile pacing + orange release + proof labels",
 );
