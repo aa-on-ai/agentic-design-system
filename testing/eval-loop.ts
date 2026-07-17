@@ -3,6 +3,8 @@ import path from 'node:path';
 import os from 'node:os';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { runRenderBatch } from './render-eval.mjs';
+import { compareRenderedVariants } from './lib/render-authority.mjs';
 
 const execFileAsync = promisify(execFile);
 
@@ -10,11 +12,11 @@ const ROOT = path.resolve(__dirname, '..');
 const TESTING_DIR = path.join(ROOT, 'testing');
 const RESULTS_DIR = path.join(TESTING_DIR, 'results');
 const PROMPTS_PATH = path.join(TESTING_DIR, 'prompts.json');
-const JUDGE_PROMPT_PATH = path.join(TESTING_DIR, 'judge-prompt.md');
 // Generator and judge default to DIFFERENT models on purpose: the judge must not be the
 // builder. Both overridable via --generator/--judge or EVAL_*_MODEL. OpenAI also supported.
 const DEFAULT_GENERATOR = 'claude-sonnet-4-6';
 const DEFAULT_JUDGE = 'claude-opus-4-8';
+const RENDER_STATES = ['default', 'loading', 'empty', 'error'];
 
 type PromptDef = {
   slug: string;
@@ -61,8 +63,16 @@ type VariantResult = {
   states: StateResult;
   accessibility: AccessibilityResult;
   responsive: boolean;
+  sourceChecksAreAdvisory: true;
   judge: JudgeScores;
   judgeTotal: number;
+  rendered: {
+    receiptPath: string;
+    evidencePath: string;
+    gates: Record<string, any>;
+    authority: Record<string, any>;
+    judge: Record<string, any>;
+  };
   penalties: {
     antiPatterns: number;
     missingStates: number;
@@ -80,6 +90,7 @@ type PromptResult = {
   judgeFallbackUsed: boolean;
   before: VariantResult;
   after: VariantResult;
+  renderAuthority: Record<string, any>;
   delta: number;
   winner: 'before' | 'after' | 'tie';
 };
@@ -90,7 +101,18 @@ type PromptFailure = {
   type: string;
   timestamp: string;
   error: string;
+  renderAuthority?: Record<string, any>;
 };
+
+class RenderAuthorityError extends Error {
+  renderAuthority: Record<string, any>;
+
+  constructor(message: string, renderAuthority: Record<string, any>) {
+    super(message);
+    this.name = 'RenderAuthorityError';
+    this.renderAuthority = renderAuthority;
+  }
+}
 
 function log(message: string) {
   console.log(`[eval-loop] ${message}`);
@@ -105,6 +127,7 @@ function parseArgs() {
     generator: readFlagValue(args, '--generator') ?? process.env.EVAL_GENERATOR_MODEL ?? DEFAULT_GENERATOR,
     judge: readFlagValue(args, '--judge') ?? process.env.EVAL_JUDGE_MODEL ?? DEFAULT_JUDGE,
     judgeFallback: process.env.EVAL_JUDGE_FALLBACK_MODEL?.trim() || undefined,
+    tailwind: readFlagValue(args, '--tailwind') ?? 'cdn',
   };
 }
 
@@ -115,7 +138,7 @@ function readFlagValue(args: string[], name: string): string | undefined {
 }
 
 function printHelp() {
-  console.log(`Usage: npx tsx testing/eval-loop.ts [options]\n\nOptions:\n  --dry-run             Validate inputs and print what would run without calling APIs\n  --slug <slug>         Run only one prompt slug\n  --generator <model>   Override the generator model (default: ${DEFAULT_GENERATOR}, or $EVAL_GENERATOR_MODEL). OpenAI and Anthropic models supported.\n  --judge <model>       Override the judge model (default: ${DEFAULT_JUDGE}, or $EVAL_JUDGE_MODEL)\n  --help, -h            Show this help`);
+  console.log(`Usage: npx tsx testing/eval-loop.ts [options]\n\nOptions:\n  --dry-run             Validate inputs and print what would run without calling APIs\n  --slug <slug>         Run only one prompt slug\n  --generator <model>   Override the generator model (default: ${DEFAULT_GENERATOR}, or $EVAL_GENERATOR_MODEL). OpenAI and Anthropic models supported.\n  --judge <model>       Override the independent screenshot judge (default: ${DEFAULT_JUDGE}, or $EVAL_JUDGE_MODEL)\n  --tailwind <mode>     Render generated Tailwind variants with cdn or none (default: cdn)\n  --help, -h            Show this help`);
 }
 
 async function ensureDir(dir: string) {
@@ -211,11 +234,11 @@ async function loadCorePackPrompt(): Promise<string> {
 }
 
 function buildBeforeUserPrompt(prompt: string) {
-  return `${prompt}\n\nbuild a single React + Tailwind CSS page component. export default. use client directive. return TSX only.`;
+  return `${prompt}\n\nbuild a single React + Tailwind CSS page component. export default. use client directive. return TSX only. For the benchmark harness, read #state=default|loading|empty|error from location.hash and visibly render each requested state.`;
 }
 
 function buildAfterUserPrompt(prompt: string) {
-  return `${prompt}\n\nFollow the core pack chain from the system prompt. Build a single React + Tailwind CSS page component with a default export and a use client directive. Include intentional hierarchy, specific copy, responsive behavior, and clear loading, empty, and error states when applicable. Return TSX only.`;
+  return `${prompt}\n\nFollow the core pack chain from the system prompt. Build a single React + Tailwind CSS page component with a default export and a use client directive. Include intentional hierarchy, specific copy, responsive behavior, and clear loading, empty, and error states. For the benchmark harness, read #state=default|loading|empty|error from location.hash and visibly render each requested state. Return TSX only.`;
 }
 
 async function callOpenAI({ apiKey, model, system, user }: { apiKey: string; model: string; system?: string; user: string }) {
@@ -416,7 +439,7 @@ function missingStateCount(states: StateResult) {
   return Number(!states.loading) + Number(!states.empty) + Number(!states.error);
 }
 
-function computeTotal(args: {
+function computeEvaluationDetails(args: {
   judge: JudgeScores;
   antiPatterns: AntiPatternResult;
   states: StateResult;
@@ -437,15 +460,10 @@ function computeTotal(args: {
       accessibility: accessibilityPenalty,
       responsive: responsivePenalty,
     },
-    total: judgeScore + antiPatternPenalty + missingStatesPenalty + accessibilityPenalty + responsivePenalty,
+    // Rendered judge scores decide the comparison. Source-derived penalties are retained as
+    // diagnostics only; they cannot rescue or overturn the browser authority verdict.
+    total: judgeScore,
   };
-}
-
-function parseJudgeScores(raw: string): { before: JudgeScores; after: JudgeScores } {
-  const parsed = JSON.parse(stripCodeFences(raw)) as { before: JudgeScores; after: JudgeScores };
-  validateJudgeScores(parsed.before, 'before');
-  validateJudgeScores(parsed.after, 'after');
-  return parsed;
 }
 
 function validateJudgeScores(scores: JudgeScores, label: string) {
@@ -458,7 +476,13 @@ function validateJudgeScores(scores: JudgeScores, label: string) {
   }
 }
 
-async function evaluateVariant(filePath: string, judge: JudgeScores): Promise<VariantResult> {
+async function evaluateVariant(
+  filePath: string,
+  renderReceipt: Record<string, any>,
+  authority: Record<string, any>,
+): Promise<VariantResult> {
+  const judge = renderReceipt.judge?.scores as JudgeScores;
+  validateJudgeScores(judge, path.basename(filePath));
   const [antiPatterns, states, accessibility, responsive] = await Promise.all([
     runAntiPatternCheck(filePath),
     runStateCheck(filePath),
@@ -466,7 +490,7 @@ async function evaluateVariant(filePath: string, judge: JudgeScores): Promise<Va
     detectResponsiveClasses(filePath),
   ]);
 
-  const totals = computeTotal({ judge, antiPatterns, states, accessibility, responsive });
+  const totals = computeEvaluationDetails({ judge, antiPatterns, states, accessibility, responsive });
 
   return {
     file: path.relative(ROOT, filePath),
@@ -474,8 +498,16 @@ async function evaluateVariant(filePath: string, judge: JudgeScores): Promise<Va
     states,
     accessibility,
     responsive,
+    sourceChecksAreAdvisory: true,
     judge,
     judgeTotal: totals.judgeTotal,
+    rendered: {
+      receiptPath: path.relative(ROOT, path.join(path.dirname(renderReceipt.evidencePath), '..', 'receipt.json')),
+      evidencePath: path.relative(ROOT, renderReceipt.evidencePath),
+      gates: renderReceipt.gates || {},
+      authority,
+      judge: renderReceipt.judge || {},
+    },
     penalties: totals.penalties,
     total: totals.total,
   };
@@ -556,6 +588,17 @@ function renderPenaltyTable(result: PromptResult): string {
   ].join('\n');
 }
 
+function renderBrowserGateRows(result: PromptResult): string[] {
+  return (['before', 'after'] as const).map((name) => {
+    const variant = result[name];
+    const gates = variant.rendered.gates || {};
+    const states = Object.entries(gates.stateRendered || {})
+      .map(([state, rendered]) => `${state}=${rendered ? 'yes' : 'NO'}`)
+      .join(' ');
+    return `| ${name} | ${variant.rendered.authority.status} | ${gates.seriousAxeViolations ?? '?'} | ${(gates.horizontalOverflowAt || []).join(', ') || 'none'} | ${(gates.touchTargetsUnder44 || []).length} | ${states || 'none'} | ${variant.judgeTotal}/50 |`;
+  });
+}
+
 function signed(n: number): string {
   return n > 0 ? `+${n}` : `${n}`;
 }
@@ -593,7 +636,20 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     `- before: \`${result.before.file}\``,
     `- after: \`${result.after.file}\``,
     '',
-    '## rules fired',
+    '## authoritative rendered evidence',
+    '',
+    `- decision authority: ${result.renderAuthority.authority}`,
+    `- verdict: ${result.renderAuthority.status} — ${result.renderAuthority.reason}`,
+    `- before receipt: \`${result.before.rendered.receiptPath}\``,
+    `- after receipt: \`${result.after.rendered.receiptPath}\``,
+    '',
+    '| variant | gate | serious axe | overflow | small targets | distinct states | rendered judge |',
+    '|---|---|---:|---|---:|---|---:|',
+    ...renderBrowserGateRows(result),
+    '',
+    '## source preflight (advisory only)',
+    '',
+    'These checks explain source risks. They do not affect the rendered verdict or score.',
     '',
     '### before',
     '',
@@ -653,7 +709,7 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     '',
     renderJudgeTable(result),
     '',
-    '## penalties',
+    '## source-derived penalties (advisory only)',
     '',
     renderPenaltyTable(result),
     '',
@@ -665,9 +721,9 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     '',
     '## follow-ups',
     '',
-    '1. anti-pattern hits present on the after variant → candidates for `skills/design-review/references/anti-patterns.md`',
-    '2. judge dimensions under 7 on after → iterate before shipping',
-    '3. rubric weights from `skills/agentic-design-system/SKILL.md` (Design Quality 35%, Originality 30%, Craft 20%, Functionality 15%) are not automatically scored here — apply manually before verdict',
+    '1. any rendered gate failure blocks success even when source checks are clean',
+    '2. unresolved screenshot judgment requires a human verdict',
+    '3. source anti-pattern hits remain useful repair hints, never authority',
     '',
     '## raw',
     '',
@@ -740,26 +796,26 @@ function buildBatchReportMarkdown(summary: {
     '',
     '## score summary',
     '',
-    `- total score average: ${summary.averages.beforeTotal} -> ${summary.averages.afterTotal} (${signed(summary.averages.delta)})`,
-    `- judge total average: ${summary.averages.beforeJudgeTotal} -> ${summary.averages.afterJudgeTotal} (${signed(summary.averages.afterJudgeTotal - summary.averages.beforeJudgeTotal)})`,
-    `- anti-pattern warnings average: ${summary.averages.beforeWarnings} -> ${summary.averages.afterWarnings}`,
-    `- anti-pattern info average: ${summary.averages.beforeInfo} -> ${summary.averages.afterInfo}`,
+    `- authoritative rendered judge average: ${summary.averages.beforeJudgeTotal} -> ${summary.averages.afterJudgeTotal} (${signed(summary.averages.afterJudgeTotal - summary.averages.beforeJudgeTotal)})`,
+    `- source anti-pattern warnings average (advisory): ${summary.averages.beforeWarnings} -> ${summary.averages.afterWarnings}`,
+    `- source anti-pattern info average (advisory): ${summary.averages.beforeInfo} -> ${summary.averages.afterInfo}`,
     '',
     '## prompt results',
     '',
-    '| slug | type | before | after | delta | rule hits before -> after | states before -> after |',
-    '|---|---|---:|---:|---:|---|---|',
+    '| slug | type | before | after | delta | rendered gates | source hits (advisory) | source states (advisory) |',
+    '|---|---|---:|---:|---:|---|---|---|',
     ...summary.results.map((result) => {
       const beforeRuleHits = result.before.antiPatterns.warnings + result.before.antiPatterns.info + result.before.accessibility.warnings + result.before.accessibility.info;
       const afterRuleHits = result.after.antiPatterns.warnings + result.after.antiPatterns.info + result.after.accessibility.warnings + result.after.accessibility.info;
       const beforeStates = `${3 - missingStateCount(result.before.states)}/3`;
       const afterStates = `${3 - missingStateCount(result.after.states)}/3`;
-      return `| ${result.slug} | ${result.type} | ${result.before.total} | ${result.after.total} | ${signed(result.delta)} | ${beforeRuleHits} -> ${afterRuleHits} | ${beforeStates} -> ${afterStates} |`;
+      return `| ${result.slug} | ${result.type} | ${result.before.total} | ${result.after.total} | ${signed(result.delta)} | ${result.before.rendered.authority.status} -> ${result.after.rendered.authority.status} | ${beforeRuleHits} -> ${afterRuleHits} | ${beforeStates} -> ${afterStates} |`;
     }),
     '',
     '## qualitative notes',
     '',
     `- ${summary.results.filter((result) => result.winner === 'after').length}/${summary.results.length} prompts improved after the core-pack loop.`,
+    `- ${summary.results.length}/${summary.results.length} successful prompts passed authoritative rendered evidence with a resolved independent judge.`,
     `- ${summary.results.filter((result) => missingStateCount(result.after.states) === 0).length}/${summary.results.length} after variants reached full loading/empty/error coverage.`,
     ...(
       summary.failures.length > 0
@@ -798,8 +854,15 @@ async function main() {
     throw new Error(`No prompt found for slug: ${args.slug}`);
   }
 
-  const judgeSystemPrompt = await fs.readFile(JUDGE_PROMPT_PATH, 'utf8');
   const corePackPrompt = await loadCorePackPrompt();
+
+  const generatorModel = args.generator.trim().toLowerCase();
+  const judgeModels = [args.judge, args.judgeFallback]
+    .filter((model): model is string => !!model)
+    .map((model) => model.trim().toLowerCase());
+  if (judgeModels.includes(generatorModel)) {
+    throw new Error('Generator and every rendered judge must use different models. Choose a separate --judge/fallback.');
+  }
 
   if (args.dryRun) {
     log(`Dry run. Would evaluate ${filteredPrompts.length} prompt(s): ${filteredPrompts.map((item) => item.slug).join(', ')}`);
@@ -808,7 +871,8 @@ async function main() {
     if (args.judgeFallback) {
       log(`Judge fallback model configured: ${args.judgeFallback}`);
     }
-    log(`Loaded judge prompt and core pack bundle.`);
+    log(`Rendered states: ${RENDER_STATES.join(', ')}`);
+    log(`Loaded core pack bundle; browser evidence + independent screenshot judge are authoritative.`);
     return;
   }
 
@@ -818,8 +882,15 @@ async function main() {
     log(`Judge fallback model configured: ${args.judgeFallback}`);
   }
 
-  const openAiKey = await loadEnvKey('OPENAI_API_KEY', '~/.clawdbot/credentials/openai.env');
-  const anthropicKey = await loadEnvKey('ANTHROPIC_API_KEY', '~/.clawdbot/credentials/anthropic.env');
+  const activeModels = [args.generator, args.judge, args.judgeFallback].filter(Boolean) as string[];
+  const needsAnthropic = activeModels.some((model) => isAnthropicModel(model));
+  const needsOpenAI = activeModels.some((model) => !isAnthropicModel(model));
+  const openAiKey = needsOpenAI
+    ? await loadEnvKey('OPENAI_API_KEY', '~/.clawdbot/credentials/openai.env')
+    : '';
+  const anthropicKey = needsAnthropic
+    ? await loadEnvKey('ANTHROPIC_API_KEY', '~/.clawdbot/credentials/anthropic.env')
+    : '';
 
   const successes: PromptResult[] = [];
   const failures: PromptFailure[] = [];
@@ -854,54 +925,39 @@ async function main() {
         fs.writeFile(afterPath, `${afterTsx.trim()}\n`, 'utf8'),
       ]);
 
-      log(`Judging ${promptDef.slug}`);
-      const judgeUserPrompt = [
-        `Prompt: ${promptDef.prompt}`,
-        '',
-        '## before.tsx',
-        '```tsx',
-        beforeTsx,
-        '```',
-        '',
-        '## after.tsx',
-        '```tsx',
-        afterTsx,
-        '```',
-      ].join('\n');
-
-      let judgeFallbackUsed = false;
-      let judgeRaw: string;
-      try {
-        judgeRaw = await callModel({
-          openAiKey,
-          anthropicKey,
-          model: args.judge,
-          system: judgeSystemPrompt,
-          user: judgeUserPrompt,
-        });
-      } catch (primaryJudgeError) {
-        if (!args.judgeFallback) {
-          throw primaryJudgeError;
-        }
-        log(`Primary judge failed for ${promptDef.slug}; retrying once with fallback model ${args.judgeFallback}`);
-        try {
-          judgeRaw = await callModel({
-            openAiKey,
-            anthropicKey,
-            model: args.judgeFallback,
-            system: judgeSystemPrompt,
-            user: judgeUserPrompt,
-          });
-          judgeFallbackUsed = true;
-        } catch {
-          throw primaryJudgeError;
-        }
+      log(`Rendering and independently judging ${promptDef.slug}`);
+      const renderOutcome = await runRenderBatch({
+        slug: `eval-${promptDef.slug}`,
+        prompt: promptDef.prompt,
+        variants: [
+          { name: 'before', src: path.relative(ROOT, beforePath), states: RENDER_STATES.join(',') },
+          { name: 'after', src: path.relative(ROOT, afterPath), states: RENDER_STATES.join(',') },
+        ],
+        judgeModel: args.judge,
+        judgeFallbackModel: args.judgeFallback,
+        tailwind: args.tailwind,
+        apiKeys: { openai: openAiKey, anthropic: anthropicKey },
+      });
+      const beforeReceipt = renderOutcome.results.find((item: Record<string, any>) => item.name === 'before');
+      const afterReceipt = renderOutcome.results.find((item: Record<string, any>) => item.name === 'after');
+      const renderAuthority = compareRenderedVariants({
+        before: beforeReceipt,
+        after: afterReceipt,
+        requiredStates: RENDER_STATES,
+        sourceAdvisory: { role: 'diagnostic-only', affectsVerdict: false },
+      });
+      await writeJson(path.join(resultDir, 'render-authority.json'), renderAuthority);
+      if (renderAuthority.status !== 'pass') {
+        throw new RenderAuthorityError(
+          `Rendered authority ${renderAuthority.status}: ${renderAuthority.reason}`,
+          renderAuthority,
+        );
       }
-      const judge = parseJudgeScores(judgeRaw);
 
-      log(`Running programmatic evals for ${promptDef.slug}`);
-      const before = await evaluateVariant(beforePath, judge.before);
-      const after = await evaluateVariant(afterPath, judge.after);
+      log(`Running advisory source checks for ${promptDef.slug}`);
+      const before = await evaluateVariant(beforePath, beforeReceipt, renderAuthority.before);
+      const after = await evaluateVariant(afterPath, afterReceipt, renderAuthority.after);
+      const judgeFallbackUsed = !!before.rendered.judge.fallbackUsed || !!after.rendered.judge.fallbackUsed;
 
       const result: PromptResult = {
         prompt: promptDef.prompt,
@@ -911,8 +967,9 @@ async function main() {
         judgeFallbackUsed,
         before,
         after,
+        renderAuthority,
         delta: after.total - before.total,
-        winner: after.total === before.total ? 'tie' : after.total > before.total ? 'after' : 'before',
+        winner: renderAuthority.winner,
       };
 
       await writeJson(path.join(resultDir, 'scores.json'), result);
@@ -929,6 +986,7 @@ async function main() {
         type: promptDef.type,
         timestamp: startedAt,
         error: error instanceof Error ? error.stack || error.message : String(error),
+        ...(error instanceof RenderAuthorityError ? { renderAuthority: error.renderAuthority } : {}),
       };
       failures.push(failure);
       await writeJson(path.join(resultDir, 'scores.json'), failure);
@@ -938,6 +996,7 @@ async function main() {
 
   await buildSummary(successes, failures, { generator: args.generator, judge: args.judge });
   log(`Done. ${successes.length} succeeded, ${failures.length} failed.`);
+  if (failures.length > 0) process.exitCode = 1;
 }
 
 main().catch((error) => {

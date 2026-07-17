@@ -25,13 +25,16 @@ const exists = async (p) => { try { await fs.access(p); return true; } catch { r
 
 async function main() {
   console.log('[smoke] running: node testing/render-eval.mjs --fixture');
+  let renderExit = 0;
   try {
     const { stdout } = await execFileAsync(process.execPath, [path.join(HERE, 'render-eval.mjs'), '--fixture'], { cwd: REPO_ROOT });
     console.log(stdout.trim());
   } catch (e) {
-    console.error('[smoke] render-eval exited non-zero:\n' + [e.stdout, e.stderr].filter(Boolean).join('\n'));
-    // keep going — we still assert on whatever receipts landed
+    renderExit = e.code;
+    console.log([e.stdout, e.stderr].filter(Boolean).join('\n').trim());
   }
+
+  ok('fixture batch exits 1 because an explicit skip is not success', renderExit === 1, `exit=${renderExit}`);
 
   // --- good variant ---
   const goodReceiptPath = path.join(SLUG_DIR, 'good', 'receipt.json');

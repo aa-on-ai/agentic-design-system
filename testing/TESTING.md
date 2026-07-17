@@ -45,6 +45,21 @@ python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 
 attach screenshots or preview links when the host workflow supports them.
 
+## rendered eval authority
+
+verify the A/B evidence boundary without API spend:
+
+```bash
+npm run render-eval:smoke
+npm run eval-loop:render-smoke
+npx tsx testing/eval-loop.ts --dry-run --slug canopy
+```
+
+the authority smoke proves that a fixture can pass every source check and receive a 50/50
+independent judge score while still failing because the browser measures mobile overflow.
+Bundle/capture skips, serious axe violations, overflow, undersized touch targets, missing
+distinct states, and unresolved judging cannot silently pass.
+
 ## homepage regression
 
 with the demo app running, verify the public homepage's typography rhythm and both Ember interactions:
@@ -77,6 +92,5 @@ This gate verifies one active hero request on first load, stable full-page scrol
 
 ## archived eval fixtures
 
-the old before/after benchmark loop, judge prompt, sample prompts, generated results, and case studies live under `docs/archive/pre-spine-evals/`.
-
-those artifacts are useful provenance for the earlier review/check/report loop. they are not the current public ADS story.
+historical source-judged results and case studies live under `docs/archive/pre-spine-evals/`.
+the current `testing/eval-loop.ts` renders both variants and treats source heuristics as advisory.
