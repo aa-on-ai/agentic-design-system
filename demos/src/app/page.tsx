@@ -22,7 +22,7 @@ function InspectionLamp({ label, tone = "amber" }: { label: string; tone?: "ambe
   );
 }
 
-function OrderRows({ final = false }: { final?: boolean }) {
+function OrderRows({ selected = false }: { selected?: boolean }) {
   return (
     <div className="order-rows" role="table" aria-label="Recent orders">
       <div className="order-row order-row--head" role="row">
@@ -33,7 +33,7 @@ function OrderRows({ final = false }: { final?: boolean }) {
         <span role="columnheader">Total</span>
       </div>
       {orders.map((order, index) => (
-        <div className={`order-row ${final && index === 0 ? "order-row--selected" : ""}`} role="row" key={order.id}>
+        <div className={`order-row ${selected && index === 0 ? "order-row--selected" : ""}`} role="row" key={order.id}>
           <strong role="cell">{order.id}</strong>
           <span role="cell">{order.customer}</span>
           <span className="order-destination" role="cell">{order.destination}</span>
@@ -41,6 +41,46 @@ function OrderRows({ final = false }: { final?: boolean }) {
           <span role="cell">{order.total}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ProductStateContactSheet() {
+  return (
+    <div className="state-contact-sheet" aria-label="Required loading, empty, and error screen fixtures">
+      <div className="state-card state-card--loading">
+        <strong>Loading</strong>
+        <span className="state-skeleton state-skeleton--wide" aria-hidden="true" />
+        <span className="state-skeleton" aria-hidden="true" />
+        <span className="state-skeleton state-skeleton--short" aria-hidden="true" />
+      </div>
+      <div className="state-card state-card--empty">
+        <strong>Empty</strong>
+        <span className="state-empty-box" aria-hidden="true">0</span>
+        <small>No orders match</small>
+      </div>
+      <div className="state-card state-card--error">
+        <strong>Error</strong>
+        <span className="state-error-mark" aria-hidden="true">!</span>
+        <small>Retry available</small>
+      </div>
+    </div>
+  );
+}
+
+function EvidenceWorkbench() {
+  return (
+    <div className="evidence-workbench" aria-label="Desktop and mobile order screen renders under inspection">
+      <div className="evidence-desktop-shot">
+        <span className="evidence-shot-label">1280 / repaired</span>
+        <OrderRows selected />
+      </div>
+      <div className="evidence-phone-shot" aria-hidden="true">
+        <div className="evidence-phone-top"><strong>Orders</strong><span>03</span></div>
+        <div className="evidence-phone-summary"><span>At risk</span><strong>3</strong></div>
+        <div className="evidence-phone-order evidence-phone-order--risk"><b>#4821</b><span>Delayed</span></div>
+        <div className="evidence-phone-order"><b>#4819</b><span>Packing</span></div>
+      </div>
     </div>
   );
 }
@@ -105,16 +145,8 @@ function OrderArtifact({ stage }: { stage: ArtifactStage }) {
               </div>
             )}
 
-            {isBaseline && (
-              <div className="state-shelf">
-                <span><i className="state-spinner" aria-hidden="true" />Loading</span>
-                <span><i aria-hidden="true">○</i>Empty</span>
-                <span><i aria-hidden="true">!</i>Error</span>
-                <small>states packed before build</small>
-              </div>
-            )}
-
-            <OrderRows final={isRelease} />
+            {isBaseline && <ProductStateContactSheet />}
+            {isEvidence ? <EvidenceWorkbench /> : !isBaseline && <OrderRows selected={isRubric || isRelease} />}
 
             {isRubric && (
               <div className="rubric-overlay" aria-hidden="true">
