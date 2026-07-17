@@ -12,7 +12,7 @@ export function AssemblyLineClimber() {
     <div
       ref={climberRef}
       className="assembly-climber"
-      data-motion="stable"
+      data-motion="rail-follow"
     >
       <button
         type="button"

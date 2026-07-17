@@ -24,12 +24,21 @@ try {
   });
 
   await page.goto(`${url}?theme=light`, { waitUntil: "networkidle" });
-  const initialTransform = await page.locator(".assembly-climber").evaluate((node) => getComputedStyle(node).transform);
+  const initialClimber = await page.locator(".assembly-climber").evaluate((node) => ({
+    documentTop: window.scrollY + node.getBoundingClientRect().top,
+    transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
+  }));
   const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+  const climberTransforms = new Set([initialClimber.transform]);
 
   for (let step = 0; step <= 24; step += 1) {
-    await page.evaluate(({ step, pageHeight }) => scrollTo(0, (pageHeight * step) / 24), { step, pageHeight });
+    await page.evaluate(({ step, pageHeight }) => {
+      document.documentElement.style.scrollBehavior = "auto";
+      document.documentElement.scrollTop = (pageHeight * step) / 24;
+      document.body.scrollTop = (pageHeight * step) / 24;
+    }, { step, pageHeight });
     await page.waitForTimeout(35);
+    climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
   }
 
   const facts = await page.evaluate(() => ({
@@ -38,12 +47,15 @@ try {
     artifacts: document.querySelectorAll(".ads-artifact").length,
     artifactStages: [...document.querySelectorAll(".ads-artifact")].map((node) => node.getAttribute("data-artifact")),
     climberImages: document.querySelectorAll(".assembly-climber img").length,
+    climberMotion: document.querySelector(".assembly-climber").getAttribute("data-motion"),
     climberPosition: getComputedStyle(document.querySelector(".assembly-climber")).position,
     handoffs: document.querySelectorAll(".release-handoff").length,
     activeStations: document.querySelectorAll(".station[data-active]").length,
     releaseBackground: getComputedStyle(document.querySelector(".release-bay")).backgroundColor,
   }));
-  const finalTransform = await page.locator(".assembly-climber").evaluate((node) => getComputedStyle(node).transform);
+  const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
+    documentTop: window.scrollY + node.getBoundingClientRect().top,
+  }));
 
   const failures = [];
   if (errors.length) failures.push(`page errors: ${errors.join(" | ")}`);
@@ -52,8 +64,10 @@ try {
   if (facts.artifacts !== 5) failures.push(`expected 5 ADS artifacts, found ${facts.artifacts}`);
   if (new Set(facts.artifactStages).size !== 5) failures.push("ADS artifact stages are not distinct");
   if (facts.climberImages !== 1) failures.push(`expected one stable Ember image, found ${facts.climberImages}`);
-  if (facts.climberPosition !== "absolute") failures.push(`Ember position is ${facts.climberPosition}, expected absolute`);
-  if (initialTransform !== finalTransform) failures.push(`Ember transform changed during scroll: ${initialTransform} -> ${finalTransform}`);
+  if (facts.climberMotion !== "rail-follow") failures.push(`Ember motion is ${facts.climberMotion}, expected rail-follow`);
+  if (facts.climberPosition !== "sticky") failures.push(`Ember position is ${facts.climberPosition}, expected sticky`);
+  if (finalClimber.documentTop - initialClimber.documentTop < 200) failures.push(`Ember only traveled ${Math.round(finalClimber.documentTop - initialClimber.documentTop)}px with the rail`);
+  if (climberTransforms.size < 3) failures.push(`Ember climb cadence only produced ${climberTransforms.size} transform state(s)`);
   if (facts.handoffs) failures.push("release handoff is still rendered");
   if (facts.activeStations) failures.push("scroll-driven station state is still rendered");
   if (facts.releaseBackground !== "rgb(232, 93, 38)") failures.push(`release background is ${facts.releaseBackground}`);
@@ -62,7 +76,7 @@ try {
     console.error(failures.join("\n"));
     process.exitCode = 1;
   } else {
-    console.log(`WebKit recovery passed: 5 artifacts, stable Ember, no overflow, CLS ${facts.layoutShift.toFixed(3)}, orange release`);
+    console.log(`WebKit recovery passed: 5 artifacts, smooth rail-following Ember, no overflow, CLS ${facts.layoutShift.toFixed(3)}, orange release`);
   }
 } finally {
   await browser.close();

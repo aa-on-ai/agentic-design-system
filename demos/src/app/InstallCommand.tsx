@@ -9,13 +9,19 @@ type InstallCommandProps = {
 };
 
 export function InstallCommand({ variant = "card" }: InstallCommandProps) {
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "error">("idle");
 
   const copy = async () => {
-    await navigator.clipboard.writeText(command);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("error");
+    }
+    window.setTimeout(() => setCopyStatus("idle"), 1600);
   };
+
+  const copyLabel = copyStatus === "copied" ? "Copied" : copyStatus === "error" ? "Try again" : "Copy";
 
   if (variant === "strip") {
     return (
@@ -33,7 +39,7 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
           </span>
         </code>
         <span className="hero-command-copy" aria-live="polite">
-          {copied ? "Copied" : "Copy"}
+          {copyLabel}
         </span>
       </button>
     );
@@ -49,7 +55,7 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
           className="copy-command rounded-full border border-[var(--border)] px-3 py-1.5 text-xs font-bold text-[var(--text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)] active:scale-[0.98]"
           aria-live="polite"
         >
-          {copied ? "Copied" : "Copy"}
+          {copyLabel}
         </button>
       </div>
       <pre className="mt-4 overflow-x-auto rounded-[1.25rem] bg-[#100c08] p-4 text-sm leading-6 text-[#f6d9aa]"><code>{command}</code></pre>

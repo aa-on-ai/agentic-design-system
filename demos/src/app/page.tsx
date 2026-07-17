@@ -1,11 +1,26 @@
-import Image from "next/image";
 import { Github } from "lucide-react";
+import { cookies } from "next/headers";
+import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
 import { WorkshopRun } from "./WorkshopRun";
 
-export default function Home() {
+type HomeProps = {
+  searchParams: Promise<{ theme?: string | string[] }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+  const cookieStore = await cookies();
+  const requestedTheme = Array.isArray(params.theme) ? params.theme[0] : params.theme;
+  const storedTheme = cookieStore.get("ads-theme")?.value;
+  const initialTheme = requestedTheme === "light" || requestedTheme === "dark"
+    ? requestedTheme
+    : storedTheme === "light" || storedTheme === "dark"
+      ? storedTheme
+      : "light";
+
   return (
     <main className="theme-page sm:min-h-screen">
       <p className="sr-only">
@@ -27,15 +42,12 @@ export default function Home() {
             >
               <Github size={18} strokeWidth={2.1} aria-hidden="true" />
             </a>
-            <ThemeToggle />
+            <ThemeToggle initialTheme={initialTheme} />
           </nav>
         </header>
 
         <div className="hero-workshop" id="top">
-          <div className="hero-media" aria-hidden="true">
-            <Image src="/hero/creative-pipeline-light.png" alt="" width={1536} height={1024} priority className="hero-image hero-image-light" />
-            <Image src="/hero/creative-pipeline-dark.png" alt="" width={1536} height={1024} priority className="hero-image hero-image-dark" />
-          </div>
+          <HeroMedia initialTheme={initialTheme} />
           <div className="hero-scrim" aria-hidden="true" />
 
           <div className="hero-copy">

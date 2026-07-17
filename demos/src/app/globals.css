@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --background: #f1e4ca;
   --foreground: #1c1711;
   --page: #f1e4ca;
@@ -37,6 +38,7 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --background: #071524;
   --foreground: #f9ecd2;
   --page: #071524;
@@ -266,17 +268,13 @@ code {
   outline-offset: -1px;
 }
 
-.hero-image-light {
-  opacity: 0.94;
-}
-
-.hero-image-dark {
-  opacity: 1;
-  transition: opacity 260ms ease-out;
-}
-
-:root[data-theme="light"] .hero-image-dark {
+.hero-image--pending {
   opacity: 0;
+  pointer-events: none;
+}
+
+:root[data-theme="light"] .hero-image:not(.hero-image--pending) {
+  opacity: 0.94;
 }
 
 .hero-scrim {
@@ -404,7 +402,8 @@ code {
 
 .hero-command-copy {
   display: grid;
-  min-width: 60px;
+  width: 72px;
+  flex: 0 0 72px;
   min-height: 42px;
   place-items: center;
   border-left: 1px solid rgba(255, 240, 210, 0.16);
@@ -493,6 +492,8 @@ code {
   position: relative;
   isolation: isolate;
   padding: 108px 0 120px;
+  view-timeline-axis: block;
+  view-timeline-name: --assembly-run;
   background:
     radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--orange) 10%, transparent), transparent 26%),
     radial-gradient(circle at 90% 68%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 24%),
@@ -536,9 +537,10 @@ code {
 }
 
 .assembly-climber {
-  position: absolute;
-  z-index: 1;
-  top: 118px;
+  --climber-home: 118px;
+  position: sticky;
+  z-index: 3;
+  top: clamp(118px, 18vh, 168px);
   width: 100%;
   height: 1px;
   pointer-events: none;
@@ -560,6 +562,10 @@ code {
   pointer-events: auto;
   transform: translateX(-50%) rotate(-2deg);
   transform-origin: 50% 82%;
+  animation: ember-rail-cadence 1s linear both;
+  animation-iteration-count: 12;
+  animation-range: entry 5% exit 95%;
+  animation-timeline: --assembly-run;
 }
 
 .assembly-climber-image,
@@ -578,6 +584,12 @@ code {
   0% { transform: translateY(0) scale(1); }
   48% { transform: translateY(-18px) scale(0.99, 1.01); }
   100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes ember-rail-cadence {
+  0%, 50%, 100% { transform: translate3d(-50%, 0, 0) rotate(-2deg); }
+  25% { transform: translate3d(calc(-50% - 3px), -3px, 0) rotate(-3deg); }
+  75% { transform: translate3d(calc(-50% + 3px), -3px, 0) rotate(-1deg); }
 }
 
 .line-intro {
@@ -1935,6 +1947,7 @@ code {
   }
 
   .assembly-climber {
+    --climber-home: 92px;
     top: 92px;
   }
 
@@ -2257,12 +2270,29 @@ code {
     transition-duration: 0.01ms !important;
   }
 
+  .assembly-climber {
+    position: absolute;
+    top: var(--climber-home);
+  }
+
   .assembly-climber-figure {
+    animation: none;
     transform: translateX(-50%);
   }
 
   .assembly-climber-image--hop {
     animation: none;
+  }
+
+  .footer-ember-image {
+    animation: none;
+  }
+
+  .hero-pill:hover,
+  .hero-pill:active,
+  .hero-command-strip:hover,
+  .hero-command-strip:active {
+    transform: none;
   }
 
 }

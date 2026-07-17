@@ -8,6 +8,8 @@
     "render-eval:fixture": "node testing/render-eval.mjs --fixture",
     "compare:smoke": "node testing/compare-smoke.mjs",
     "homepage:smoke": "node testing/homepage-regression.mjs",
+    "homepage:hardening": "node testing/homepage-hardening.mjs",
+    "homepage:runtime": "node testing/homepage-runtime.mjs",
     "playwright:install": "playwright install chromium"
   },
   "devDependencies": {
