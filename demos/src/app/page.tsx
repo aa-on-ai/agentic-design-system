@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Github } from "lucide-react";
 import { AssemblyLineClimber } from "./AssemblyLineClimber";
 import { InstallCommand } from "./InstallCommand";
+import { ReleaseHandoff } from "./ReleaseHandoff";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -385,6 +386,7 @@ export default function Home() {
       </div>
 
       <section className="release-bay" aria-labelledby="release-title">
+        <ReleaseHandoff />
         <div className="release-door" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="release-copy">
           <p>Start a run / MIT licensed</p>

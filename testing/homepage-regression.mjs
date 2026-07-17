@@ -223,6 +223,69 @@ try {
   }
 
   await mobilePage.close();
+
+  const handoffPage = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    reducedMotion: "no-preference",
+  });
+  handoffPage.on("pageerror", (error) => issues.push(`handoff page error: ${error.message}`));
+  await handoffPage.goto(url, { waitUntil: "networkidle" });
+
+  const initialHandoff = await handoffPage.locator(".release-handoff").evaluate((element) => ({
+    active: element.getAttribute("data-active"),
+    translateY: new DOMMatrix(getComputedStyle(element).transform).m42,
+  }));
+  await handoffPage.locator(".release-bay").scrollIntoViewIfNeeded();
+  await handoffPage.waitForTimeout(620);
+  const completedHandoff = await handoffPage.evaluate(() => {
+    const handoff = document.querySelector(".release-handoff");
+    const releaseCopy = document.querySelector(".release-copy");
+    if (!handoff || !releaseCopy) return null;
+    const handoffBox = handoff.getBoundingClientRect();
+    const copyBox = releaseCopy.getBoundingClientRect();
+    const style = getComputedStyle(handoff);
+    return {
+      active: handoff.getAttribute("data-active"),
+      opacity: Number.parseFloat(style.opacity),
+      translateY: new DOMMatrix(style.transform).m42,
+      clearsCopy: handoffBox.bottom <= copyBox.top,
+    };
+  });
+
+  if (initialHandoff.active !== "false" || initialHandoff.translateY > -100) {
+    issues.push(
+      `release handoff starts at ${initialHandoff.active}/${initialHandoff.translateY}px (expected false/< -100px)`,
+    );
+  }
+  if (
+    !completedHandoff ||
+    completedHandoff.active !== "true" ||
+    completedHandoff.opacity < 0.99 ||
+    Math.abs(completedHandoff.translateY + 38) > 1 ||
+    !completedHandoff.clearsCopy
+  ) {
+    issues.push(`release handoff did not settle cleanly: ${JSON.stringify(completedHandoff)}`);
+  }
+  await handoffPage.close();
+
+  const staticHandoffPage = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    reducedMotion: "reduce",
+  });
+  await staticHandoffPage.goto(url, { waitUntil: "networkidle" });
+  const staticHandoff = await staticHandoffPage.locator(".release-handoff").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      opacity: Number.parseFloat(style.opacity),
+      translateY: new DOMMatrix(style.transform).m42,
+    };
+  });
+  if (staticHandoff.opacity < 0.99 || Math.abs(staticHandoff.translateY + 38) > 1) {
+    issues.push(
+      `reduced-motion release handoff is ${staticHandoff.opacity}/${staticHandoff.translateY}px (expected 1/-38px)`,
+    );
+  }
+  await staticHandoffPage.close();
 } finally {
   await browser.close();
 }
@@ -233,4 +296,6 @@ if (issues.length > 0) {
   process.exit(1);
 }
 
-console.log("homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing");
+console.log(
+  "homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing + release handoff",
+);
