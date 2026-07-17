@@ -205,7 +205,12 @@ type StationProps = {
 
 function Station({ number, id, eyebrow, title, description, proof, notes, stage, side, lamp, lampTone, machineLabel }: StationProps) {
   return (
-    <section className={`station station--${side} station--${stage}`} aria-labelledby={id}>
+    <section
+      className={`station station--${side} station--${stage}`}
+      aria-labelledby={id}
+      data-active="false"
+      data-stage={stage}
+    >
       <div className="station-index" aria-hidden="true">
         <span>{number}</span>
       </div>
