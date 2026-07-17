@@ -1811,6 +1811,90 @@ code {
   grid-template-columns: minmax(0, 1.2fr) minmax(420px, 0.8fr);
 }
 
+.release-handoff {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 50%;
+  width: 128px;
+  height: 92px;
+  opacity: 0.18;
+  pointer-events: none;
+  transform: translate3d(-50%, -112px, 0) rotate(-2deg);
+  transform-origin: 50% 0;
+  transition-property: transform, opacity;
+  transition-duration: 520ms;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+  will-change: transform;
+}
+
+.release-handoff[data-active="true"] {
+  opacity: 1;
+  transform: translate3d(-50%, -38px, 0) rotate(-2deg);
+}
+
+.release-handoff-ticket {
+  position: relative;
+  display: block;
+  width: 112px;
+  height: 70px;
+  border: 2px solid #274d3a;
+  border-radius: 7px;
+  background: #f5edda;
+  box-shadow: 7px 8px 0 rgba(72, 29, 10, 0.3);
+}
+
+.release-handoff-ticket::before {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  left: 8px;
+  height: 7px;
+  border-radius: 2px;
+  background: #274d3a;
+  content: "";
+}
+
+.release-handoff-screen {
+  position: absolute;
+  top: 21px;
+  right: 9px;
+  left: 9px;
+  display: grid;
+  gap: 4px;
+}
+
+.release-handoff-screen i {
+  display: block;
+  height: 5px;
+  border-radius: 1px;
+  background: #d5c5a7;
+}
+
+.release-handoff-screen i:nth-child(2) { width: 74%; }
+.release-handoff-screen i:nth-child(3) { width: 48%; }
+
+.release-handoff-seal {
+  position: absolute;
+  right: -20px;
+  bottom: -13px;
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  border: 3px double #276d4d;
+  border-radius: 50%;
+  background: #eef6e6;
+  box-shadow: 0 6px 0 rgba(39, 109, 77, 0.22);
+  color: #276d4d;
+  font-family: var(--font-label), monospace;
+  font-size: 0.46rem;
+  font-weight: 900;
+  line-height: 1.16;
+  text-align: center;
+  transform: rotate(-7deg);
+}
+
 .release-door {
   position: absolute;
   z-index: -1;
@@ -2621,5 +2705,10 @@ code {
 
   .assembly-climber-image {
     animation: none;
+  }
+
+  .release-handoff {
+    opacity: 1;
+    transform: translate3d(-50%, -38px, 0) rotate(-2deg);
   }
 }
