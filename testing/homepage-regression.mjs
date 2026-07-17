@@ -181,6 +181,14 @@ try {
     const stationIndex = rect(".station-index");
     const stationCopy = rect(".station-copy");
     const releaseBay = rect(".release-bay");
+    const proofLabels = Array.from(document.querySelectorAll(".station-proof p")).map((label) => {
+      const style = getComputedStyle(label);
+      const lineHeight = Number.parseFloat(style.lineHeight);
+      return {
+        text: label.textContent?.trim() ?? "",
+        lines: lineHeight > 0 ? Math.round(label.getBoundingClientRect().height / lineHeight) : null,
+      };
+    });
 
     return {
       pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -191,6 +199,7 @@ try {
       stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
       stationContentLeft: stationCopy?.left ?? null,
       releaseHeight: releaseBay?.height ?? null,
+      proofLabels,
     };
   });
 
@@ -220,6 +229,21 @@ try {
   }
   if (mobilePacing.releaseHeight === null || mobilePacing.releaseHeight > 660) {
     issues.push(`mobile release CTA is ${mobilePacing.releaseHeight ?? "missing"}px tall (expected <= 660px)`);
+  }
+
+  const expectedProofLabels = ["Ticket", "Context", "Pass line", "Evidence", "Verdict"];
+  const renderedProofLabels = mobilePacing.proofLabels.map(({ text }) => text);
+  if (JSON.stringify(renderedProofLabels) !== JSON.stringify(expectedProofLabels)) {
+    issues.push(
+      `proof labels are ${renderedProofLabels.join(" / ") || "missing"} ` +
+      `(expected ${expectedProofLabels.join(" / ")})`,
+    );
+  }
+  const wrappedProofLabels = mobilePacing.proofLabels.filter(({ lines }) => lines !== 1);
+  if (wrappedProofLabels.length > 0) {
+    issues.push(
+      `proof labels wrap at 390px: ${wrappedProofLabels.map(({ text, lines }) => `${text} (${lines ?? "?"} lines)`).join(", ")}`,
+    );
   }
 
   await mobilePage.close();
@@ -297,5 +321,5 @@ if (issues.length > 0) {
 }
 
 console.log(
-  "homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing + release handoff",
+  "homepage regression passed: typography + footer + Ember poses + product focus + mobile pacing + release handoff + proof labels",
 );
