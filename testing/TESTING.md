@@ -31,13 +31,14 @@ the smoke test installs from the local repo into a temporary project and verifie
 - all 5 runtime templates are bundled: outcome, project identity, reference intake, grader report, and run report
 - bundled templates and all 7 workflow runbooks match their canonical top-level copies
 - the deterministic decision-trace script is present and byte-identical in the installed orchestrator
+- the structured-findings reference is present and byte-identical in the installed orchestrator
 
 the installer does not generate or replace `AGENTS.md`. project instructions remain an explicit setup step.
 
 success ends with:
 
 ```text
-install smoke passed: 10 skills, 2 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
+install smoke passed: 10 skills, 3 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
 ```
 
 to exercise the public github shorthand instead of the current checkout:
@@ -98,6 +99,7 @@ verify the A/B evidence boundary without API spend:
 npm run render-eval:smoke
 npm run eval-loop:render-smoke
 npm run production-gates:smoke
+npm run structured-findings:smoke
 npm run decision-trace:smoke
 npx tsx testing/eval-loop.ts --dry-run --slug canopy
 ```
@@ -107,6 +109,10 @@ independent judge score while still failing because the browser measures mobile 
 Bundle/capture skips, serious axe violations, overflow, missing main/live-region semantics,
 unavailable or over-budget CLS, undersized touch targets, missing distinct states, and unresolved
 judging cannot silently pass.
+
+the structured-findings smoke proves that unsupported categories, missing evidence, and invalid
+regions fail validation; blocker findings cannot return `satisfied`; compatibility rows derive
+from structured findings; and recurrence aggregation preserves the evidence trail.
 
 ## homepage regression
 

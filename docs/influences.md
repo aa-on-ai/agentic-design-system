@@ -50,6 +50,13 @@ ADS is assembled from public ideas and local dogfooding. These are influences, n
 - What ADS borrows: a shared, promptable motion vocabulary — named patterns (crossfade, shared element transition, direction-aware transition, rubber-banding, stagger, …) so reviewers and agents use precise nouns instead of "make it smooth."
 - What ADS does not copy: course content or wording. ADS curates a review-relevant subset in `references/motion.md`, ties each name to one of four jobs (state / hierarchy / causality / feedback) with default timing/easing, a reduced-motion fallback, and an evidence expectation, and links out for the full lexicon and implementation depth (`web-animation-design`).
 
+## Contra Labs landing-page failure annotations
+
+- Source: <https://x.com/contralabs_ai/status/2078202668711895356>
+- What ADS borrows: point at the exact rendered failure, assign a fixed diagnostic category, and rate severity so review produces a repairable record instead of a vague score.
+- What ADS changes: the categories sit beneath ADS's four-score verdict rubric and feed the existing finding → revision → evidence loop. Subjective labels remain separate from deterministic browser gates.
+- Limits on the influence: Contra evaluated five briefs with one generated output per model per brief, and Sol was reviewed in a separate session. ADS treats the reported model profiles as hypotheses, not routing rules or hard gates.
+
 ## Agent2Agent / A2A
 
 - Sources: <https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/> and <https://a2a-protocol.org/latest/specification/>

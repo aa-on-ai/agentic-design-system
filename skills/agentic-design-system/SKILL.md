@@ -187,6 +187,32 @@ when you read `skills/design-review/SKILL.md`, it points to reference files in `
 - `ux-writing.md` — copy quality, button labels, empty states (read when writing UI text)
 - `mock-data.md` — realistic content, where humor goes (read when generating sample data)
 - `inspiration.md` — context pass, reference priority (read when building for a named company)
+- `structured-findings.md` — diagnostic categories, severity, evidence, and recurrence rules (read for substantial independent review)
+
+## Structured diagnostic findings
+
+the four weighted rubric criteria remain the verdict layer. for substantial UI review, the
+independent grader must also return structured findings that explain why a score failed and exactly
+where the failure appears. read `references/structured-findings.md` for the complete schema.
+
+each finding records:
+
+- `category`: `layout_spacing_hierarchy`, `polish_consistency`, `typography`, `originality`, `color_contrast`, `interaction_motion`, `cues_affordances`, or `brand_fit_tone`
+- `severity`: `minor`, `major`, or `blocker`
+- `rubricRow`: Design Quality, Originality, Craft, Functionality, or a task-specific criterion
+- `state` and `breakpoint`
+- `artifact`: the screenshot or preview actually judged
+- `target`: a concrete element description, plus an optional normalized bounding box
+- `observation`: one specific, falsifiable failure statement
+- `evidence`: the screenshot path, comparison, interaction receipt, or rendered measurement supporting it
+
+do not replace the four rubric scores with the diagnostic categories. do not turn a subjective
+label into a deterministic hard gate. a blocker finding forces `needs_revision` or `failed`, and
+every blocker or major finding must feed a bounded next-revision instruction.
+
+aggregate findings by category and severity across iterations. repeated findings become candidates
+for a rule, constraint, fixture, or deterministic gate only after a human or verified recurrence
+establishes the pattern. preserve the finding → revision → evidence trace in the run report.
 
 ## Compounding
 

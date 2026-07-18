@@ -72,6 +72,39 @@ produced content.
 
 > if no rendered evidence is attached, the verdict cannot be `satisfied`. source heuristics below are pre-flight only.
 
+## structured diagnostic findings
+
+the four ADS rubric scores remain the verdict layer. findings are the diagnostic layer beneath
+them. every row must identify the exact rendered artifact and location that supports the judgment.
+
+### final iteration findings
+
+| id | category | severity | rubric row | state @ breakpoint | target / region | observation | evidence |
+|---|---|---|---|---|---|---|---|
+| finding-001 | (fixed category) | minor / major / blocker | (rubric row) | default @ 390x844 | (element + optional normalized box) | (specific failure) | (artifact + fact) |
+
+### aggregate across iterations
+
+| category | minor | major | blocker | total |
+|---|---:|---:|---:|---:|
+| layout_spacing_hierarchy | 0 | 0 | 0 | 0 |
+| polish_consistency | 0 | 0 | 0 | 0 |
+| typography | 0 | 0 | 0 | 0 |
+| originality | 0 | 0 | 0 | 0 |
+| color_contrast | 0 | 0 | 0 | 0 |
+| interaction_motion | 0 | 0 | 0 | 0 |
+| cues_affordances | 0 | 0 | 0 | 0 |
+| brand_fit_tone | 0 | 0 | 0 | 0 |
+
+### finding → revision → evidence trace
+
+| finding id | iteration found | revision instruction | next evidence | status |
+|---|---:|---|---|---|
+| finding-001 | 1 | (bounded repair) | (iteration 2 artifact) | fixed / repeated / unresolved |
+
+repeated findings are candidates for a rule, constraint, fixture, or deterministic gate. they do
+not become one automatically; preserve the evidence and require human or verified recurrence.
+
 ## rules fired (source heuristics — pre-flight, gameable)
 
 these grep the `.tsx` source and can pass on a comment. treat as advisory, not sign-off.
@@ -144,7 +177,7 @@ prose, 3-5 sentences. cite specific visual, copy, state, accessibility, or inter
 ## follow-ups
 
 1. rule hits that repeat across runs -> candidates for `skills/design-review/references/anti-patterns.md`
-2. failed grader rows -> `needs_revision` before presenting
+2. blocker and major findings -> `needs_revision` before presenting; every repair cites its finding id
 3. decisions worth preserving -> propose diff to `guidelines.md`
 4. anything a human should double-check that a script cannot
 

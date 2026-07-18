@@ -57,6 +57,16 @@ if [[ ! -f "$trace_script" ]]; then
   echo "missing installed skill asset: agentic-design-system/scripts/decision-trace.mjs" >&2
   exit 1
 fi
+
+structured_findings_reference="$TMP_DIR/.agents/skills/agentic-design-system/references/structured-findings.md"
+if [[ ! -f "$structured_findings_reference" ]]; then
+  echo "missing installed skill asset: agentic-design-system/references/structured-findings.md" >&2
+  exit 1
+fi
+if ! diff -q "$ROOT/skills/agentic-design-system/references/structured-findings.md" "$structured_findings_reference" >/dev/null; then
+  echo "installed skill asset drift: skills/agentic-design-system/references/structured-findings.md" >&2
+  exit 1
+fi
 if ! diff -q "$ROOT/skills/agentic-design-system/scripts/decision-trace.mjs" "$trace_script" >/dev/null; then
   echo "installed skill asset drift: agentic-design-system/scripts/decision-trace.mjs" >&2
   exit 1
@@ -109,4 +119,4 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, 2 skill assets, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
+echo "install smoke passed: ${#expected[@]} skills, 3 skill assets, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
