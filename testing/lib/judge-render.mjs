@@ -153,6 +153,10 @@ export async function judgeFromScreenshots({ slug, variant, prompt, evidence, ou
     `Rendered-evidence gates: serious/critical axe violations=${gates.seriousAxeViolations}, ` +
       `horizontal overflow at=[${(gates.horizontalOverflowAt || []).join(', ')}], ` +
       `touch targets under 44x44=${(gates.touchTargetsUnder44 || []).length}, ` +
+      `main-landmark failures=${Array.isArray(gates.landmarkFailures) ? gates.landmarkFailures.length : 'unmeasured'}, ` +
+      `live-region failures=${Array.isArray(gates.liveRegionFailures) ? gates.liveRegionFailures.length : 'unmeasured'}, ` +
+      `max CLS=${gates.clsAvailable === true ? gates.maxCumulativeLayoutShift : 'unavailable'} ` +
+      `(threshold=${gates.clsThreshold ?? 'unknown'}, failures=${Array.isArray(gates.clsFailures) ? gates.clsFailures.length : 'unmeasured'}), ` +
       `distinct states=${Object.entries(gates.stateRendered || {}).map(([state, rendered]) => `${state}=${rendered ? 'yes' : 'NO'}`).join(' ') || 'unknown'}, ` +
       `rendered font(s)=${(gates.renderedFonts || []).join(' | ') || 'unknown'}.`,
     `Screenshots follow (labels: ${screenshots.map((s) => s.label).join(', ')}). Score from what you see.`,

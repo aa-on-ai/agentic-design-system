@@ -595,7 +595,11 @@ function renderBrowserGateRows(result: PromptResult): string[] {
     const states = Object.entries(gates.stateRendered || {})
       .map(([state, rendered]) => `${state}=${rendered ? 'yes' : 'NO'}`)
       .join(' ');
-    return `| ${name} | ${variant.rendered.authority.status} | ${gates.seriousAxeViolations ?? '?'} | ${(gates.horizontalOverflowAt || []).join(', ') || 'none'} | ${(gates.touchTargetsUnder44 || []).length} | ${states || 'none'} | ${variant.judgeTotal}/50 |`;
+    const semantics = Array.isArray(gates.landmarkFailures) && Array.isArray(gates.liveRegionFailures)
+      ? `${gates.landmarkFailures.length} landmark / ${gates.liveRegionFailures.length} live`
+      : 'unmeasured';
+    const cls = gates.clsAvailable === true ? gates.maxCumulativeLayoutShift : 'unavailable';
+    return `| ${name} | ${variant.rendered.authority.status} | ${gates.seriousAxeViolations ?? '?'} | ${(gates.horizontalOverflowAt || []).join(', ') || 'none'} | ${(gates.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states || 'none'} | ${variant.judgeTotal}/50 |`;
   });
 }
 
@@ -643,8 +647,8 @@ function buildReportMarkdown(result: PromptResult, models: { generator: string; 
     `- before receipt: \`${result.before.rendered.receiptPath}\``,
     `- after receipt: \`${result.after.rendered.receiptPath}\``,
     '',
-    '| variant | gate | serious axe | overflow | small targets | distinct states | rendered judge |',
-    '|---|---|---:|---|---:|---|---:|',
+    '| variant | gate | serious axe | overflow | small targets | semantics | max CLS | distinct states | rendered judge |',
+    '|---|---|---:|---|---:|---|---:|---|---:|',
     ...renderBrowserGateRows(result),
     '',
     '## source preflight (advisory only)',

@@ -144,6 +144,10 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --out evidence/<task>
 ```
 
+The rendered gate blocks serious axe violations, overflow, missing main landmarks,
+loading/error states without the corresponding live-region semantics, CLS above `0.1`,
+undersized touch targets, and requested states that did not actually render.
+
 For a meaningful modification, capture the baseline and candidate with the same states and breakpoints, then compare them:
 
 ```bash
@@ -207,7 +211,7 @@ npm run release:check
 ```
 
 The release gate aligns version and skill manifests, installs a clean copy for all five supported
-agents, and reruns the comparison, render-authority, and eval-loop authority smokes.
+agents, and reruns comparison, render-authority, production-evidence, and eval-loop authority smokes.
 
 To exercise the public GitHub shorthand rather than the local checkout:
 

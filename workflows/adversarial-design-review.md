@@ -40,7 +40,8 @@ python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 
 ## Evidence required
 
-- The `capture.mjs` screenshots + `evidence.json` the critic actually judged (axe + overflow gates included).
+- The `capture.mjs` screenshots + `evidence.json` the critic actually judged (axe, overflow,
+  main/live-region semantics, CLS, state, and touch-target gates included).
 - The three checks' output.
 - Each critic finding tied to a rubric row or a `file:line` — no free-floating "feels off."
 

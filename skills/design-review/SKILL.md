@@ -110,7 +110,7 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --states default,loading,empty,error --out evidence/<slug>
 ```
 
-gate the verdict on the rendered screenshots, axe results, horizontal overflow, computed fonts, touch-target sizes, and whether each required state actually appeared. fix serious rendered violations before presenting, or name the exact remaining gap.
+gate the verdict on the rendered screenshots, axe results, horizontal overflow, main-landmark and state-aware live-region failures, CLS, computed fonts, touch-target sizes, and whether each required state actually appeared. fix serious rendered violations before presenting, or name the exact remaining gap.
 
 for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 

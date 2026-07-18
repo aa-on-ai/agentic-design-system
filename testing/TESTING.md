@@ -97,14 +97,16 @@ verify the A/B evidence boundary without API spend:
 ```bash
 npm run render-eval:smoke
 npm run eval-loop:render-smoke
+npm run production-gates:smoke
 npm run decision-trace:smoke
 npx tsx testing/eval-loop.ts --dry-run --slug canopy
 ```
 
 the authority smoke proves that a fixture can pass every source check and receive a 50/50
 independent judge score while still failing because the browser measures mobile overflow.
-Bundle/capture skips, serious axe violations, overflow, undersized touch targets, missing
-distinct states, and unresolved judging cannot silently pass.
+Bundle/capture skips, serious axe violations, overflow, missing main/live-region semantics,
+unavailable or over-budget CLS, undersized touch targets, missing distinct states, and unresolved
+judging cannot silently pass.
 
 ## homepage regression
 

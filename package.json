@@ -11,6 +11,7 @@
     "render-eval:smoke": "node testing/render-eval-smoke.mjs",
     "render-eval:fixture": "node testing/render-eval.mjs --fixture",
     "eval-loop:render-smoke": "node testing/eval-loop-render-smoke.mjs",
+    "production-gates:smoke": "node testing/production-gates-smoke.mjs",
     "decision-trace:smoke": "node testing/decision-trace-smoke.mjs",
     "compare:smoke": "node testing/compare-smoke.mjs",
     "homepage:smoke": "node testing/homepage-regression.mjs",

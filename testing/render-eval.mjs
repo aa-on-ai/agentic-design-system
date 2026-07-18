@@ -167,15 +167,19 @@ function buildReport(slug, results) {
     '',
     '## rendered variants',
     '',
-    '| variant | serious axe | overflow | small targets | states rendered | judge |',
-    '|---|---:|---|---:|---|---|',
+    '| variant | serious axe | overflow | small targets | semantics | max CLS | states rendered | judge |',
+    '|---|---:|---|---:|---|---:|---|---|',
     ...rendered.map((r) => {
       const g = r.gates || {};
       const states = Object.entries(g.stateRendered || {}).map(([k, v]) => `${k}=${v ? 'y' : 'N'}`).join(' ');
       const judge = r.judge?.judged
         ? `scored ${r.judge.scoreTotal}/50`
         : `needs human (${r.judge?.screenshotsSent?.length || 0} shots ready)`;
-      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${(g.touchTargetsUnder44 || []).length} | ${states} | ${judge} |`;
+      const semantics = Array.isArray(g.landmarkFailures) && Array.isArray(g.liveRegionFailures)
+        ? `${g.landmarkFailures.length} landmark / ${g.liveRegionFailures.length} live`
+        : 'unmeasured';
+      const cls = g.clsAvailable === true ? g.maxCumulativeLayoutShift : 'unavailable';
+      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${(g.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states} | ${judge} |`;
     }),
     '',
     '## skipped variants (explicit — no silent drops)',

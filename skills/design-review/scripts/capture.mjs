@@ -19,9 +19,10 @@
 //   --out <dir>           evidence output directory (default: ./evidence/<host>)
 //   --wait <selector>     wait for this selector before snapshot (optional)
 //   --settle <ms>         extra settle time after load (default: 250)
+//   --max-cls <number>    maximum allowed cumulative layout shift (default: 0.1)
 //
 // Output (in --out):
-//   evidence.json         structured facts: per state/breakpoint axe + computed styles
+//   evidence.json         structured facts: axe, semantics, CLS, overflow + computed styles
 //   <state>-<WxH>.png     one screenshot per state per breakpoint
 //
 // Exit codes: 0 = captured (read evidence.json for gate verdicts), 2 = could not run.
@@ -44,6 +45,11 @@ function parseArgs(argv) {
     return i === -1 ? dflt : args[i + 1];
   };
   const url = args[0];
+  const maxCls = Number(get('--max-cls', '0.1'));
+  if (!Number.isFinite(maxCls) || maxCls < 0) {
+    console.error('--max-cls must be a finite number greater than or equal to 0');
+    process.exit(2);
+  }
   return {
     url,
     states: get('--states', 'default').split(',').map((s) => s.trim()).filter(Boolean),
@@ -54,6 +60,7 @@ function parseArgs(argv) {
     selectors: (get('--selectors', '') || '').split(',').map((s) => s.trim()).filter(Boolean),
     waitFor: get('--wait', null),
     settle: Number(get('--settle', '250')),
+    maxCls,
     out: get('--out', null),
   };
 }
@@ -107,6 +114,11 @@ async function readComputedFacts(page, selectors) {
       }
     }
     const body = document.body;
+    const hasRenderedElement = (selector) => [...document.querySelectorAll(selector)].some((el) => {
+      const c = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && c.visibility !== 'hidden' && c.display !== 'none';
+    });
     // Landmark / state-render facts: did anything actually render for this state?
     const visibleText = (body?.innerText || '').replace(/\s+/g, ' ').trim();
     const signatureInput = `${visibleText}\n${(body?.innerHTML || '').replace(/\s+/g, ' ').trim()}`;
@@ -161,21 +173,96 @@ async function readComputedFacts(page, selectors) {
       smallTouchTargets,
       body: styleOf(body),
       landmarks: {
-        main: !!document.querySelector('main'),
-        nav: !!document.querySelector('nav'),
-        header: !!document.querySelector('header'),
-        footer: !!document.querySelector('footer'),
+        main: hasRenderedElement('main'),
+        nav: hasRenderedElement('nav'),
+        header: hasRenderedElement('header'),
+        footer: hasRenderedElement('footer'),
       },
       // a rendered status/alert region is real evidence of a loading/error state;
       // the WORD "loading" in source is not.
-      statusRegion: !!document.querySelector('[role="status"],[aria-live],[aria-busy="true"]'),
-      alertRegion: !!document.querySelector('[role="alert"]'),
+      statusRegion: hasRenderedElement('[role="status"],[aria-live],[aria-busy="true"]'),
+      alertRegion: hasRenderedElement('[role="alert"],[aria-live="assertive"]'),
       renderedTextLength: visibleText.length,
       renderedTextSample: visibleText.slice(0, 280),
       renderSignature: (signatureHash >>> 0).toString(16).padStart(8, '0'),
       probe,
     };
   }, selectors);
+}
+
+// Install before navigation so layout shifts from the first rendered frame onward are
+// observed. The value follows the Web Vitals CLS session-window algorithm: the largest
+// burst of shifts within a five-second window, with at most one second between shifts.
+async function installLayoutShiftObserver(page) {
+  await page.addInitScript(() => {
+    const metric = {
+      supported: false,
+      value: 0,
+      entryCount: 0,
+      excludedByRecentInput: 0,
+      largestShift: 0,
+    };
+    let observer = null;
+    let windowStart = null;
+    let windowLast = null;
+    let windowValue = 0;
+
+    const addEntries = (entries) => {
+      for (const entry of entries) {
+        if (entry.hadRecentInput) {
+          metric.excludedByRecentInput += 1;
+          continue;
+        }
+        if (
+          windowStart === null ||
+          entry.startTime - windowLast > 1000 ||
+          entry.startTime - windowStart > 5000
+        ) {
+          windowStart = entry.startTime;
+          windowValue = entry.value;
+        } else {
+          windowValue += entry.value;
+        }
+        windowLast = entry.startTime;
+        metric.entryCount += 1;
+        metric.largestShift = Math.max(metric.largestShift, entry.value);
+        metric.value = Math.max(metric.value, windowValue);
+      }
+    };
+
+    const supported = typeof PerformanceObserver !== 'undefined' &&
+      (PerformanceObserver.supportedEntryTypes || []).includes('layout-shift');
+    metric.supported = supported;
+    if (supported) {
+      observer = new PerformanceObserver((list) => addEntries(list.getEntries()));
+      observer.observe({ type: 'layout-shift', buffered: true });
+    }
+
+    Object.defineProperty(window, '__adsLayoutShift', {
+      configurable: false,
+      enumerable: false,
+      value: {
+        read() {
+          if (observer) addEntries(observer.takeRecords());
+          return {
+            ...metric,
+            value: Number(metric.value.toFixed(5)),
+            largestShift: Number(metric.largestShift.toFixed(5)),
+          };
+        },
+      },
+    });
+  });
+}
+
+async function readLayoutShift(page) {
+  return page.evaluate(() => window.__adsLayoutShift?.read() || {
+    supported: false,
+    value: 0,
+    entryCount: 0,
+    excludedByRecentInput: 0,
+    largestShift: 0,
+  });
 }
 
 async function main() {
@@ -210,10 +297,13 @@ async function main() {
           reducedMotion: 'reduce',
         });
         const page = await context.newPage();
+        await installLayoutShiftObserver(page);
         const target = state === 'default' ? opts.url : `${opts.url.split('#')[0]}#state=${state}`;
         await page.goto(target, { waitUntil: 'networkidle' }).catch(() => {});
         if (opts.waitFor) await page.waitForSelector(opts.waitFor, { timeout: 5000 }).catch(() => {});
         if (opts.settle) await page.waitForTimeout(opts.settle);
+
+        const layoutShift = await readLayoutShift(page);
 
         const shotName = `${state}-${bp.label}.png`;
         await page.screenshot({ path: path.join(outDir, shotName), fullPage: true });
@@ -253,6 +343,7 @@ async function main() {
           breakpoint: bp.label,
           screenshot: shotName,
           horizontalOverflow: overflow,
+          cumulativeLayoutShift: layoutShift,
           axe,
           ...facts,
         });
@@ -270,6 +361,35 @@ async function main() {
     0,
   );
   const overflowAt = evidence.snapshots.filter((s) => s.horizontalOverflow).map((s) => `${s.state}@${s.breakpoint}`);
+  const landmarkFailures = evidence.snapshots
+    .filter((snapshot) => snapshot.landmarks?.main !== true)
+    .map((snapshot) => ({ state: snapshot.state, breakpoint: snapshot.breakpoint, missing: ['main'] }));
+  const liveRegionFailures = evidence.snapshots.flatMap((snapshot) => {
+    if (snapshot.state === 'loading' && snapshot.statusRegion !== true) {
+      return [{ state: snapshot.state, breakpoint: snapshot.breakpoint, expected: 'status/live region' }];
+    }
+    if (snapshot.state === 'error' && snapshot.alertRegion !== true) {
+      return [{ state: snapshot.state, breakpoint: snapshot.breakpoint, expected: 'alert/assertive live region' }];
+    }
+    return [];
+  });
+  const cumulativeLayoutShiftAt = evidence.snapshots.map((snapshot) => ({
+    state: snapshot.state,
+    breakpoint: snapshot.breakpoint,
+    supported: snapshot.cumulativeLayoutShift?.supported === true,
+    value: Number(snapshot.cumulativeLayoutShift?.value || 0),
+    entryCount: Number(snapshot.cumulativeLayoutShift?.entryCount || 0),
+  }));
+  const clsUnavailableAt = cumulativeLayoutShiftAt
+    .filter((sample) => !sample.supported)
+    .map(({ state, breakpoint }) => `${state}@${breakpoint}`);
+  const clsFailures = cumulativeLayoutShiftAt
+    .filter((sample) => sample.supported && sample.value > opts.maxCls)
+    .map(({ state, breakpoint, value }) => ({ state, breakpoint, value, threshold: opts.maxCls }));
+  const maxCumulativeLayoutShift = cumulativeLayoutShiftAt.reduce(
+    (max, sample) => Math.max(max, sample.value),
+    0,
+  );
   // Default must render non-trivial content. Every requested non-default state must also
   // differ from default at the same breakpoint; repeating the default page no longer passes.
   const stateRendered = {};
@@ -303,9 +423,17 @@ async function main() {
     axeAvailable: evidence.axeAvailable,
     seriousAxeViolations: seriousAxe,
     horizontalOverflowAt: overflowAt,
+    landmarkFailures,
+    liveRegionFailures,
     stateRendered,
     renderedFonts,
     touchTargetsUnder44,
+    clsAvailable: clsUnavailableAt.length === 0,
+    clsThreshold: opts.maxCls,
+    maxCumulativeLayoutShift: Number(maxCumulativeLayoutShift.toFixed(5)),
+    cumulativeLayoutShiftAt,
+    clsUnavailableAt,
+    clsFailures,
   };
 
   await fs.writeFile(
@@ -317,6 +445,24 @@ async function main() {
   console.log(`captured ${evidence.snapshots.length} snapshot(s) -> ${outDir}`);
   console.log(`  serious/critical axe violations: ${seriousAxe}`);
   console.log(`  horizontal overflow: ${overflowAt.length ? overflowAt.join(', ') : 'none'}`);
+  console.log(
+    `  main landmark failures: ${
+      landmarkFailures.length
+        ? landmarkFailures.map((failure) => `${failure.state}@${failure.breakpoint}`).join(', ')
+        : 'none'
+    }`,
+  );
+  console.log(
+    `  live-region failures: ${
+      liveRegionFailures.length
+        ? liveRegionFailures.map((failure) => `${failure.state}@${failure.breakpoint} (${failure.expected})`).join(', ')
+        : 'none'
+    }`,
+  );
+  console.log(
+    `  CLS: ${clsUnavailableAt.length ? `unavailable at ${clsUnavailableAt.join(', ')}` : `max ${maxCumulativeLayoutShift.toFixed(5)}`} ` +
+      `(threshold ${opts.maxCls}; ${clsFailures.length ? `${clsFailures.length} failure(s)` : 'pass'})`,
+  );
   console.log(`  states rendered: ${Object.entries(stateRendered).map(([k, v]) => `${k}=${v ? 'yes' : 'NO'}`).join(', ')}`);
   console.log(`  rendered font(s): ${renderedFonts.join(' | ') || 'unknown'}`);
   console.log(

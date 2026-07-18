@@ -22,8 +22,9 @@ source heuristic passes anyway. A control plane cannot gate on this.
 
 `capture.mjs` loads the **live route** in a headless browser and records what the user
 actually sees: a screenshot per state per breakpoint, axe run against the live DOM,
-real horizontal-overflow, whether each state's content actually rendered, and the
-font/color computed from the page. None of this can be satisfied by a comment.
+real horizontal-overflow, semantic landmarks/live regions, CLS, whether each state's
+content actually rendered, and the font/color computed from the page. None of this can
+be satisfied by a comment.
 
 ```bash
 # one-time setup (installs playwright + @axe-core/playwright + chromium, then verifies):
@@ -36,11 +37,16 @@ node capture.mjs "http://localhost:3000/orders" \
   --out evidence/orders
 ```
 
+CLS uses Chromium's `layout-shift` PerformanceObserver and the Web Vitals session-window
+algorithm. The default hard threshold is `0.1`; override it only when the product contract
+explicitly requires another budget: `--max-cls 0.05`.
+
 Run `setup-capture.mjs` from your project root so the deps land in a `node_modules` that
 `capture.mjs` resolves. If capture ever reports Playwright missing, it prints this same command.
 
 Output (`evidence/orders/`):
-- `evidence.json` — structured facts + a `gates` block (serious axe, overflow, state-render, fonts)
+- `evidence.json` — structured facts + a `gates` block (axe, overflow, main landmark,
+  state-aware live regions, CLS, state-render, touch targets, fonts)
 - `<state>-<WxH>.png` — one screenshot per state per breakpoint
 
 States are toggled via the URL hash (`#state=<name>`); the route must expose them.
@@ -91,7 +97,8 @@ cd ../../../../testing/fixtures
 node ../../skills/design-review/scripts/capture.mjs \
   "file://$(pwd)/states-demo.html" \
   --states default,loading,empty,error --out ./evidence/states-demo
-# expect: 2 serious axe violations (the deliberate missing-alt img), all 4 states rendered.
+# expect: 2 serious axe violations (the deliberate missing-alt img), all 4 states rendered,
+# main/live-region gates clear, and CLS within 0.1.
 ```
 
 ## The rule

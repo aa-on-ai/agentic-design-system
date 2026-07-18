@@ -56,12 +56,16 @@ every styling choice. see `workflows/decision-provenance.md`.
 ## rendered evidence (authoritative — gate on this)
 
 from `capture.mjs` against the live route. this is the non-gameable tier: axe ran on the
-real DOM, overflow is measured, "rendered" means the state actually produced content.
+real DOM; overflow, semantics, and CLS are measured; "rendered" means the state actually
+produced content.
 
 | signal | result | gate |
 |---|---|---|
 | serious/critical axe violations | (n) | fail if > 0 |
 | horizontal overflow | (none / state@WxH) | fail if any |
+| main landmark | (none / state@WxH missing) | fail if missing from any snapshot |
+| loading/error live regions | (none / state@WxH missing) | fail if loading lacks status/live or error lacks alert/assertive live semantics |
+| max CLS | (value / threshold) | fail if unavailable or above 0.1 by default |
 | states rendered | loading=?, empty=?, error=? | fail if any required state did not render |
 | rendered font(s) | (computed font-family) | flag if a known agent default (Inter) actually renders |
 | screenshots | (paths) | required for verdict |
