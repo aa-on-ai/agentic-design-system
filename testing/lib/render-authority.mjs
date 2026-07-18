@@ -3,6 +3,14 @@
 
 const DIMENSIONS = ['hierarchy', 'spacing', 'copy', 'productFit', 'screenshotWorthy'];
 
+function gateLocations(failures) {
+  return failures
+    .map((failure) => typeof failure === 'string'
+      ? failure
+      : `${failure.state || 'unknown'}@${failure.breakpoint || 'unknown'}`)
+    .join(', ');
+}
+
 function validScores(scores) {
   return !!scores && DIMENSIONS.every((key) => Number.isInteger(scores[key]) && scores[key] >= 1 && scores[key] <= 10);
 }
@@ -37,6 +45,13 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   const seriousAxe = Number(gates.seriousAxeViolations || 0);
   const overflowAt = Array.isArray(gates.horizontalOverflowAt) ? gates.horizontalOverflowAt : [];
   const smallTargets = Array.isArray(gates.touchTargetsUnder44) ? gates.touchTargetsUnder44 : [];
+  const landmarkGateRecorded = Array.isArray(gates.landmarkFailures);
+  const landmarkFailures = landmarkGateRecorded ? gates.landmarkFailures : [];
+  const liveRegionGateRecorded = Array.isArray(gates.liveRegionFailures);
+  const liveRegionFailures = liveRegionGateRecorded ? gates.liveRegionFailures : [];
+  const clsGateRecorded = Array.isArray(gates.clsFailures);
+  const clsFailures = clsGateRecorded ? gates.clsFailures : [];
+  const clsUnavailableAt = Array.isArray(gates.clsUnavailableAt) ? gates.clsUnavailableAt : [];
   const renderedStates = gates.stateRendered || {};
   const missingStates = requiredStates.filter((state) => renderedStates[state] !== true);
   const screenshots = Array.isArray(receipt.judge?.screenshotsSent) ? receipt.judge.screenshotsSent : [];
@@ -45,6 +60,25 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   if (seriousAxe > 0) blockingReasons.push(`${seriousAxe} serious/critical axe violation(s)`);
   if (overflowAt.length > 0) blockingReasons.push(`horizontal overflow at ${overflowAt.join(', ')}`);
   if (smallTargets.length > 0) blockingReasons.push(`${smallTargets.length} touch target(s) under 44x44`);
+  if (!landmarkGateRecorded) blockingReasons.push('main-landmark gate was not recorded');
+  if (landmarkFailures.length > 0) {
+    blockingReasons.push(`main landmark missing at ${gateLocations(landmarkFailures)}`);
+  }
+  if (!liveRegionGateRecorded) blockingReasons.push('live-region gate was not recorded');
+  if (liveRegionFailures.length > 0) {
+    blockingReasons.push(`required live region missing at ${gateLocations(liveRegionFailures)}`);
+  }
+  if (!clsGateRecorded) blockingReasons.push('CLS gate was not recorded');
+  if (gates.clsAvailable !== true || clsUnavailableAt.length > 0) {
+    blockingReasons.push(
+      `CLS measurement unavailable${clsUnavailableAt.length ? ` at ${clsUnavailableAt.join(', ')}` : ''}`,
+    );
+  }
+  if (clsFailures.length > 0) {
+    blockingReasons.push(
+      `CLS exceeded ${gates.clsThreshold ?? 0.1} at ${gateLocations(clsFailures)}`,
+    );
+  }
   if (missingStates.length > 0) blockingReasons.push(`states not distinctly rendered: ${missingStates.join(', ')}`);
   if (screenshots.length === 0) blockingReasons.push('no screenshots reached the independent grader packet');
 

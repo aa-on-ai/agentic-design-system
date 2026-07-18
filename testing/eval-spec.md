@@ -32,7 +32,7 @@ eval-loop.ts
 ├── render-eval.mjs
 │   ├── mount each TSX variant with esbuild
 │   ├── capture default/loading/empty/error at 390 and 1280
-│   ├── compute axe, overflow, touch-target, state, and font gates
+│   ├── compute axe, overflow, semantic, CLS, touch-target, state, and font gates
 │   └── send screenshots to a model that did not build the page
 ├── render-authority.mjs
 │   ├── block incomplete rendered comparisons

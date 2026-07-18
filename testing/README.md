@@ -31,8 +31,9 @@ judge are intentionally different — the judge must not be the builder.
 The verdict is render-authoritative:
 
 - a bundle/capture failure blocks the comparison and writes an explicit skip receipt
-- serious/critical axe violations, horizontal overflow, sub-44px touch targets, or a missing
-  distinct requested state block the candidate
+- serious/critical axe violations, horizontal overflow, missing main/live-region semantics,
+  unavailable or over-budget CLS, sub-44px touch targets, or a missing distinct requested state
+  block the candidate
 - an unresolved screenshot judge returns `needs-human`; it never silently passes
 - source anti-pattern, state, accessibility, and responsive checks remain advisory diagnostics
 
@@ -62,6 +63,7 @@ Variants' own imports (`react`, `lucide-react`, `recharts`, …) resolve from
 # deterministic fixture path — intentionally exits 1 because one variant is unrenderable:
 node testing/render-eval.mjs --fixture
 npm run render-eval:smoke         # runs the fixture path + asserts the receipts
+npm run production-gates:smoke    # proves landmarks, live regions, and CLS are blocking gates
 
 # proves clean source checks and a 50/50 judge cannot bypass browser overflow:
 npm run eval-loop:render-smoke

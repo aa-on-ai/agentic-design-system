@@ -8,8 +8,8 @@
 //   - The grader runs as a SEPARATE agent() and judges the SCREENSHOTS captured by
 //     capture.mjs — not the .tsx source. "Separate-context grading" stops being a TODO.
 //   - The hard gates are plain JS computed from rendered evidence.json (axe on the live
-//     DOM, real horizontal-overflow, did the state actually render). None can be passed
-//     by a comment in source — which is exactly the receipts hole this closes.
+//     DOM, real horizontal-overflow, semantic landmarks/live regions, CLS, and whether
+//     the state actually rendered). None can be passed by a comment in source.
 //
 // args: {
 //   outcome: string,        // user-facing outcome (who/accomplish/notice/states)
@@ -66,11 +66,35 @@ const CAPTURE_URL = DEV_URL || `file://${ARTIFACT}`;
 
 const CAPTURE_SCHEMA = {
   type: 'object',
-  required: ['evidencePath', 'seriousAxeViolations', 'horizontalOverflowAt', 'stateRendered', 'touchTargetsUnder44', 'screenshots', 'renderedFonts'],
+  required: [
+    'evidencePath',
+    'seriousAxeViolations',
+    'horizontalOverflowAt',
+    'landmarkFailures',
+    'liveRegionFailures',
+    'stateRendered',
+    'touchTargetsUnder44',
+    'clsAvailable',
+    'clsThreshold',
+    'maxCumulativeLayoutShift',
+    'clsFailures',
+    'screenshots',
+    'renderedFonts',
+  ],
   properties: {
     evidencePath: { type: 'string', description: 'absolute path to evidence.json written by capture.mjs' },
     seriousAxeViolations: { type: 'number' },
     horizontalOverflowAt: { type: 'array', items: { type: 'string' } },
+    landmarkFailures: {
+      type: 'array',
+      description: 'rendered snapshots missing the required main landmark',
+      items: { type: 'object' },
+    },
+    liveRegionFailures: {
+      type: 'array',
+      description: 'loading/error snapshots missing their required live-region semantics',
+      items: { type: 'object' },
+    },
     stateRendered: { type: 'object', description: 'map of state -> boolean (did it render non-trivial content)' },
     touchTargetsUnder44: {
       type: 'array',
@@ -88,6 +112,14 @@ const CAPTURE_SCHEMA = {
     },
     screenshots: { type: 'array', items: { type: 'string' }, description: 'absolute paths to the captured PNGs' },
     renderedFonts: { type: 'array', items: { type: 'string' } },
+    clsAvailable: { type: 'boolean' },
+    clsThreshold: { type: 'number' },
+    maxCumulativeLayoutShift: { type: 'number' },
+    clsFailures: {
+      type: 'array',
+      description: 'state/breakpoint samples whose CLS exceeded clsThreshold',
+      items: { type: 'object' },
+    },
   },
 };
 
@@ -130,7 +162,8 @@ if (ROUTE) {
     `You are the ADS router. Read routing/ROUTING.md.\n\nTASK / OUTCOME:\n${OUTCOME}\n\n` +
       `Return: which packs apply; the comma-separated breakpoints to gate at (include at least one mobile <=414w, ` +
       `e.g. "${DEFAULT_BREAKPOINTS}"); and a 3-6 item task-specific rubric the grader will judge the RENDERED result against. ` +
-      `Gates must be checkable from rendered evidence (serious axe, all states render, no horizontal overflow).`,
+      `Gates must be checkable from rendered evidence (serious axe, all states render, no horizontal overflow, ` +
+      `main/live-region semantics, CLS within budget).`,
     { label: 'route', phase: 'Route', schema: PLAN_SCHEMA, agentType: 'Explore' },
   );
   if (plan.breakpoints && plan.breakpoints.trim()) BREAKPOINTS = plan.breakpoints.trim();
@@ -186,19 +219,28 @@ while (iteration < MAX_ITERS) {
     .filter(([, rendered]) => !rendered)
     .map(([s]) => s);
   const smallTargets = capture.touchTargetsUnder44 || [];
+  const landmarkFailures = capture.landmarkFailures || [];
+  const liveRegionFailures = capture.liveRegionFailures || [];
+  const clsFailures = capture.clsFailures || [];
   const smallTargetSummary = [...new Set(smallTargets.map((t) => `${t.selector} (${t.size})`))].slice(0, 8).join(', ');
   const hardGate = {
     axe: capture.seriousAxeViolations === 0,
     overflow: capture.horizontalOverflowAt.length === 0,
+    landmarks: landmarkFailures.length === 0,
+    liveRegions: liveRegionFailures.length === 0,
     states: missingStates.length === 0,
     touchTargets: smallTargets.length === 0,
+    cls: capture.clsAvailable === true && clsFailures.length === 0,
   };
-  const gatePass = hardGate.axe && hardGate.overflow && hardGate.states && hardGate.touchTargets;
+  const gatePass = Object.values(hardGate).every(Boolean);
   log(
     `iter${iteration} gates: axe=${hardGate.axe ? 'pass' : `FAIL(${capture.seriousAxeViolations})`}, ` +
       `overflow=${hardGate.overflow ? 'pass' : `FAIL(${capture.horizontalOverflowAt.join(',')})`}, ` +
+      `landmarks=${hardGate.landmarks ? 'pass' : `FAIL(${landmarkFailures.length})`}, ` +
+      `liveRegions=${hardGate.liveRegions ? 'pass' : `FAIL(${liveRegionFailures.length})`}, ` +
       `states=${hardGate.states ? 'pass' : `FAIL(missing ${missingStates.join(',')})`}, ` +
-      `touchTargets=${hardGate.touchTargets ? 'pass' : `FAIL(${smallTargets.length}: ${smallTargetSummary})`}`,
+      `touchTargets=${hardGate.touchTargets ? 'pass' : `FAIL(${smallTargets.length}: ${smallTargetSummary})`}, ` +
+      `cls=${hardGate.cls ? `pass(${capture.maxCumulativeLayoutShift})` : `FAIL(max=${capture.maxCumulativeLayoutShift}, unavailable=${!capture.clsAvailable}, samples=${clsFailures.length})`}`,
   );
 
   // --- Independent grader: a SEPARATE agent that judges the SCREENSHOTS, not source ---
@@ -212,11 +254,14 @@ while (iteration < MAX_ITERS) {
       `Rendered font(s) actually used: ${capture.renderedFonts.join(', ') || 'unknown'}.\n` +
       `Deterministic gate result this iteration: ${gatePass ? 'PASS' : 'FAIL'} ` +
       `(axe serious=${capture.seriousAxeViolations}, overflow=[${capture.horizontalOverflowAt.join(',')}], missing states=[${missingStates.join(',')}], ` +
-      `touch targets <44px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}).\n\n` +
+      `touch targets <44px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}, ` +
+      `landmark failures=${landmarkFailures.length}, live-region failures=${liveRegionFailures.length}, ` +
+      `max CLS=${capture.maxCumulativeLayoutShift}/${capture.clsThreshold}, CLS failures=${clsFailures.length}).\n\n` +
       `Rule: if the deterministic gate FAILED, you cannot return "satisfied". If touch targets failed, the nextRevisionPrompt MUST ` +
       `instruct enlarging the listed interactive controls (links, buttons, inputs, selects) to a minimum 44x44px target at mobile ` +
       `(e.g. padding or min-height/min-width), without breaking layout. ` +
-      `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, axe issues, overflow) ` +
+      `If landmark, live-region, or CLS gates failed, the nextRevisionPrompt MUST cite the failing state/breakpoint and required repair. ` +
+      `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, semantics, CLS, axe issues, overflow) ` +
       `and revise iterations remain — reserve "failed" for a genuinely wrong direction, not a fixable defect. ` +
       `If Design Quality or Originality < 6, ` +
       `return needs_revision with a bounded, testable nextRevisionPrompt. Be direct; judge the artifact, not effort.`,
@@ -251,14 +296,20 @@ const report = await agent(
       hardGate: h.hardGate,
       seriousAxe: h.capture.seriousAxeViolations,
       overflow: h.capture.horizontalOverflowAt,
+      landmarkFailures: h.capture.landmarkFailures,
+      liveRegionFailures: h.capture.liveRegionFailures,
       stateRendered: h.capture.stateRendered,
       touchTargetsUnder44: (h.capture.touchTargetsUnder44 || []).length,
+      clsAvailable: h.capture.clsAvailable,
+      clsThreshold: h.capture.clsThreshold,
+      maxCumulativeLayoutShift: h.capture.maxCumulativeLayoutShift,
+      clsFailures: h.capture.clsFailures,
       renderedFonts: h.capture.renderedFonts,
       graderVerdict: h.grade.verdict,
       scores: h.grade.scores,
       failingRows: h.grade.failingRows,
     })), null, 2) +
-    `\n\nMake clear in the report which evidence is RENDERED (authoritative: axe, overflow, state-render, fonts, ` +
+    `\n\nMake clear in the report which evidence is RENDERED (authoritative: axe, overflow, landmarks/live regions, CLS, state-render, fonts, ` +
     `grader-on-screenshots) vs SOURCE heuristic (the python greps). Return the path written.`,
   { label: 'run-report', phase: 'Report' },
 );

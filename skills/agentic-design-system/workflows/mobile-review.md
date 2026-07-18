@@ -36,7 +36,7 @@ python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
 ```
 
 Then capture the rendered route at mobile breakpoints — this is the **authoritative** platform
-evidence (axe on the live DOM, measured overflow), not an eyeball pass:
+evidence (axe on the live DOM; measured overflow, semantics, and CLS), not an eyeball pass:
 
 ```bash
 node skills/design-review/scripts/capture.mjs "<running-route-url>" \
@@ -47,6 +47,10 @@ Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defect
 
 - `seriousAxeViolations > 0` → P0/P1 (by impact), cite the axe rule id
 - `horizontalOverflowAt` non-empty → P0 (overflow at that breakpoint)
+- `landmarkFailures` non-empty → P1 (a rendered state has no main landmark)
+- `liveRegionFailures` non-empty → P1 (loading/error state is not announced semantically)
+- `clsAvailable: false` or `clsFailures` non-empty → P1 (layout stability was unmeasured or
+  exceeded the default `0.1` budget), citing `state@breakpoint` and the measured value
 - a required state with `stateRendered: false` → P1 (the state never renders)
 - `touchTargetsUnder44` non-empty → **P1** for each entry (an interactive control under
   44×44 CSS px), citing `selector size (state@breakpoint)` — **unless there is an explicit
@@ -55,8 +59,8 @@ Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defect
   hit area, so when you downgrade one, name the reason and add `data-ads-target-ok` to the
   control so it stops being flagged.
 
-Then eyeball the screenshots for what the gates don't measure: safe-area insets, touch-target
-size, hover-only traps, PWA manifest/offline. `capture.mjs` ships with the design-review skill,
+Then eyeball the screenshots for what the gates don't measure: safe-area insets, hover-only
+traps, PWA manifest/offline. `capture.mjs` ships with the design-review skill,
 so installed agents have it. If capture reports Playwright missing, run
 `node skills/design-review/scripts/setup-capture.mjs` once (from your project root) to install it,
 then re-run capture. If you genuinely can't install, fall back to a manual 375px screenshot and

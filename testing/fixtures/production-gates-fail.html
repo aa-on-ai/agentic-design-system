@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Production gates fail fixture</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 system-ui, sans-serif; }
+      header, #content, footer { padding: 24px; }
+      [hidden] { display: none !important; }
+      #late-banner { height: 420px; background: #f0b44d; }
+    </style>
+  </head>
+  <body>
+    <header><strong>Acme Orders</strong></header>
+    <div id="content">
+      <h1>Orders</h1>
+      <section id="default" hidden><p>Three orders are ready to review.</p></section>
+      <section id="loading" hidden><p>Loading orders…</p></section>
+      <section id="empty" hidden><p>No orders yet.</p></section>
+      <section id="error" hidden><p>Orders could not be loaded.</p></section>
+    </div>
+    <footer>Acme Operations</footer>
+    <script>
+      function showState() {
+        const state = (location.hash.match(/state=(\w+)/) || [])[1] || 'default';
+        for (const name of ['default', 'loading', 'empty', 'error']) {
+          document.getElementById(name).hidden = name !== state;
+        }
+      }
+      window.addEventListener('hashchange', showState);
+      showState();
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const banner = document.createElement('div');
+          banner.id = 'late-banner';
+          document.body.prepend(banner);
+        }, 80);
+      });
+    </script>
+  </body>
+</html>

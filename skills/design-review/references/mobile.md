@@ -70,7 +70,7 @@ the device-specific surface:
 - **PWA / web defects** — manifest, icons, and `theme-color` present if installable; offline /
   service-worker behavior works if claimed; no sticky-`100vh` scroll jump on iOS Safari.
 - **performance / layout** — images sized and lazy-loaded; layout shift (CLS) controlled
-  (checked by observation — capture.mjs does not measure CLS);
+  (`capture.mjs` measures the Web Vitals session-window value and fails above `0.1` by default);
   no runtime jank on scroll/drag; no rigid fixed widths (`max-width`, not `width`).
 
 ### Severity tiers

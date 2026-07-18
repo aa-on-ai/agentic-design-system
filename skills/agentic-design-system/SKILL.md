@@ -169,7 +169,7 @@ python3 skills/design-review/scripts/state-check.py <file.tsx>
 python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 
-investigate their warnings before presenting work. these are advisory source heuristics: they catch obvious defaults and missing source signals, but can both miss rendered defects and pass comments that merely contain the right words. when screenshot verification is in scope, gate the verdict on `skills/design-review/scripts/capture.mjs`, rendered screenshots, overflow, computed fonts, touch targets, and axe results.
+investigate their warnings before presenting work. these are advisory source heuristics: they catch obvious defaults and missing source signals, but can both miss rendered defects and pass comments that merely contain the right words. when screenshot verification is in scope, gate the verdict on `skills/design-review/scripts/capture.mjs`, rendered screenshots, overflow, main/live-region semantics, CLS, computed fonts, touch targets, and axe results.
 
 ## What the reference files cover
 
