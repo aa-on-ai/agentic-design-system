@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3efe6">
+  <title>Radio Common — City Hour rundown</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f3efe6;
+      --paper-raised: #fbf8f1;
+      --ink: #182029;
+      --ink-soft: #555f65;
+      --line: #cbc6ba;
+      --line-strong: #97978f;
+      --navy: #243249;
+      --navy-deep: #172337;
+      --sun: #e4ad3d;
+      --sun-soft: #f7e7b9;
+      --warn: #8c3523;
+      --warn-soft: #f8e4dc;
+      --success: #28604e;
+      --success-soft: #e0eee7;
+      --radius: 16px;
+      --shadow: 0 18px 42px rgba(34, 42, 46, 0.09);
+      font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif;
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-width: 320px; background: var(--paper); }
+
+    body {
+      min-height: 100svh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, transparent 0 28px, rgba(74, 65, 47, 0.055) 28px 29px, transparent 29px),
+        var(--paper);
+    }
+
+    button {
+      min-width: 44px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 9px;
+      padding: 0 18px;
+      font: 700 0.92rem/1 "Avenir Next", Avenir, "Century Gothic", sans-serif;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition-property: background-color, border-color, color, transform, box-shadow;
+      transition-duration: 160ms;
+      transition-timing-function: ease-out;
+    }
+
+    button:active:not(:disabled) { transform: scale(0.97); }
+    button:focus-visible { outline: 3px solid #c77f00; outline-offset: 3px; }
+    button:disabled { cursor: not-allowed; }
+
+    .shell {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) 0 max(48px, env(safe-area-inset-bottom));
+    }
+
+    .masthead {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .station-mark {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .station-mark::before {
+      width: 24px;
+      height: 10px;
+      border-top: 3px solid var(--sun);
+      border-bottom: 3px solid var(--sun);
+      content: "";
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-family: Charter, "Iowan Old Style", Georgia, serif;
+      font-size: clamp(2.15rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .edition {
+      flex: 0 0 auto;
+      padding-bottom: 4px;
+      text-align: right;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.65;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .edition span { display: block; color: var(--ink-soft); }
+
+    .state-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--success);
+      background: var(--success-soft);
+    }
+
+    .state-banner.warning {
+      align-items: flex-start;
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+
+    .state-copy { min-width: 0; }
+    .state-copy strong { display: block; font-size: 0.98rem; }
+    .state-copy p {
+      max-width: 70ch;
+      margin: 4px 0 0;
+      color: #39464a;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+
+    .state-stamp {
+      flex: 0 0 auto;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--success);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .warning .state-stamp { color: var(--warn); }
+
+    main { display: block; }
+
+    .live-board {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+      gap: 36px;
+      margin-top: 32px;
+      padding: 30px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      color: #fffaf0;
+      background: var(--navy);
+      box-shadow: var(--shadow);
+    }
+
+    .live-board::after {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: var(--sun);
+      content: "";
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 15px;
+      color: #f5d887;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--sun);
+      box-shadow: 0 0 0 4px rgba(228, 173, 61, 0.17);
+      content: "";
+    }
+
+    .live-title {
+      margin: 0;
+      font-family: Charter, "Iowan Old Style", Georgia, serif;
+      font-size: clamp(1.65rem, 3.2vw, 2.45rem);
+      line-height: 1.05;
+      text-wrap: balance;
+    }
+
+    .live-detail {
+      margin: 12px 0 0;
+      color: #d7dce3;
+      font-size: 0.94rem;
+      line-height: 1.5;
+      text-wrap: pretty;
+    }
+
+    .timing {
+      align-self: end;
+      border-left: 1px solid rgba(255,255,255,0.24);
+      padding-left: 28px;
+    }
+
+    .timing-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .timing-line span:last-child { color: #f5d887; font-variant-numeric: tabular-nums; }
+
+    progress {
+      display: block;
+      width: 100%;
+      height: 8px;
+      overflow: hidden;
+      border: 0;
+      border-radius: 999px;
+      appearance: none;
+      background: rgba(255,255,255,0.16);
+    }
+
+    progress::-webkit-progress-bar { background: rgba(255,255,255,0.16); }
+    progress::-webkit-progress-value { background: var(--sun); }
+    progress::-moz-progress-bar { background: var(--sun); }
+
+    .timing-note {
+      margin: 10px 0 0;
+      color: #d7dce3;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .control-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 24px;
+      margin: 24px 0 0;
+      padding: 0 4px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .next-cue { min-width: 0; }
+    .next-cue-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink-soft);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .next-cue strong {
+      display: block;
+      font-family: Charter, "Iowan Old Style", Georgia, serif;
+      font-size: 1.22rem;
+      line-height: 1.25;
+    }
+
+    .next-cue p { margin: 4px 0 0; color: var(--ink-soft); font-size: 0.86rem; }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .action-primary { color: #fff; background: var(--navy); }
+    .action-secondary { border: 1px solid var(--line-strong); color: var(--ink); background: var(--paper-raised); }
+
+    @media (hover: hover) and (pointer: fine) {
+      .action-primary:hover { background: var(--navy-deep); box-shadow: 0 6px 16px rgba(23,35,55,0.18); }
+      .action-secondary:hover:not(:disabled) { border-color: var(--ink); background: #fffdf8; }
+    }
+
+    .action-secondary:disabled {
+      border-color: #b9b4a9;
+      color: #716f69;
+      background: #ded9cf;
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .action-reason {
+      grid-column: 1 / -1;
+      margin: -10px 0 0;
+      color: var(--warn);
+      font-size: 0.82rem;
+      font-weight: 650;
+      line-height: 1.45;
+      text-align: right;
+    }
+
+    .rundown-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 34px 0 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Charter, "Iowan Old Style", Georgia, serif;
+      font-size: 1.55rem;
+      line-height: 1.1;
+    }
+
+    .rundown-heading p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .rundown-list { margin: 0; padding: 0; list-style: none; }
+
+    .segment {
+      display: grid;
+      grid-template-columns: 76px 12px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: start;
+      min-height: 76px;
+      padding: 17px 4px;
+      border-top: 1px solid var(--line);
+    }
+
+    .segment:last-child { border-bottom: 1px solid var(--line); }
+
+    .segment time {
+      padding-top: 2px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+
+    .rail {
+      position: relative;
+      width: 12px;
+      min-height: 42px;
+    }
+
+    .rail::before {
+      position: absolute;
+      top: 5px;
+      left: 2px;
+      width: 8px;
+      height: 8px;
+      border: 2px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--paper);
+      content: "";
+    }
+
+    .rail::after {
+      position: absolute;
+      top: 19px;
+      bottom: -39px;
+      left: 5px;
+      width: 1px;
+      background: var(--line);
+      content: "";
+    }
+
+    .segment:last-child .rail::after { display: none; }
+    .segment.on-air .rail::before { border-color: var(--sun); background: var(--sun); box-shadow: 0 0 0 4px var(--sun-soft); }
+    .segment.complete .rail::before { border-color: var(--success); background: var(--success); }
+
+    .segment-title { min-width: 0; }
+    .segment-title strong { display: block; font-size: 0.98rem; line-height: 1.3; }
+    .segment-title span {
+      display: block;
+      margin-top: 4px;
+      color: var(--ink-soft);
+      font-size: 0.82rem;
+      line-height: 1.4;
+      text-wrap: pretty;
+    }
+
+    .segment-state {
+      min-width: 76px;
+      padding-top: 2px;
+      color: var(--ink-soft);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .segment.on-air .segment-state { color: #7a4b00; }
+    .segment.complete .segment-state { color: var(--success); }
+
+    .loading-panel,
+    .empty-panel {
+      margin-top: 32px;
+      border-radius: var(--radius);
+      background: var(--paper-raised);
+      box-shadow: var(--shadow);
+    }
+
+    .loading-panel { padding: 30px; }
+    .loading-message { margin: 0 0 26px; font-size: 0.92rem; font-weight: 750; }
+
+    .skeleton {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) 120px;
+      gap: 22px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .skeleton span {
+      display: block;
+      height: 14px;
+      border-radius: 4px;
+      background: #dcd7cd;
+    }
+
+    .skeleton span:nth-child(2) { width: min(420px, 85%); }
+    .skeleton span:nth-child(3) { width: 100%; }
+
+    .empty-panel {
+      display: grid;
+      grid-template-columns: 100px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 28px;
+      padding: 38px;
+    }
+
+    .empty-time {
+      font-family: Charter, "Iowan Old Style", Georgia, serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .empty-panel h2 { margin-bottom: 7px; }
+    .empty-panel p { max-width: 58ch; margin: 0; color: var(--ink-soft); line-height: 1.55; text-wrap: pretty; }
+
+    .toast {
+      position: fixed;
+      right: max(20px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      z-index: 10;
+      max-width: min(360px, calc(100% - 40px));
+      padding: 13px 16px;
+      border-radius: 10px;
+      color: white;
+      background: var(--navy-deep);
+      box-shadow: 0 14px 32px rgba(23,35,55,0.24);
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.4;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition-property: opacity, transform;
+      transition-duration: 180ms;
+      transition-timing-function: ease-out;
+    }
+
+    .toast.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 720px) {
+      body { background: var(--paper); }
+
+      .shell {
+        width: min(100% - 32px, 620px);
+        padding-top: max(22px, env(safe-area-inset-top));
+      }
+
+      .masthead { display: block; padding-bottom: 18px; }
+      .station-mark { margin-bottom: 14px; }
+      h1 { font-size: clamp(2.05rem, 11vw, 3rem); line-height: 1.01; }
+
+      .edition {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 17px;
+        padding-top: 13px;
+        border-top: 1px solid var(--line);
+        text-align: left;
+      }
+
+      .state-banner { align-items: flex-start; gap: 12px; padding: 13px 14px; }
+      .state-stamp { display: none; }
+
+      .live-board {
+        display: block;
+        margin-top: 24px;
+        padding: 24px 22px 26px;
+      }
+
+      .live-detail { font-size: 0.88rem; }
+
+      .timing {
+        margin-top: 24px;
+        padding: 20px 0 0;
+        border-top: 1px solid rgba(255,255,255,0.24);
+        border-left: 0;
+      }
+
+      .control-strip {
+        display: block;
+        margin-top: 20px;
+        padding: 0 0 25px;
+      }
+
+      .actions { display: grid; grid-template-columns: 1fr 1fr; margin-top: 18px; }
+      .actions button { width: 100%; padding: 0 12px; }
+      .action-reason { margin: 10px 0 0; text-align: left; }
+
+      .rundown-heading { margin-top: 28px; }
+      .rundown-heading p { display: none; }
+
+      .segment {
+        grid-template-columns: 54px 10px minmax(0, 1fr);
+        gap: 11px;
+        min-height: 84px;
+        padding: 16px 0;
+      }
+
+      .segment time { grid-column: 1; grid-row: 1 / span 2; }
+      .segment .rail { grid-column: 2; grid-row: 1 / span 2; }
+      .segment-title { grid-column: 3; grid-row: 1; }
+      .segment-state {
+        grid-column: 3;
+        grid-row: 2;
+        min-width: 0;
+        padding-top: 3px;
+        text-align: left;
+      }
+
+      .rail::after { bottom: -53px; }
+
+      .loading-panel { padding: 24px 20px; }
+      .skeleton { grid-template-columns: 48px minmax(0, 1fr); gap: 16px; }
+      .skeleton span:nth-child(3) { display: none; }
+
+      .empty-panel {
+        display: block;
+        padding: 28px 24px;
+      }
+
+      .empty-time { margin-bottom: 20px; }
+      .empty-panel button { width: 100%; margin-top: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body data-state="default">
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <div class="station-mark">Radio Common · 89.7 FM</div>
+        <h1>City Hour <span aria-hidden="true">/</span> live rundown</h1>
+      </div>
+      <div class="edition" aria-label="Broadcast date and clock">
+        Sunday, July 19
+        <span>19:18:24 PT · Studio A</span>
+      </div>
+    </header>
+
+    <main id="app" aria-labelledby="page-state-title"></main>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    const app = document.querySelector('#app');
+    const toast = document.querySelector('#toast');
+    const allowedStates = new Set(['default', 'loading', 'empty', 'error']);
+
+    function currentState() {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const requested = params.get('state') || 'default';
+      return allowedStates.has(requested) ? requested : 'default';
+    }
+
+    const rundownRows = `
+      <ol class="rundown-list" aria-label="City Hour segment order">
+        <li class="segment complete">
+          <time datetime="19:00">19:00</time><span class="rail" aria-hidden="true"></span>
+          <div class="segment-title"><strong>Open &amp; local headlines</strong><span>Priya Nair · Studio A · 12:00</span></div>
+          <span class="segment-state">✓ Aired</span>
+        </li>
+        <li class="segment on-air" aria-current="true">
+          <time datetime="19:12">19:12</time><span class="rail" aria-hidden="true"></span>
+          <div class="segment-title"><strong>The housing desk</strong><span>Interview · Councillor Elena Ruiz on line 2 · 10:00</span></div>
+          <span class="segment-state">● On air</span>
+        </li>
+        <li class="segment">
+          <time datetime="19:22">19:22</time><span class="rail" aria-hidden="true"></span>
+          <div class="segment-title"><strong>River report</strong><span>Samir Bell live at Duwamish Landing · 6:00</span></div>
+          <span class="segment-state">○ Next</span>
+        </li>
+        <li class="segment">
+          <time datetime="19:28">19:28</time><span class="rail" aria-hidden="true"></span>
+          <div class="segment-title"><strong>Field tape: Night Market</strong><span>Package ready · 12:30</span></div>
+          <span class="segment-state">Queued</span>
+        </li>
+        <li class="segment">
+          <time datetime="19:41">19:41</time><span class="rail" aria-hidden="true"></span>
+          <div class="segment-title"><strong>Community calendar &amp; close</strong><span>Priya Nair · Studio A · 4:30</span></div>
+          <span class="segment-state">Queued</span>
+        </li>
+      </ol>`;
+
+    function liveBoard() {
+      return `
+        <section class="live-board" aria-labelledby="on-air-title">
+          <div>
+            <div class="kicker">On air · line 2 connected</div>
+            <h2 class="live-title" id="on-air-title">The housing desk</h2>
+            <p class="live-detail">Priya Nair with Councillor Elena Ruiz · Studio A</p>
+          </div>
+          <div class="timing">
+            <div class="timing-line"><span>6:24 elapsed</span><span>3:36 left</span></div>
+            <progress max="600" value="384" aria-label="The housing desk timing: 6 minutes 24 seconds of 10 minutes elapsed">64%</progress>
+            <p class="timing-note">On time. River report checks in at 19:22.</p>
+          </div>
+        </section>`;
+    }
+
+    function controls(locked) {
+      const disabled = locked ? ' disabled aria-describedby="move-reason"' : '';
+      return `
+        <section class="control-strip" aria-label="Next segment controls">
+          <div class="next-cue">
+            <span class="next-cue-label">Up next · 19:22</span>
+            <strong>River report</strong>
+            <p>Samir Bell is connected from Duwamish Landing.</p>
+          </div>
+          <div class="actions">
+            <button class="action-secondary" type="button" data-action="move"${disabled}>Move segment</button>
+            <button class="action-primary" type="button" data-action="call">Call host</button>
+          </div>
+          ${locked ? '<p class="action-reason" id="move-reason">Move unavailable: the playout lock owns segment order. Host contact is still available.</p>' : ''}
+        </section>`;
+    }
+
+    function renderDefault() {
+      app.innerHTML = `
+        <section class="state-banner" aria-labelledby="page-state-title">
+          <div class="state-copy"><strong id="page-state-title">✓ Rundown open</strong><p>Producer ordering is available. Playout will follow this rundown.</p></div>
+          <span class="state-stamp">Ordering available</span>
+        </section>
+        ${liveBoard()}
+        ${controls(false)}
+        <div class="rundown-heading"><h2>Tonight’s hour</h2><p>5 segments · ends 19:46</p></div>
+        ${rundownRows}`;
+    }
+
+    function renderError() {
+      app.innerHTML = `
+        <section class="state-banner warning" role="alert" aria-live="assertive" aria-labelledby="page-state-title">
+          <div class="state-copy"><strong id="page-state-title">🔒 Schedule locked by playout</strong><p>Automation owns the order until the 19:30 handoff. You cannot move segments, but you can still call the host about timing.</p></div>
+          <span class="state-stamp">Order locked</span>
+        </section>
+        ${liveBoard()}
+        ${controls(true)}
+        <div class="rundown-heading"><h2>Tonight’s hour</h2><p>Locked order · live timing continues</p></div>
+        ${rundownRows}`;
+    }
+
+    function renderLoading() {
+      app.innerHTML = `
+        <section class="state-banner" role="status" aria-live="polite" aria-busy="true" aria-labelledby="page-state-title">
+          <div class="state-copy"><strong id="page-state-title">Loading the live rundown…</strong><p>Checking playout status and the latest studio timing.</p></div>
+          <span class="state-stamp">Syncing</span>
+        </section>
+        <section class="loading-panel" aria-label="Rundown loading skeleton rows">
+          <p class="loading-message">Holding the board steady while the latest order arrives.</p>
+          <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+        </section>`;
+    }
+
+    function renderEmpty() {
+      app.innerHTML = `
+        <section class="state-banner" aria-labelledby="page-state-title">
+          <div class="state-copy"><strong id="page-state-title">○ No rundown loaded</strong><p>Studio A is connected, but this hour has no segments yet.</p></div>
+          <span class="state-stamp">Not scheduled</span>
+        </section>
+        <section class="empty-panel" aria-labelledby="empty-title">
+          <div class="empty-time" aria-hidden="true">19:00</div>
+          <div><h2 id="empty-title">Build the next hour</h2><p>Import the producer sheet to add segments, durations, guests, and studio cues. Nothing will enter playout until you review it.</p></div>
+          <button class="action-primary" type="button" data-action="import">Import rundown</button>
+        </section>`;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('visible');
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove('visible'), 2600);
+    }
+
+    function render() {
+      const state = currentState();
+      document.body.dataset.state = state;
+      if (state === 'loading') renderLoading();
+      else if (state === 'empty') renderEmpty();
+      else if (state === 'error') renderError();
+      else renderDefault();
+    }
+
+    app.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button || button.disabled) return;
+      if (button.dataset.action === 'call') showToast('Calling Priya on the Studio A host line…');
+      if (button.dataset.action === 'move') showToast('Move mode ready. Select a new slot for River report.');
+      if (button.dataset.action === 'import') showToast('Rundown importer ready. Choose a local producer sheet.');
+    });
+
+    window.addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+</html>

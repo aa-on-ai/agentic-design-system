@@ -159,6 +159,11 @@ secondary, toolbar, and inline action in each changed state and breakpoint. An e
 contradiction in a read-only, disabled, offline, permission-limited, or destructive state becomes a
 major `cues_affordances` finding.
 
+ADS behavior changes are guarded by the frozen v1.3.1 five-case regression suite. The release gate
+keeps its baseline immutable and requires a new candidate packet for changes under skills,
+workflows, templates, routing, or judge behavior. See
+[`testing/TESTING.md`](./testing/TESTING.md#frozen-adjacent-action-regression).
+
 For a meaningful modification, capture the baseline and candidate with the same states and breakpoints, then compare them:
 
 ```bash

@@ -24,8 +24,10 @@ npm run playwright:install
 npm run release:check
 ```
 
-The gate verifies metadata, all five agent installations, bundled assets/templates/runbooks, and
-the deterministic rendered-evidence smokes. Do not tag a commit that fails this command.
+The gate verifies metadata, all five agent installations, bundled assets/templates/runbooks, the
+deterministic rendered-evidence smokes, and the checksum-locked adjacent-action regression baseline.
+Pull requests that change ADS behavior paths must also add a passing append-only candidate packet
+under `testing/regression/adjacent-actions-v1.3.1/runs/`. Do not tag a commit that fails this command.
 
 ## Publish
 
