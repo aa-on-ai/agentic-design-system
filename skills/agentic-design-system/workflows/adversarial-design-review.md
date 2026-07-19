@@ -33,7 +33,12 @@ the builder would otherwise self-clear its own quality.
    every critique, emit a structured finding with category, severity, rubric row, state,
    breakpoint, exact artifact, concrete target, optional normalized region, observation, and
    evidence. A blocker cannot return `satisfied`.
-4. **Back judgment with objective checks** on changed files so taste and defects stay separable:
+4. **Run the adjacent-action consistency check** before returning `satisfied`. In every state and
+   breakpoint, compare status and instructional copy with every visible nearby primary, secondary,
+   toolbar, and inline action. An enabled-looking action that contradicts a read-only, disabled,
+   offline, permission-limited, or destructive state is a major `cues_affordances` finding and
+   cannot return `satisfied`.
+5. **Back judgment with objective checks** on changed files so taste and defects stay separable:
 
 ```bash
 python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>

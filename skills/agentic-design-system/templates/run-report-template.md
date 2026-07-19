@@ -105,6 +105,16 @@ them. every row must identify the exact rendered artifact and location that supp
 repeated findings are candidates for a rule, constraint, fixture, or deterministic gate. they do
 not become one automatically; preserve the evidence and require human or verified recurrence.
 
+### adjacent-action consistency sweep
+
+- **state contract(s):** changed state + permitted actions
+- **actions inspected:** primary, secondary, toolbar, and inline controls at each changed breakpoint
+- **verdict:** pass / fail / not applicable
+- **evidence:** screenshot path(s) showing state copy and adjacent actions together
+
+a contradictory enabled-looking action in a read-only, disabled, offline, permission-limited, or
+destructive state is a major `cues_affordances` finding and prevents `satisfied`.
+
 ## rules fired (source heuristics — pre-flight, gameable)
 
 these grep the `.tsx` source and can pass on a comment. treat as advisory, not sign-off.

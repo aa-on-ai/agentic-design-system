@@ -112,7 +112,8 @@ judging cannot silently pass.
 
 the structured-findings smoke proves that unsupported categories, missing evidence, and invalid
 regions fail validation; blocker findings cannot return `satisfied`; compatibility rows derive
-from structured findings; and recurrence aggregation preserves the evidence trail.
+from structured findings; recurrence aggregation preserves the evidence trail; and both revision
+and regrade paths require an adjacent-action consistency sweep before `satisfied`.
 
 ## homepage regression
 

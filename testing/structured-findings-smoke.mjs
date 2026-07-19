@@ -146,10 +146,28 @@ await check('workflow normalizes grade and reports aggregate', async () => {
   assert.match(source, /finding → revision → evidence/);
 });
 
+await check('workflow sweeps adjacent actions during revision and regrade', async () => {
+  const source = await readFile(path.join(root, 'workflows/new-page-component.mjs'), 'utf8');
+  const mentions = source.match(/adjacent-action consistency/gi) || [];
+  assert.ok(mentions.length >= 2, 'builder revision and independent regrade must both run the check');
+  assert.match(source, /read-only, disabled, offline, permission-limited, or destructive/);
+  assert.match(source, /cues_affordances/);
+});
+
+await check('manual review and state inventory carry the adjacent-action check', async () => {
+  const review = await readFile(path.join(root, 'workflows/adversarial-design-review.md'), 'utf8');
+  const states = await readFile(path.join(root, 'skills/ux-baseline-check/SKILL.md'), 'utf8');
+  assert.match(review, /adjacent-action consistency/i);
+  assert.match(review, /cannot return `satisfied`/);
+  assert.match(states, /Adjacent-action consistency/);
+  assert.match(states, /native `disabled`/);
+});
+
 await check('grader template carries the structured table and blocker rule', async () => {
   const source = await readFile(path.join(root, 'templates/grader-report-template.md'), 'utf8');
   assert.match(source, /## structured findings/);
   assert.match(source, /a blocker cannot return `satisfied`/);
+  assert.match(source, /adjacent-action consistency/i);
 });
 
 await check('run report carries aggregate and trace sections', async () => {

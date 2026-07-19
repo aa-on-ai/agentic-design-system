@@ -210,6 +210,24 @@ do not replace the four rubric scores with the diagnostic categories. do not tur
 label into a deterministic hard gate. a blocker finding forces `needs_revision` or `failed`, and
 every blocker or major finding must feed a bounded next-revision instruction.
 
+### adjacent-action consistency check
+
+before a revision closes or an independent grader returns `satisfied`, run this sweep in every
+changed state and breakpoint:
+
+1. name the state contract and what actions it permits
+2. inspect every visible nearby primary, secondary, toolbar, and inline action, not only the target
+   named by the finding
+3. verify each action's label, visual emphasis, enabledness, native semantics, and helper text agree
+   with the state and its instructions
+4. when the state is read-only, disabled, offline, permission-limited, or destructive, remove,
+   disable, relabel, or explain any action that would contradict it; use native `disabled`
+   semantics when the control remains visible
+5. preserve active actions in unaffected states
+
+run this in both the builder's revision instruction and the independent regrade. an enabled-looking
+contradictory action is a `cues_affordances` major finding and prevents `satisfied` until repaired.
+
 aggregate findings by category and severity across iterations. repeated findings become candidates
 for a rule, constraint, fixture, or deterministic gate only after a human or verified recurrence
 establishes the pattern. preserve the finding → revision → evidence trace in the run report.

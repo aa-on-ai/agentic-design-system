@@ -50,6 +50,9 @@ found no minor or material issues.
 ## hard stops reviewed
 
 - vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
+- adjacent-action consistency: status and instructional copy agree with every visible nearby
+  primary, secondary, toolbar, and inline action in each state and breakpoint; a contradictory
+  enabled-looking action is a major `cues_affordances` finding and prevents `satisfied`
 
 ## missing criteria
 
