@@ -1,4 +1,5 @@
 // new-page-component.mjs — ADS "new page/component" profile, compiled to a workflow.
+import { GRADE_SCHEMA, aggregateFindingHistory, normalizeGrade } from './lib/structured-findings.mjs';
 //
 // This is the spine made executable. An agent states a design OUTCOME; ADS compiles
 // it into: build -> render-capture -> deterministic gates -> INDEPENDENT grader ->
@@ -123,26 +124,6 @@ const CAPTURE_SCHEMA = {
   },
 };
 
-const GRADE_SCHEMA = {
-  type: 'object',
-  required: ['verdict', 'scores', 'failingRows', 'nextRevisionPrompt'],
-  properties: {
-    verdict: { enum: ['satisfied', 'needs_revision', 'failed'] },
-    scores: {
-      type: 'object',
-      required: ['designQuality', 'originality', 'craft', 'functionality'],
-      properties: {
-        designQuality: { type: 'number' },
-        originality: { type: 'number' },
-        craft: { type: 'number' },
-        functionality: { type: 'number' },
-      },
-    },
-    failingRows: { type: 'array', items: { type: 'string' } },
-    nextRevisionPrompt: { type: 'string', description: 'bounded, testable instruction for the builder; empty if satisfied' },
-  },
-};
-
 // --- Route (opt-in): derive packs/breakpoints/rubric from the task before building ---
 const PLAN_SCHEMA = {
   type: 'object',
@@ -245,7 +226,7 @@ while (iteration < MAX_ITERS) {
 
   // --- Independent grader: a SEPARATE agent that judges the SCREENSHOTS, not source ---
   phase('Grade');
-  const grade = await agent(
+  const rawGrade = await agent(
     `You are an independent design grader. You did NOT build this. Judge ONLY the rendered screenshots.\n\n` +
       `OUTCOME the build must satisfy:\n${OUTCOME}\n\n` +
       `Read each screenshot image and score the ADS rubric (1-10): Design Quality (35%), Originality (30%), ` +
@@ -264,9 +245,16 @@ while (iteration < MAX_ITERS) {
       `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, semantics, CLS, axe issues, overflow) ` +
       `and revise iterations remain — reserve "failed" for a genuinely wrong direction, not a fixable defect. ` +
       `If Design Quality or Originality < 6, ` +
-      `return needs_revision with a bounded, testable nextRevisionPrompt. Be direct; judge the artifact, not effort.`,
+      `return needs_revision with a bounded, testable nextRevisionPrompt. Be direct; judge the artifact, not effort.\n\n` +
+      `Return structured findings beneath the four scores. For every finding, provide: id; one category from ` +
+      `layout_spacing_hierarchy, polish_consistency, typography, originality, color_contrast, interaction_motion, ` +
+      `cues_affordances, brand_fit_tone; severity minor, major, or blocker; rubricRow; state; breakpoint; ` +
+      `the exact screenshot artifact; a concrete target; an optional normalized region; one falsifiable observation; ` +
+      `and the evidence that supports it. A blocker cannot return satisfied. Subjective findings are diagnostic, not ` +
+      `deterministic hard gates. Use an empty findings array only if you found no issues.`,
     { label: `grade:iter${iteration}`, phase: 'Grade', schema: GRADE_SCHEMA, agentType: 'Explore' },
   );
+  const grade = normalizeGrade(rawGrade);
 
   lastGrade = grade;
   history.push({ iteration, gatePass, hardGate, capture, grade });
@@ -285,6 +273,11 @@ const verdict = !final
     : iteration >= MAX_ITERS
       ? 'max_iterations'
       : final.grade.verdict;
+
+const findingAggregate = aggregateFindingHistory(history.map((entry) => ({
+  iteration: entry.iteration,
+  findings: entry.grade.findings,
+})));
 
 const report = await agent(
   `Write a run report to ${REPORT_PATH} using templates/run-report-template.md as the shape.\n\n` +
@@ -307,10 +300,15 @@ const report = await agent(
       renderedFonts: h.capture.renderedFonts,
       graderVerdict: h.grade.verdict,
       scores: h.grade.scores,
+      findings: h.grade.findings,
       failingRows: h.grade.failingRows,
+      nextRevisionPrompt: h.grade.nextRevisionPrompt,
     })), null, 2) +
+    `\n\nStructured finding aggregate (repeated entries are candidates for a rule, constraint, fixture, or gate; ` +
+    `they do not become one automatically):\n${JSON.stringify(findingAggregate, null, 2)}` +
     `\n\nMake clear in the report which evidence is RENDERED (authoritative: axe, overflow, landmarks/live regions, CLS, state-render, fonts, ` +
-    `grader-on-screenshots) vs SOURCE heuristic (the python greps). Return the path written.`,
+    `grader-on-screenshots) vs SOURCE heuristic (the python greps). Preserve the finding → revision → evidence trail. ` +
+    `Return the path written.`,
   { label: 'run-report', phase: 'Report' },
 );
 

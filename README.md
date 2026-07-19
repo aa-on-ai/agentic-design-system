@@ -82,6 +82,11 @@ intent → baseline → rubric → build → rendered evidence → review → re
 
 The report is part of the product. “Looks good” is not evidence.
 
+The four weighted rubric scores remain the verdict layer. Substantial reviews also emit structured
+findings beneath those scores: a fixed failure category, minor/major/blocker severity, the exact
+state and breakpoint, a concrete target or screenshot region, and the rendered evidence. Repeated
+findings become candidates for a rule or gate; they do not become one automatically.
+
 ## What installs
 
 ### Orchestrator
@@ -211,7 +216,8 @@ npm run release:check
 ```
 
 The release gate aligns version and skill manifests, installs a clean copy for all five supported
-agents, and reruns comparison, render-authority, production-evidence, and eval-loop authority smokes.
+agents, and reruns comparison, render-authority, production-evidence, structured-findings, and
+eval-loop authority smokes.
 
 To exercise the public GitHub shorthand rather than the local checkout:
 

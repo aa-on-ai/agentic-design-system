@@ -11,6 +11,7 @@ npm run compare:smoke
 npm run render-eval:smoke
 npm run eval-loop:render-smoke
 npm run production-gates:smoke
+npm run structured-findings:smoke
 npm run decision-trace:smoke
 
-echo "release gate passed: metadata, install distribution, comparison, render authority, production evidence, eval-loop authority, and decision provenance"
+echo "release gate passed: metadata, install distribution, comparison, render authority, production evidence, structured findings, eval-loop authority, and decision provenance"

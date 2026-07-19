@@ -102,6 +102,16 @@ for spec in "${agent_specs[@]}"; do
     exit 1
   fi
 
+  structured_findings_reference="$project/$install_root/agentic-design-system/references/structured-findings.md"
+  if [[ ! -f "$structured_findings_reference" ]]; then
+    echo "missing installed structured-findings reference for $agent" >&2
+    exit 1
+  fi
+  if ! diff -q "$ROOT/skills/agentic-design-system/references/structured-findings.md" "$structured_findings_reference" >/dev/null; then
+    echo "installed structured-findings reference drift for $agent" >&2
+    exit 1
+  fi
+
   for template in "${bundled_templates[@]}"; do
     installed="$project/$install_root/agentic-design-system/templates/$template"
     canonical="$ROOT/templates/$template"

@@ -58,6 +58,12 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
 the verdict rests on rendered evidence; source heuristics are advisory. fix serious axe,
 overflow, semantic, CLS, and touch-target failures before presenting work.
 
+for substantial independent review, keep the four ADS rubric scores as the verdict layer and add
+structured findings beneath them. each finding needs a fixed category, minor/major/blocker
+severity, rubric row, state, breakpoint, exact artifact, concrete target or optional normalized
+region, falsifiable observation, and evidence. blockers cannot return `satisfied`; subjective
+findings do not become deterministic gates without a rendered measurement.
+
 ## key rules
 - core pack is always-on for visual work. you don't need permission to use it.
 - creative pack skills self-gate. read their trigger rules and skip if they don't apply.

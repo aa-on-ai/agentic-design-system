@@ -12,7 +12,7 @@ wrappers around it.
 
 | You want to… | Go to | Profile it runs |
 |---|---|---|
-| Build a new page / component | `workflows/new-page-component.mjs` — runnable route → build → capture → independent-grade → revise (Claude Code Workflow tool). Optional dynamic Route phase; gates on responsive breakpoints **and** touch-target size; runs against a live `devUrl` **or** a self-contained `artifactPath` (no dev server). Or `routing/ROUTING.md` → **Core chain** + **Outcome + Grader loop** by hand | core pack + capture + grader |
+| Build a new page / component | `workflows/new-page-component.mjs` — runnable route → build → capture → independent-grade → structured findings → revise (Claude Code Workflow tool). Optional dynamic Route phase; gates on responsive breakpoints **and** touch-target size; runs against a live `devUrl` **or** a self-contained `artifactPath` (no dev server). Or `routing/ROUTING.md` → **Core chain** + **Outcome + Grader loop** by hand | core pack + capture + grader |
 | Explore options before choosing a direction | `skills/design-variations/SKILL.md` → build one disposable browser artifact → choose or blend → promote only the winner | divergence before core pack |
 | Review existing UI before merge | [`adversarial-design-review.md`](./adversarial-design-review.md) | separate-context critique |
 | Review a mobile / responsive / app / PWA screen | [`mobile-review.md`](./mobile-review.md) | two-pass mobile review |
@@ -41,6 +41,7 @@ Every workflow in this directory is decision-shaped and answers the same seven q
 
 - **Evidence over assertion.** A verdict needs receipts (screenshots, check output, a report), not "looks good."
 - **Separate the builder from the judge.** Critique runs in a context that did not build the thing.
+- **Scores decide; findings diagnose.** Keep the four-score verdict layer, then point each failure to a category, severity, rendered location, and evidence artifact.
 - **Name the uncertainty.** Opinions stay labeled as opinions; objective defects stay labeled as defects; blockers get surfaced, not smoothed over.
 
 ## What ships where
@@ -48,7 +49,7 @@ Every workflow in this directory is decision-shaped and answers the same seven q
 `npx skills add` installs the `skills/` tree, so installed agents get:
 
 - the verification scripts — `capture.mjs`, the three source checks, and the lightweight decision-trace script
-- the reference docs — `references/mobile.md`, `references/motion.md`, etc.
+- the reference docs — `references/mobile.md`, `references/motion.md`, `references/structured-findings.md`, etc.
 - bundled copies of these runbooks at `skills/agentic-design-system/workflows/` (kept byte-identical to the top-level `workflows/` by the install smoke's drift guard)
 
 A full repo clone additionally has top-level `workflows/`, `testing/`, and `ci/`. One exception: `workflows/new-page-component.mjs` is a

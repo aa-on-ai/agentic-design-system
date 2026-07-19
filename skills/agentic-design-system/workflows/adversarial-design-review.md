@@ -12,6 +12,7 @@ the builder would otherwise self-clear its own quality.
 
 - `skills/design-review/SKILL.md` (the quality gate + pre-flight checklist)
 - `skills/agentic-design-system/SKILL.md` → the 4-criteria rubric (Design Quality, Originality, Craft, Functionality)
+- `skills/agentic-design-system/references/structured-findings.md` → diagnostic categories, severity, and evidence schema
 - [`templates/grader-report-template.md`](../templates/grader-report-template.md) (the verdict shape)
 - the task's outcome artifact ([`templates/outcome-template.md`](../templates/outcome-template.md)), if one exists
 
@@ -28,8 +29,10 @@ the builder would otherwise self-clear its own quality.
    Give it the outcome + the captured screenshots (`evidence/<slug>/*.png`) and the `evidence.json`
    gates, not the builder's commentary.
 3. **Prompt it to refute, not to praise:** "Find the strongest reasons this fails the outcome and
-   the rubric. Default to needs_revision when uncertain." Score each of the 4 rubric criteria and
-   name the specific failing element.
+   the rubric. Default to needs_revision when uncertain." Score each of the 4 rubric criteria. For
+   every critique, emit a structured finding with category, severity, rubric row, state,
+   breakpoint, exact artifact, concrete target, optional normalized region, observation, and
+   evidence. A blocker cannot return `satisfied`.
 4. **Back judgment with objective checks** on changed files so taste and defects stay separable:
 
 ```bash
@@ -43,13 +46,17 @@ python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
 - The `capture.mjs` screenshots + `evidence.json` the critic actually judged (axe, overflow,
   main/live-region semantics, CLS, state, and touch-target gates included).
 - The three checks' output.
-- Each critic finding tied to a rubric row or a `file:line` — no free-floating "feels off."
+- Each critic finding tied to a rubric row, state, breakpoint, exact screenshot, and concrete
+  target or normalized screenshot region — no free-floating "feels off."
+- A finding without evidence, with an unsupported category, or with an incomplete location is an
+  invalid grader packet.
 
 ## Output
 
 A filled `templates/grader-report-template.md` with a verdict:
-`satisfied` / `needs_revision` / `max_iterations` / `failed`, the rubric scores, and a bounded,
-testable next-revision prompt if not satisfied.
+`satisfied` / `needs_revision` / `max_iterations` / `failed`, the rubric scores, the structured
+findings table, and a bounded, testable next-revision prompt containing every blocker and major
+finding id if not satisfied.
 
 ## Blocked when
 
