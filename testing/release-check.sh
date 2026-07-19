@@ -13,5 +13,6 @@ npm run eval-loop:render-smoke
 npm run production-gates:smoke
 npm run structured-findings:smoke
 npm run decision-trace:smoke
+npm run regression:smoke
 
-echo "release gate passed: metadata, install distribution, comparison, render authority, production evidence, structured findings, eval-loop authority, and decision provenance"
+echo "release gate passed: metadata, install distribution, comparison, render authority, production evidence, structured findings, eval-loop authority, decision provenance, and frozen adjacent-action regression"

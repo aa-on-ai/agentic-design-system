@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "status": "frozen",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "states": ["default", "loading", "empty", "error"],
+  "breakpoints": [
+    { "name": "390x844", "width": 390, "height": 844 },
+    { "name": "1280x800", "width": 1280, "height": 800 }
+  ],
+  "weights": {
+    "designQuality": 0.35,
+    "originality": 0.3,
+    "craft": 0.2,
+    "functionality": 0.15
+  },
+  "acceptance": {
+    "verdict": "satisfied",
+    "minimumDesignQuality": 6,
+    "minimumOriginality": 6,
+    "maximumMaterialFindings": 0,
+    "requiredScreenshotsPerCase": 8,
+    "seriousAxeViolations": 0,
+    "horizontalOverflow": false,
+    "mainLandmark": true,
+    "requiredLiveRegions": true,
+    "touchTargetsUnder44": 0,
+    "clsAvailable": true,
+    "allRequestedStatesRendered": true
+  },
+  "behaviorPathPrefixes": [
+    "skills/",
+    "workflows/",
+    "templates/",
+    "routing/",
+    "ci/design-eval",
+    "testing/judge-"
+  ],
+  "cases": [
+    {
+      "slug": "pawprint",
+      "name": "Pawprint dispatch",
+      "role": "immutable_regression_fixture",
+      "restrictiveState": "schedule read-only",
+      "restrictedAction": "New walk",
+      "preservedAction": "Retry",
+      "actionCheck": {
+        "mode": "selectors",
+        "restrictedSelector": ".header-actions [data-action=\"new-walk\"]",
+        "preservedSelector": "[data-action=\"retry\"]",
+        "preservedDefault": "not_applicable"
+      },
+      "baselineWeightedScore": 9.21
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "name": "Glasshouse irrigation",
+      "role": "transfer_case",
+      "restrictiveState": "telemetry offline, safe mode",
+      "restrictedAction": "Adjust schedule",
+      "preservedAction": "Call grower",
+      "actionCheck": { "mode": "labels", "preservedDefault": "required" },
+      "baselineWeightedScore": 8.35
+    },
+    {
+      "slug": "museum-loans",
+      "name": "Museum loan registrar",
+      "role": "transfer_case",
+      "restrictiveState": "approval permission missing",
+      "restrictedAction": "Approve transfer",
+      "preservedAction": "Download condition report",
+      "actionCheck": { "mode": "labels", "preservedDefault": "required" },
+      "baselineWeightedScore": 8.15
+    },
+    {
+      "slug": "kitchen-pass",
+      "name": "Kitchen service pass",
+      "role": "transfer_case",
+      "restrictiveState": "order feed offline",
+      "restrictedAction": "Fire next course",
+      "preservedAction": "Call station",
+      "actionCheck": { "mode": "labels", "preservedDefault": "required" },
+      "baselineWeightedScore": 8.2
+    },
+    {
+      "slug": "radio-rundown",
+      "name": "Community radio rundown",
+      "role": "transfer_case",
+      "restrictiveState": "schedule locked",
+      "restrictedAction": "Move segment",
+      "preservedAction": "Call host",
+      "actionCheck": { "mode": "labels", "preservedDefault": "required" },
+      "baselineWeightedScore": 8.15
+    }
+  ],
+  "expectedBaseline": {
+    "caseCount": 5,
+    "satisfiedCount": 5,
+    "weightedMean": 8.412,
+    "screenshotCount": 40,
+    "actionChecks": 20
+  },
+  "rerunPolicy": {
+    "trigger": "any ADS behavior-path change",
+    "baselineMutation": "forbidden",
+    "candidateOutput": "append one new runs/<run-id>/ packet",
+    "matrix": "exactly these cases, states, breakpoints, action contracts, gates, and weights"
+  },
+  "expansionPolicy": {
+    "addDomainOnlyWhen": "a verified new failure class is not represented by the frozen cases",
+    "requiredChange": "document the failure class, add one isolating case, and issue a new suite version"
+  }
+}

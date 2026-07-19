@@ -4,6 +4,10 @@ ADS asks every build for receipts. This harness is where ADS produces receipts f
 **itself**: does the system actually make agent UI better, on a held-out prompt set,
 judged by a model that didn't build it?
 
+The frozen adjacent-action suite lives at `testing/regression/adjacent-actions-v1.3.1/`. It is the
+append-only release regression for ADS behavior changes; see [`TESTING.md`](./TESTING.md) for the
+baseline, candidate, and CI commands.
+
 ## eval-loop.ts — ADS on vs off (A/B)
 
 For each prompt in `prompts.json`, the same generator builds twice:

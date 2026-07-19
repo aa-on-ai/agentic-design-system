@@ -13,8 +13,41 @@ npm run release:check
 ```
 
 the gate checks release metadata, the single-project install smoke, the five-agent install matrix,
-and the comparison/render/eval-loop authority smokes. the install scripts default to
+the comparison/render/eval-loop authority smokes, and the frozen adjacent-action regression suite.
+the install scripts default to
 `skills@1.5.19`; override `SKILLS_CLI_PACKAGE` only when deliberately certifying a newer CLI.
+
+## frozen adjacent-action regression
+
+ADS v1.3.1 has a checksum-locked five-case baseline under
+`testing/regression/adjacent-actions-v1.3.1/`. Verify the immutable baseline with:
+
+```bash
+npm run regression:frozen
+```
+
+The check covers Pawprint, Glasshouse, Museum loans, Kitchen pass, and Radio rundown across default,
+loading, empty, and error at 390x844 and 1280x800. It validates 40 screenshots, rendered hard gates,
+five independent grades, exact outcome contracts, and 20 native adjacent-action checks.
+
+After changing an ADS skill, workflow, template, route, or judge behavior, create a new append-only
+candidate packet:
+
+```bash
+npm run regression:prepare -- <yyyy-mm-dd-short-description>
+```
+
+Populate the five cases, record distinct builder/grader context receipts, and verify with:
+
+```bash
+npm run regression:frozen -- --candidate testing/regression/adjacent-actions-v1.3.1/runs/<run-id>
+```
+
+The pull-request gate fails a behavior change without a newly added passing packet. Candidate score
+deltas are reported but remain subjective; missing cases, changed outcomes, hard-gate failures,
+unresolved material findings, contradictory mutations, and over-disabled legitimate actions block.
+After the suite first lands, CI also rejects any edit to the v1.3.1 baseline or a prior run; future
+evidence is append-only.
 
 ## install smoke
 

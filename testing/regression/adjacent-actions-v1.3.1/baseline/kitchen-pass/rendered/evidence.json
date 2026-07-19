@@ -1,0 +1,562 @@
+{
+  "url": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-expanded-benchmark-2026-07-19/kitchen-pass/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 904,
+      "renderedTextSample": "Mise ✓ Order feed live SERVICE PASS · NOW Table 14 is pacing next. Four guests are through course three. The fish station is finishing the next plate set while sauce and garde stand ready. Table 14 · 4 guests Course 4 of 7 Seated 18:07 Turbot with brown butter & sea herbs Hold fo",
+      "renderSignature": "5fe4f843",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(39, 63, 50)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(255, 253, 247)",
+          "backgroundColor": "rgb(39, 63, 50)",
+          "visible": true
+        },
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 940,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ✓ Order feed live · 18:42 SERVICE PASS · NOW Table 14 is pacing next. Four guests are through course three. The fish station is finishing the next plate set while sauce and garde stand ready. Table 14 · 4 guests Course 4 of 7 Seated 18:07 Turbot w",
+      "renderSignature": "77262b43",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(39, 63, 50)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(255, 253, 247)",
+          "backgroundColor": "rgb(39, 63, 50)",
+          "visible": true
+        },
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 192,
+      "renderedTextSample": "Mise ↻ Syncing orders SERVICE PASS Bringing the pass up to date. Checking the latest table pacing, holds, and station readiness before service actions become available. Syncing current orders…",
+      "renderSignature": "c2394868",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(109, 103, 93)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": null,
+        "#callStation": null
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 220,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ↻ Syncing orders SERVICE PASS Bringing the pass up to date. Checking the latest table pacing, holds, and station readiness before service actions become available. Syncing current orders…",
+      "renderSignature": "b45e4bda",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(109, 103, 93)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": null,
+        "#callStation": null
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 356,
+      "renderedTextSample": "Mise ✓ Order feed live SERVICE PASS · NOW The pass is clear. No table is waiting to fire. The next pacing check is due in two minutes. Nothing needs the kitchen yet. Dining room is holding Table 21 for a wine pour. New courses will appear here as soon as they are released to the ",
+      "renderSignature": "b51e935d",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(39, 63, 50)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": null,
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 392,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ✓ Order feed live · 18:42 SERVICE PASS · NOW The pass is clear. No table is waiting to fire. The next pacing check is due in two minutes. Nothing needs the kitchen yet. Dining room is holding Table 21 for a wine pour. New courses will appear here ",
+      "renderSignature": "07910e5d",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(39, 63, 50)",
+          "backgroundColor": "rgb(255, 253, 247)",
+          "visible": true
+        },
+        "#fireCourse": null,
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1082,
+      "renderedTextSample": "Mise ! Order feed offline SERVICE PASS · LAST KNOWN POSITION Table 14 was pacing next. The last full sync completed at 18:39. Course details remain visible for coordination, but the pass cannot change an order until the feed reconnects. ! Order feed offline Firing is paused to pr",
+      "renderSignature": "18e500ff",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(152, 69, 31)",
+          "backgroundColor": "rgb(247, 228, 213)",
+          "visible": true
+        },
+        "#fireCourse": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(119, 113, 104)",
+          "backgroundColor": "rgb(220, 213, 202)",
+          "visible": true
+        },
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1124,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ! Order feed offline · since 18:39 SERVICE PASS · LAST KNOWN POSITION Table 14 was pacing next. The last full sync completed at 18:39. Course details remain visible for coordination, but the pass cannot change an order until the feed reconnects. !",
+      "renderSignature": "84b4900b",
+      "probe": {
+        "h1": {
+          "fontFamily": "\"Iowan Old Style\", \"Palatino Linotype\", Georgia, serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".feed-status": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(152, 69, 31)",
+          "backgroundColor": "rgb(247, 228, 213)",
+          "visible": true
+        },
+        "#fireCourse": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(119, 113, 104)",
+          "backgroundColor": "rgb(220, 213, 202)",
+          "visible": true
+        },
+        "#callStation": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+          "color": "rgb(33, 31, 26)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        }
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

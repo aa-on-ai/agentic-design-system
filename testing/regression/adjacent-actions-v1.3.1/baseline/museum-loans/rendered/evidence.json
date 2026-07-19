@@ -1,0 +1,532 @@
+{
+  "url": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-expanded-benchmark-2026-07-19/museum-loans/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 1416,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS TRAVELING LOAN · NRM 1978.45 FILE OBL-26-014 Attic red-figure kylix Attributed to the Penthesilea Painter · Athens, circa 460 BCE · Terracotta, 12.4 × 31.8 cm CONDITION & CUSTODY Stable, with one monitored edge Packing may proceed und",
+      "renderSignature": "225d2b14",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(245, 240, 231)",
+          "visible": true
+        },
+        "#approve-transfer": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 243)",
+          "backgroundColor": "rgb(113, 47, 53)",
+          "visible": true
+        },
+        "#download-report": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(89, 35, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 1416,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS TRAVELING LOAN · NRM 1978.45 FILE OBL-26-014 Attic red-figure kylix Attributed to the Penthesilea Painter · Athens, circa 460 BCE · Terracotta, 12.4 × 31.8 cm CONDITION & CUSTODY Stable, with one monitored edge Packing may proceed und",
+      "renderSignature": "225d2b14",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(245, 240, 231)",
+          "visible": true
+        },
+        "#approve-transfer": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 243)",
+          "backgroundColor": "rgb(113, 47, 53)",
+          "visible": true
+        },
+        "#download-report": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(89, 35, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 86,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS Loading loan record and custody history…",
+      "renderSignature": "ec8342c3",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": null,
+        "#approve-transfer": null,
+        "#download-report": null
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 86,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS Loading loan record and custody history…",
+      "renderSignature": "ec8342c3",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": null,
+        "#approve-transfer": null,
+        "#download-report": null
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 206,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS OUTBOUND LOANS No loan selected Choose an active loan to review its object record, condition evidence, custody trail, and transfer permissions. Open active loan",
+      "renderSignature": "685c1825",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": null,
+        "#approve-transfer": null,
+        "#download-report": null
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 206,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS OUTBOUND LOANS No loan selected Choose an active loan to review its object record, condition evidence, custody trail, and transfer permissions. Open active loan",
+      "renderSignature": "685c1825",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": null,
+        "#approve-transfer": null,
+        "#download-report": null
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1309,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS TRAVELING LOAN · NRM 1978.45 FILE OBL-26-014 Attic red-figure kylix Attributed to the Penthesilea Painter · Athens, circa 460 BCE · Terracotta, 12.4 × 31.8 cm CONDITION & CUSTODY Stable, with one monitored edge Packing may proceed und",
+      "renderSignature": "2d79cf52",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(247, 240, 232)",
+          "visible": true
+        },
+        "#approve-transfer": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(129, 125, 115)",
+          "backgroundColor": "rgb(228, 223, 213)",
+          "visible": true
+        },
+        "#download-report": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(89, 35, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(36, 37, 31)",
+        "backgroundColor": "rgb(242, 238, 229)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1660,
+      "renderedTextSample": "North River Museum REGISTRAR · OUTBOUND LOANS TRAVELING LOAN · NRM 1978.45 FILE OBL-26-014 Attic red-figure kylix Attributed to the Penthesilea Painter · Athens, circa 460 BCE · Terracotta, 12.4 × 31.8 cm CONDITION & CUSTODY Stable, with one monitored edge Packing may proceed und",
+      "renderSignature": "2498f952",
+      "probe": {
+        ".record-shell": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        },
+        ".decision-panel": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(36, 37, 31)",
+          "backgroundColor": "rgb(245, 240, 231)",
+          "visible": true
+        },
+        "#approve-transfer": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(129, 125, 115)",
+          "backgroundColor": "rgb(228, 223, 213)",
+          "visible": true
+        },
+        "#download-report": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(89, 35, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

@@ -1,0 +1,562 @@
+{
+  "url": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-expanded-benchmark-2026-07-19/radio-rundown/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 787,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ✓ Rundown open Producer ordering is available. Playout will follow this rundown. ON AIR · LINE 2 CONNECTED The housing desk Priya Nair with Councillor Elena Ruiz · Studio A 6:24 ELAPSED 3:36 LE",
+      "renderSignature": "fffe7dc0",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 240)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        },
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 830,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ✓ Rundown open Producer ordering is available. Playout will follow this rundown. ORDERING AVAILABLE ON AIR · LINE 2 CONNECTED The housing desk Priya Nair with Councillor Elena Ruiz · Studio A 6",
+      "renderSignature": "bb413041",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 240)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        },
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(251, 248, 241)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 223,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A Loading the live rundown… Checking playout status and the latest studio timing. Holding the board steady while the latest order arrives.",
+      "renderSignature": "0faf675a",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": null,
+        "button": null
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 231,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A Loading the live rundown… Checking playout status and the latest studio timing. SYNCING Holding the board steady while the latest order arrives.",
+      "renderSignature": "f08e3903",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": null,
+        "button": null
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 332,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ○ No rundown loaded Studio A is connected, but this hour has no segments yet. 19:00 Build the next hour Import the producer sheet to add segments, durations, guests, and studio cues. Nothing wi",
+      "renderSignature": "d384af1c",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": null,
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 346,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ○ No rundown loaded Studio A is connected, but this hour has no segments yet. NOT SCHEDULED 19:00 Build the next hour Import the producer sheet to add segments, durations, guests, and studio cu",
+      "renderSignature": "976b1ed2",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(224, 238, 231)",
+          "visible": true
+        },
+        ".live-board": null,
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 947,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A 🔒 Schedule locked by playout Automation owns the order until the 19:30 handoff. You cannot move segments, but you can still call the host about timing. ON AIR · LINE 2 CONNECTED The housing de",
+      "renderSignature": "a2b51655",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(248, 228, 220)",
+          "visible": true
+        },
+        ".live-board": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 240)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        },
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(113, 111, 105)",
+          "backgroundColor": "rgb(222, 217, 207)",
+          "visible": true
+        }
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 997,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A 🔒 Schedule locked by playout Automation owns the order until the 19:30 handoff. You cannot move segments, but you can still call the host about timing. ORDER LOCKED ON AIR · LINE 2 CONNECTED T",
+      "renderSignature": "ddd84d64",
+      "probe": {
+        "h1": {
+          "fontFamily": "Charter, \"Iowan Old Style\", Georgia, serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "visible": true
+        },
+        ".state-banner": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(24, 32, 41)",
+          "backgroundColor": "rgb(248, 228, 220)",
+          "visible": true
+        },
+        ".live-board": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(255, 250, 240)",
+          "backgroundColor": "rgb(36, 50, 73)",
+          "visible": true
+        },
+        "button": {
+          "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+          "color": "rgb(113, 111, 105)",
+          "backgroundColor": "rgb(222, 217, 207)",
+          "visible": true
+        }
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

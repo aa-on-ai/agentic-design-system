@@ -1,0 +1,392 @@
+{
+  "url": "http://127.0.0.1:41731/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 896,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live SATURDAY · MORNING RUN Watering starts at 06:40 Three zones are queued. Propagation is below its moisture floor and leads the run. 27 min until valves open The plan is editable. Controller GH-02 is receiving current probe readings.",
+      "renderSignature": "bb940f42",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 904,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live · GH-02 SATURDAY · MORNING RUN Watering starts at 06:40 Three zones are queued. Propagation is below its moisture floor and leads the run. 27 min until valves open The plan is editable. Controller GH-02 is receiving current probe r",
+      "renderSignature": "ca7e773b",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 235,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Checking telemetry SATURDAY · MORNING RUN Preparing the watering run The latest zone readings are being checked before the valve plan is shown. --:-- start time Checking controller and moisture probes…",
+      "renderSignature": "3b2dcbee",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 243,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Checking telemetry · GH-02 SATURDAY · MORNING RUN Preparing the watering run The latest zone readings are being checked before the valve plan is shown. --:-- start time Checking controller and moisture probes…",
+      "renderSignature": "332b1a71",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 598,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live SATURDAY · MORNING RUN No watering run is scheduled All eight zones are within their moisture bands. The glasshouse is ready for the next planned cycle. 8 / 8 zones within target QUEUE CLEAR Plan the next cycle when the crop team i",
+      "renderSignature": "bba36230",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 606,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live · GH-02 SATURDAY · MORNING RUN No watering run is scheduled All eight zones are within their moisture bands. The glasshouse is ready for the next planned cycle. 8 / 8 zones within target QUEUE CLEAR Plan the next cycle when the cro",
+      "renderSignature": "d4628927",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1142,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry offline SATURDAY · SAFE MODE The last verified plan is on hold Controller GH-02 stopped reporting after 06:12. Schedule changes are blocked until telemetry returns. 06:12 last verified reading TELEMETRY OFFLINE · SAFE MODE ACTIVE Schedu",
+      "renderSignature": "11d00c81",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1150,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry offline · GH-02 SATURDAY · SAFE MODE The last verified plan is on hold Controller GH-02 stopped reporting after 06:12. Schedule changes are blocked until telemetry returns. 06:12 last verified reading TELEMETRY OFFLINE · SAFE MODE ACTIV",
+      "renderSignature": "a1868458",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Trebuchet MS\", \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}
