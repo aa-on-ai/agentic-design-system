@@ -2,6 +2,24 @@
 
 All notable changes to Agentic Design System are recorded here.
 
+## [1.3.0] - 2026-07-19
+
+### Added
+
+- Prospective decision-provenance dogfood on the public `/trace` page, with verified
+  decision → rule → constraint → evidence chains captured from a real build.
+- Production rendered-evidence gates for missing `main` landmarks, loading/error live-region
+  semantics, and Web Vitals CLS measurements with a default `0.1` threshold.
+- Structured diagnostic findings beneath the four ADS rubric scores, with eight fixed categories,
+  minor/major/blocker severity, rendered location and evidence, bounded revision instructions,
+  and cross-iteration recurrence aggregation.
+
+### Changed
+
+- Missing semantic or CLS measurements now block rendered authority instead of silently passing.
+- Grader and run-report templates preserve finding → revision → evidence traceability while
+  keeping subjective findings separate from deterministic gates.
+
 ## [1.2.0] - 2026-07-17
 
 ### Added
