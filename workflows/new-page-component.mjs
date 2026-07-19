@@ -179,6 +179,9 @@ while (iteration < MAX_ITERS) {
       `Do NOT introduce any new axe violations, and fix the specific rendered-evidence failure cited. ` +
       `If touch targets are cited: give EVERY interactive control a >=44px target in every state — buttons/inputs/selects via min-height + padding, ` +
       `and inline text links via display:inline-block with padding (or min-height/min-width) so the clickable box clears 44px. Don't miss row links. ` +
+      `Then run an adjacent-action consistency sweep in every changed state and breakpoint: inspect nearby primary, secondary, toolbar, and inline actions, not only the named target. ` +
+      `When a state is read-only, disabled, offline, permission-limited, or destructive, remove, disable, relabel, or visibly explain actions that contradict it; ` +
+      `use native disabled semantics for visible inactive controls and preserve active actions in unaffected states. ` +
       `Return a one-line summary of what you changed.`;
 
   await agent(buildInstruction, { label: `build:iter${iteration}`, phase: 'Build' });
@@ -251,7 +254,10 @@ while (iteration < MAX_ITERS) {
       `cues_affordances, brand_fit_tone; severity minor, major, or blocker; rubricRow; state; breakpoint; ` +
       `the exact screenshot artifact; a concrete target; an optional normalized region; one falsifiable observation; ` +
       `and the evidence that supports it. A blocker cannot return satisfied. Subjective findings are diagnostic, not ` +
-      `deterministic hard gates. Use an empty findings array only if you found no issues.`,
+      `deterministic hard gates. Before returning satisfied, run an adjacent-action consistency check in every state and breakpoint: compare each status, instruction, ` +
+      `and permission boundary with all visible nearby primary, secondary, toolbar, and inline actions. An enabled-looking action that contradicts a read-only, disabled, ` +
+      `offline, permission-limited, or destructive state is a major cues_affordances finding and cannot return satisfied. ` +
+      `Use an empty findings array only if you found no issues.`,
     { label: `grade:iter${iteration}`, phase: 'Grade', schema: GRADE_SCHEMA, agentType: 'Explore' },
   );
   const grade = normalizeGrade(rawGrade);

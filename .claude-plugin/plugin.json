@@ -1,6 +1,6 @@
 {
   "name": "agentic-design-system",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A design system for AI agents that build UI. 10 skills, routing logic, templates, and verification scripts that raise the quality floor on agent-generated interfaces.",
   "author": "aa-on-ai",
   "license": "MIT",

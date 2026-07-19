@@ -2,6 +2,21 @@
 
 All notable changes to Agentic Design System are recorded here.
 
+## [1.3.1] - 2026-07-19
+
+### Changed
+
+- Revision prompts now sweep every nearby primary, secondary, toolbar, and inline action after a
+  finding-driven repair instead of stopping at the named target.
+- Independent regrades now compare state and instructional copy with adjacent actions before
+  allowing `satisfied`.
+
+### Fixed
+
+- Read-only, disabled, offline, permission-limited, and destructive states can no longer clear the
+  ADS review loop while a contradictory enabled-looking action remains; the conflict becomes a
+  major `cues_affordances` finding.
+
 ## [1.3.0] - 2026-07-19
 
 ### Added

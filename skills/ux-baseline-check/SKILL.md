@@ -31,6 +31,10 @@ Before any page or component is "done", verify each applicable state exists:
 - [ ] **Active/pressed** — buttons respond to clicks visually
 - [ ] **Disabled** — grayed out with clear reason why (tooltip or helper text)
 - [ ] **Selected** — multi-select, current tab, active filter all visually distinct
+- [ ] **Adjacent-action consistency** — when a state is read-only, disabled, offline,
+  permission-limited, or destructive, inspect every nearby primary, secondary, toolbar, and inline
+  action. Remove, relabel, or visibly explain contradictions; use native `disabled` semantics when
+  an inactive control remains visible, and preserve active actions in unaffected states.
 
 ### 3. Form States
 - [ ] **Validation** — inline errors on blur, not just on submit

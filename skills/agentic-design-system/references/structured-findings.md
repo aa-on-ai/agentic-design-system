@@ -26,6 +26,23 @@ Source: https://x.com/contralabs_ai/status/2078202668711895356
 
 `region` is optional and normalized from 0 to 1. All other fields are required for substantial screenshot review.
 
+## Adjacent-action consistency check
+
+A repair is not complete when the named target alone looks fixed. Before the builder hands back a
+revision and before the grader can return `satisfied`:
+
+1. State the changed state's contract and permitted actions.
+2. Inspect every visible nearby primary, secondary, toolbar, and inline action at every changed breakpoint.
+3. Confirm each action's label, emphasis, enabledness, native semantics, and supporting copy agree
+   with the state and its instructions.
+4. For read-only, disabled, offline, permission-limited, or destructive states, remove, disable,
+   relabel, or visibly explain conflicting actions; use native `disabled` semantics when the
+   control remains visible.
+5. Preserve active actions in unaffected states and verify them from fresh rendered evidence.
+
+An enabled-looking contradiction is a `cues_affordances` major finding. It prevents `satisfied`,
+and the next revision prompt must name the conflicting state, action, and expected repair.
+
 ## Implementation slice after Phase 7
 
 1. Extend the grader schema in `workflows/new-page-component.mjs` with `findings[]`; keep `failingRows` temporarily as a derived compatibility field.

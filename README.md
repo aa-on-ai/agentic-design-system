@@ -153,6 +153,12 @@ The rendered gate blocks serious axe violations, overflow, missing main landmark
 loading/error states without the corresponding live-region semantics, CLS above `0.1`,
 undersized touch targets, and requested states that did not actually render.
 
+After a finding-driven repair, ADS also sweeps adjacent actions before a grader can return
+`satisfied`. Status and instructional copy must agree with every visible nearby primary,
+secondary, toolbar, and inline action in each changed state and breakpoint. An enabled-looking
+contradiction in a read-only, disabled, offline, permission-limited, or destructive state becomes a
+major `cues_affordances` finding.
+
 For a meaningful modification, capture the baseline and candidate with the same states and breakpoints, then compare them:
 
 ```bash

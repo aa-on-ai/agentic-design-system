@@ -64,7 +64,7 @@ Variants' own imports (`react`, `lucide-react`, `recharts`, …) resolve from
 node testing/render-eval.mjs --fixture
 npm run render-eval:smoke         # runs the fixture path + asserts the receipts
 npm run production-gates:smoke    # proves landmarks, live regions, and CLS are blocking gates
-npm run structured-findings:smoke # proves diagnostic schema, blocker behavior, and recurrence trace
+npm run structured-findings:smoke # proves schema, blocker behavior, recurrence, and adjacent-action checks
 
 # proves clean source checks and a 50/50 judge cannot bypass browser overflow:
 npm run eval-loop:render-smoke
