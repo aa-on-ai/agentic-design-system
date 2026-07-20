@@ -219,6 +219,16 @@ for (const [browserName, browserType] of browserTypes) {
         documentTop: window.scrollY + node.getBoundingClientRect().top,
         transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
       }));
+      const mobileRailAlignment = viewport.name === "mobile"
+        ? await page.evaluate(() => {
+            const mouth = document.querySelector(".hero-track-mouth").getBoundingClientRect();
+            const track = document.querySelector(".continuous-track").getBoundingClientRect();
+            return {
+              centerDelta: Math.abs((mouth.left + mouth.width / 2) - (track.left + track.width / 2)),
+              widthDelta: Math.abs(mouth.width - track.width),
+            };
+          })
+        : null;
       const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
       const climberTransforms = new Set([initialClimber.transform]);
       for (let step = 0; step <= 16; step += 1) {
@@ -245,6 +255,9 @@ for (const [browserName, browserType] of browserTypes) {
         fail(scope, `Ember only traveled ${Math.round(finalClimber.documentTop - initialClimber.documentTop)}px with the rail`);
       }
       if (climberTransforms.size < 3) fail(scope, `Ember climb cadence only produced ${climberTransforms.size} transform state(s)`);
+      if (mobileRailAlignment && (mobileRailAlignment.centerDelta > 0.5 || mobileRailAlignment.widthDelta > 0.5)) {
+        fail(scope, `mobile rail mismatch is ${mobileRailAlignment.centerDelta.toFixed(1)}px center / ${mobileRailAlignment.widthDelta.toFixed(1)}px width`);
+      }
       if (new Set(scrolled.artifacts).size !== 5) fail(scope, `artifact count is ${new Set(scrolled.artifacts).size}`);
       if (scrolled.handoffs) fail(scope, "release handoff returned");
       if (scrolled.activeStations) fail(scope, "scroll-driven station state returned");
@@ -297,6 +310,7 @@ for (const [browserName, browserType] of browserTypes) {
         persistedHero: persisted.heroResources,
         emberTravel: Math.round(finalClimber.documentTop - initialClimber.documentTop),
         emberCadenceStates: climberTransforms.size,
+        mobileRailAlignment,
         keyboardControls: keyboardOrder.length,
         copyFeedback: copyFeedback?.trim() ?? null,
       });
