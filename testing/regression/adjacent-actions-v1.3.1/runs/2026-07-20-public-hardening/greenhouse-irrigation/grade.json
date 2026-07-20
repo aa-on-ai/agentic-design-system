@@ -1,0 +1,13 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "Design Quality": 8,
+    "Originality": 8,
+    "Craft": 9,
+    "Functionality": 9
+  },
+  "weightedScore": 8.35,
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}

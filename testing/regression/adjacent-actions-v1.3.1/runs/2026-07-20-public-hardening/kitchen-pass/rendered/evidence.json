@@ -1,0 +1,563 @@
+{
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/kitchen-pass/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 904,
+      "renderedTextSample": "Mise ✓ Order feed live SERVICE PASS · NOW Table 14 is pacing next. Four guests are through course three. The fish station is finishing the next plate set while sauce and garde stand ready. Table 14 · 4 guests Course 4 of 7 Seated 18:07 Turbot with brown butter & sea herbs Hold fo",
+      "renderSignature": "5fe4f843",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 940,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ✓ Order feed live · 18:42 SERVICE PASS · NOW Table 14 is pacing next. Four guests are through course three. The fish station is finishing the next plate set while sauce and garde stand ready. Table 14 · 4 guests Course 4 of 7 Seated 18:07 Turbot w",
+      "renderSignature": "77262b43",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 192,
+      "renderedTextSample": "Mise ↻ Syncing orders SERVICE PASS Bringing the pass up to date. Checking the latest table pacing, holds, and station readiness before service actions become available. Syncing current orders…",
+      "renderSignature": "c2394868",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 220,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ↻ Syncing orders SERVICE PASS Bringing the pass up to date. Checking the latest table pacing, holds, and station readiness before service actions become available. Syncing current orders…",
+      "renderSignature": "b45e4bda",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 356,
+      "renderedTextSample": "Mise ✓ Order feed live SERVICE PASS · NOW The pass is clear. No table is waiting to fire. The next pacing check is due in two minutes. Nothing needs the kitchen yet. Dining room is holding Table 21 for a wine pour. New courses will appear here as soon as they are released to the ",
+      "renderSignature": "b51e935d",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 392,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ✓ Order feed live · 18:42 SERVICE PASS · NOW The pass is clear. No table is waiting to fire. The next pacing check is due in two minutes. Nothing needs the kitchen yet. Dining room is holding Table 21 for a wine pour. New courses will appear here ",
+      "renderSignature": "07910e5d",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1082,
+      "renderedTextSample": "Mise ! Order feed offline SERVICE PASS · LAST KNOWN POSITION Table 14 was pacing next. The last full sync completed at 18:39. Course details remain visible for coordination, but the pass cannot change an order until the feed reconnects. ! Order feed offline Firing is paused to pr",
+      "renderSignature": "18e500ff",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif",
+        "color": "rgb(33, 31, 26)",
+        "backgroundColor": "rgb(242, 237, 227)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1124,
+      "renderedTextSample": "Mise SATURDAY DINNER · 28 COVERS ! Order feed offline · since 18:39 SERVICE PASS · LAST KNOWN POSITION Table 14 was pacing next. The last full sync completed at 18:39. Course details remain visible for coordination, but the pass cannot change an order until the feed reconnects. !",
+      "renderSignature": "84b4900b",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  },
+  "comparison": {
+    "generatedBy": "compare.mjs",
+    "toolVersion": "0.4.0",
+    "schemaVersion": 1,
+    "baselineDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/baseline/kitchen-pass/rendered",
+    "candidateDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/kitchen-pass/rendered",
+    "baselineUrl": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-expanded-benchmark-2026-07-19/kitchen-pass/artifact/index.html",
+    "candidateUrl": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/kitchen-pass/artifact/index.html",
+    "pixelmatchThreshold": 0.1,
+    "pixelmatchIncludeAA": false,
+    "pairsCompared": 8,
+    "pairsIdentical": 8,
+    "maxChangedPct": 0,
+    "meanChangedPct": 0,
+    "incomparable": [],
+    "pairs": [
+      {
+        "key": "default@1280x800",
+        "state": "default",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "default-1280x800.png",
+        "candidateScreenshot": "default-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1132",
+          "candidate": "1280x1132",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1448960,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-1280x800.png"
+      },
+      {
+        "key": "default@390x844",
+        "state": "default",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "default-390x844.png",
+        "candidateScreenshot": "default-390x844.png",
+        "dimensions": {
+          "baseline": "390x1609",
+          "candidate": "390x1609",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 627510,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-390x844.png"
+      },
+      {
+        "key": "empty@1280x800",
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "empty-1280x800.png",
+        "candidateScreenshot": "empty-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-1280x800.png"
+      },
+      {
+        "key": "empty@390x844",
+        "state": "empty",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "empty-390x844.png",
+        "candidateScreenshot": "empty-390x844.png",
+        "dimensions": {
+          "baseline": "390x844",
+          "candidate": "390x844",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 329160,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-390x844.png"
+      },
+      {
+        "key": "error@1280x800",
+        "state": "error",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "error-1280x800.png",
+        "candidateScreenshot": "error-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1250",
+          "candidate": "1280x1250",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1600000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-1280x800.png"
+      },
+      {
+        "key": "error@390x844",
+        "state": "error",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "error-390x844.png",
+        "candidateScreenshot": "error-390x844.png",
+        "dimensions": {
+          "baseline": "390x1779",
+          "candidate": "390x1779",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 693810,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-390x844.png"
+      },
+      {
+        "key": "loading@1280x800",
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "loading-1280x800.png",
+        "candidateScreenshot": "loading-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-1280x800.png"
+      },
+      {
+        "key": "loading@390x844",
+        "state": "loading",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "loading-390x844.png",
+        "candidateScreenshot": "loading-390x844.png",
+        "dimensions": {
+          "baseline": "390x844",
+          "candidate": "390x844",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 329160,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-390x844.png"
+      }
+    ],
+    "outDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/kitchen-pass/rendered/comparison"
+  }
+}

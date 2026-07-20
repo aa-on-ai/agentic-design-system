@@ -1,0 +1,563 @@
+{
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/pawprint/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 801,
+      "renderedTextSample": "Pawprint DISPATCH + SATURDAY · JULY 18 Today’s walks ↻ NEXT ACTION · DUE IN 18 MIN Confirm Milo’s handoff with Jamal Jamal is running 12 minutes late. Milo’s entry note requires an in-person key handoff before 11:20. Call Jamal Walk schedule 4 remaining · 2 completed Active risks",
+      "renderSignature": "96c71c39",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 808,
+      "renderedTextSample": "Pawprint DISPATCH Live schedule + New walk SATURDAY · JULY 18 Today’s walks Synced 10:42 AM ↻ NEXT ACTION · DUE IN 18 MIN Confirm Milo’s handoff with Jamal Jamal is running 12 minutes late. Milo’s entry note requires an in-person key handoff before 11:20. Call Jamal Walk schedule",
+      "renderSignature": "652c5df3",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 100,
+      "renderedTextSample": "Pawprint DISPATCH + SATURDAY · JULY 18 Today’s walks ↻ Updating today’s routes and walker locations…",
+      "renderSignature": "fcb7cb89",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 139,
+      "renderedTextSample": "Pawprint DISPATCH Live schedule + New walk SATURDAY · JULY 18 Today’s walks Synced 10:42 AM ↻ Updating today’s routes and walker locations…",
+      "renderSignature": "d65e1a00",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 290,
+      "renderedTextSample": "Pawprint DISPATCH + SATURDAY · JULY 18 Today’s walks ↻ THE BOARD IS CLEAR No walks scheduled yet Build today’s route board by adding the first booking. Walker coverage and dispatch risks will appear here automatically. Add the first walk Saturday schedule · accepting bookings unt",
+      "renderSignature": "e9858236",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 329,
+      "renderedTextSample": "Pawprint DISPATCH Live schedule + New walk SATURDAY · JULY 18 Today’s walks Synced 10:42 AM ↻ THE BOARD IS CLEAR No walks scheduled yet Build today’s route board by adding the first booking. Walker coverage and dispatch risks will appear here automatically. Add the first walk Sat",
+      "renderSignature": "d7bb637f",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 403,
+      "renderedTextSample": "Pawprint DISPATCH + SATURDAY · JULY 18 Today’s walks Last verified 10:42 AM ↻ SCHEDULE CONNECTION LOST We can’t refresh the dispatch board The last verified schedule is still available below. Retry before assigning or changing a walk so no booking is missed. Retry now Last verifi",
+      "renderSignature": "f883896c",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, sans-serif",
+        "color": "rgb(24, 48, 43)",
+        "backgroundColor": "rgb(244, 240, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 441,
+      "renderedTextSample": "Pawprint DISPATCH Read-only schedule New walk unavailable SATURDAY · JULY 18 Today’s walks Last verified 10:42 AM ↻ SCHEDULE CONNECTION LOST We can’t refresh the dispatch board The last verified schedule is still available below. Retry before assigning or changing a walk so no bo",
+      "renderSignature": "35645412",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  },
+  "comparison": {
+    "generatedBy": "compare.mjs",
+    "toolVersion": "0.4.0",
+    "schemaVersion": 1,
+    "baselineDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/baseline/pawprint/rendered",
+    "candidateDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/pawprint/rendered",
+    "baselineUrl": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-pawprint-regression-2026-07-19/artifact/index.html",
+    "candidateUrl": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/pawprint/artifact/index.html",
+    "pixelmatchThreshold": 0.1,
+    "pixelmatchIncludeAA": false,
+    "pairsCompared": 8,
+    "pairsIdentical": 8,
+    "maxChangedPct": 0,
+    "meanChangedPct": 0,
+    "incomparable": [],
+    "pairs": [
+      {
+        "key": "default@1280x800",
+        "state": "default",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "default-1280x800.png",
+        "candidateScreenshot": "default-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x862",
+          "candidate": "1280x862",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1103360,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-1280x800.png"
+      },
+      {
+        "key": "default@390x844",
+        "state": "default",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "default-390x844.png",
+        "candidateScreenshot": "default-390x844.png",
+        "dimensions": {
+          "baseline": "390x1407",
+          "candidate": "390x1407",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 548730,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-390x844.png"
+      },
+      {
+        "key": "empty@1280x800",
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "empty-1280x800.png",
+        "candidateScreenshot": "empty-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x862",
+          "candidate": "1280x862",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1103360,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-1280x800.png"
+      },
+      {
+        "key": "empty@390x844",
+        "state": "empty",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "empty-390x844.png",
+        "candidateScreenshot": "empty-390x844.png",
+        "dimensions": {
+          "baseline": "390x844",
+          "candidate": "390x844",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 329160,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-390x844.png"
+      },
+      {
+        "key": "error@1280x800",
+        "state": "error",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "error-1280x800.png",
+        "candidateScreenshot": "error-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x862",
+          "candidate": "1280x862",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1103360,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-1280x800.png"
+      },
+      {
+        "key": "error@390x844",
+        "state": "error",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "error-390x844.png",
+        "candidateScreenshot": "error-390x844.png",
+        "dimensions": {
+          "baseline": "390x877",
+          "candidate": "390x877",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 342030,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-390x844.png"
+      },
+      {
+        "key": "loading@1280x800",
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "loading-1280x800.png",
+        "candidateScreenshot": "loading-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x862",
+          "candidate": "1280x862",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1103360,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-1280x800.png"
+      },
+      {
+        "key": "loading@390x844",
+        "state": "loading",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "loading-390x844.png",
+        "candidateScreenshot": "loading-390x844.png",
+        "dimensions": {
+          "baseline": "390x877",
+          "candidate": "390x877",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 342030,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-390x844.png"
+      }
+    ],
+    "outDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/pawprint/rendered/comparison"
+  }
+}
