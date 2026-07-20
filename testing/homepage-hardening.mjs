@@ -22,9 +22,28 @@ const browserTypes = [
 
 const failures = [];
 const receipts = [];
+const pageReadySelector = 'main[data-ads-homepage][data-page-ready="true"]';
+const expectedInstallCommand = "npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes";
+const browserStepTimeoutMs = 20_000;
 
 function fail(scope, message) {
   failures.push(`${scope}: ${message}`);
+}
+
+async function withBrowserStepTimeout(promise, label) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`${label} timed out after ${browserStepTimeoutMs}ms`)),
+      browserStepTimeoutMs,
+    );
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 async function installObservers(page) {
@@ -49,6 +68,11 @@ async function waitForHero(page, theme) {
   }, theme);
 }
 
+async function gotoReady(page, target) {
+  await page.goto(target, { waitUntil: "domcontentloaded" });
+  await page.locator(pageReadySelector).waitFor({ state: "attached", timeout: 20_000 });
+}
+
 async function inspectPage(page) {
   return page.evaluate(() => ({
     theme: document.documentElement.dataset.theme,
@@ -63,6 +87,7 @@ async function inspectPage(page) {
     artifacts: [...document.querySelectorAll(".ads-artifact")].map((node) => node.getAttribute("data-artifact")),
     handoffs: document.querySelectorAll(".release-handoff").length,
     activeStations: document.querySelectorAll(".station[data-active]").length,
+    installGuideLinks: document.querySelectorAll('a[href*="docs/INSTALL.md"]').length,
     releaseBackground: getComputedStyle(document.querySelector(".release-bay")).backgroundColor,
   }));
 }
@@ -121,9 +146,9 @@ async function verifyReducedMotion(browser, browserName) {
     reducedMotion: "reduce",
     colorScheme: "dark",
   });
-  const page = await context.newPage();
   const scope = `${browserName}/reduced-motion`;
-  await page.goto(`${url}?theme=dark&reduced=${Date.now()}`, { waitUntil: "networkidle" });
+  const page = await withBrowserStepTimeout(context.newPage(), `${scope} page startup`);
+  await gotoReady(page, `${url}?theme=dark&reduced=${Date.now()}`);
   await waitForHero(page, "dark");
 
   await page.getByRole("button", { name: "Make Ember hop" }).click();
@@ -163,13 +188,13 @@ for (const [browserName, browserType] of browserTypes) {
         reducedMotion: "no-preference",
         ...(browserName === "Chromium" ? { permissions: ["clipboard-read", "clipboard-write"] } : {}),
       });
-      const page = await context.newPage();
+      const page = await withBrowserStepTimeout(context.newPage(), `${scope} page startup`);
       await context.addCookies([{ name: "ads-theme", value: "light", url }]);
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await installObservers(page);
 
-      await page.goto(`${url}?matrix=${browserName}-${viewport.name}-${Date.now()}`, { waitUntil: "networkidle" });
+      await gotoReady(page, `${url}?matrix=${browserName}-${viewport.name}-${Date.now()}`);
       await waitForHero(page, "light");
       const initial = await inspectPage(page);
       if (initial.theme !== "light" || initial.firstFrameTheme !== "light") {
@@ -217,6 +242,9 @@ for (const [browserName, browserType] of browserTypes) {
       if (new Set(scrolled.artifacts).size !== 5) fail(scope, `artifact count is ${new Set(scrolled.artifacts).size}`);
       if (scrolled.handoffs) fail(scope, "release handoff returned");
       if (scrolled.activeStations) fail(scope, "scroll-driven station state returned");
+      if (scrolled.installGuideLinks !== 2) {
+        fail(scope, `install/activation guide link count is ${scrolled.installGuideLinks}`);
+      }
       if (scrolled.releaseBackground !== "rgb(232, 93, 38)") {
         fail(scope, `release background is ${scrolled.releaseBackground}`);
       }
@@ -225,7 +253,7 @@ for (const [browserName, browserType] of browserTypes) {
 
       await page.getByRole("button", { name: "Switch to dark theme" }).click();
       await waitForHero(page, "dark");
-      await page.goto(`${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`, { waitUntil: "networkidle" });
+      await gotoReady(page, `${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`);
       await waitForHero(page, "dark");
       const persisted = await inspectPage(page);
       if (persisted.theme !== "dark" || persisted.firstFrameTheme !== "dark") {
@@ -235,7 +263,11 @@ for (const [browserName, browserType] of browserTypes) {
         fail(scope, `persisted first load requested ${persisted.heroResources.join(" | ") || "no hero"}`);
       }
 
-      const copyButton = page.getByRole("button", { name: "Copy install command" }).first();
+      const copyButton = page.getByRole("button", { name: "Copy Codex install command" }).first();
+      const renderedInstallCommand = await copyButton.locator("code").getAttribute("aria-label");
+      if (renderedInstallCommand !== expectedInstallCommand) {
+        fail(scope, `install command is ${renderedInstallCommand ?? "missing"}`);
+      }
       const beforeCopy = await copyButton.boundingBox();
       await copyButton.click();
       await page.waitForTimeout(50);
@@ -266,12 +298,15 @@ for (const [browserName, browserType] of browserTypes) {
     }
 
     await verifyReducedMotion(browser, browserName);
+  } catch (error) {
+    fail(browserName, error instanceof Error ? error.message : String(error));
   } finally {
     await browser.close();
   }
 }
 
 if (failures.length) {
+  console.log(JSON.stringify(receipts, null, 2));
   console.error("homepage hardening failed:");
   for (const failure of failures) console.error(`- ${failure}`);
   process.exit(1);

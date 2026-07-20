@@ -1,5 +1,6 @@
 import { Github } from "lucide-react";
 import { cookies } from "next/headers";
+import { HomepageReady } from "./HomepageReady";
 import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { SiteFooter } from "./SiteFooter";
@@ -22,7 +23,8 @@ export default async function Home({ searchParams }: HomeProps) {
       : "light";
 
   return (
-    <main className="theme-page sm:min-h-screen">
+    <main className="theme-page sm:min-h-screen" data-ads-homepage data-page-ready="pending">
+      <HomepageReady />
       <p className="sr-only">
         Agentic Design System is a repo-local skill pack for coding agents. This page shows its input,
         browser checks, corrected screen, evidence report, and separate grader verdict.
@@ -59,7 +61,15 @@ export default async function Home({ searchParams }: HomeProps) {
               your coding agent calls the work done.
             </p>
             <div className="hero-actions">
-              <InstallCommand variant="strip" />
+              <div className="hero-install">
+                <InstallCommand variant="strip" />
+                <a
+                  className="install-guide-link focus-ring"
+                  href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md"
+                >
+                  Codex example · choose your agent and activate ADS <span aria-hidden="true">↗</span>
+                </a>
+              </div>
               <a className="tour-link focus-ring" href="#assembly-line">See one UI run <span aria-hidden="true">↓</span></a>
             </div>
           </div>
@@ -84,10 +94,10 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="release-primary-action">
             <span>Install the complete skill pack</span>
             <InstallCommand variant="strip" />
-            <small>One command adds the routing, review, motion, accessibility, and evidence workflows.</small>
+            <small>Codex shown. Tested commands and activation are available for all five supported agents.</small>
           </div>
-          <a className="release-github focus-ring" href="https://github.com/aa-on-ai/agentic-design-system">
-            <Github size={18} aria-hidden="true" /> Inspect the skills and scripts on GitHub
+          <a className="release-github focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md">
+            <Github size={18} aria-hidden="true" /> Choose your agent and activate ADS
           </a>
         </div>
       </section>

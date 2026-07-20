@@ -199,7 +199,8 @@ try {
       pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       commandLineCount: commandLines.length,
       commandLinesFit: commandLines.every((line) => line.scrollWidth <= line.clientWidth),
-      commandUsesTwoRows: commandLines.length === 2 && commandLines[0].top < commandLines[1].top,
+      commandUsesThreeRows: commandLines.length === 3 &&
+        commandLines[0].top < commandLines[1].top && commandLines[1].top < commandLines[2].top,
       trackCenter: track ? track.left + track.width / 2 : null,
       stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
       stationContentLeft: stationCopy?.left ?? null,
@@ -214,10 +215,10 @@ try {
   if (mobilePacing.pageOverflow > 0) {
     issues.push(`mobile page overflows by ${mobilePacing.pageOverflow}px`);
   }
-  if (!mobilePacing.commandLinesFit || !mobilePacing.commandUsesTwoRows) {
+  if (!mobilePacing.commandLinesFit || !mobilePacing.commandUsesThreeRows) {
     issues.push(
       `mobile install command is ${mobilePacing.commandLineCount} line segment(s), ` +
-      `fit=${mobilePacing.commandLinesFit}, twoRows=${mobilePacing.commandUsesTwoRows}`,
+      `fit=${mobilePacing.commandLinesFit}, threeRows=${mobilePacing.commandUsesThreeRows}`,
     );
   }
   if (
