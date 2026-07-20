@@ -28,6 +28,12 @@ async function withBrowserStepTimeout(promise, label) {
   }
 }
 
+async function settleMotionFrame(page) {
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
+}
+
 try {
   const page = await withBrowserStepTimeout(
     browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "no-preference" }),
@@ -60,7 +66,7 @@ try {
       document.documentElement.scrollTop = (pageHeight * step) / 24;
       document.body.scrollTop = (pageHeight * step) / 24;
     }, { step, pageHeight });
-    await page.waitForTimeout(35);
+    await settleMotionFrame(page);
     climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
   }
 

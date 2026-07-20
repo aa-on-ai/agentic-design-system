@@ -46,6 +46,12 @@ async function withBrowserStepTimeout(promise, label) {
   }
 }
 
+async function settleMotionFrame(page) {
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
+}
+
 async function installObservers(page) {
   await page.addInitScript(() => {
     window.__adsHardening = { cls: 0, firstFrameTheme: null };
@@ -221,7 +227,7 @@ for (const [browserName, browserType] of browserTypes) {
           document.documentElement.scrollTop = (pageHeight * step) / 16;
           document.body.scrollTop = (pageHeight * step) / 16;
         }, { step, pageHeight });
-        await page.waitForTimeout(24);
+        await settleMotionFrame(page);
         climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
       }
       const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
