@@ -115,7 +115,7 @@ async function runProfile(browser, profileName, runNumber) {
   await themeToggle.click();
   await page.waitForTimeout(120);
 
-  const copyButton = page.getByRole("button", { name: "Copy install command" }).first();
+  const copyButton = page.getByRole("button", { name: "Copy Codex install command" }).first();
   await copyButton.click();
   await page.waitForTimeout(120);
 

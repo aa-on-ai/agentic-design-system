@@ -358,6 +358,31 @@ code {
   gap: 20px;
 }
 
+.hero-install {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.install-guide-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-family: var(--font-label), monospace;
+  font-size: 0.64rem;
+  font-weight: 650;
+  line-height: var(--leading-label);
+  text-decoration: none;
+}
+
+.install-guide-link:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .hero-command-strip {
   display: flex;
   min-height: 54px;
@@ -1887,6 +1912,10 @@ code {
     width: 100%;
   }
 
+  .hero-install {
+    width: 100%;
+  }
+
   .hero-command-code {
     flex: 1;
     overflow: hidden;
@@ -1903,6 +1932,12 @@ code {
 
   .hero-command-text > span {
     white-space: nowrap;
+  }
+
+  .install-guide-link {
+    max-width: 340px;
+    align-items: flex-start;
+    padding-top: 8px;
   }
 
   .tour-link { min-height: 44px; }

@@ -9,11 +9,39 @@ if (!url) {
 }
 
 const browser = await webkit.launch();
-const page = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "no-preference" });
-const errors = [];
-page.on("pageerror", (error) => errors.push(error.message));
+const pageReadySelector = 'main[data-ads-homepage][data-page-ready="true"]';
+const browserStepTimeoutMs = 20_000;
+
+async function withBrowserStepTimeout(promise, label) {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error(`${label} timed out after ${browserStepTimeoutMs}ms`)),
+      browserStepTimeoutMs,
+    );
+  });
+
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function settleMotionFrame(page) {
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
+}
 
 try {
+  const page = await withBrowserStepTimeout(
+    browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "no-preference" }),
+    "WebKit page startup",
+  );
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+
   await page.addInitScript(() => {
     window.__adsLayoutShift = 0;
     new PerformanceObserver((list) => {
@@ -23,7 +51,8 @@ try {
     }).observe({ type: "layout-shift", buffered: true });
   });
 
-  await page.goto(`${url}?theme=light`, { waitUntil: "networkidle" });
+  await page.goto(`${url}?theme=light`, { waitUntil: "domcontentloaded" });
+  await page.locator(pageReadySelector).waitFor({ state: "attached", timeout: 20_000 });
   const initialClimber = await page.locator(".assembly-climber").evaluate((node) => ({
     documentTop: window.scrollY + node.getBoundingClientRect().top,
     transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
@@ -37,7 +66,7 @@ try {
       document.documentElement.scrollTop = (pageHeight * step) / 24;
       document.body.scrollTop = (pageHeight * step) / 24;
     }, { step, pageHeight });
-    await page.waitForTimeout(35);
+    await settleMotionFrame(page);
     climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
   }
 

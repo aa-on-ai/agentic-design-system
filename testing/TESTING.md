@@ -99,7 +99,7 @@ the matrix creates separate clean projects and explicitly installs to:
 - OpenClaw: `skills/`
 - Hermes (`hermes-agent`): `.hermes/skills/`
 
-every target must contain all 10 skills, the variation asset, 5 bundled templates, 6 bundled
+every target must contain all 10 skills, all 3 skill assets, 5 bundled templates, 7 bundled
 workflow runbooks, and `skills-lock.json`. success ends with:
 
 ```text
@@ -176,7 +176,10 @@ Run the Chromium and WebKit matrix at 390, 768, and 1280px:
 npm run homepage:hardening -- http://127.0.0.1:3000
 ```
 
-This gate verifies one active hero request on first load, stable full-page scrolling, reduced-motion fallbacks, theme persistence without a wrong first frame, keyboard focus in Chromium, copy feedback without layout shift, and the locked recovery invariants.
+This gate waits for the homepage's explicit hydrated-and-font-ready marker instead of network idle.
+It verifies one active hero request on first load, stable full-page scrolling, reduced-motion
+fallbacks, theme persistence without a wrong first frame, keyboard focus in Chromium, copy
+feedback without layout shift, and the locked recovery invariants.
 
 ## archived eval fixtures
 

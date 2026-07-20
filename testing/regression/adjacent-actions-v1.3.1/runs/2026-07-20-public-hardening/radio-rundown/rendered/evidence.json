@@ -1,0 +1,563 @@
+{
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/radio-rundown/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 787,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ✓ Rundown open Producer ordering is available. Playout will follow this rundown. ON AIR · LINE 2 CONNECTED The housing desk Priya Nair with Councillor Elena Ruiz · Studio A 6:24 ELAPSED 3:36 LE",
+      "renderSignature": "fffe7dc0",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 830,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ✓ Rundown open Producer ordering is available. Playout will follow this rundown. ORDERING AVAILABLE ON AIR · LINE 2 CONNECTED The housing desk Priya Nair with Councillor Elena Ruiz · Studio A 6",
+      "renderSignature": "bb413041",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 223,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A Loading the live rundown… Checking playout status and the latest studio timing. Holding the board steady while the latest order arrives.",
+      "renderSignature": "0faf675a",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 231,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A Loading the live rundown… Checking playout status and the latest studio timing. SYNCING Holding the board steady while the latest order arrives.",
+      "renderSignature": "f08e3903",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 332,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ○ No rundown loaded Studio A is connected, but this hour has no segments yet. 19:00 Build the next hour Import the producer sheet to add segments, durations, guests, and studio cues. Nothing wi",
+      "renderSignature": "d384af1c",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 346,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A ○ No rundown loaded Studio A is connected, but this hour has no segments yet. NOT SCHEDULED 19:00 Build the next hour Import the producer sheet to add segments, durations, guests, and studio cu",
+      "renderSignature": "976b1ed2",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 947,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A 🔒 Schedule locked by playout Automation owns the order until the 19:30 handoff. You cannot move segments, but you can still call the host about timing. ON AIR · LINE 2 CONNECTED The housing de",
+      "renderSignature": "a2b51655",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif",
+        "color": "rgb(24, 32, 41)",
+        "backgroundColor": "rgb(243, 239, 230)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 997,
+      "renderedTextSample": "RADIO COMMON · 89.7 FM City Hour / live rundown SUNDAY, JULY 19 19:18:24 PT · STUDIO A 🔒 Schedule locked by playout Automation owns the order until the 19:30 handoff. You cannot move segments, but you can still call the host about timing. ORDER LOCKED ON AIR · LINE 2 CONNECTED T",
+      "renderSignature": "ddd84d64",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Avenir Next\", Avenir, \"Century Gothic\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  },
+  "comparison": {
+    "generatedBy": "compare.mjs",
+    "toolVersion": "0.4.0",
+    "schemaVersion": 1,
+    "baselineDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/baseline/radio-rundown/rendered",
+    "candidateDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/radio-rundown/rendered",
+    "baselineUrl": "file:///Users/moltbot/clawd/memory/artifacts/ads-v1.3.1-expanded-benchmark-2026-07-19/radio-rundown/artifact/index.html",
+    "candidateUrl": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/radio-rundown/artifact/index.html",
+    "pixelmatchThreshold": 0.1,
+    "pixelmatchIncludeAA": false,
+    "pairsCompared": 8,
+    "pairsIdentical": 8,
+    "maxChangedPct": 0,
+    "meanChangedPct": 0,
+    "incomparable": [],
+    "pairs": [
+      {
+        "key": "default@1280x800",
+        "state": "default",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "default-1280x800.png",
+        "candidateScreenshot": "default-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1078",
+          "candidate": "1280x1078",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1379840,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-1280x800.png"
+      },
+      {
+        "key": "default@390x844",
+        "state": "default",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "default-390x844.png",
+        "candidateScreenshot": "default-390x844.png",
+        "dimensions": {
+          "baseline": "390x1442",
+          "candidate": "390x1442",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 562380,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-390x844.png"
+      },
+      {
+        "key": "empty@1280x800",
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "empty-1280x800.png",
+        "candidateScreenshot": "empty-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-1280x800.png"
+      },
+      {
+        "key": "empty@390x844",
+        "state": "empty",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "empty-390x844.png",
+        "candidateScreenshot": "empty-390x844.png",
+        "dimensions": {
+          "baseline": "390x844",
+          "candidate": "390x844",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 329160,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-390x844.png"
+      },
+      {
+        "key": "error@1280x800",
+        "state": "error",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "error-1280x800.png",
+        "candidateScreenshot": "error-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1136",
+          "candidate": "1280x1136",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1454080,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-1280x800.png"
+      },
+      {
+        "key": "error@390x844",
+        "state": "error",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "error-390x844.png",
+        "candidateScreenshot": "error-390x844.png",
+        "dimensions": {
+          "baseline": "390x1515",
+          "candidate": "390x1515",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 590850,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-390x844.png"
+      },
+      {
+        "key": "loading@1280x800",
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "loading-1280x800.png",
+        "candidateScreenshot": "loading-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-1280x800.png"
+      },
+      {
+        "key": "loading@390x844",
+        "state": "loading",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "loading-390x844.png",
+        "candidateScreenshot": "loading-390x844.png",
+        "dimensions": {
+          "baseline": "390x844",
+          "candidate": "390x844",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 329160,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-390x844.png"
+      }
+    ],
+    "outDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/radio-rundown/rendered/comparison"
+  }
+}

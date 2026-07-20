@@ -1,0 +1,19 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "Design Quality": 8,
+    "Originality": 8,
+    "Craft": 8,
+    "Functionality": 9
+  },
+  "weights": {
+    "Design Quality": 0.35,
+    "Originality": 0.30,
+    "Craft": 0.20,
+    "Functionality": 0.15
+  },
+  "weightedScore": 8.15,
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": null
+}

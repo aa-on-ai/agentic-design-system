@@ -26,7 +26,7 @@ testing/install-matrix.sh
 Success ends with both:
 
 ```text
-install smoke passed: 10 skills, 2 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
+install smoke passed: 10 skills, 3 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
 install matrix passed: 5 agents x 10 skills, with assets, templates, workflow runbooks, and lockfiles verified
 ```
 

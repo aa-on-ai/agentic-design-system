@@ -21,9 +21,32 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run release:check
       - name: Require a frozen-suite packet for ADS behavior changes
         env:
           REGRESSION_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: npm run regression:gate -- --base "$REGRESSION_BASE_SHA"
+      - run: npm ci --prefix demos
+      - run: npm run build --prefix demos
+      - name: Verify the homepage in Chromium and WebKit
+        run: |
+          npm --prefix demos run start -- --hostname 127.0.0.1 --port 3000 > "$RUNNER_TEMP/ads-demo.log" 2>&1 &
+          demo_pid=$!
+          trap 'kill "$demo_pid"' EXIT
+
+          ready=0
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000 > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+
+          if [[ "$ready" -ne 1 ]]; then
+            cat "$RUNNER_TEMP/ads-demo.log"
+            exit 1
+          fi
+
+          npm run homepage:hardening -- http://127.0.0.1:3000

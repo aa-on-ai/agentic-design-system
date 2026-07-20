@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f2ede3">
+  <title>Mise — Service pass</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2ede3;
+      --paper-deep: #e8e0d2;
+      --surface: #fffdf7;
+      --ink: #211f1a;
+      --muted: #6d675d;
+      --line: #d8cfc0;
+      --line-strong: #b9ad9b;
+      --action: #273f32;
+      --action-hover: #1e3328;
+      --action-soft: #e2e8df;
+      --warning: #98451f;
+      --warning-bg: #f7e4d5;
+      --warning-line: #d69472;
+      --focus: #a45427;
+      --radius: 14px;
+      --shadow: 0 1px 1px rgba(45, 36, 24, .04), 0 10px 32px rgba(45, 36, 24, .06);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(45, 36, 24, .025) 1px, transparent 1px) 0 0 / 100% 28px,
+        var(--paper);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    button { font: inherit; }
+
+    button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .service-header {
+      border-bottom: 1px solid var(--line-strong);
+      background: rgba(242, 237, 227, .96);
+    }
+
+    .header-inner {
+      width: min(1120px, calc(100% - 40px));
+      min-height: 88px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 7px 6px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+    }
+
+    .brand-mark span {
+      display: block;
+      height: 1px;
+      background: var(--ink);
+    }
+
+    .brand-name {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+
+    .brand-context {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.3;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .feed-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: .02em;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px rgba(45, 36, 24, .04);
+    }
+
+    .status-symbol {
+      width: 18px;
+      height: 18px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .feed-status.is-live { color: var(--action); }
+    .feed-status.is-offline { color: var(--warning); border-color: var(--warning-line); background: var(--warning-bg); }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin-inline: auto;
+      padding: 52px 0 calc(64px + env(safe-area-inset-bottom));
+    }
+
+    .eyebrow {
+      margin: 0 0 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+
+    h1 {
+      max-width: 800px;
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 500;
+      line-height: .98;
+      letter-spacing: -.04em;
+    }
+
+    .service-deck {
+      max-width: 650px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .notice {
+      margin: 32px 0 0;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 13px;
+      align-items: start;
+      border: 1px solid var(--warning-line);
+      border-radius: var(--radius);
+      background: var(--warning-bg);
+      color: #532916;
+    }
+
+    .notice-icon {
+      width: 24px;
+      height: 24px;
+      grid-row: 1 / span 2;
+      display: grid;
+      place-items: center;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .notice strong { font-size: 15px; }
+    .notice p { margin: 0; color: #704029; font-size: 14px; }
+
+    .pass-shell {
+      margin-top: 44px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+      gap: 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      background: rgba(255, 253, 247, .56);
+      box-shadow: var(--shadow);
+    }
+
+    .course-lead { padding: 32px 40px 36px 0; }
+    .command { padding: 32px 0 36px 40px; border-left: 1px solid var(--line-strong); }
+
+    .course-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      align-items: baseline;
+      color: var(--muted);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .course-meta strong { color: var(--ink); font-size: 15px; }
+
+    .course-title {
+      max-width: 620px;
+      margin: 21px 0 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: clamp(31px, 4vw, 50px);
+      font-weight: 500;
+      line-height: 1.04;
+      letter-spacing: -.035em;
+    }
+
+    .course-note {
+      max-width: 590px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .timing {
+      margin-top: 28px;
+      display: flex;
+      align-items: baseline;
+      gap: 13px;
+    }
+
+    .timing-value {
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: 37px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timing-label { color: var(--muted); font-size: 14px; }
+
+    .command h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .station-readiness {
+      margin: 17px 0 28px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .station-readiness li {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .station-readiness li:first-child { border-top: 1px solid var(--line); }
+    .station-readiness span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    .action-stack { display: grid; gap: 10px; }
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 18px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-weight: 700;
+      line-height: 1.2;
+      cursor: pointer;
+      transition-property: background-color, border-color, color, transform;
+      transition-duration: 160ms;
+      transition-timing-function: ease-out;
+    }
+
+    .btn:active { transform: scale(.97); }
+    .btn-primary { color: #fffdf7; background: var(--action); }
+    .btn-primary:hover { background: var(--action-hover); }
+    .btn-secondary { color: var(--ink); background: transparent; border-color: var(--line-strong); }
+    .btn-secondary:hover { background: var(--action-soft); border-color: #859587; }
+
+    .btn:disabled {
+      color: #777168;
+      background: #dcd5ca;
+      border-color: #cbc2b4;
+      cursor: not-allowed;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.32);
+      opacity: 1;
+    }
+
+    .btn:disabled:active { transform: none; }
+
+    .action-help {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .action-help strong { color: var(--warning); }
+
+    .sequence {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: minmax(180px, .42fr) minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    .sequence-heading h2 {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: 27px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .sequence-heading p { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
+
+    .tickets { border-top: 1px solid var(--line-strong); }
+
+    .ticket {
+      min-height: 76px;
+      padding: 16px 0;
+      display: grid;
+      grid-template-columns: 68px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ticket-table {
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .ticket-main { min-width: 0; }
+    .ticket-main strong { display: block; font-size: 15px; }
+    .ticket-main span { display: block; margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .ticket-status { text-align: right; color: var(--muted); font-size: 13px; font-weight: 650; }
+    .ticket-status::before { content: "— "; }
+
+    .skeleton-shell { margin-top: 44px; border-top: 1px solid var(--line-strong); padding-top: 32px; }
+    .skeleton-status { margin: 0 0 28px; color: var(--muted); }
+    .skeleton-grid { display: grid; grid-template-columns: 1.4fr .7fr; gap: 52px; }
+    .skeleton-lines { display: grid; gap: 14px; }
+    .skeleton-line {
+      height: 18px;
+      border-radius: 4px;
+      background: #dfd8cc;
+      position: relative;
+      overflow: hidden;
+    }
+    .skeleton-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.52), transparent);
+      transform: translateX(-100%);
+      animation: sweep 1.4s ease-in-out infinite;
+    }
+    .skeleton-line.lg { height: 54px; width: 86%; }
+    .skeleton-line.md { width: 63%; }
+    .skeleton-line.sm { width: 42%; }
+    @keyframes sweep { to { transform: translateX(100%); } }
+
+    .empty-shell {
+      margin-top: 44px;
+      padding: 54px 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line-strong);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 360px);
+      gap: 48px;
+      align-items: end;
+    }
+
+    .empty-shell h2 {
+      max-width: 620px;
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      font-size: clamp(32px, 5vw, 50px);
+      font-weight: 500;
+      line-height: 1.06;
+      letter-spacing: -.03em;
+    }
+
+    .empty-shell p { max-width: 610px; margin: 15px 0 0; color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      right: max(20px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      z-index: 5;
+      max-width: min(340px, calc(100vw - 40px));
+      padding: 14px 18px;
+      border-radius: 10px;
+      color: #fffdf7;
+      background: var(--action);
+      box-shadow: 0 12px 40px rgba(24, 31, 27, .24);
+      font-size: 14px;
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition-property: transform, opacity;
+      transition-duration: 180ms;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+
+    /* md: compact composition begins where the pass columns stop reading comfortably. */
+    @media (max-width: 720px) {
+      .header-inner, main { width: min(100% - 32px, 1120px); }
+      .header-inner { min-height: 78px; gap: 12px; }
+      .brand-context { display: none; }
+      .feed-status { padding-inline: 10px; font-size: 12px; }
+      main { padding-top: 36px; }
+      h1 { font-size: clamp(40px, 13vw, 54px); }
+      .service-deck { font-size: 16px; line-height: 1.5; }
+      .notice { margin-top: 25px; padding: 15px 16px; }
+      .pass-shell { margin-top: 34px; grid-template-columns: 1fr; box-shadow: none; }
+      .course-lead { padding: 26px 0 28px; }
+      .command { padding: 26px 0 30px; border-left: 0; border-top: 1px solid var(--line-strong); }
+      .course-title { font-size: 37px; }
+      .station-readiness { margin-bottom: 22px; }
+      .sequence { margin-top: 42px; grid-template-columns: 1fr; gap: 21px; }
+      .ticket { grid-template-columns: 56px minmax(0, 1fr); gap: 12px; }
+      .ticket-status { grid-column: 2; text-align: left; margin-top: -7px; }
+      .skeleton-grid, .empty-shell { grid-template-columns: 1fr; }
+      .skeleton-grid { gap: 32px; }
+      .empty-shell { padding: 40px 0; gap: 30px; align-items: start; }
+    }
+
+    @media (max-width: 390px) {
+      .header-inner, main { width: calc(100% - 28px); }
+      .brand-name { font-size: 22px; }
+      .feed-status .status-time { display: none; }
+      .course-meta { gap: 6px 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="service-header">
+    <div class="header-inner">
+      <div class="brand" aria-label="Mise service pass">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <div>
+          <p class="brand-name">Mise</p>
+          <p class="brand-context">Saturday dinner · 28 covers</p>
+        </div>
+      </div>
+      <div id="feedStatus" class="feed-status is-live">
+        <span class="status-symbol" aria-hidden="true">✓</span>
+        <span>Order feed live <span class="status-time">· 18:42</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const stateCopy = {
+      default: {
+        eyebrow: 'Service pass · now',
+        title: 'Table 14 is pacing next.',
+        deck: 'Four guests are through course three. The fish station is finishing the next plate set while sauce and garde stand ready.'
+      },
+      error: {
+        eyebrow: 'Service pass · last known position',
+        title: 'Table 14 was pacing next.',
+        deck: 'The last full sync completed at 18:39. Course details remain visible for coordination, but the pass cannot change an order until the feed reconnects.'
+      }
+    };
+
+    const feedStatus = document.getElementById('feedStatus');
+    const app = document.getElementById('app');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    function iconLabel(kind) {
+      return kind === 'offline'
+        ? '<span class="status-symbol" aria-hidden="true">!</span>'
+        : kind === 'loading'
+          ? '<span class="status-symbol" aria-hidden="true">↻</span>'
+          : '<span class="status-symbol" aria-hidden="true">✓</span>';
+    }
+
+    function updateFeed(state) {
+      if (state === 'error') {
+        feedStatus.className = 'feed-status is-offline';
+        feedStatus.innerHTML = iconLabel('offline') + '<span>Order feed offline <span class="status-time">· since 18:39</span></span>';
+      } else if (state === 'loading') {
+        feedStatus.className = 'feed-status';
+        feedStatus.innerHTML = iconLabel('loading') + '<span>Syncing orders</span>';
+      } else {
+        feedStatus.className = 'feed-status is-live';
+        feedStatus.innerHTML = iconLabel('live') + '<span>Order feed live <span class="status-time">· 18:42</span></span>';
+      }
+    }
+
+    function coursePanel(state) {
+      const isError = state === 'error';
+      return `
+        <section class="pass-shell" aria-labelledby="course-heading">
+          <div class="course-lead">
+            <div class="course-meta">
+              <strong>Table 14 · 4 guests</strong>
+              <span>Course 4 of 7</span>
+              <span>${isError ? 'Last sync 18:39' : 'Seated 18:07'}</span>
+            </div>
+            <h2 class="course-title" id="course-heading">Turbot with brown butter &amp; sea herbs</h2>
+            <p class="course-note">Hold for the pairing pour. Sommelier expects to clear the table in under two minutes.</p>
+            <div class="timing" aria-label="Target fire in 1 minute 38 seconds">
+              <span class="timing-value">01:38</span>
+              <span class="timing-label">target to fire</span>
+            </div>
+          </div>
+          <aside class="command" aria-labelledby="readiness-heading">
+            <h2 id="readiness-heading">Station readiness</h2>
+            <ul class="station-readiness">
+              <li><span>Fish</span><span>Plating · 3 of 4</span></li>
+              <li><span>Sauce</span><span>Ready · 18:41</span></li>
+              <li><span>Garde</span><span>Ready · 18:40</span></li>
+            </ul>
+            <div class="action-stack">
+              <button class="btn btn-primary" id="fireCourse" type="button" ${isError ? 'disabled aria-describedby="fire-help"' : 'aria-describedby="fire-help"'}>Fire next course</button>
+              <button class="btn btn-secondary" id="callStation" type="button">Call station</button>
+            </div>
+            <p class="action-help" id="fire-help">${isError ? '<strong>Unavailable:</strong> the order feed is offline, so no course can be fired. Calling the station still works.' : 'Sends the Table 14 fire to fish, sauce, and garde. Calling the station is also available.'}</p>
+          </aside>
+        </section>`;
+    }
+
+    function pageHeader(eyebrow, title, deck) {
+      return `
+        <p class="eyebrow">${eyebrow}</p>
+        <h1>${title}</h1>
+        <p class="service-deck">${deck}</p>`;
+    }
+
+    function sequencePanel() {
+      return `
+        <section class="sequence" aria-labelledby="sequence-heading">
+          <div class="sequence-heading">
+            <p class="eyebrow">After Table 14</p>
+            <h2 id="sequence-heading">Service sequence</h2>
+            <p>Three tables are being paced behind the pass.</p>
+          </div>
+          <div class="tickets">
+            <article class="ticket">
+              <div class="ticket-table">T08</div>
+              <div class="ticket-main"><strong>Duck · chicory · black garlic</strong><span>Course 5 · 2 guests · one dairy note</span></div>
+              <div class="ticket-status">Hold 04:20</div>
+            </article>
+            <article class="ticket">
+              <div class="ticket-table">T21</div>
+              <div class="ticket-main"><strong>Squab · beetroot · juniper</strong><span>Course 4 · 5 guests · complete pickup</span></div>
+              <div class="ticket-status">Pacing</div>
+            </article>
+            <article class="ticket">
+              <div class="ticket-table">T05</div>
+              <div class="ticket-main"><strong>Celeriac · smoked whey · walnut</strong><span>Course 3 · 2 guests · walnut allergy swap</span></div>
+              <div class="ticket-status">Hold 08:10</div>
+            </article>
+          </div>
+        </section>`;
+    }
+
+    function activeView(state) {
+      const copy = stateCopy[state];
+      return `
+        ${pageHeader(copy.eyebrow, copy.title, copy.deck)}
+        ${state === 'error' ? `
+          <div class="notice" role="alert" aria-live="assertive">
+            <span class="notice-icon" aria-hidden="true">!</span>
+            <strong>Order feed offline</strong>
+            <p>Firing is paused to prevent a false kitchen order. Use Call station for immediate coordination.</p>
+          </div>` : ''}
+        ${coursePanel(state)}
+        ${sequencePanel()}`;
+    }
+
+    function loadingView() {
+      return `
+        ${pageHeader('Service pass', 'Bringing the pass up to date.', 'Checking the latest table pacing, holds, and station readiness before service actions become available.')}
+        <section class="skeleton-shell" role="status" aria-live="polite" aria-busy="true" aria-label="Loading current service orders">
+          <p class="skeleton-status">Syncing current orders…</p>
+          <div class="skeleton-grid" aria-hidden="true">
+            <div class="skeleton-lines">
+              <div class="skeleton-line md"></div>
+              <div class="skeleton-line lg"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line sm"></div>
+            </div>
+            <div class="skeleton-lines">
+              <div class="skeleton-line md"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        </section>`;
+    }
+
+    function emptyView() {
+      return `
+        ${pageHeader('Service pass · now', 'The pass is clear.', 'No table is waiting to fire. The next pacing check is due in two minutes.')}
+        <section class="empty-shell" aria-labelledby="empty-heading">
+          <div>
+            <h2 id="empty-heading">Nothing needs the kitchen yet.</h2>
+            <p>Dining room is holding Table 21 for a wine pour. New courses will appear here as soon as they are released to the pass.</p>
+          </div>
+          <div>
+            <button class="btn btn-secondary" id="callStation" type="button">Call station</button>
+            <p class="action-help">The station line stays available while the pass is clear.</p>
+          </div>
+        </section>`;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    function bindActions() {
+      document.getElementById('callStation')?.addEventListener('click', () => showToast('Calling fish station on the kitchen line…'));
+      document.getElementById('fireCourse')?.addEventListener('click', () => showToast('Table 14 fired to fish, sauce, and garde.'));
+    }
+
+    function readState() {
+      const requested = new URLSearchParams(location.hash.replace(/^#/, '')).get('state') || 'default';
+      return ['default', 'loading', 'empty', 'error'].includes(requested) ? requested : 'default';
+    }
+
+    function render() {
+      const state = readState();
+      updateFeed(state);
+      app.innerHTML = state === 'loading' ? loadingView() : state === 'empty' ? emptyView() : activeView(state);
+      document.title = `${state === 'default' ? 'Service pass' : state[0].toUpperCase() + state.slice(1)} — Mise`;
+      bindActions();
+    }
+
+    window.addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+</html>

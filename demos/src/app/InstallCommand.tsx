@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const command = "npx skills add aa-on-ai/agentic-design-system --yes";
+const command = "npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes";
 
 type InstallCommandProps = {
   variant?: "card" | "strip";
@@ -28,14 +28,15 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
       <button
         type="button"
         onClick={copy}
-        aria-label="Copy install command"
+        aria-label="Copy Codex install command"
         className="hero-command-strip"
       >
         <code className="hero-command-code" aria-label={command}>
           <span className="hero-command-prompt" aria-hidden="true">$</span>
           <span className="hero-command-text">
             <span>npx skills add</span>{" "}
-            <span>aa-on-ai/agentic-design-system --yes</span>
+            <span>aa-on-ai/agentic-design-system</span>{" "}
+            <span>--agent codex --copy --yes</span>
           </span>
         </code>
         <span className="hero-command-copy" aria-live="polite">

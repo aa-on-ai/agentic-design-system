@@ -1,0 +1,563 @@
+{
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/greenhouse-irrigation/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 896,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live SATURDAY · MORNING RUN Watering starts at 06:40 Three zones are queued. Propagation is below its moisture floor and leads the run. 27 min until valves open The plan is editable. Controller GH-02 is receiving current probe readings.",
+      "renderSignature": "bb940f42",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 904,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live · GH-02 SATURDAY · MORNING RUN Watering starts at 06:40 Three zones are queued. Propagation is below its moisture floor and leads the run. 27 min until valves open The plan is editable. Controller GH-02 is receiving current probe r",
+      "renderSignature": "ca7e773b",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 235,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Checking telemetry SATURDAY · MORNING RUN Preparing the watering run The latest zone readings are being checked before the valve plan is shown. --:-- start time Checking controller and moisture probes…",
+      "renderSignature": "3b2dcbee",
+      "probe": {}
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 243,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Checking telemetry · GH-02 SATURDAY · MORNING RUN Preparing the watering run The latest zone readings are being checked before the valve plan is shown. --:-- start time Checking controller and moisture probes…",
+      "renderSignature": "332b1a71",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 598,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live SATURDAY · MORNING RUN No watering run is scheduled All eight zones are within their moisture bands. The glasshouse is ready for the next planned cycle. 8 / 8 zones within target QUEUE CLEAR Plan the next cycle when the crop team i",
+      "renderSignature": "bba36230",
+      "probe": {}
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 606,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry live · GH-02 SATURDAY · MORNING RUN No watering run is scheduled All eight zones are within their moisture bands. The glasshouse is ready for the next planned cycle. 8 / 8 zones within target QUEUE CLEAR Plan the next cycle when the cro",
+      "renderSignature": "d4628927",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1142,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry offline SATURDAY · SAFE MODE The last verified plan is on hold Controller GH-02 stopped reporting after 06:12. Schedule changes are blocked until telemetry returns. 06:12 last verified reading TELEMETRY OFFLINE · SAFE MODE ACTIVE Schedu",
+      "renderSignature": "11d00c81",
+      "probe": {}
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"Trebuchet MS\", \"Segoe UI\", sans-serif",
+        "color": "rgb(23, 49, 38)",
+        "backgroundColor": "rgb(244, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1150,
+      "renderedTextSample": "NORTH RANGE Glasshouse irrigation Telemetry offline · GH-02 SATURDAY · SAFE MODE The last verified plan is on hold Controller GH-02 stopped reporting after 06:12. Schedule changes are blocked until telemetry returns. 06:12 last verified reading TELEMETRY OFFLINE · SAFE MODE ACTIV",
+      "renderSignature": "a1868458",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"Trebuchet MS\", \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  },
+  "comparison": {
+    "generatedBy": "compare.mjs",
+    "toolVersion": "0.4.0",
+    "schemaVersion": 1,
+    "baselineDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/baseline/greenhouse-irrigation/rendered",
+    "candidateDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/greenhouse-irrigation/rendered",
+    "baselineUrl": "http://127.0.0.1:41731/index.html",
+    "candidateUrl": "file:///Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/greenhouse-irrigation/artifact/index.html",
+    "pixelmatchThreshold": 0.1,
+    "pixelmatchIncludeAA": false,
+    "pairsCompared": 8,
+    "pairsIdentical": 8,
+    "maxChangedPct": 0,
+    "meanChangedPct": 0,
+    "incomparable": [],
+    "pairs": [
+      {
+        "key": "default@1280x800",
+        "state": "default",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "default-1280x800.png",
+        "candidateScreenshot": "default-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1061",
+          "candidate": "1280x1061",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1358080,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-1280x800.png"
+      },
+      {
+        "key": "default@390x844",
+        "state": "default",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "default-390x844.png",
+        "candidateScreenshot": "default-390x844.png",
+        "dimensions": {
+          "baseline": "390x1780",
+          "candidate": "390x1780",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 694200,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-default-390x844.png"
+      },
+      {
+        "key": "empty@1280x800",
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "empty-1280x800.png",
+        "candidateScreenshot": "empty-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-1280x800.png"
+      },
+      {
+        "key": "empty@390x844",
+        "state": "empty",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "empty-390x844.png",
+        "candidateScreenshot": "empty-390x844.png",
+        "dimensions": {
+          "baseline": "390x1139",
+          "candidate": "390x1139",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 444210,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-empty-390x844.png"
+      },
+      {
+        "key": "error@1280x800",
+        "state": "error",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "error-1280x800.png",
+        "candidateScreenshot": "error-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x1248",
+          "candidate": "1280x1248",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1597440,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-1280x800.png"
+      },
+      {
+        "key": "error@390x844",
+        "state": "error",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "error-390x844.png",
+        "candidateScreenshot": "error-390x844.png",
+        "dimensions": {
+          "baseline": "390x1942",
+          "candidate": "390x1942",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 757380,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-error-390x844.png"
+      },
+      {
+        "key": "loading@1280x800",
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "baselineScreenshot": "loading-1280x800.png",
+        "candidateScreenshot": "loading-1280x800.png",
+        "dimensions": {
+          "baseline": "1280x800",
+          "candidate": "1280x800",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 1024000,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-1280x800.png"
+      },
+      {
+        "key": "loading@390x844",
+        "state": "loading",
+        "breakpoint": "390x844",
+        "baselineScreenshot": "loading-390x844.png",
+        "candidateScreenshot": "loading-390x844.png",
+        "dimensions": {
+          "baseline": "390x942",
+          "candidate": "390x942",
+          "match": true
+        },
+        "changedPixels": 0,
+        "outOfBoundsPixels": 0,
+        "totalPixels": 367380,
+        "changedPct": 0,
+        "changedPctRaw": 0,
+        "identical": true,
+        "diffImage": "diff-loading-390x844.png"
+      }
+    ],
+    "outDir": "/Users/moltbot/clawd/worktrees/ads-public-hardening/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening/greenhouse-irrigation/rendered/comparison"
+  }
+}

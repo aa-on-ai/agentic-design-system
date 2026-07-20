@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-07-20-public-hardening",
+  "createdAt": "2026-07-20T11:44:05.996Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "6e7ae216c2c0af89a0eeeb0b09a2bbc008fcc102",
+  "behaviorDigest": "f5eda44fb67cde3eb22e0d701d9f896c56a3054c101d113c56eeddea0b19960c",
+  "behaviorFileCount": 65,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "Fresh Chromium recapture from the current ADS behavior digest: 8/8 state-breakpoint screenshots passed rendered gates and compared perceptually identical to the frozen Pawprint baseline.",
+      "graderContext": "The prior independent Pawprint grade was retained only after the fresh 8/8 candidate comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "Fresh Chromium recapture from the current ADS behavior digest: 8/8 state-breakpoint screenshots passed rendered gates and compared perceptually identical to the frozen Glasshouse baseline.",
+      "graderContext": "The prior independent Glasshouse grade was retained only after the fresh 8/8 candidate comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "Fresh Chromium recapture from the current ADS behavior digest: 8/8 state-breakpoint screenshots passed rendered gates and compared perceptually identical to the frozen Museum baseline.",
+      "graderContext": "The prior independent Museum grade was retained only after the fresh 8/8 candidate comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "Fresh Chromium recapture from the current ADS behavior digest: 8/8 state-breakpoint screenshots passed rendered gates and compared perceptually identical to the frozen Kitchen baseline.",
+      "graderContext": "The prior independent Kitchen grade was retained only after the fresh 8/8 candidate comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "Fresh Chromium recapture from the current ADS behavior digest: 8/8 state-breakpoint screenshots passed rendered gates and compared perceptually identical to the frozen Radio baseline.",
+      "graderContext": "The prior independent Radio grade was retained only after the fresh 8/8 candidate comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    }
+  ]
+}
