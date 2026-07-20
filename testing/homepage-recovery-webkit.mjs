@@ -57,6 +57,14 @@ try {
     documentTop: window.scrollY + node.getBoundingClientRect().top,
     transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
   }));
+  const railAlignment = await page.evaluate(() => {
+    const mouth = document.querySelector(".hero-track-mouth").getBoundingClientRect();
+    const track = document.querySelector(".continuous-track").getBoundingClientRect();
+    return {
+      centerDelta: Math.abs((mouth.left + mouth.width / 2) - (track.left + track.width / 2)),
+      widthDelta: Math.abs(mouth.width - track.width),
+    };
+  });
   const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
   const climberTransforms = new Set([initialClimber.transform]);
 
@@ -85,6 +93,21 @@ try {
   const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
     documentTop: window.scrollY + node.getBoundingClientRect().top,
   }));
+  await page.locator(".footer-ember-image img").evaluate((node) => {
+    node.dataset.mountProbe = "footer-ember";
+  });
+  await page.getByRole("button", { name: "Make Ember bounce" }).click();
+  await settleMotionFrame(page);
+  const footerBounce = await page.locator(".footer-ember-image").evaluate((node) => {
+    const image = node.querySelector("img");
+    const style = getComputedStyle(node);
+    return {
+      animationName: style.animationName,
+      imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+      imageStayedMounted: image?.dataset.mountProbe === "footer-ember",
+      opacity: Number.parseFloat(style.opacity),
+    };
+  });
 
   const failures = [];
   if (errors.length) failures.push(`page errors: ${errors.join(" | ")}`);
@@ -97,6 +120,9 @@ try {
   if (facts.climberPosition !== "sticky") failures.push(`Ember position is ${facts.climberPosition}, expected sticky`);
   if (finalClimber.documentTop - initialClimber.documentTop < 200) failures.push(`Ember only traveled ${Math.round(finalClimber.documentTop - initialClimber.documentTop)}px with the rail`);
   if (climberTransforms.size < 3) failures.push(`Ember climb cadence only produced ${climberTransforms.size} transform state(s)`);
+  if (railAlignment.centerDelta > 0.5 || railAlignment.widthDelta > 0.5) failures.push(`mobile rail mismatch is ${railAlignment.centerDelta.toFixed(1)}px center / ${railAlignment.widthDelta.toFixed(1)}px width`);
+  if (footerBounce.animationName !== "ember-peek-pop") failures.push(`footer bounce animation is ${footerBounce.animationName}`);
+  if (!footerBounce.imageLoaded || !footerBounce.imageStayedMounted || footerBounce.opacity < 1) failures.push(`footer Ember visibility failed: ${JSON.stringify(footerBounce)}`);
   if (facts.handoffs) failures.push("release handoff is still rendered");
   if (facts.activeStations) failures.push("scroll-driven station state is still rendered");
   if (facts.releaseBackground !== "rgb(232, 93, 38)") failures.push(`release background is ${facts.releaseBackground}`);

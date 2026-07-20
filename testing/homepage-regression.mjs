@@ -92,7 +92,7 @@ try {
     }
   }
 
-  const footerEmber = page.getByRole("button", { name: "Make Ember pop up" });
+  const footerEmber = page.getByRole("button", { name: "Make Ember bounce" });
   if (await footerEmber.count() !== 1) {
     issues.push("footer Ember is not an accessible button");
   } else {
@@ -101,10 +101,24 @@ try {
       issues.push(`footer Ember hit area is ${box ? `${box.width}x${box.height}` : "missing"} (expected >= 48x48)`);
     }
 
+    await footerEmber.locator(".footer-ember-image img").evaluate((node) => {
+      node.dataset.mountProbe = "footer-ember";
+    });
     await footerEmber.click();
     const reactionCount = await footerEmber.getAttribute("data-reaction-count");
     if (reactionCount !== "1") {
       issues.push(`footer Ember did not react after click (reaction count: ${reactionCount ?? "missing"})`);
+    }
+    const bounceState = await footerEmber.locator(".footer-ember-image").evaluate((node) => {
+      const image = node.querySelector("img");
+      return {
+        animationName: getComputedStyle(node).animationName,
+        imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+        imageStayedMounted: image?.dataset.mountProbe === "footer-ember",
+      };
+    });
+    if (bounceState.animationName !== "ember-peek-pop" || !bounceState.imageLoaded || !bounceState.imageStayedMounted) {
+      issues.push(`footer Ember bounce failed: ${JSON.stringify(bounceState)}`);
     }
   }
 
