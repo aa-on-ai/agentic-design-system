@@ -168,7 +168,7 @@ async function verifyReducedMotion(browser, browserName) {
   const climberPosition = await page.locator(".assembly-climber").evaluate((node) => getComputedStyle(node).position);
   if (climberPosition !== "absolute") fail(scope, `reduced-motion climber position is ${climberPosition}`);
 
-  await page.getByRole("button", { name: "Make Ember pop up" }).click();
+  await page.getByRole("button", { name: "Make Ember bounce" }).click();
   const footerAnimation = await page.locator(".footer-ember-image").evaluate((node) => ({
     name: getComputedStyle(node).animationName,
     duration: getComputedStyle(node).animationDuration,
@@ -303,6 +303,28 @@ for (const [browserName, browserType] of browserTypes) {
         fail(scope, "copy feedback shifted the install action");
       }
 
+      await page.locator(".footer-ember-image img").evaluate((node) => {
+        node.dataset.mountProbe = "footer-ember";
+      });
+      await page.getByRole("button", { name: "Make Ember bounce" }).click();
+      await settleMotionFrame(page);
+      const footerBounce = await page.locator(".footer-ember-image").evaluate((node) => {
+        const image = node.querySelector("img");
+        const style = getComputedStyle(node);
+        return {
+          animationName: style.animationName,
+          imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+          imageStayedMounted: image?.dataset.mountProbe === "footer-ember",
+          opacity: Number.parseFloat(style.opacity),
+        };
+      });
+      if (footerBounce.animationName !== "ember-peek-pop") {
+        fail(scope, `footer bounce animation is ${footerBounce.animationName}`);
+      }
+      if (!footerBounce.imageLoaded || !footerBounce.imageStayedMounted || footerBounce.opacity < 1) {
+        fail(scope, `footer Ember visibility failed: ${JSON.stringify(footerBounce)}`);
+      }
+
       receipts.push({
         scope,
         cls: scrolled.cls,
@@ -311,6 +333,7 @@ for (const [browserName, browserType] of browserTypes) {
         emberTravel: Math.round(finalClimber.documentTop - initialClimber.documentTop),
         emberCadenceStates: climberTransforms.size,
         mobileRailAlignment,
+        footerBounce,
         keyboardControls: keyboardOrder.length,
         copyFeedback: copyFeedback?.trim() ?? null,
       });
