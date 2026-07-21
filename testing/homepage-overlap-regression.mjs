@@ -120,6 +120,54 @@ try {
     if (endCollision.missing) fail(width, "missing End of run or Ember collision target");
     else if (endCollision.collision !== false) fail(width, `End of run overlaps Ember: ${JSON.stringify(endCollision)}`);
 
+    const footerLayout = await page.evaluate(() => {
+      const footer = document.querySelector(".site-footer");
+      const ember = document.querySelector(".footer-ember");
+      const metaLink = document.querySelector(".footer-meta a");
+      if (!footer || !ember || !metaLink) return { missing: true };
+
+      const footerRect = footer.getBoundingClientRect();
+      const emberRect = ember.getBoundingClientRect();
+      const metaLinkRect = metaLink.getBoundingClientRect();
+      const overlap = (a, b) => Boolean(
+        Math.min(a.right, b.right) > Math.max(a.left, b.left) &&
+        Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top)
+      );
+      const clipped = [...footer.querySelectorAll("p, a")]
+        .filter((element) => {
+          const styles = getComputedStyle(element);
+          const box = element.getBoundingClientRect();
+          return styles.display !== "none" && styles.visibility !== "hidden" && box.width > 1 && box.height > 1;
+        })
+        .map((element) => {
+          const box = element.getBoundingClientRect();
+          return {
+            text: element.textContent?.trim().replace(/\s+/g, " ") ?? "",
+            left: box.left,
+            right: box.right,
+          };
+        })
+        .filter((element) => element.left < footerRect.left - 1 || element.right > footerRect.right + 1);
+
+      return {
+        missing: false,
+        emberMetaOverlap: overlap(emberRect, metaLinkRect),
+        clipped,
+        ember: { top: emberRect.top, right: emberRect.right, bottom: emberRect.bottom, left: emberRect.left },
+        metaLink: { top: metaLinkRect.top, right: metaLinkRect.right, bottom: metaLinkRect.bottom, left: metaLinkRect.left },
+      };
+    });
+
+    if (footerLayout.missing) fail(width, "missing footer collision target");
+    else {
+      if (footerLayout.emberMetaOverlap) {
+        fail(width, `footer Ember overlaps the author link: ${JSON.stringify({ ember: footerLayout.ember, metaLink: footerLayout.metaLink })}`);
+      }
+      if (footerLayout.clipped.length > 0) {
+        fail(width, `footer content clips outside its lane: ${JSON.stringify(footerLayout.clipped)}`);
+      }
+    }
+
     await page.close();
   }
 } finally {
