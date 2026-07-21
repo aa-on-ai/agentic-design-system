@@ -81,8 +81,15 @@ async function settleAtStation(page, stage) {
     }, stage);
     await page.waitForTimeout(60);
   }
-  // The final alignment already waited 60ms; another 140ms observes arrival at ~200ms.
-  await page.waitForTimeout(140);
+  await page.waitForFunction(
+    (targetStage) => {
+      const climber = document.querySelector(".assembly-climber");
+      return climber?.getAttribute("data-phase") === "arriving" &&
+        climber.getAttribute("data-station") === targetStage;
+    },
+    stage,
+    { timeout: 3_000 },
+  );
   const arrival = await readStationState(page, stage);
 
   await page.waitForFunction(
