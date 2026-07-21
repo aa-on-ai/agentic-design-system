@@ -355,6 +355,7 @@ code {
   display: flex;
   margin-top: 32px;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
@@ -1882,6 +1883,19 @@ code {
     width: min(800px, 64vw);
   }
 
+  .release-bay {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .release-actions {
+    width: 100%;
+    max-width: none;
+  }
+
+  .release-primary-action .hero-command-text {
+    flex-direction: row;
+  }
+
   .line-intro h2,
   .line-intro > span {
     max-width: calc(50% - 70px);
@@ -1891,6 +1905,14 @@ code {
     font-size: clamp(3.2rem, 5vw, 4.6rem);
   }
 
+}
+
+@media (min-width: 1400px) {
+  .release-bay {
+    padding-right: max(32px, calc((100vw - 1440px) / 2));
+    padding-left: max(32px, calc((100vw - 1440px) / 2));
+    grid-template-columns: minmax(0, 1fr) minmax(610px, 0.8fr);
+  }
 }
 
 @media (max-width: 1040px) {

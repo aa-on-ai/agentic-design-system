@@ -9,7 +9,7 @@ if (!url) {
   process.exit(2);
 }
 
-const widths = [267, 320, 390, 479, 664, 720, 768, 811, 958, 1040, 1280, 1622];
+const widths = [267, 320, 390, 479, 664, 720, 768, 811, 958, 1040, 1074, 1280, 1622];
 const issues = [];
 const browser = await chromium.launch({ headless: true });
 
@@ -38,13 +38,14 @@ try {
         const copy = root?.querySelector(".hero-command-copy")?.getBoundingClientRect();
         const lines = [...(root?.querySelectorAll(".hero-command-text > span") ?? [])].map((line) => {
           const box = line.getBoundingClientRect();
-          return { text: line.textContent?.trim() ?? "", left: box.left, right: box.right };
+          return { text: line.textContent?.trim() ?? "", top: box.top, left: box.left, right: box.right };
         });
         const textRightEdge = code && copy ? Math.min(code.right, copy.left) : null;
         return {
           code: code ? { left: code.left, right: code.right } : null,
           copy: copy ? { left: copy.left, right: copy.right } : null,
           lines,
+          singleRow: lines.length === 3 && Math.max(...lines.map((line) => line.top)) - Math.min(...lines.map((line) => line.top)) < 1,
           fits: Boolean(
             code && copy && lines.length === 3 && textRightEdge !== null &&
             lines.every((line) => line.left >= code.left - 1 && line.right <= textRightEdge - 4)
@@ -79,6 +80,9 @@ try {
     }
     if (!layout.releaseCommand.fits) {
       fail(width, `release command text clips into its Copy control: ${JSON.stringify(layout.releaseCommand)}`);
+    }
+    if (width >= 1041 && !layout.releaseCommand.singleRow) {
+      fail(width, `desktop release install command is not a single row: ${JSON.stringify(layout.releaseCommand)}`);
     }
     if (layout.introRailOverlap) {
       fail(width, `“One request” heading occupies the rail lane: ${JSON.stringify({ heading: layout.introHeading, rail: layout.rail })}`);
