@@ -25,7 +25,7 @@ export function SiteFooter({ topHref = "#top", assemblyHref = "#assembly-line" }
         <div>
           <span>Explore</span>
           <Link className="focus-ring" href={assemblyHref}>The assembly line</Link>
-          <Link className="focus-ring" href="/trace">Decision trace</Link>
+          <Link className="focus-ring" href="/trace/002">Decision trace</Link>
           <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system">GitHub</a>
         </div>
         <div>

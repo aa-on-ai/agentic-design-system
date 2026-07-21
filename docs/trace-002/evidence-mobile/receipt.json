@@ -1,0 +1,46 @@
+{
+  "engine": "chromium",
+  "environment": "iPhone 13 emulation at 390x844 with touch and mobile Safari user agent",
+  "url": "http://127.0.0.1:3013/trace/002",
+  "traceStatus": "satisfied",
+  "traceId": "002",
+  "themeToggle": {
+    "before": "light",
+    "after": "dark",
+    "changed": true
+  },
+  "title": "Trace 002 · Agentic Design System",
+  "h1": "The button changed because the state did.",
+  "main": true,
+  "horizontalOverflow": false,
+  "images": [
+    {
+      "alt": "Pawprint default desktop state with an enabled New walk button in the header.",
+      "complete": true,
+      "naturalWidth": 390
+    },
+    {
+      "alt": "Pawprint error desktop state with Read-only schedule, a disabled New walk unavailable button, and an enabled Retry now button.",
+      "complete": true,
+      "naturalWidth": 390
+    },
+    {
+      "alt": "Pawprint default mobile state with an enabled add walk control.",
+      "complete": true,
+      "naturalWidth": 204
+    },
+    {
+      "alt": "Pawprint error mobile state with a dimmed disabled add walk control and an enabled Retry now button.",
+      "complete": true,
+      "naturalWidth": 204
+    },
+    {
+      "alt": "",
+      "complete": true,
+      "naturalWidth": 119
+    }
+  ],
+  "undersized": [],
+  "consoleErrors": [],
+  "passed": true
+}

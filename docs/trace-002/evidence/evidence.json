@@ -1,0 +1,212 @@
+{
+  "url": "http://127.0.0.1:3013/trace/002",
+  "capturedStates": [
+    "default"
+  ],
+  "breakpoints": [
+    "375x812",
+    "390x844",
+    "768x1024",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "375x812",
+      "screenshot": "default-375x812.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2640,
+      "renderedTextSample": "A Agentic Design System CURRENT PROOF / TRACE 002 The button changed because the state did. Pawprint's schedule became read-only. ADS caught the enabled-looking New walk action, disabled it natively, kept Retry active, and proved the unaffected states stayed untouched. FROZEN RUN",
+      "renderSignature": "bbd92082",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2640,
+      "renderedTextSample": "A Agentic Design System CURRENT PROOF / TRACE 002 The button changed because the state did. Pawprint's schedule became read-only. ADS caught the enabled-looking New walk action, disabled it natively, kept Retry active, and proved the unaffected states stayed untouched. FROZEN RUN",
+      "renderSignature": "bbd92082",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "768x1024",
+      "screenshot": "default-768x1024.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2650,
+      "renderedTextSample": "A Agentic Design System Trace 001 CURRENT PROOF / TRACE 002 The button changed because the state did. Pawprint's schedule became read-only. ADS caught the enabled-looking New walk action, disabled it natively, kept Retry active, and proved the unaffected states stayed untouched. ",
+      "renderSignature": "ca417a3c",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 2650,
+      "renderedTextSample": "A Agentic Design System Trace 001 CURRENT PROOF / TRACE 002 The button changed because the state did. Pawprint's schedule became read-only. ADS caught the enabled-looking New walk action, disabled it natively, kept Retry active, and proved the unaffected states stayed untouched. ",
+      "renderSignature": "ca417a3c",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true
+    },
+    "renderedFonts": [
+      "\"DM Sans\", \"DM Sans Fallback\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "375x812",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "768x1024",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}
