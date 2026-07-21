@@ -414,6 +414,7 @@ code {
 .hero-command-code {
   display: flex;
   min-width: 0;
+  padding-right: 4px;
   align-items: center;
   gap: 9px;
   font-size: 0.71rem;
@@ -1662,6 +1663,18 @@ code {
   box-shadow: 9px 9px 0 rgba(72, 29, 10, 0.3);
 }
 
+.release-primary-action .hero-command-text {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.release-primary-action .hero-command-text > span {
+  white-space: nowrap;
+}
+
 .release-github {
   display: inline-flex;
   min-height: 48px;
@@ -1742,6 +1755,7 @@ code {
 .footer-meta {
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
 
 .site-footer a {
@@ -1862,6 +1876,25 @@ code {
 }
 
 /* Responsive workshop --------------------------------------------------- */
+
+@media (min-width: 1041px) {
+  .hero-copy {
+    width: min(800px, 64vw);
+  }
+
+  .line-intro h2,
+  .line-intro > span {
+    max-width: calc(50% - 70px);
+  }
+
+  .line-intro h2 {
+    font-size: clamp(3.2rem, 5vw, 4.6rem);
+  }
+
+  .track-end {
+    transform: translateX(156px);
+  }
+}
 
 @media (max-width: 1040px) {
   .hero-copy {
@@ -2089,6 +2122,12 @@ code {
     .hero-command-copy {
       width: 60px;
       flex-basis: 60px;
+    }
+
+    .hero-command-text > span,
+    .release-primary-action .hero-command-text > span {
+      overflow-wrap: anywhere;
+      white-space: normal;
     }
   }
 
@@ -2434,6 +2473,7 @@ code {
 
   .footer-links {
     gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer-meta {
@@ -2441,6 +2481,20 @@ code {
     flex-direction: column;
     gap: 14px;
     grid-column: 1;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-ember {
+    right: 12px;
+    left: auto;
+    transform: rotate(1deg);
+  }
+}
+
+@media (max-width: 300px) {
+  .track-end {
+    transform: translateX(40px);
   }
 }
 
