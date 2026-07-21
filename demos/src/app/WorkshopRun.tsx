@@ -31,7 +31,14 @@ function Station({
   stage, side, lamp, lampTone, machineLabel,
 }: StationProps) {
   return (
-    <section className={`station station--${side} station--${stage}`} aria-labelledby={id}>
+    <section
+      className={`station station--${side} station--${stage}`}
+      aria-labelledby={id}
+      data-stage={stage}
+      data-side={side}
+      data-active="false"
+      data-arrival="false"
+    >
       <div className="station-index" aria-hidden="true"><span>{number}</span></div>
       <div className="station-copy">
         <p className="station-eyebrow">{eyebrow}</p>

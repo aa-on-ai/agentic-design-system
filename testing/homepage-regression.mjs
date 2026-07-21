@@ -15,6 +15,26 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const issues = [];
 
+async function settleAtStation(targetPage, stage) {
+  await targetPage.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+  });
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await targetPage.evaluate((targetStage) => {
+      const figure = document.querySelector(".assembly-climber-figure");
+      const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
+      if (!figure || !marker) return;
+      const figureRect = figure.getBoundingClientRect();
+      const markerRect = marker.getBoundingClientRect();
+      const figureFocus = figureRect.top + figureRect.height * 0.52;
+      const markerFocus = markerRect.top + markerRect.height / 2;
+      window.scrollTo(0, window.scrollY + markerFocus - figureFocus);
+    }, stage);
+    await targetPage.waitForTimeout(60);
+  }
+  await targetPage.waitForTimeout(760);
+}
+
 page.on("pageerror", (error) => issues.push(`page error: ${error.message}`));
 
 try {
@@ -101,7 +121,18 @@ try {
       issues.push(`footer Ember hit area is ${box ? `${box.width}x${box.height}` : "missing"} (expected >= 48x48)`);
     }
 
-    await footerEmber.locator(".footer-ember-image img").evaluate((node) => {
+    const footerImage = footerEmber.locator(".footer-ember-image img");
+    await footerEmber.scrollIntoViewIfNeeded();
+    await footerImage.evaluate(async (node) => {
+      await Promise.race([
+        node.decode(),
+        new Promise((_, reject) => {
+          window.setTimeout(() => reject(new Error("footer Ember image load timed out")), 10_000);
+        }),
+      ]);
+      if (!node.complete || node.naturalWidth === 0) throw new Error("footer Ember image failed to load");
+    });
+    await footerImage.evaluate((node) => {
       node.dataset.mountProbe = "footer-ember";
     });
     await footerEmber.click();
@@ -135,9 +166,11 @@ try {
   await page.waitForTimeout(80);
   const initialClimber = await page.locator(".assembly-climber").evaluate((element) => ({
     motion: element.getAttribute("data-motion"),
+    pose: element.getAttribute("data-pose"),
     position: getComputedStyle(element).position,
     documentTop: window.scrollY + element.getBoundingClientRect().top,
     transform: getComputedStyle(element.querySelector(".assembly-climber-figure")).transform,
+    imageSrc: element.querySelector("img")?.currentSrc ?? null,
   }));
   await page.evaluate(() => {
     document.querySelector(".station--evidence")?.scrollIntoView({ block: "center" });
@@ -152,6 +185,9 @@ try {
   if (initialClimber.motion !== "rail-follow" || scrolledClimber.motion !== "rail-follow") {
     issues.push(`Ember motion mode is ${initialClimber.motion}/${scrolledClimber.motion} (expected rail-follow/rail-follow)`);
   }
+  if (initialClimber.pose !== "climb" || !initialClimber.imageSrc?.includes("ember-climbing")) {
+    issues.push(`Ember initial pose is ${initialClimber.pose}/${initialClimber.imageSrc ?? "missing"} (expected climb asset)`);
+  }
   if (initialClimber.position !== "sticky") {
     issues.push(`Ember position is ${initialClimber.position} (expected sticky rail-following)`);
   }
@@ -161,13 +197,85 @@ try {
   if (initialClimber.transform === scrolledClimber.transform) {
     issues.push(`Ember climb cadence did not respond to scroll (${initialClimber.transform})`);
   }
-  if (await page.locator(".station[data-active]").count() !== 0) {
-    issues.push("stations still carry scroll-driven active state");
-  }
-
   const mobilePage = await browser.newPage({ viewport: { width: 390, height: 844 } });
   mobilePage.on("pageerror", (error) => issues.push(`mobile page error: ${error.message}`));
   await mobilePage.goto(url, { waitUntil: "networkidle" });
+
+  await mobilePage.locator(".assembly-climber img").evaluate((node) => {
+    node.dataset.mountProbe = "assembly-ember";
+  });
+  const stopStages = ["intent", "baseline", "rubric", "evidence", "release"];
+  const stationStops = [];
+  for (const stage of stopStages) {
+    await settleAtStation(mobilePage, stage);
+    stationStops.push(await mobilePage.evaluate((targetStage) => {
+      const climber = document.querySelector(".assembly-climber");
+      const image = climber?.querySelector("img");
+      const station = document.querySelector(`.station[data-stage="${targetStage}"]`);
+      const marker = station?.querySelector(".station-index");
+      const markerRect = marker?.getBoundingClientRect();
+      const topAtMarker = markerRect
+        ? document.elementsFromPoint(markerRect.left + markerRect.width / 2, markerRect.top + markerRect.height / 2)[0]
+        : null;
+      const stopWrap = climber?.querySelector(".assembly-climber-stop");
+      return {
+        requestedStage: targetStage,
+        phase: climber?.getAttribute("data-phase"),
+        pose: climber?.getAttribute("data-pose"),
+        station: climber?.getAttribute("data-station"),
+        stop: climber?.getAttribute("data-stop"),
+        reactionCount: climber?.getAttribute("data-station-reaction-count"),
+        animationName: stopWrap ? getComputedStyle(stopWrap).animationName : null,
+        imageSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
+        activeStations: document.querySelectorAll('.station[data-active="true"]').length,
+        arrivingStations: document.querySelectorAll('.station[data-arrival="true"]').length,
+        stationActive: station?.getAttribute("data-active"),
+        imageStayedMounted: image?.dataset.mountProbe === "assembly-ember",
+        climberZ: climber ? Number.parseInt(getComputedStyle(climber).zIndex, 10) : null,
+        stationZ: station ? Number.parseInt(getComputedStyle(station).zIndex, 10) : null,
+        markerOwnsTopLayer: topAtMarker instanceof Element && Boolean(topAtMarker.closest(".station")),
+      };
+    }, stage));
+  }
+
+  for (const stop of stationStops) {
+    if (
+      stop.phase !== "resting" || stop.pose !== "peek" || stop.station !== stop.requestedStage ||
+      stop.stop !== stop.requestedStage || stop.animationName !== "none" ||
+      !stop.imageSrc?.includes("ember-peek") || stop.activeStations !== 1 || stop.arrivingStations !== 0 ||
+      stop.stationActive !== "true" || !stop.imageStayedMounted
+    ) {
+      issues.push(`Ember station stop failed: ${JSON.stringify(stop)}`);
+    }
+    if (!(stop.climberZ < stop.stationZ) || !stop.markerOwnsTopLayer) {
+      issues.push(`Ember station occlusion failed: ${JSON.stringify(stop)}`);
+    }
+  }
+
+  const releaseReactionCount = stationStops.at(-1)?.reactionCount ?? null;
+  await settleAtStation(mobilePage, "release");
+  const repeatedReleaseReactionCount = await mobilePage.locator(".assembly-climber").getAttribute("data-station-reaction-count");
+  if (releaseReactionCount === null || repeatedReleaseReactionCount !== releaseReactionCount) {
+    issues.push(
+      `Ember repeated release reaction changed ${releaseReactionCount ?? "missing"} -> ` +
+      `${repeatedReleaseReactionCount ?? "missing"} without leaving the station hysteresis zone`,
+    );
+  }
+
+  const climberButton = mobilePage.getByRole("button", { name: "Make Ember hop" });
+  await climberButton.press("Enter");
+  const clickReaction = await climberButton.evaluate((button) => ({
+    reactionCount: button.getAttribute("data-reaction-count"),
+    clickAnimation: getComputedStyle(button.querySelector(".assembly-climber-image")).animationName,
+    stopAnimation: getComputedStyle(button.querySelector(".assembly-climber-stop")).animationName,
+    imageCount: button.querySelectorAll("img").length,
+  }));
+  if (
+    clickReaction.reactionCount !== "1" || clickReaction.clickAnimation !== "ember-hop" ||
+    clickReaction.stopAnimation !== "ember-stop-release" || clickReaction.imageCount !== 1
+  ) {
+    issues.push(`Ember click/stop animation layers failed: ${JSON.stringify(clickReaction)}`);
+  }
 
   const mobilePacing = await mobilePage.evaluate(() => {
     const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect() ?? null;
@@ -188,6 +296,10 @@ try {
     const releaseBay = rect(".release-bay");
     const heroTicket = document.querySelector(".hero-job-ticket");
     const heroCommand = rect(".hero-actions .hero-command-strip");
+    const heroActions = rect(".hero-actions");
+    const heroWorkshop = rect(".hero-workshop");
+    const heroTrackMouth = rect(".hero-track-mouth");
+    const tourLink = rect(".tour-link");
     const proofLabels = Array.from(document.querySelectorAll(".station-proof p")).map((label) => {
       const style = getComputedStyle(label);
       const lineHeight = Number.parseFloat(style.lineHeight);
@@ -221,6 +333,12 @@ try {
       releaseHeight: releaseBay?.height ?? null,
       heroTicketVisible: heroTicket ? getComputedStyle(heroTicket).display !== "none" : false,
       heroCommandWidth: heroCommand?.width ?? null,
+      heroCommandFitsActions: Boolean(
+        heroCommand && heroActions &&
+        heroCommand.left >= heroActions.left - 1 && heroCommand.right <= heroActions.right + 1
+      ),
+      tourBottomInset: heroWorkshop && tourLink ? heroWorkshop.bottom - tourLink.bottom : null,
+      tourTrackClearance: heroTrackMouth && tourLink ? tourLink.left - heroTrackMouth.right : null,
       proofLabels,
       artifacts,
     };
@@ -259,6 +377,39 @@ try {
   if (mobilePacing.heroCommandWidth === null || mobilePacing.heroCommandWidth < 340) {
     issues.push(`mobile hero install action is ${mobilePacing.heroCommandWidth ?? "missing"}px wide (expected >= 340px)`);
   }
+  if (!mobilePacing.heroCommandFitsActions) {
+    issues.push("mobile hero install action exceeds the action stack width");
+  }
+  if (mobilePacing.tourBottomInset === null || mobilePacing.tourBottomInset < 16) {
+    issues.push(`mobile tour link bottom inset is ${mobilePacing.tourBottomInset ?? "missing"}px (expected >= 16px)`);
+  }
+  if (mobilePacing.tourTrackClearance === null || mobilePacing.tourTrackClearance < 8) {
+    issues.push(`mobile tour link clears the rail mouth by ${mobilePacing.tourTrackClearance ?? "missing"}px (expected >= 8px)`);
+  }
+
+  const narrowPage = await browser.newPage({ viewport: { width: 320, height: 844 } });
+  await narrowPage.goto(url, { waitUntil: "networkidle" });
+  const narrowHero = await narrowPage.evaluate(() => {
+    const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect() ?? null;
+    const command = rect(".hero-actions .hero-command-strip");
+    const actions = rect(".hero-actions");
+    const workshop = rect(".hero-workshop");
+    const mouth = rect(".hero-track-mouth");
+    const tour = rect(".tour-link");
+    return {
+      commandFits: Boolean(command && actions && command.left >= actions.left - 1 && command.right <= actions.right + 1),
+      bottomInset: workshop && tour ? workshop.bottom - tour.bottom : null,
+      railClearance: mouth && tour ? tour.left - mouth.right : null,
+      pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+  if (!narrowHero.commandFits || narrowHero.pageOverflow > 0) {
+    issues.push(`320px hero command does not fit: ${JSON.stringify(narrowHero)}`);
+  }
+  if (narrowHero.bottomInset === null || narrowHero.bottomInset < 16 || narrowHero.railClearance === null || narrowHero.railClearance < 8) {
+    issues.push(`320px hero tour link collides with the rail/bottom edge: ${JSON.stringify(narrowHero)}`);
+  }
+  await narrowPage.close();
 
   const expectedProofLabels = ["Input", "Failed check", "Corrected screen", "Evidence report", "Grader verdict"];
   const renderedProofLabels = mobilePacing.proofLabels.map(({ text }) => text);
