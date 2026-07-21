@@ -1755,6 +1755,7 @@ code {
 .footer-meta {
   position: relative;
   z-index: 2;
+  min-width: 0;
 }
 
 .site-footer a {
@@ -2472,6 +2473,7 @@ code {
 
   .footer-links {
     gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer-meta {
@@ -2479,6 +2481,14 @@ code {
     flex-direction: column;
     gap: 14px;
     grid-column: 1;
+  }
+}
+
+@media (max-width: 360px) {
+  .footer-ember {
+    right: 12px;
+    left: auto;
+    transform: rotate(1deg);
   }
 }
 
