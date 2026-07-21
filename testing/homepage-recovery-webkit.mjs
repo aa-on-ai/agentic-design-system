@@ -34,9 +34,84 @@ async function settleMotionFrame(page) {
   );
 }
 
+async function readStationState(page, stage) {
+  return page.evaluate((targetStage) => {
+    const climber = document.querySelector(".assembly-climber");
+    const station = document.querySelector(`.station[data-stage="${targetStage}"]`);
+    const marker = station?.querySelector(".station-index");
+    const markerRect = marker?.getBoundingClientRect();
+    const topAtMarker = markerRect
+      ? document.elementsFromPoint(markerRect.left + markerRect.width / 2, markerRect.top + markerRect.height / 2)[0]
+      : null;
+    const image = climber?.querySelector("img");
+    const stopWrap = climber?.querySelector(".assembly-climber-stop");
+    return {
+      phase: climber?.getAttribute("data-phase"),
+      pose: climber?.getAttribute("data-pose"),
+      station: climber?.getAttribute("data-station"),
+      reactionCount: climber?.getAttribute("data-station-reaction-count"),
+      animationName: stopWrap ? getComputedStyle(stopWrap).animationName : null,
+      imageSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
+      imageCount: climber?.querySelectorAll("img").length ?? 0,
+      activeStations: document.querySelectorAll('.station[data-active="true"]').length,
+      arrivingStations: document.querySelectorAll('.station[data-arrival="true"]').length,
+      imageStayedMounted: image?.dataset.mountProbe === "assembly-ember",
+      climberZ: climber ? Number.parseInt(getComputedStyle(climber).zIndex, 10) : null,
+      stationZ: station ? Number.parseInt(getComputedStyle(station).zIndex, 10) : null,
+      markerOwnsTopLayer: topAtMarker instanceof Element && Boolean(topAtMarker.closest(".station")),
+    };
+  }, stage);
+}
+
+async function settleAtStation(page, stage) {
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = "auto";
+  });
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.evaluate((targetStage) => {
+      const figure = document.querySelector(".assembly-climber-figure");
+      const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
+      if (!figure || !marker) return;
+      const figureRect = figure.getBoundingClientRect();
+      const markerRect = marker.getBoundingClientRect();
+      window.scrollTo(
+        0,
+        window.scrollY + markerRect.top + markerRect.height / 2 - (figureRect.top + figureRect.height * 0.52),
+      );
+    }, stage);
+    await page.waitForTimeout(60);
+  }
+  // The final alignment already waited 60ms; another 140ms observes arrival at ~200ms.
+  await page.waitForTimeout(140);
+  const arrival = await readStationState(page, stage);
+
+  await page.waitForFunction(
+    () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "peeking",
+    undefined,
+    { timeout: 3_000 },
+  );
+  const peeking = await readStationState(page, stage);
+  await page.waitForFunction(
+    () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "resting",
+    undefined,
+    { timeout: 3_000 },
+  );
+  const resting = await readStationState(page, stage);
+  await page.waitForTimeout(120);
+  const persistent = await readStationState(page, stage);
+
+  await page.evaluate(() => window.scrollBy(0, 8));
+  await page.waitForTimeout(60);
+  await page.evaluate(() => window.scrollBy(0, -8));
+  await page.waitForTimeout(760);
+  const repeated = await readStationState(page, stage);
+
+  return { arrival, peeking, resting, persistent, repeated };
+}
+
 try {
   const page = await withBrowserStepTimeout(
-    browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "no-preference" }),
+    browser.newPage({ viewport: { width: 390, height: 844 } }),
     "WebKit page startup",
   );
   const errors = [];
@@ -57,6 +132,9 @@ try {
     documentTop: window.scrollY + node.getBoundingClientRect().top,
     transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
   }));
+  await page.locator(".assembly-climber img").evaluate((node) => {
+    node.dataset.mountProbe = "assembly-ember";
+  });
   const railAlignment = await page.evaluate(() => {
     const mouth = document.querySelector(".hero-track-mouth").getBoundingClientRect();
     const track = document.querySelector(".continuous-track").getBoundingClientRect();
@@ -78,6 +156,8 @@ try {
     climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
   }
 
+  const stationStop = await settleAtStation(page, "evidence");
+
   const facts = await page.evaluate(() => ({
     horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1,
     layoutShift: window.__adsLayoutShift || 0,
@@ -87,7 +167,13 @@ try {
     climberMotion: document.querySelector(".assembly-climber").getAttribute("data-motion"),
     climberPosition: getComputedStyle(document.querySelector(".assembly-climber")).position,
     handoffs: document.querySelectorAll(".release-handoff").length,
-    activeStations: document.querySelectorAll(".station[data-active]").length,
+    activeStations: document.querySelectorAll('.station[data-active="true"]').length,
+    stationPhase: document.querySelector(".assembly-climber").getAttribute("data-phase"),
+    activeStage: document.querySelector(".assembly-climber").getAttribute("data-station"),
+    stopAnimation: getComputedStyle(document.querySelector(".assembly-climber-stop")).animationName,
+    imageStayedMounted: document.querySelector(".assembly-climber img")?.dataset.mountProbe === "assembly-ember",
+    climberZ: Number.parseInt(getComputedStyle(document.querySelector(".assembly-climber")).zIndex, 10),
+    stationZ: Number.parseInt(getComputedStyle(document.querySelector('.station[data-stage="evidence"]')).zIndex, 10),
     releaseBackground: getComputedStyle(document.querySelector(".release-bay")).backgroundColor,
   }));
   const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
@@ -124,14 +210,48 @@ try {
   if (footerBounce.animationName !== "ember-peek-pop") failures.push(`footer bounce animation is ${footerBounce.animationName}`);
   if (!footerBounce.imageLoaded || !footerBounce.imageStayedMounted || footerBounce.opacity < 1) failures.push(`footer Ember visibility failed: ${JSON.stringify(footerBounce)}`);
   if (facts.handoffs) failures.push("release handoff is still rendered");
-  if (facts.activeStations) failures.push("scroll-driven station state is still rendered");
+  const { arrival, peeking, resting, persistent, repeated } = stationStop;
+  if (
+    arrival.phase !== "arriving" || arrival.pose !== "climb" || arrival.station !== "evidence" ||
+    arrival.animationName !== "ember-stop-evidence" || !arrival.imageSrc?.includes("ember-climbing") ||
+    arrival.imageCount !== 1 || arrival.arrivingStations !== 1 || !arrival.imageStayedMounted
+  ) {
+    failures.push(`station arrival failed: ${JSON.stringify(arrival)}`);
+  }
+  if (
+    peeking.phase !== "peeking" || peeking.pose !== "peek" || peeking.station !== "evidence" ||
+    !peeking.imageSrc?.includes("ember-peek") || peeking.imageCount !== 1 || !peeking.imageStayedMounted
+  ) {
+    failures.push(`station peek failed: ${JSON.stringify(peeking)}`);
+  }
+  for (const [label, state] of [["resting", resting], ["persistent", persistent], ["repeated", repeated]]) {
+    if (
+      state.phase !== "resting" || state.pose !== "peek" || state.station !== "evidence" ||
+      state.animationName !== "none" || !state.imageSrc?.includes("ember-peek") ||
+      state.imageCount !== 1 || state.activeStations !== 1 || state.arrivingStations !== 0 ||
+      !state.imageStayedMounted || !(state.climberZ < state.stationZ) || !state.markerOwnsTopLayer
+    ) {
+      failures.push(`station ${label} state/occlusion failed: ${JSON.stringify(state)}`);
+    }
+  }
+  if (
+    arrival.reactionCount !== resting.reactionCount || resting.reactionCount !== persistent.reactionCount ||
+    persistent.reactionCount !== repeated.reactionCount
+  ) {
+    failures.push(`station reaction count changed within one visit: ${JSON.stringify({
+      arrival: arrival.reactionCount,
+      resting: resting.reactionCount,
+      persistent: persistent.reactionCount,
+      repeated: repeated.reactionCount,
+    })}`);
+  }
   if (facts.releaseBackground !== "rgb(232, 93, 38)") failures.push(`release background is ${facts.releaseBackground}`);
 
   if (failures.length) {
     console.error(failures.join("\n"));
     process.exitCode = 1;
   } else {
-    console.log(`WebKit recovery passed: 5 artifacts, smooth rail-following Ember, no overflow, CLS ${facts.layoutShift.toFixed(3)}, orange release`);
+    console.log(`WebKit recovery passed: 5 artifacts, station-aware rail-following Ember behind the machines, no overflow, CLS ${facts.layoutShift.toFixed(3)}, orange release`);
   }
 } finally {
   await browser.close();
