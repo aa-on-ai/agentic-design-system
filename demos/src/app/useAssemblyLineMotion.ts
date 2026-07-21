@@ -35,7 +35,7 @@ const findNearestStation = (climber: HTMLElement, stations: HTMLElement[]): Stat
 };
 
 export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | null>) {
-  const [pose, setPose] = useState<"climb" | "peek">("climb");
+  const [pose, setPose] = useState<"climb" | "peek">("peek");
 
   useEffect(() => {
     const climber = climberRef.current;
@@ -170,6 +170,26 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
       const floorRect = factoryFloor.getBoundingClientRect();
       const visible = floorRect.top < window.innerHeight * 0.88 && floorRect.bottom > window.innerHeight * 0.12;
       climber.dataset.visible = String(visible);
+
+      const stagedAtMobileStart = window.innerWidth <= 720 && floorRect.top > 0;
+      if (stagedAtMobileStart) {
+        window.clearTimeout(settleTimer);
+        settleTimer = 0;
+        clearPhaseTimers();
+        clearStationState();
+        latchedStation = null;
+        smoothedVelocity = 0;
+        climber.dataset.reducedMotion = String(reduceMotion.matches);
+        climber.dataset.phase = "staged";
+        climber.dataset.station = "between";
+        climber.dataset.stop = "none";
+        setPoseState("peek");
+        climber.style.setProperty("--climber-step-x", "0px");
+        climber.style.setProperty("--climber-step-y", "0px");
+        climber.style.setProperty("--climber-step-tilt", "0deg");
+        previousY = window.scrollY;
+        return;
+      }
 
       if (reduceMotion.matches) {
         clearPhaseTimers();
