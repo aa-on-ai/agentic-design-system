@@ -84,7 +84,7 @@ try {
       fail(width, `“One request” heading occupies the rail lane: ${JSON.stringify({ heading: layout.introHeading, rail: layout.rail })}`);
     }
 
-    const endCollision = await page.evaluate(async () => {
+    const endLayering = await page.evaluate(async () => {
       document.documentElement.style.scrollBehavior = "auto";
       const floor = document.querySelector(".factory-floor");
       const sign = document.querySelector(".track-end");
@@ -93,10 +93,14 @@ try {
 
       const floorTop = floor.getBoundingClientRect().top + window.scrollY;
       const floorBottom = floorTop + floor.getBoundingClientRect().height;
-      const start = Math.max(0, floorTop - window.innerHeight);
-      const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom);
+      const signTop = sign.getBoundingClientRect().top + window.scrollY;
+      const stickyTop = Number.parseFloat(getComputedStyle(ember.parentElement).top) || 0;
+      const figureOffset = Number.parseFloat(getComputedStyle(ember).top) || 0;
+      const alignmentScroll = signTop - stickyTop - figureOffset;
+      const start = Math.max(0, floorTop - window.innerHeight, alignmentScroll - 180);
+      const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll + 180);
 
-      for (let scrollY = start; scrollY <= end; scrollY += 32) {
+      for (let scrollY = start; scrollY <= end; scrollY += 8) {
         window.scrollTo(0, scrollY);
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const a = sign.getBoundingClientRect();
@@ -104,21 +108,42 @@ try {
         const overlapWidth = Math.min(a.right, b.right) - Math.max(a.left, b.left);
         const overlapHeight = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
         if (overlapWidth > 1 && overlapHeight > 1) {
+          const overlapX = (Math.max(a.left, b.left) + Math.min(a.right, b.right)) / 2;
+          const overlapY = (Math.max(a.top, b.top) + Math.min(a.bottom, b.bottom)) / 2;
+          const stack = document.elementsFromPoint(overlapX, overlapY);
+          const signIndex = stack.findIndex((element) => element === sign || sign.contains(element));
+          const emberIndex = stack.findIndex((element) => element === ember || ember.contains(element));
           return {
             missing: false,
+            collision: true,
             scrollY,
             overlapWidth,
             overlapHeight,
+            centerDelta: Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2),
+            signAboveEmber: signIndex >= 0 && emberIndex >= 0 && signIndex < emberIndex,
+            signBackground: getComputedStyle(sign).backgroundColor,
             sign: { top: a.top, right: a.right, bottom: a.bottom, left: a.left },
             ember: { top: b.top, right: b.right, bottom: b.bottom, left: b.left },
           };
         }
       }
-      return { missing: false, collision: false };
+      const a = sign.getBoundingClientRect();
+      const b = ember.getBoundingClientRect();
+      return {
+        missing: false,
+        collision: false,
+        centerDelta: Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2),
+      };
     });
 
-    if (endCollision.missing) fail(width, "missing End of run or Ember collision target");
-    else if (endCollision.collision !== false) fail(width, `End of run overlaps Ember: ${JSON.stringify(endCollision)}`);
+    if (endLayering.missing) fail(width, "missing End of run or Ember layering target");
+    else if (width >= 1041 && !endLayering.collision) {
+      fail(width, `Ember never passes behind the End of run background: ${JSON.stringify(endLayering)}`);
+    } else if (endLayering.collision && !endLayering.signAboveEmber) {
+      fail(width, `Ember paints above the End of run background: ${JSON.stringify(endLayering)}`);
+    } else if (width >= 1041 && endLayering.centerDelta > 20) {
+      fail(width, `End of run is offset from Ember's rail lane: ${JSON.stringify(endLayering)}`);
+    }
 
     const footerLayout = await page.evaluate(() => {
       const footer = document.querySelector(".site-footer");

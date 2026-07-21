@@ -1891,9 +1891,6 @@ code {
     font-size: clamp(3.2rem, 5vw, 4.6rem);
   }
 
-  .track-end {
-    transform: translateX(156px);
-  }
 }
 
 @media (max-width: 1040px) {
