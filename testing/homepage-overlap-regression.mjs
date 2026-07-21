@@ -88,6 +88,55 @@ try {
       fail(width, `“One request” heading occupies the rail lane: ${JSON.stringify({ heading: layout.introHeading, rail: layout.rail })}`);
     }
 
+    if (width <= 720) {
+      const startState = await page.evaluate(async () => {
+        document.documentElement.style.scrollBehavior = "auto";
+        const floor = document.querySelector(".factory-floor");
+        const climber = document.querySelector(".assembly-climber");
+        const figure = document.querySelector(".assembly-climber-figure");
+        if (!floor || !climber || !figure) return { missing: true };
+
+        const floorTop = floor.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, Math.max(0, floorTop - 320));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+        const figureRect = figure.getBoundingClientRect();
+        const initial = {
+          phase: climber.getAttribute("data-phase"),
+          pose: climber.getAttribute("data-pose"),
+          figureAnimation: getComputedStyle(figure).animationName,
+          imageAnimation: getComputedStyle(figure.querySelector(".assembly-climber-image")).animationName,
+        };
+
+        window.scrollTo(0, floorTop + 40);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        window.scrollTo(0, Math.max(0, floorTop - 320));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await new Promise((resolve) => setTimeout(resolve, 240));
+
+        return {
+          missing: false,
+          ...initial,
+          returnPhase: climber.getAttribute("data-phase"),
+          returnPose: climber.getAttribute("data-pose"),
+          floorTop: floor.getBoundingClientRect().top,
+          figureTop: figureRect.top,
+        };
+      });
+
+      if (startState.missing) fail(width, "missing mobile Ember start-state target");
+      else if (
+        startState.phase !== "staged" ||
+        startState.pose !== "peek" ||
+        startState.figureAnimation !== "none" ||
+        startState.imageAnimation !== "none" ||
+        startState.returnPhase !== "staged" ||
+        startState.returnPose !== "peek"
+      ) {
+        fail(width, `Ember is not staged in a still pose at the top of the rail: ${JSON.stringify(startState)}`);
+      }
+    }
+
     const endLayering = await page.evaluate(async () => {
       document.documentElement.style.scrollBehavior = "auto";
       const floor = document.querySelector(".factory-floor");
@@ -104,6 +153,7 @@ try {
       const start = Math.max(0, floorTop - window.innerHeight, alignmentScroll - 180);
       const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll + 180);
 
+      let bestCollision = null;
       for (let scrollY = start; scrollY <= end; scrollY += 8) {
         window.scrollTo(0, scrollY);
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -117,20 +167,23 @@ try {
           const stack = document.elementsFromPoint(overlapX, overlapY);
           const signIndex = stack.findIndex((element) => element === sign || sign.contains(element));
           const emberIndex = stack.findIndex((element) => element === ember || ember.contains(element));
-          return {
+          const collision = {
             missing: false,
             collision: true,
             scrollY,
             overlapWidth,
             overlapHeight,
+            coverage: (overlapWidth * overlapHeight) / (b.width * b.height),
             centerDelta: Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2),
             signAboveEmber: signIndex >= 0 && emberIndex >= 0 && signIndex < emberIndex,
             signBackground: getComputedStyle(sign).backgroundColor,
             sign: { top: a.top, right: a.right, bottom: a.bottom, left: a.left },
             ember: { top: b.top, right: b.right, bottom: b.bottom, left: b.left },
           };
+          if (!bestCollision || collision.coverage > bestCollision.coverage) bestCollision = collision;
         }
       }
+      if (bestCollision) return bestCollision;
       const a = sign.getBoundingClientRect();
       const b = ember.getBoundingClientRect();
       return {
@@ -141,12 +194,14 @@ try {
     });
 
     if (endLayering.missing) fail(width, "missing End of run or Ember layering target");
-    else if (width >= 1041 && !endLayering.collision) {
+    else if (!endLayering.collision) {
       fail(width, `Ember never passes behind the End of run background: ${JSON.stringify(endLayering)}`);
     } else if (endLayering.collision && !endLayering.signAboveEmber) {
       fail(width, `Ember paints above the End of run background: ${JSON.stringify(endLayering)}`);
-    } else if (width >= 1041 && endLayering.centerDelta > 20) {
+    } else if (endLayering.centerDelta > 20) {
       fail(width, `End of run is offset from Ember's rail lane: ${JSON.stringify(endLayering)}`);
+    } else if (width <= 720 && endLayering.coverage < 0.82) {
+      fail(width, `End of run leaves too much of Ember visible on mobile: ${JSON.stringify(endLayering)}`);
     }
 
     const footerLayout = await page.evaluate(() => {

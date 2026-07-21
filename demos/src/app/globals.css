@@ -651,6 +651,10 @@ code {
   clip-path: inset(0 0 26% 0);
 }
 
+.assembly-climber[data-phase="staged"][data-pose="peek"] .assembly-climber-image {
+  clip-path: none;
+}
+
 .assembly-climber[data-phase="peeking"] .assembly-climber-stop,
 .assembly-climber[data-phase="resting"] .assembly-climber-stop {
   transform: translate3d(calc(var(--climber-stop-direction) * 18px), -34px, 0);
@@ -1983,6 +1987,11 @@ code {
     left: 48px;
   }
 
+  .track-end {
+    margin-right: 0;
+    margin-left: -14px;
+  }
+
   .line-intro {
     padding-left: 84px;
   }
@@ -2454,7 +2463,13 @@ code {
   .machine-footer { display: none; }
   .cart-wheel { bottom: -26px; width: 25px; height: 25px; border-width: 5px; }
 
-  .track-end { margin-top: -70px; }
+  .track-end {
+    width: 124px;
+    height: 112px;
+    margin-top: -112px;
+    margin-right: 0;
+    margin-left: -30px;
+  }
 
   .release-bay {
     min-height: 0;
@@ -2508,12 +2523,6 @@ code {
     right: 12px;
     left: auto;
     transform: rotate(1deg);
-  }
-}
-
-@media (max-width: 300px) {
-  .track-end {
-    transform: translateX(40px);
   }
 }
 
