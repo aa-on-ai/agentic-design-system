@@ -157,10 +157,11 @@ try {
       const floor = document.querySelector(".factory-floor");
       const track = document.querySelector(".continuous-track");
       const sign = document.querySelector(".track-end");
+      const releaseStation = document.querySelector(".station--release");
       const climber = document.querySelector(".assembly-climber");
       const ember = document.querySelector(".assembly-climber-figure");
       const image = ember?.querySelector("img");
-      if (!floor || !track || !sign || !climber || !ember || !image) return { missing: true };
+      if (!floor || !track || !sign || !releaseStation || !climber || !ember || !image) return { missing: true };
 
       image.dataset.mountProbe = "terminal-exit-ember";
 
@@ -230,10 +231,12 @@ try {
 
       const trackRect = track.getBoundingClientRect();
       const signRect = sign.getBoundingClientRect();
+      const releaseRect = releaseStation.getBoundingClientRect();
       return {
         missing: false,
         states: [...states],
         trackCenterDelta: Math.abs((trackRect.left + trackRect.right) / 2 - (signRect.left + signRect.right) / 2),
+        runwayBeforeSign: signRect.top - releaseRect.bottom,
         trackPastSign: trackRect.bottom - signRect.bottom,
         bestOcclusion,
         firstExitedFrame,
@@ -251,8 +254,14 @@ try {
       if (terminalExit.trackCenterDelta > 1) {
         fail(width, `End of run sign leaves the ladder centerline by ${terminalExit.trackCenterDelta.toFixed(1)}px`);
       }
-      if (terminalExit.trackPastSign < 28) {
-        fail(width, `ladder ends ${terminalExit.trackPastSign.toFixed(1)}px past the sign, expected at least 28px of visible continuation`);
+      if (width > 1040 && terminalExit.runwayBeforeSign < 104) {
+        fail(width, `desktop terminal runway is only ${terminalExit.runwayBeforeSign.toFixed(1)}px, expected at least 104px after station 05`);
+      }
+      if (terminalExit.trackPastSign > 1) {
+        fail(width, `ladder peeks ${terminalExit.trackPastSign.toFixed(1)}px below the End of run sign`);
+      }
+      if (terminalExit.trackPastSign < -24) {
+        fail(width, `ladder ends ${Math.abs(terminalExit.trackPastSign).toFixed(1)}px inside the End of run sign, expected the sign to cap its final 0-24px`);
       }
       if (!terminalExit.states.includes("occluding") || !terminalExit.states.includes("exited")) {
         fail(width, `Ember terminal states are incomplete: ${JSON.stringify(terminalExit.states)}`);
