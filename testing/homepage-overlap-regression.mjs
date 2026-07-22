@@ -9,7 +9,7 @@ if (!url) {
   process.exit(2);
 }
 
-const widths = [267, 320, 390, 479, 610, 664, 720, 768, 811, 958, 1040, 1074, 1280, 1622];
+const widths = [267, 320, 390, 479, 610, 664, 720, 768, 811, 834, 958, 1040, 1074, 1280, 1622];
 const issues = [];
 const requestedBrowser = (process.env.ADS_OVERLAP_BROWSER ?? "chromium").toLowerCase();
 const browserOptions = {
@@ -54,6 +54,7 @@ try {
       const overlap = (a, b) => Boolean(a && b && Math.min(a.right, b.right) > Math.max(a.left, b.left) && Math.min(a.bottom, b.bottom) > Math.max(a.top, b.top));
       const commandFit = (rootSelector) => {
         const root = document.querySelector(rootSelector);
+        const rootBox = root?.getBoundingClientRect();
         const code = root?.querySelector(".hero-command-code")?.getBoundingClientRect();
         const copy = root?.querySelector(".hero-command-copy")?.getBoundingClientRect();
         const lines = [...(root?.querySelectorAll(".hero-command-text > span") ?? [])].map((line) => {
@@ -67,6 +68,7 @@ try {
         });
         const textRightEdge = code && copy ? Math.min(code.right, copy.left) : null;
         return {
+          box: rootBox ? { left: rootBox.left, right: rootBox.right, width: rootBox.width } : null,
           code: code ? { left: code.left, right: code.right } : null,
           copy: copy ? { left: copy.left, right: copy.right } : null,
           lines,
@@ -105,6 +107,15 @@ try {
     }
     if (width >= 1041 && !layout.releaseCommand.singleRow) {
       fail(width, `desktop release install command is not a single row: ${JSON.stringify(layout.releaseCommand)}`);
+    }
+    if (width >= 1041 && width < 1400 && layout.releaseCommand.box?.width > 840) {
+      fail(width, `desktop release install bar is ${layout.releaseCommand.box.width.toFixed(1)}px wide, expected a focused maximum of 840px`);
+    }
+    if (width >= 768 && width <= 1040 && (layout.releaseCommand.box?.width ?? 0) < Math.min(680, width - 48)) {
+      fail(width, `tablet release install bar is only ${(layout.releaseCommand.box?.width ?? 0).toFixed(1)}px wide`);
+    }
+    if (width >= 768 && !layout.releaseCommand.singleRow) {
+      fail(width, `tablet/desktop release install command should read as one line: ${JSON.stringify(layout.releaseCommand)}`);
     }
     if (layout.introRailOverlap) {
       fail(width, `“One request” heading occupies the rail lane: ${JSON.stringify({ heading: layout.introHeading, rail: layout.rail })}`);
@@ -158,10 +169,11 @@ try {
       const track = document.querySelector(".continuous-track");
       const sign = document.querySelector(".track-end");
       const releaseStation = document.querySelector(".station--release");
+      const releaseMachine = releaseStation?.querySelector(".machine-bay");
       const climber = document.querySelector(".assembly-climber");
       const ember = document.querySelector(".assembly-climber-figure");
       const image = ember?.querySelector("img");
-      if (!floor || !track || !sign || !releaseStation || !climber || !ember || !image) return { missing: true };
+      if (!floor || !track || !sign || !releaseStation || !releaseMachine || !climber || !ember || !image) return { missing: true };
 
       image.dataset.mountProbe = "terminal-exit-ember";
 
@@ -172,7 +184,8 @@ try {
       const figureOffset = Number.parseFloat(getComputedStyle(ember).top) || 0;
       const alignmentScroll = signTop - stickyTop - figureOffset;
       const contactScroll = alignmentScroll - ember.offsetHeight;
-      const start = Math.max(0, floorTop - window.innerHeight, contactScroll - 96);
+      const reverseTarget = Math.max(0, floorTop - stickyTop);
+      const start = Math.max(0, floorTop - window.innerHeight, contactScroll - 176);
       const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll + ember.offsetHeight + sign.offsetHeight + 48);
       const positions = [];
       for (let scrollY = start; scrollY <= end; scrollY += 8) positions.push(scrollY);
@@ -183,6 +196,7 @@ try {
       let bestOcclusion = null;
       let firstExitedFrame = null;
       let visibleAfterExit = null;
+      let visibleOverReleaseMachine = null;
 
       const capture = async (scrollY) => {
         window.scrollTo(0, scrollY);
@@ -193,6 +207,7 @@ try {
         const overlapWidth = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
         const overlapHeight = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
         const terminal = climber.getAttribute("data-terminal");
+        const terminalApproach = climber.getAttribute("data-terminal-approach") === "true";
         const centerDelta = Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2);
         const coverage = b.width * b.height > 0 ? (overlapWidth * overlapHeight) / (b.width * b.height) : 0;
         const samplePoints = [0.2, 0.5, 0.8].flatMap((x) => [0.2, 0.5, 0.8].map((y) => ({ x: b.left + b.width * x, y: b.top + b.height * y })));
@@ -202,14 +217,31 @@ try {
           return element === ember || ember.contains(element);
         }).length;
         const styles = getComputedStyle(ember);
+        const machine = releaseMachine.getBoundingClientRect();
+        const overlapLeft = Math.max(machine.left, b.left);
+        const overlapRight = Math.min(machine.right, b.right);
+        const overlapTop = Math.max(machine.top, b.top);
+        const overlapBottom = Math.min(machine.bottom, b.bottom);
+        const overlapSamples = overlapRight > overlapLeft && overlapBottom > overlapTop
+          ? [0.25, 0.5, 0.75].flatMap((x) => [0.25, 0.5, 0.75].map((y) => ({
+              x: overlapLeft + (overlapRight - overlapLeft) * x,
+              y: overlapTop + (overlapBottom - overlapTop) * y,
+            })))
+          : [];
+        const emberSamplesOverMachine = overlapSamples.filter(({ x, y }) => {
+          const element = document.elementFromPoint(x, y);
+          return element === ember || ember.contains(element);
+        }).length;
         const frame = {
           scrollY,
           terminal,
+          terminalApproach,
           centerDelta,
           coverage,
           signAboveEmber: overlapWidth > 1 && overlapHeight > 1 && visibleSamples < samplePoints.length,
           visuallyPresent: styles.visibility !== "hidden" && Number.parseFloat(styles.opacity) > 0.01 && visibleSamples > 0,
           visibleSamples,
+          emberSamplesOverMachine,
           sign: { top: a.top, right: a.right, bottom: a.bottom, left: a.left },
           ember: { top: b.top, right: b.right, bottom: b.bottom, left: b.left },
         };
@@ -221,13 +253,16 @@ try {
           firstExitedFrame ??= frame;
           if (frame.visuallyPresent) visibleAfterExit ??= frame;
         }
+        if (terminal === "none" && emberSamplesOverMachine >= 5) {
+          visibleOverReleaseMachine ??= frame;
+        }
         return frame;
       };
 
-      const preExit = await capture(start);
+      const preExit = await capture(reverseTarget);
       for (const scrollY of positions) await capture(scrollY);
       const exitedAtEnd = await capture(end);
-      const returned = await capture(start);
+      const returned = await capture(reverseTarget);
 
       const trackRect = track.getBoundingClientRect();
       const signRect = sign.getBoundingClientRect();
@@ -241,6 +276,7 @@ try {
         bestOcclusion,
         firstExitedFrame,
         visibleAfterExit,
+        visibleOverReleaseMachine,
         exitedAtEnd,
         returned,
         reverseCenterDelta: Math.abs((preExit.ember.left + preExit.ember.right) / 2 - (returned.ember.left + returned.ember.right) / 2),
@@ -279,11 +315,87 @@ try {
       if (terminalExit.visibleAfterExit || terminalExit.exitedAtEnd.visuallyPresent) {
         fail(width, `assembly-line Ember reappears after passing behind the sign: ${JSON.stringify(terminalExit.visibleAfterExit ?? terminalExit.exitedAtEnd)}`);
       }
+      if (terminalExit.visibleOverReleaseMachine) {
+        fail(width, `Ember paints over the final machine during terminal transit: ${JSON.stringify(terminalExit.visibleOverReleaseMachine)}`);
+      }
       if (terminalExit.returned.terminal !== "none" || !terminalExit.returned.visuallyPresent || terminalExit.reverseCenterDelta > 0.75) {
         fail(width, `reverse scroll does not restore Ember cleanly: ${JSON.stringify({ returned: terminalExit.returned, reverseCenterDelta: terminalExit.reverseCenterDelta })}`);
       }
       if (terminalExit.imageCount !== 1 || !terminalExit.imageStayedMounted) {
         fail(width, `Ember image continuity failed: ${JSON.stringify({ imageCount: terminalExit.imageCount, stayedMounted: terminalExit.imageStayedMounted })}`);
+      }
+    }
+
+    const responsivePolish = await page.evaluate(async () => {
+      const floor = document.querySelector(".factory-floor");
+      const climber = document.querySelector(".assembly-climber");
+      const ember = document.querySelector(".assembly-climber-figure");
+      const releaseStation = document.querySelector(".station--release");
+      const releaseMarker = releaseStation?.querySelector(".station-index");
+      const releaseCopy = releaseStation?.querySelector(".station-copy");
+      const releaseBay = document.querySelector(".release-bay");
+      const releaseLink = document.querySelector(".release-github");
+      const releaseDoorScrews = [...document.querySelectorAll(".release-door i")];
+      const proofMark = document.querySelector(".station--release .station-proof-mark");
+      if (!floor || !climber || !ember || !releaseStation || !releaseMarker || !releaseCopy || !releaseBay || !releaseLink || !proofMark) {
+        return { missing: true };
+      }
+
+      const floorTop = floor.getBoundingClientRect().top + window.scrollY;
+      const markerRect = releaseMarker.getBoundingClientRect();
+      const markerCenter = markerRect.top + window.scrollY + markerRect.height / 2;
+      const stickyTop = Number.parseFloat(getComputedStyle(climber).top) || 0;
+      const figureOffset = Number.parseFloat(getComputedStyle(ember).top) || 0;
+      const alignmentScroll = markerCenter - stickyTop - figureOffset - ember.offsetHeight * 0.52;
+      window.scrollTo(0, Math.max(floorTop, alignmentScroll));
+      window.dispatchEvent(new Event("scroll"));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 700));
+
+      const emberRect = ember.getBoundingClientRect();
+      const copyRect = releaseCopy.getBoundingClientRect();
+      const intersectsReleaseCopy = Math.min(emberRect.right, copyRect.right) > Math.max(emberRect.left, copyRect.left)
+        && Math.min(emberRect.bottom, copyRect.bottom) > Math.max(emberRect.top, copyRect.top);
+
+      releaseBay.scrollIntoView({ block: "center" });
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const bayRect = releaseBay.getBoundingClientRect();
+      const linkRect = releaseLink.getBoundingClientRect();
+      const linkTextNode = [...releaseLink.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+      const linkTextRange = linkTextNode ? document.createRange() : null;
+      if (linkTextRange && linkTextNode) linkTextRange.selectNodeContents(linkTextNode);
+      const linkTextRect = linkTextRange?.getBoundingClientRect();
+      const visibleScrews = releaseDoorScrews.filter((screw) => {
+        const styles = getComputedStyle(screw);
+        const rect = screw.getBoundingClientRect();
+        return styles.display !== "none" && styles.visibility !== "hidden" && rect.right > 0 && rect.left < innerWidth && rect.bottom > 0 && rect.top < innerHeight;
+      }).length;
+
+      const proofGlyph = proofMark.querySelector(":scope > span");
+      return {
+        missing: false,
+        intersectsReleaseCopy,
+        releaseLinkClipped: linkRect.left < bayRect.left - 1 || linkRect.right > bayRect.right + 1,
+        releaseLinkContentClipped: releaseLink.scrollWidth > releaseLink.clientWidth + 1
+          || Boolean(linkTextRect && linkTextRect.right > Math.min(linkRect.right, bayRect.right) + 1),
+        visibleScrews,
+        hasOpticalProofGlyph: Boolean(proofGlyph),
+      };
+    });
+
+    if (responsivePolish.missing) fail(width, "missing responsive-polish target");
+    else {
+      if (width <= 720 && responsivePolish.intersectsReleaseCopy) {
+        fail(width, "mobile Ember collides with the station 05 copy lane");
+      }
+      if (width <= 720 && (responsivePolish.releaseLinkClipped || responsivePolish.releaseLinkContentClipped)) {
+        fail(width, "mobile release link clips at the edge of the release bay");
+      }
+      if (width <= 720 && responsivePolish.visibleScrews > 0) {
+        fail(width, `mobile release bay leaves ${responsivePolish.visibleScrews} orphaned door screw(s) visible`);
+      }
+      if (!responsivePolish.hasOpticalProofGlyph) {
+        fail(width, "proof plus lacks an optically centered glyph wrapper");
       }
     }
 

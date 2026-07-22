@@ -604,10 +604,6 @@ code {
   --climber-stop-direction: 1;
 }
 
-.assembly-climber[data-terminal-approach="true"][data-terminal="none"] {
-  z-index: 4;
-}
-
 .assembly-climber[data-terminal="exited"] .assembly-climber-figure {
   visibility: hidden;
   pointer-events: none;
@@ -905,6 +901,12 @@ code {
   line-height: 1;
 }
 
+.station-proof-mark > span {
+  display: block;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
 .station-proof p,
 .station-proof strong,
 .station-proof div > span {
@@ -975,6 +977,7 @@ code {
 
 .machine-bay {
   position: relative;
+  z-index: 2;
   width: 100%;
   min-width: 0;
   padding: 10px 12px 18px;
@@ -1569,7 +1572,7 @@ code {
 
 @media (min-width: 1041px) {
   .track-end {
-    margin-top: 120px;
+    margin-top: 160px;
   }
 }
 
@@ -1908,7 +1911,7 @@ code {
 
   .release-actions {
     width: 100%;
-    max-width: none;
+    max-width: 840px;
   }
 
   .release-primary-action .hero-command-text {
@@ -2028,6 +2031,15 @@ code {
 }
 
 @media (min-width: 721px) and (max-width: 1040px) {
+  .release-actions {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .release-primary-action .hero-command-text {
+    flex-direction: row;
+  }
+
   .ads-artifact {
     min-height: 370px;
   }
@@ -2222,7 +2234,7 @@ code {
   .assembly-climber-figure {
     top: -57px;
     left: 32px;
-    width: 112px;
+    width: 88px;
   }
 
   .line-intro {
@@ -2241,7 +2253,7 @@ code {
   .station--right {
     width: 100%;
     margin-bottom: 50px;
-    padding: 0 16px 0 82px;
+    padding: 0 16px 0 84px;
     gap: 20px;
   }
 
@@ -2507,6 +2519,15 @@ code {
   .release-primary-action { gap: 10px; }
   .release-primary-action .hero-command-code { flex: 1; }
   .release-primary-action > small { overflow-wrap: anywhere; }
+  .release-door i { display: none; }
+  .release-github {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    align-items: flex-start;
+    line-height: var(--leading-body);
+    overflow-wrap: anywhere;
+  }
   .release-door { right: -34%; width: 90%; opacity: 0.44; }
   .site-footer {
     min-height: 0;
