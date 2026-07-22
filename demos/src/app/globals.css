@@ -539,7 +539,7 @@ code {
   position: absolute;
   z-index: -1;
   top: -12px;
-  bottom: 60px;
+  bottom: 120px;
   left: 50%;
   width: 108px;
   transform: translateX(-50%);
@@ -1565,6 +1565,12 @@ code {
   font-weight: 850;
   letter-spacing: 0.025em;
   text-align: center;
+}
+
+@media (min-width: 1041px) {
+  .track-end {
+    margin-top: 120px;
+  }
 }
 
 /* Release bay ----------------------------------------------------------- */
