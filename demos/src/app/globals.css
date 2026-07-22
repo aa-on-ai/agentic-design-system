@@ -539,7 +539,7 @@ code {
   position: absolute;
   z-index: -1;
   top: -12px;
-  bottom: 150px;
+  bottom: 60px;
   left: 50%;
   width: 108px;
   transform: translateX(-50%);
@@ -602,6 +602,15 @@ code {
 .assembly-climber[data-facing="right"] {
   --climber-facing: 1;
   --climber-stop-direction: 1;
+}
+
+.assembly-climber[data-terminal-approach="true"][data-terminal="none"] {
+  z-index: 4;
+}
+
+.assembly-climber[data-terminal="exited"] .assembly-climber-figure {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .assembly-climber-stop,
