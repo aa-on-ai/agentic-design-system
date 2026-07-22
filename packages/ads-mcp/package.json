@@ -1,0 +1,40 @@
+{
+  "name": "ads-mcp",
+  "version": "0.1.0",
+  "description": "Local MCP server for Agentic Design System render, evaluation, and decision-trace runs.",
+  "type": "module",
+  "bin": {
+    "ads-mcp": "dist/cli.js"
+  },
+  "files": [
+    "dist/*.js",
+    "dist/*.js.map",
+    "dist/*.d.ts",
+    "dist/vendor",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "esbuild": "^0.28.1",
+    "pixelmatch": "^6.0.0",
+    "playwright": "^1.49.0",
+    "pngjs": "^7.0.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  },
+  "license": "Apache-2.0"
+}

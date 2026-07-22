@@ -113,6 +113,13 @@ export async function mountVariant({ src, outDir, title = 'variant', tailwind = 
       format: 'iife',
       platform: 'browser',
       jsx: 'automatic',
+      // The entry resolves from demos/, while fixture files live under testing/. Without aliases,
+      // an installed demos/node_modules makes the bundle include one React for the entry and a
+      // second React for the fixture. Hooks then fail at runtime with a null dispatcher.
+      alias: {
+        react: path.join(DEMOS_DIR, 'node_modules', 'react'),
+        'react-dom': path.join(DEMOS_DIR, 'node_modules', 'react-dom'),
+      },
       // Variants live outside demos/, so their bare imports (react, lucide-react, recharts…)
       // resolve via nodePaths → demos/node_modules, not by walking up from the variant.
       nodePaths: [path.join(DEMOS_DIR, 'node_modules'), path.join(REPO_ROOT, 'node_modules')],

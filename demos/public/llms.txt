@@ -1,0 +1,15 @@
+# Agentic Design System
+
+> An open-source, repo-local design governance system for coding agents. ADS turns UI work into a brief, rendered browser evidence, a review packet, and decision provenance.
+
+## Core pages
+
+- [Home](https://agentic-design-system.vercel.app/): Product overview and one complete UI review loop.
+- [MCP lab](https://agentic-design-system.vercel.app/mcp): The local three-tool MCP contract and a verified run.
+- [MCP contract](https://agentic-design-system.vercel.app/mcp/contract.json): Machine-readable tool sequence, resources, and boundaries.
+- [Decision trace](https://agentic-design-system.vercel.app/trace/002): A rendered repair case with frozen evidence.
+
+## Source
+
+- [Repository](https://github.com/aa-on-ai/agentic-design-system): Skills, workflows, verification scripts, and documentation.
+- [ads-mcp package](https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp): Local stdio MCP implementation.

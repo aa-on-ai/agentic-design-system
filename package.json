@@ -26,7 +26,10 @@
     "trace-002:smoke": "node testing/trace-002-smoke.mjs",
     "trace-002:inspector": "node testing/trace-002-inspector.mjs",
     "trace-002:mobile": "node testing/trace-002-mobile.mjs",
-    "playwright:install": "playwright install chromium"
+    "mcp-lab:runtime": "node testing/mcp-lab-runtime.mjs",
+    "playwright:install": "playwright install chromium",
+    "mcp:build": "npm --prefix packages/ads-mcp run build",
+    "mcp:test": "npm --prefix packages/ads-mcp test"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

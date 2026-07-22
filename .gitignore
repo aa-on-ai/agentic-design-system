@@ -16,3 +16,5 @@ testing/results/*/after.tsx
 # Rendered evidence from capture.mjs (screenshots + json; re-generate on demand)
 evidence/
 **/evidence/
+# Local ads-mcp run state and receipts
+.ads/
