@@ -1,7 +1,7 @@
 "use client";
 
 import { type RefObject, useEffect, useState } from "react";
-import { resolveTerminalDock } from "./assemblyTerminalDock";
+import { resolveTerminalExit } from "./assemblyTerminalExit";
 
 const DESKTOP_RUNG_STEP = 58;
 const MOBILE_RUNG_STEP = 48;
@@ -88,8 +88,7 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
 
     const resetTerminalState = () => {
       climber.dataset.terminal = "none";
-      climber.dataset.dockSide = "none";
-      climber.style.setProperty("--climber-dock-x", "0px");
+      climber.dataset.terminalApproach = "false";
     };
 
     const faceStation = (station: HTMLElement) => {
@@ -240,7 +239,6 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
       const direction = step % 2 === 0 ? 1 : -1;
       const lift = Math.sin(phase * Math.PI);
       const speedEnergy = Math.min(1, Math.abs(smoothedVelocity) / 12);
-      const lateral = direction * (phase * 2 - 1) * (3.5 + speedEnergy * 1.5);
       const strideTilt = Math.sin(phase * Math.PI * 2) * 1.35;
       const velocityTilt = Math.max(-2.6, Math.min(2.6, smoothedVelocity * 0.12));
 
@@ -249,31 +247,26 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
       const signRect = terminalSign?.getBoundingClientRect();
       const terminal =
         figure && signRect
-          ? resolveTerminalDock({
+          ? resolveTerminalExit({
               figureBaseBottom: climberRect.top + figure.offsetTop + figure.offsetHeight,
-              figureBaseLeft: climberRect.left + figure.offsetLeft - figure.offsetWidth / 2,
-              figureWidth: figure.offsetWidth,
-              signLeft: signRect.left,
-              signRight: signRect.right,
+              signBottom: signRect.bottom,
               signTop: signRect.top,
-              viewportWidth: window.innerWidth,
             })
           : {
-              progress: 0,
-              side: "none" as const,
+              approachProgress: 0,
               state: "none" as const,
-              x: 0,
             };
-      const stepWeight = 1 - terminal.progress;
+      const stepWeight = 1 - terminal.approachProgress;
+      const speedWeight = terminal.approachProgress > 0 ? 0 : 1;
 
       climber.dataset.stepSide = step % 2 === 0 ? "left" : "right";
-      climber.dataset.facing = terminal.side === "right" ? "left" : terminal.side === "left" ? "right" : step % 2 === 0 ? "right" : "left";
+      climber.dataset.facing = step % 2 === 0 ? "right" : "left";
       climber.dataset.terminal = terminal.state;
-      climber.dataset.dockSide = terminal.side;
-      climber.style.setProperty("--climber-dock-x", `${terminal.x.toFixed(2)}px`);
-      climber.style.setProperty("--climber-step-x", `${(lateral * stepWeight).toFixed(2)}px`);
-      climber.style.setProperty("--climber-step-y", `${(-lift * (6.5 + speedEnergy * 1.5) * stepWeight).toFixed(2)}px`);
-      climber.style.setProperty("--climber-step-tilt", `${((strideTilt + velocityTilt) * stepWeight).toFixed(2)}deg`);
+      climber.dataset.terminalApproach = String(terminal.approachProgress > 0);
+      const terminalLateral = direction * (phase * 2 - 1) * (3.5 + speedEnergy * 1.5 * speedWeight);
+      climber.style.setProperty("--climber-step-x", `${(terminalLateral * stepWeight).toFixed(2)}px`);
+      climber.style.setProperty("--climber-step-y", `${(-lift * (6.5 + speedEnergy * 1.5 * speedWeight) * stepWeight).toFixed(2)}px`);
+      climber.style.setProperty("--climber-step-tilt", `${((strideTilt + velocityTilt * speedWeight) * stepWeight).toFixed(2)}deg`);
       previousY = window.scrollY;
 
       if (terminal.state !== "none") {

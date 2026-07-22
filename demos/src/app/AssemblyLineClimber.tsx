@@ -40,7 +40,7 @@ export function AssemblyLineClimber() {
       data-facing="right"
       data-step-side="left"
       data-terminal="none"
-      data-dock-side="none"
+      data-terminal-approach="false"
       data-reduced-motion="false"
     >
       <button

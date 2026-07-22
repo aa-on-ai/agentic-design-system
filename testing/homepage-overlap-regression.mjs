@@ -152,16 +152,17 @@ try {
       }
     }
 
-    const terminalDock = await page.evaluate(async () => {
+    const terminalExit = await page.evaluate(async () => {
       document.documentElement.style.scrollBehavior = "auto";
       const floor = document.querySelector(".factory-floor");
+      const track = document.querySelector(".continuous-track");
       const sign = document.querySelector(".track-end");
       const climber = document.querySelector(".assembly-climber");
       const ember = document.querySelector(".assembly-climber-figure");
       const image = ember?.querySelector("img");
-      if (!floor || !sign || !climber || !ember || !image) return { missing: true };
+      if (!floor || !track || !sign || !climber || !ember || !image) return { missing: true };
 
-      image.dataset.mountProbe = "terminal-dock-ember";
+      image.dataset.mountProbe = "terminal-exit-ember";
 
       const floorTop = floor.getBoundingClientRect().top + window.scrollY;
       const floorBottom = floorTop + floor.getBoundingClientRect().height;
@@ -170,141 +171,111 @@ try {
       const figureOffset = Number.parseFloat(getComputedStyle(ember).top) || 0;
       const alignmentScroll = signTop - stickyTop - figureOffset;
       const contactScroll = alignmentScroll - ember.offsetHeight;
-      const start = Math.max(0, floorTop - window.innerHeight, contactScroll - 152);
-      const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, contactScroll + 48);
+      const start = Math.max(0, floorTop - window.innerHeight, contactScroll - 96);
+      const end = Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll + ember.offsetHeight + sign.offsetHeight + 48);
       const positions = [];
-      for (let scrollY = start; scrollY <= end; scrollY += 12) positions.push(scrollY);
-      positions.push(Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll), Math.min(document.documentElement.scrollHeight - window.innerHeight, floorBottom, alignmentScroll + sign.offsetHeight));
+      for (let scrollY = start; scrollY <= end; scrollY += 8) positions.push(scrollY);
+      positions.push(alignmentScroll, alignmentScroll + sign.offsetHeight, end);
       positions.sort((a, b) => a - b);
 
       const states = new Set();
-      const forwardDockX = new Map();
-      let maxOverlapArea = 0;
-      let worstOverlap = null;
-      let dockedFrame = null;
-      let maxForwardStep = 0;
-      let previousLeft = null;
+      let bestOcclusion = null;
+      let firstExitedFrame = null;
+      let visibleAfterExit = null;
 
       const capture = async (scrollY) => {
         window.scrollTo(0, scrollY);
         window.dispatchEvent(new Event("scroll"));
-        await new Promise((resolve) => requestAnimationFrame(resolve));
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const a = sign.getBoundingClientRect();
         const b = ember.getBoundingClientRect();
         const overlapWidth = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
         const overlapHeight = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-        const overlapArea = overlapWidth * overlapHeight;
         const terminal = climber.getAttribute("data-terminal");
-        const dockSide = climber.getAttribute("data-dock-side");
-        const dockX = Number.parseFloat(getComputedStyle(climber).getPropertyValue("--climber-dock-x")) || 0;
-        const visibilityPoints = [0.15, 0.5, 0.85].flatMap((x) => [0.15, 0.5, 0.85].map((y) => document.elementFromPoint(b.left + b.width * x, b.top + b.height * y)));
+        const centerDelta = Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2);
+        const coverage = b.width * b.height > 0 ? (overlapWidth * overlapHeight) / (b.width * b.height) : 0;
+        const samplePoints = [0.2, 0.5, 0.8].flatMap((x) => [0.2, 0.5, 0.8].map((y) => ({ x: b.left + b.width * x, y: b.top + b.height * y })));
+        const visibleSamples = samplePoints.filter(({ x, y }) => {
+          if (x < 0 || x > window.innerWidth || y < 0 || y > window.innerHeight) return false;
+          const element = document.elementFromPoint(x, y);
+          return element === ember || ember.contains(element);
+        }).length;
+        const styles = getComputedStyle(ember);
         const frame = {
           scrollY,
           terminal,
-          dockSide,
-          dockX,
-          gapX: b.left - a.right,
-          verticalGap: a.top - b.bottom,
-          verticalOverlap: overlapHeight,
-          withinViewport: b.left >= -0.5 && b.right <= window.innerWidth + 0.5,
-          unoccluded: visibilityPoints.every((element) => element === ember || ember.contains(element)),
-          sign: {
-            top: a.top,
-            right: a.right,
-            bottom: a.bottom,
-            left: a.left,
-          },
-          ember: {
-            top: b.top,
-            right: b.right,
-            bottom: b.bottom,
-            left: b.left,
-          },
+          centerDelta,
+          coverage,
+          signAboveEmber: overlapWidth > 1 && overlapHeight > 1 && visibleSamples < samplePoints.length,
+          visuallyPresent: styles.visibility !== "hidden" && Number.parseFloat(styles.opacity) > 0.01 && visibleSamples > 0,
+          visibleSamples,
+          sign: { top: a.top, right: a.right, bottom: a.bottom, left: a.left },
+          ember: { top: b.top, right: b.right, bottom: b.bottom, left: b.left },
         };
         states.add(terminal);
-        if (overlapArea > maxOverlapArea) {
-          maxOverlapArea = overlapArea;
-          worstOverlap = {
-            ...frame,
-            overlapArea,
-            overlapWidth,
-            overlapHeight,
-          };
+        if (!bestOcclusion || frame.coverage > bestOcclusion.coverage) {
+          bestOcclusion = frame;
         }
-        if (terminal === "docked" && overlapHeight > 1 && (!dockedFrame || Math.abs(frame.verticalGap) < Math.abs(dockedFrame.verticalGap))) {
-          dockedFrame = frame;
+        if (terminal === "exited") {
+          firstExitedFrame ??= frame;
+          if (frame.visuallyPresent) visibleAfterExit ??= frame;
         }
         return frame;
       };
 
-      for (const scrollY of positions) {
-        const frame = await capture(scrollY);
-        forwardDockX.set(scrollY, frame.dockX);
-        if (previousLeft !== null) maxForwardStep = Math.max(maxForwardStep, Math.abs(frame.ember.left - previousLeft));
-        previousLeft = frame.ember.left;
-      }
+      const preExit = await capture(start);
+      for (const scrollY of positions) await capture(scrollY);
+      const exitedAtEnd = await capture(end);
+      const returned = await capture(start);
 
-      let maxReverseDelta = 0;
-      const reversePositions = positions.filter((_, index) => index % 2 === 0 || index === positions.length - 1);
-      for (const scrollY of [...reversePositions].reverse()) {
-        const frame = await capture(scrollY);
-        maxReverseDelta = Math.max(maxReverseDelta, Math.abs(frame.dockX - (forwardDockX.get(scrollY) ?? frame.dockX)));
-      }
-
+      const trackRect = track.getBoundingClientRect();
       const signRect = sign.getBoundingClientRect();
-      const signCenter = document.elementFromPoint((signRect.left + signRect.right) / 2, (signRect.top + signRect.bottom) / 2);
       return {
         missing: false,
         states: [...states],
-        maxOverlapArea,
-        worstOverlap,
-        dockedFrame,
-        maxForwardStep,
-        maxReverseDelta,
-        returnedTerminal: climber.getAttribute("data-terminal"),
+        trackCenterDelta: Math.abs((trackRect.left + trackRect.right) / 2 - (signRect.left + signRect.right) / 2),
+        trackPastSign: trackRect.bottom - signRect.bottom,
+        bestOcclusion,
+        firstExitedFrame,
+        visibleAfterExit,
+        exitedAtEnd,
+        returned,
+        reverseCenterDelta: Math.abs((preExit.ember.left + preExit.ember.right) / 2 - (returned.ember.left + returned.ember.right) / 2),
         imageCount: ember.querySelectorAll("img").length,
-        imageStayedMounted: image.dataset.mountProbe === "terminal-dock-ember",
-        signLegible: signCenter === sign || sign.contains(signCenter),
+        imageStayedMounted: image.dataset.mountProbe === "terminal-exit-ember",
       };
     });
 
-    if (terminalDock.missing) fail(width, "missing End of run or Ember terminal-dock target");
+    if (terminalExit.missing) fail(width, "missing End of run, ladder, or Ember terminal-exit target");
     else {
-      if (terminalDock.maxOverlapArea > 1) {
-        fail(width, `Ember overlaps the End of run sign: ${JSON.stringify(terminalDock.worstOverlap)}`);
+      if (terminalExit.trackCenterDelta > 1) {
+        fail(width, `End of run sign leaves the ladder centerline by ${terminalExit.trackCenterDelta.toFixed(1)}px`);
       }
-      if (!terminalDock.states.includes("approaching") || !terminalDock.states.includes("docked")) {
-        fail(width, `Ember terminal states are incomplete: ${JSON.stringify(terminalDock.states)}`);
+      if (terminalExit.trackPastSign < 28) {
+        fail(width, `ladder ends ${terminalExit.trackPastSign.toFixed(1)}px past the sign, expected at least 28px of visible continuation`);
       }
-      if (!terminalDock.dockedFrame) {
-        fail(width, "Ember never reaches a visible docked frame beside the End of run sign");
-      } else {
-        if (terminalDock.dockedFrame.dockSide !== "right") {
-          fail(width, `Ember docks on ${terminalDock.dockedFrame.dockSide ?? "no side"}, expected the open right side`);
-        }
-        if (terminalDock.dockedFrame.gapX < 15.5 || terminalDock.dockedFrame.gapX > 32) {
-          fail(width, `Ember terminal gap is ${terminalDock.dockedFrame.gapX.toFixed(1)}px, expected 16–32px`);
-        }
-        if (!terminalDock.dockedFrame.withinViewport) {
-          fail(width, `Ember is clipped at the terminal dock: ${JSON.stringify(terminalDock.dockedFrame.ember)}`);
-        }
-        if (!terminalDock.dockedFrame.unoccluded) {
-          fail(width, `Ember is still occluded at the terminal dock: ${JSON.stringify(terminalDock.dockedFrame.ember)}`);
-        }
+      if (!terminalExit.states.includes("occluding") || !terminalExit.states.includes("exited")) {
+        fail(width, `Ember terminal states are incomplete: ${JSON.stringify(terminalExit.states)}`);
       }
-      if (terminalDock.maxForwardStep > 18) {
-        fail(width, `Ember teleports ${terminalDock.maxForwardStep.toFixed(1)}px between adjacent terminal frames`);
+      if (!terminalExit.bestOcclusion || terminalExit.bestOcclusion.centerDelta > 20 || !terminalExit.bestOcclusion.signAboveEmber) {
+        fail(width, `Ember does not pass behind the centered End of run sign: ${JSON.stringify(terminalExit.bestOcclusion)}`);
       }
-      if (terminalDock.maxReverseDelta > 0.75) {
-        fail(width, `reverse scroll diverges by ${terminalDock.maxReverseDelta.toFixed(2)}px from the forward path`);
+      const requiredCoverage = width <= 720 ? 0.8 : 0.4;
+      if (!terminalExit.bestOcclusion || terminalExit.bestOcclusion.coverage < requiredCoverage) {
+        fail(width, `End of run covers only ${((terminalExit.bestOcclusion?.coverage ?? 0) * 100).toFixed(1)}% of Ember, expected at least ${(requiredCoverage * 100).toFixed(0)}%`);
       }
-      if (terminalDock.returnedTerminal !== "none") {
-        fail(width, `Ember returns from the terminal as ${terminalDock.returnedTerminal}, expected none`);
+      if (!terminalExit.firstExitedFrame || terminalExit.exitedAtEnd.terminal !== "exited") {
+        fail(width, `Ember never completes the terminal exit: ${JSON.stringify(terminalExit.exitedAtEnd)}`);
       }
-      if (terminalDock.imageCount !== 1 || !terminalDock.imageStayedMounted) {
-        fail(width, `Ember image continuity failed: ${JSON.stringify({ imageCount: terminalDock.imageCount, stayedMounted: terminalDock.imageStayedMounted })}`);
+      if (terminalExit.visibleAfterExit || terminalExit.exitedAtEnd.visuallyPresent) {
+        fail(width, `assembly-line Ember reappears after passing behind the sign: ${JSON.stringify(terminalExit.visibleAfterExit ?? terminalExit.exitedAtEnd)}`);
       }
-      if (!terminalDock.signLegible) fail(width, "End of run sign is not topmost at its center");
+      if (terminalExit.returned.terminal !== "none" || !terminalExit.returned.visuallyPresent || terminalExit.reverseCenterDelta > 0.75) {
+        fail(width, `reverse scroll does not restore Ember cleanly: ${JSON.stringify({ returned: terminalExit.returned, reverseCenterDelta: terminalExit.reverseCenterDelta })}`);
+      }
+      if (terminalExit.imageCount !== 1 || !terminalExit.imageStayedMounted) {
+        fail(width, `Ember image continuity failed: ${JSON.stringify({ imageCount: terminalExit.imageCount, stayedMounted: terminalExit.imageStayedMounted })}`);
+      }
     }
 
     const footerLayout = await page.evaluate(() => {
