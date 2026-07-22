@@ -566,6 +566,7 @@ code {
   --climber-step-x: 0px;
   --climber-step-y: 0px;
   --climber-step-tilt: 0deg;
+  --climber-dock-x: 0px;
   --climber-stop-direction: 1;
   position: sticky;
   z-index: 1;
@@ -589,7 +590,7 @@ code {
   cursor: pointer;
   filter: drop-shadow(0 8px 9px rgba(38, 25, 17, 0.18));
   pointer-events: auto;
-  transform: translate3d(calc(-50% + var(--climber-step-x)), var(--climber-step-y), 0) rotate(var(--climber-step-tilt)) scaleX(var(--climber-facing, 1));
+  transform: translate3d(calc(-50% + var(--climber-step-x) + var(--climber-dock-x)), var(--climber-step-y), 0) rotate(var(--climber-step-tilt)) scaleX(var(--climber-facing, 1));
   transform-origin: 50% 82%;
   will-change: transform;
 }
@@ -602,6 +603,11 @@ code {
 .assembly-climber[data-facing="right"] {
   --climber-facing: 1;
   --climber-stop-direction: 1;
+}
+
+.assembly-climber[data-terminal="approaching"],
+.assembly-climber[data-terminal="docked"] {
+  z-index: 4;
 }
 
 .assembly-climber-stop,

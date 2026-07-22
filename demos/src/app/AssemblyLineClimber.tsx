@@ -39,6 +39,8 @@ export function AssemblyLineClimber() {
       data-station-reaction-count="0"
       data-facing="right"
       data-step-side="left"
+      data-terminal="none"
+      data-dock-side="none"
       data-reduced-motion="false"
     >
       <button

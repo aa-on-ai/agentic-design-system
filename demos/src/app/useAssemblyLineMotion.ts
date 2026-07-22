@@ -1,6 +1,7 @@
 "use client";
 
 import { type RefObject, useEffect, useState } from "react";
+import { resolveTerminalDock } from "./assemblyTerminalDock";
 
 const DESKTOP_RUNG_STEP = 58;
 const MOBILE_RUNG_STEP = 48;
@@ -43,6 +44,7 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
     if (!climber || !factoryFloor) return;
 
     const stations = Array.from(factoryFloor.querySelectorAll<HTMLElement>(".station[data-stage]"));
+    const terminalSign = factoryFloor.querySelector<HTMLElement>(".track-end");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const peekPreload = new window.Image();
     peekPreload.src = "/characters/ember-peek.png";
@@ -84,11 +86,15 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
       }
     };
 
+    const resetTerminalState = () => {
+      climber.dataset.terminal = "none";
+      climber.dataset.dockSide = "none";
+      climber.style.setProperty("--climber-dock-x", "0px");
+    };
+
     const faceStation = (station: HTMLElement) => {
       const stage = station.dataset.stage ?? "between";
-      const machineSide = window.innerWidth <= 720
-        ? "right"
-        : station.dataset.side === "left" ? "right" : "left";
+      const machineSide = window.innerWidth <= 720 ? "right" : station.dataset.side === "left" ? "right" : "left";
       climber.dataset.station = stage;
       climber.dataset.stop = stage;
       climber.dataset.facing = machineSide;
@@ -187,6 +193,7 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
         climber.style.setProperty("--climber-step-x", "0px");
         climber.style.setProperty("--climber-step-y", "0px");
         climber.style.setProperty("--climber-step-tilt", "0deg");
+        resetTerminalState();
         previousY = window.scrollY;
         return;
       }
@@ -203,6 +210,7 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
         climber.style.removeProperty("--climber-step-x");
         climber.style.removeProperty("--climber-step-y");
         climber.style.removeProperty("--climber-step-tilt");
+        resetTerminalState();
         previousY = window.scrollY;
         return;
       }
@@ -236,12 +244,49 @@ export function useAssemblyLineMotion(climberRef: RefObject<HTMLDivElement | nul
       const strideTilt = Math.sin(phase * Math.PI * 2) * 1.35;
       const velocityTilt = Math.max(-2.6, Math.min(2.6, smoothedVelocity * 0.12));
 
+      const figure = climber.querySelector<HTMLElement>(".assembly-climber-figure");
+      const climberRect = climber.getBoundingClientRect();
+      const signRect = terminalSign?.getBoundingClientRect();
+      const terminal =
+        figure && signRect
+          ? resolveTerminalDock({
+              figureBaseBottom: climberRect.top + figure.offsetTop + figure.offsetHeight,
+              figureBaseLeft: climberRect.left + figure.offsetLeft - figure.offsetWidth / 2,
+              figureWidth: figure.offsetWidth,
+              signLeft: signRect.left,
+              signRight: signRect.right,
+              signTop: signRect.top,
+              viewportWidth: window.innerWidth,
+            })
+          : {
+              progress: 0,
+              side: "none" as const,
+              state: "none" as const,
+              x: 0,
+            };
+      const stepWeight = 1 - terminal.progress;
+
       climber.dataset.stepSide = step % 2 === 0 ? "left" : "right";
-      climber.dataset.facing = step % 2 === 0 ? "right" : "left";
-      climber.style.setProperty("--climber-step-x", `${lateral.toFixed(2)}px`);
-      climber.style.setProperty("--climber-step-y", `${(-lift * (6.5 + speedEnergy * 1.5)).toFixed(2)}px`);
-      climber.style.setProperty("--climber-step-tilt", `${(strideTilt + velocityTilt).toFixed(2)}deg`);
+      climber.dataset.facing = terminal.side === "right" ? "left" : terminal.side === "left" ? "right" : step % 2 === 0 ? "right" : "left";
+      climber.dataset.terminal = terminal.state;
+      climber.dataset.dockSide = terminal.side;
+      climber.style.setProperty("--climber-dock-x", `${terminal.x.toFixed(2)}px`);
+      climber.style.setProperty("--climber-step-x", `${(lateral * stepWeight).toFixed(2)}px`);
+      climber.style.setProperty("--climber-step-y", `${(-lift * (6.5 + speedEnergy * 1.5) * stepWeight).toFixed(2)}px`);
+      climber.style.setProperty("--climber-step-tilt", `${((strideTilt + velocityTilt) * stepWeight).toFixed(2)}deg`);
       previousY = window.scrollY;
+
+      if (terminal.state !== "none") {
+        window.clearTimeout(settleTimer);
+        settleTimer = 0;
+        clearPhaseTimers();
+        clearStationState();
+        latchedStation = null;
+        climber.dataset.station = "between";
+        climber.dataset.stop = "none";
+        return;
+      }
+
       scheduleSettle();
     };
 
