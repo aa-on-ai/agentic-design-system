@@ -415,6 +415,7 @@ code {
 .hero-command-code {
   display: flex;
   min-width: 0;
+  flex: 1;
   padding-right: 4px;
   align-items: center;
   gap: 9px;
@@ -423,8 +424,19 @@ code {
 }
 
 .hero-command-prompt {
+  flex: 0 0 auto;
   color: var(--orange-bright);
   font-weight: 800;
+}
+
+.hero-command-text {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  line-height: 1.35;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hero-command-copy {
@@ -1686,18 +1698,6 @@ code {
   box-shadow: 9px 9px 0 rgba(72, 29, 10, 0.3);
 }
 
-.release-primary-action .hero-command-text {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  flex-direction: column;
-  line-height: 1.35;
-}
-
-.release-primary-action .hero-command-text > span {
-  white-space: nowrap;
-}
-
 .release-github {
   display: inline-flex;
   min-height: 48px;
@@ -1914,10 +1914,6 @@ code {
     max-width: 840px;
   }
 
-  .release-primary-action .hero-command-text {
-    flex-direction: row;
-  }
-
   .line-intro h2,
   .line-intro > span {
     max-width: calc(50% - 70px);
@@ -2036,10 +2032,6 @@ code {
     max-width: 720px;
   }
 
-  .release-primary-action .hero-command-text {
-    flex-direction: row;
-  }
-
   .ads-artifact {
     min-height: 370px;
   }
@@ -2130,26 +2122,13 @@ code {
   }
 
   .hero-command-code {
-    flex: 1;
     overflow: hidden;
     font-size: 10px;
-    white-space: normal;
   }
 
   .hero-command-copy {
     width: 60px;
     flex-basis: 60px;
-  }
-
-  .hero-command-text {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    line-height: 1.35;
-  }
-
-  .hero-command-text > span {
-    white-space: nowrap;
   }
 
   .install-guide-link {
@@ -2179,11 +2158,6 @@ code {
       flex-basis: 60px;
     }
 
-    .hero-command-text > span,
-    .release-primary-action .hero-command-text > span {
-      overflow-wrap: anywhere;
-      white-space: normal;
-    }
   }
 
   .hero-image {
