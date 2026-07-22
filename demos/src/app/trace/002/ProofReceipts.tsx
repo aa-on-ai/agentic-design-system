@@ -22,26 +22,38 @@ const receipts = [
 
 export function ProofReceipts() {
   return (
-    <section className={styles.receipts} aria-labelledby="receipts-title">
-      <div className={styles.receiptsHeading}>
-        <p className={styles.sectionLabel}>Verification</p>
-        <h2 id="receipts-title">The claim resolves<br /> all the way down.</h2>
-        <p>Scores stay subjective. Rendered failures, missing states, and contradictory actions do not.</p>
+    <section className={styles.proofPacket} id="packet" aria-labelledby="packet-title">
+      <div className={styles.packetHeading}>
+        <p className={styles.eyebrow}>Supporting evidence</p>
+        <h2 id="packet-title">The proof packet stays available.<br /><em>It does not lead the story.</em></h2>
       </div>
 
-      <dl className={styles.metrics}>
+      <dl className={styles.packetRail}>
         {metrics.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
       </dl>
 
-      <nav className={styles.receiptLinks} aria-label="Trace 002 source receipts">
-        {receipts.map(([label, href]) => (
-          <a key={label} className="focus-ring" href={href}>
+      <details className={styles.packetDetails}>
+        <summary className="focus-ring">
+          <span>Outcome</span><b>What success meant</b>
+          <span>Builder</span><b>What changed</b>
+          <span>Grader</span><b>What was verified</b>
+          <span className={styles.packetOpen}>Expand packet +</span>
+        </summary>
+        <nav className={styles.receiptLinks} aria-label="Proof packet source receipts">
+          {receipts.map(([label, href]) => (
+            <a key={label} className="focus-ring" href={href}>
+              <CheckCircle2 size={18} aria-hidden="true" />
+              <span>{label}</span>
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          ))}
+          <a className="focus-ring" href="/trace/002/trace.json">
             <CheckCircle2 size={18} aria-hidden="true" />
-            <span>{label}</span>
+            <span>Machine-readable trace</span>
             <ArrowUpRight size={16} aria-hidden="true" />
           </a>
-        ))}
-      </nav>
+        </nav>
+      </details>
     </section>
   );
 }

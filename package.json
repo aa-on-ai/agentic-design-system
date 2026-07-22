@@ -23,6 +23,7 @@
     "homepage:hardening": "node testing/homepage-hardening.mjs",
     "homepage:runtime": "node testing/homepage-runtime.mjs",
     "trace-002:smoke": "node testing/trace-002-smoke.mjs",
+    "trace-002:inspector": "node testing/trace-002-inspector.mjs",
     "trace-002:mobile": "node testing/trace-002-mobile.mjs",
     "playwright:install": "playwright install chromium"
   },

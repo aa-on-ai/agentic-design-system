@@ -1,35 +1,49 @@
-import { ArrowUpRight, LockKeyhole } from "lucide-react";
-import { TRACE } from "./traceData";
+import Image from "next/image";
 import styles from "./trace-two.module.css";
 
 export function TraceTwoHero() {
   return (
-    <section className={styles.hero} aria-labelledby="trace-two-title">
-      <div className={styles.heroCopy}>
-        <p className={styles.kicker}>Current proof / trace 002</p>
-        <h1 id="trace-two-title">The button changed<br /> <em>because the state did.</em></h1>
-        <p className={styles.lede}>
-          Pawprint&apos;s schedule became read-only. ADS caught the enabled-looking New walk action,
-          disabled it natively, kept Retry active, and proved the unaffected states stayed untouched.
+    <section className={styles.hero} aria-labelledby="case-title">
+      <div className={styles.caseCopy}>
+        <p className={styles.eyebrow}>Pawprint dispatch · one consequential repair</p>
+        <h1 id="case-title">The schedule went read-only.<br /><em>The action should have too.</em></h1>
+        <p className={styles.heroLede}>
+          ADS caught the contradiction, disabled the write action, kept Retry available, and proved
+          every unrelated state stayed untouched.
         </p>
+        <div className={styles.heroActions}>
+          <a className={`${styles.action} ${styles.primaryAction} focus-ring`} href="#inspect">
+            Inspect the repair <span aria-hidden="true">↓</span>
+          </a>
+          <a className={`${styles.action} ${styles.secondaryAction} focus-ring`} href="#packet">
+            Open the proof packet <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <dl className={styles.heroFacts}>
+          <div><dt>Contradiction</dt><dd>1 caught</dd></div>
+          <div><dt>Changed captures</dt><dd>2 of 8</dd></div>
+          <div><dt>Preserved action</dt><dd>Retry</dd></div>
+        </dl>
       </div>
 
-      <aside className={styles.runCard} aria-label="Trace 002 summary">
-        <div className={styles.runCardTop}>
-          <span><LockKeyhole size={14} aria-hidden="true" /> Frozen run</span>
-          <span className={styles.satisfiedStatus}><i aria-hidden="true" /> {TRACE.grade.verdict}</span>
+      <div className={styles.heroStage} aria-label="Ember inspecting the Pawprint repair ticket">
+        <div className={styles.stageGlow} aria-hidden="true" />
+        <Image
+          className={styles.ember}
+          src="/characters/ember-peek.png"
+          width={512}
+          height={512}
+          priority
+          alt="Ember, the ADS workshop character, inspecting a proof ticket"
+        />
+        <div className={styles.findingTicket}>
+          <div className={styles.ticketHead}><span>Finding 01</span><span className={styles.severity}>Major</span></div>
+          <strong>State and action disagree</strong>
+          <p>“Read-only schedule” appeared beside an active <b>New walk</b> action.</p>
+          <div className={styles.ticketRepair}><span>Repair</span><b>Disable the mutation. Keep Retry alive.</b></div>
         </div>
-        <strong>Pawprint / {TRACE.finding.id}</strong>
-        <dl>
-          <div><dt>Release</dt><dd>{TRACE.release.tag}</dd></div>
-          <div><dt>Evidence</dt><dd>{TRACE.evidence.screenshots} / {TRACE.evidence.screenshots}</dd></div>
-          <div><dt>Grade</dt><dd>{TRACE.grade.weightedScore.toFixed(2)} / 10</dd></div>
-          <div><dt>Material findings</dt><dd>{TRACE.grade.findings.length}</dd></div>
-        </dl>
-        <a className={`${styles.rawLink} focus-ring`} href="/trace/002/trace.json">
-          Open machine-readable trace <ArrowUpRight size={16} aria-hidden="true" />
-        </a>
-      </aside>
+        <div className={styles.stageRail} aria-hidden="true"><i /><i /><i /><i /><i /></div>
+      </div>
     </section>
   );
 }

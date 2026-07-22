@@ -9,7 +9,7 @@ const baseline = path.join(suiteRoot, "baseline/pawprint");
 const rerun = path.join(suiteRoot, "runs/2026-07-20-public-hardening");
 
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
-const [suite, grade, evidence, run, rerunEvidence, artifact, page, hero, footer] = await Promise.all([
+const [suite, grade, evidence, run, rerunEvidence, artifact, page, hero, gallery, receipts, header, footer, desktopAsset, mobileAsset] = await Promise.all([
   readJson(path.join(suiteRoot, "suite.json")),
   readJson(path.join(rerun, "pawprint/grade.json")),
   readJson(path.join(baseline, "rendered/evidence.json")),
@@ -18,7 +18,12 @@ const [suite, grade, evidence, run, rerunEvidence, artifact, page, hero, footer]
   readFile(path.join(baseline, "artifact/index.html"), "utf8"),
   readFile(path.join(root, "demos/src/app/trace/002/page.tsx"), "utf8"),
   readFile(path.join(root, "demos/src/app/trace/002/TraceTwoHero.tsx"), "utf8"),
+  readFile(path.join(root, "demos/src/app/trace/002/ProofGallery.tsx"), "utf8"),
+  readFile(path.join(root, "demos/src/app/trace/002/ProofReceipts.tsx"), "utf8"),
+  readFile(path.join(root, "demos/src/app/trace/002/TraceTwoHeader.tsx"), "utf8"),
   readFile(path.join(root, "demos/src/app/SiteFooter.tsx"), "utf8"),
+  readFile(path.join(root, "demos/public/trace/002/repaired-error-desktop-2x.png")),
+  readFile(path.join(root, "demos/public/trace/002/repaired-error-mobile-2x.png")),
 ]);
 
 assert.equal(suite.suiteId, "ads-adjacent-actions-v1.3.1");
@@ -47,7 +52,16 @@ assert.ok(rerunEvidence.comparison.pairs.every(({ identical }) => identical));
 assert.match(artifact, /button\.disabled = isOffline/);
 assert.match(artifact, /data-action="retry"/);
 assert.match(page, /<ProofGallery \/>/);
-assert.match(hero, /trace\/002\/trace\.json/);
+assert.match(page, /<ProofResult \/>/);
+assert.match(hero, /ember-peek\.png/);
+assert.match(hero, /The schedule went read-only/);
+assert.match(gallery, /\["baseline", "repaired", "diff"\]/);
+assert.match(gallery, /requestFullscreen/);
+assert.match(gallery, /unoptimized/);
+assert.match(receipts, /Machine-readable trace/);
+assert.match(header, /Proof case 01/);
+assert.ok(desktopAsset.length > 200_000, "desktop 2x repair evidence is missing or unexpectedly small");
+assert.ok(mobileAsset.length > 100_000, "mobile 2x repair evidence is missing or unexpectedly small");
 assert.match(footer, /href="\/trace\/002"/);
 
-console.log("[trace-002-smoke] current release, repair semantics, 8/8 evidence, rerun lock, and public route passed");
+console.log("[trace-002-smoke] current release, repair semantics, 2x evidence inspector, rerun lock, and public proof route passed");
