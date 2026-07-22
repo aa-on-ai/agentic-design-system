@@ -58,6 +58,9 @@ for (const testCase of cases) {
     let themeToggle = "not exercised";
     if (testCase.name === "chromium-desktop") {
       const themeButton = page.getByRole("button", { name: "Switch to dark theme" });
+      // The control is server-rendered before React attaches its event handler. Production can
+      // reach DOMContentLoaded before hydration on a cold edge response, so wait for that boundary.
+      await page.waitForTimeout(750);
       await themeButton.click();
       assert.equal(await page.locator("html").getAttribute("data-theme"), "dark");
       themeToggle = "light -> dark";
