@@ -9,7 +9,7 @@ if (!url) {
   process.exit(2);
 }
 
-const widths = [267, 320, 390, 479, 610, 664, 720, 768, 811, 834, 958, 1040, 1074, 1280, 1622];
+const widths = [267, 320, 390, 479, 544, 582, 610, 664, 720, 768, 811, 834, 958, 1040, 1074, 1280, 1622];
 const issues = [];
 const requestedBrowser = (process.env.ADS_OVERLAP_BROWSER ?? "chromium").toLowerCase();
 const browserOptions = {
@@ -57,6 +57,9 @@ try {
         const rootBox = root?.getBoundingClientRect();
         const code = root?.querySelector(".hero-command-code")?.getBoundingClientRect();
         const copy = root?.querySelector(".hero-command-copy")?.getBoundingClientRect();
+        const text = root?.querySelector(".hero-command-text");
+        const textBox = text?.getBoundingClientRect();
+        const textStyle = text ? getComputedStyle(text) : null;
         const lines = [...(root?.querySelectorAll(".hero-command-text > span") ?? [])].map((line) => {
           const box = line.getBoundingClientRect();
           return {
@@ -67,13 +70,32 @@ try {
           };
         });
         const textRightEdge = code && copy ? Math.min(code.right, copy.left) : null;
+        const singleRow = Boolean(
+          textBox && textStyle &&
+          textBox.height <= Number.parseFloat(textStyle.lineHeight) * 1.5 &&
+          (lines.length < 2 || Math.max(...lines.map((line) => line.top)) - Math.min(...lines.map((line) => line.top)) < 1)
+        );
+        const truncationContract = Boolean(
+          textStyle &&
+          textStyle.whiteSpace === "nowrap" &&
+          textStyle.textAlign === "left" &&
+          textStyle.textOverflow === "ellipsis" &&
+          textStyle.overflowX === "hidden"
+        );
         return {
           box: rootBox ? { left: rootBox.left, right: rootBox.right, width: rootBox.width } : null,
           code: code ? { left: code.left, right: code.right } : null,
           copy: copy ? { left: copy.left, right: copy.right } : null,
           lines,
-          singleRow: lines.length === 3 && Math.max(...lines.map((line) => line.top)) - Math.min(...lines.map((line) => line.top)) < 1,
-          fits: Boolean(code && copy && lines.length === 3 && textRightEdge !== null && lines.every((line) => line.left >= code.left - 1 && line.right <= textRightEdge - 4)),
+          singleRow,
+          truncationContract,
+          truncated: Boolean(text && text.scrollWidth > text.clientWidth + 1),
+          visibleText: text?.textContent?.trim() ?? "",
+          accessibleCommand: root?.querySelector(".hero-command-code")?.getAttribute("aria-label") ?? "",
+          fits: Boolean(
+            code && copy && textBox && textRightEdge !== null &&
+            code.right <= copy.left && textBox.left >= code.left - 1 && textBox.right <= textRightEdge - 4
+          ),
         };
       };
 
@@ -104,6 +126,22 @@ try {
     }
     if (!layout.releaseCommand.fits) {
       fail(width, `release command text clips into its Copy control: ${JSON.stringify(layout.releaseCommand)}`);
+    }
+    if (!layout.heroCommand.singleRow || !layout.heroCommand.truncationContract) {
+      fail(width, `hero install command does not use the single-line truncation contract: ${JSON.stringify(layout.heroCommand)}`);
+    }
+    if (!layout.releaseCommand.singleRow || !layout.releaseCommand.truncationContract) {
+      fail(width, `release install command does not use the single-line truncation contract: ${JSON.stringify(layout.releaseCommand)}`);
+    }
+    if (width <= 390 && (!layout.heroCommand.truncated || !layout.releaseCommand.truncated)) {
+      fail(width, `narrow install commands are not truncated: ${JSON.stringify({ hero: layout.heroCommand, release: layout.releaseCommand })}`);
+    }
+    if ([544, 582].includes(width)) {
+      for (const [name, command] of Object.entries({ hero: layout.heroCommand, release: layout.releaseCommand })) {
+        if (!command.visibleText.endsWith("…") || command.visibleText.length >= command.accessibleCommand.length) {
+          fail(width, `${name} install command does not use the intentionally shortened visible label: ${JSON.stringify(command)}`);
+        }
+      }
     }
     if (width >= 1041 && !layout.releaseCommand.singleRow) {
       fail(width, `desktop release install command is not a single row: ${JSON.stringify(layout.releaseCommand)}`);

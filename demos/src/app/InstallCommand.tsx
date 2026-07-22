@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 const command = "npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes";
+const visibleCommand = "npx skills add aa-on-ai/agentic-design-system…";
 
 type InstallCommandProps = {
   variant?: "card" | "strip";
@@ -33,11 +34,7 @@ export function InstallCommand({ variant = "card" }: InstallCommandProps) {
       >
         <code className="hero-command-code" aria-label={command}>
           <span className="hero-command-prompt" aria-hidden="true">$</span>
-          <span className="hero-command-text">
-            <span>npx skills add</span>{" "}
-            <span>aa-on-ai/agentic-design-system</span>{" "}
-            <span>--agent codex --copy --yes</span>
-          </span>
+          <span className="hero-command-text">{visibleCommand}</span>
         </code>
         <span className="hero-command-copy" aria-live="polite">
           {copyLabel}

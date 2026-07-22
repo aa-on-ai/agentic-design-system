@@ -290,6 +290,8 @@ try {
           };
         })
       : [];
+    const commandStyle = command ? getComputedStyle(command) : null;
+    const commandBox = command?.getBoundingClientRect() ?? null;
     const track = rect(".continuous-track");
     const stationIndex = rect(".station-index");
     const stationCopy = rect(".station-copy");
@@ -324,9 +326,19 @@ try {
     return {
       pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       commandLineCount: commandLines.length,
-      commandLinesFit: commandLines.every((line) => line.scrollWidth <= line.clientWidth),
-      commandUsesThreeRows: commandLines.length === 3 &&
-        commandLines[0].top < commandLines[1].top && commandLines[1].top < commandLines[2].top,
+      commandUsesOneRow: Boolean(
+        commandBox && commandStyle &&
+        commandBox.height <= Number.parseFloat(commandStyle.lineHeight) * 1.5 &&
+        (commandLines.length < 2 || Math.max(...commandLines.map((line) => line.top)) - Math.min(...commandLines.map((line) => line.top)) < 1)
+      ),
+      commandTruncates: Boolean(command && command.scrollWidth > command.clientWidth + 1),
+      commandTruncationContract: Boolean(
+        commandStyle &&
+        commandStyle.whiteSpace === "nowrap" &&
+        commandStyle.textAlign === "left" &&
+        commandStyle.textOverflow === "ellipsis" &&
+        commandStyle.overflowX === "hidden"
+      ),
       trackCenter: track ? track.left + track.width / 2 : null,
       stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
       stationContentLeft: stationCopy?.left ?? null,
@@ -347,10 +359,11 @@ try {
   if (mobilePacing.pageOverflow > 0) {
     issues.push(`mobile page overflows by ${mobilePacing.pageOverflow}px`);
   }
-  if (!mobilePacing.commandLinesFit || !mobilePacing.commandUsesThreeRows) {
+  if (!mobilePacing.commandUsesOneRow || !mobilePacing.commandTruncates || !mobilePacing.commandTruncationContract) {
     issues.push(
-      `mobile install command is ${mobilePacing.commandLineCount} line segment(s), ` +
-      `fit=${mobilePacing.commandLinesFit}, threeRows=${mobilePacing.commandUsesThreeRows}`,
+      `mobile release command truncation failed: segments=${mobilePacing.commandLineCount}, ` +
+      `oneRow=${mobilePacing.commandUsesOneRow}, truncated=${mobilePacing.commandTruncates}, ` +
+      `contract=${mobilePacing.commandTruncationContract}`,
     );
   }
   if (
