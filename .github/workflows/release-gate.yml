@@ -50,3 +50,5 @@ jobs:
           fi
 
           npm run homepage:hardening -- http://127.0.0.1:3000
+          npm run homepage:blend -- http://127.0.0.1:3000
+          ADS_SECTION_BLEND_BROWSER=webkit npm run homepage:blend -- http://127.0.0.1:3000

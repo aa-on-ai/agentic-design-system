@@ -21,6 +21,7 @@
     "compare:smoke": "node testing/compare-smoke.mjs",
     "homepage:smoke": "node testing/homepage-regression.mjs",
     "homepage:hardening": "node testing/homepage-hardening.mjs",
+    "homepage:blend": "node testing/homepage-section-blend-regression.mjs",
     "homepage:runtime": "node testing/homepage-runtime.mjs",
     "trace-002:smoke": "node testing/trace-002-smoke.mjs",
     "trace-002:inspector": "node testing/trace-002-inspector.mjs",

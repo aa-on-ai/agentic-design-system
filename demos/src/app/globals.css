@@ -244,7 +244,6 @@ code {
   border-bottom-color: transparent;
   border-radius: 28px;
   background: var(--page-deep);
-  box-shadow: 0 18px 46px color-mix(in srgb, var(--shadow) 58%, transparent);
 }
 
 .hero-media,
@@ -281,13 +280,13 @@ code {
   z-index: -2;
   background:
     linear-gradient(90deg, color-mix(in srgb, var(--page) 98%, transparent) 0%, color-mix(in srgb, var(--page) 93%, transparent) 34%, color-mix(in srgb, var(--page) 48%, transparent) 58%, transparent 86%),
-    linear-gradient(0deg, color-mix(in srgb, var(--page) 42%, transparent) 0%, transparent 38%);
+    linear-gradient(0deg, var(--page) 0%, color-mix(in srgb, var(--page) 82%, transparent) 8%, color-mix(in srgb, var(--page) 42%, transparent) 22%, transparent 38%);
 }
 
 :root[data-theme="dark"] .hero-scrim {
   background:
     linear-gradient(90deg, rgba(7, 21, 36, 0.98) 0%, rgba(7, 21, 36, 0.9) 35%, rgba(7, 21, 36, 0.45) 63%, rgba(7, 21, 36, 0.08) 90%),
-    linear-gradient(0deg, rgba(7, 21, 36, 0.62) 0%, transparent 48%);
+    linear-gradient(0deg, var(--page) 0%, rgba(7, 21, 36, 0.82) 8%, rgba(7, 21, 36, 0.62) 22%, transparent 48%);
 }
 
 .hero-copy {
@@ -532,6 +531,7 @@ code {
   isolation: isolate;
   padding: 108px 0 120px;
   background:
+    linear-gradient(to bottom, var(--page) 0, color-mix(in srgb, var(--page) 0.01%, transparent) 96px),
     radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--orange) 10%, transparent), transparent 26%),
     radial-gradient(circle at 90% 68%, color-mix(in srgb, var(--blue) 10%, transparent), transparent 24%),
     var(--page);
@@ -1949,7 +1949,9 @@ code {
   }
 
   .hero-scrim {
-    background: linear-gradient(90deg, color-mix(in srgb, var(--page) 98%, transparent) 0%, color-mix(in srgb, var(--page) 88%, transparent) 52%, color-mix(in srgb, var(--page) 28%, transparent) 100%);
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--page) 98%, transparent) 0%, color-mix(in srgb, var(--page) 88%, transparent) 52%, color-mix(in srgb, var(--page) 28%, transparent) 100%),
+      linear-gradient(0deg, var(--page) 0%, color-mix(in srgb, var(--page) 82%, transparent) 8%, color-mix(in srgb, var(--page) 42%, transparent) 22%, transparent 38%);
   }
 
   .station,
