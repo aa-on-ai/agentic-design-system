@@ -1,0 +1,303 @@
+{
+  "generatedAt": "2026-07-21T22:05:28.659Z",
+  "url": "http://127.0.0.1:3013",
+  "environment": {
+    "browser": "148.0.7778.96",
+    "runs": 3,
+    "mobile": "390x844, DPR 2, 4x CPU slowdown, 150ms latency, 1.6Mbps down, 750Kbps up",
+    "desktop": "1280x900, DPR 1, no synthetic throttling",
+    "interaction": "theme toggle then install-copy; INP from PerformanceEventTiming interaction groups"
+  },
+  "runs": {
+    "mobile": [
+      {
+        "lcp": 2344,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75"
+        },
+        "cls": 0,
+        "inp": 64,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2160.600000023842,
+            "initiatorType": "link"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2160.600000023842,
+            "initiatorType": "link"
+          }
+        ]
+      },
+      {
+        "lcp": 2336,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75"
+        },
+        "cls": 0,
+        "inp": 64,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2159.7999999523163,
+            "initiatorType": "link"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2159.7999999523163,
+            "initiatorType": "link"
+          }
+        ]
+      },
+      {
+        "lcp": 2360,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75"
+        },
+        "cls": 0,
+        "inp": 88,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2178.100000023842,
+            "initiatorType": "link"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+            "transferSize": 56272,
+            "encodedBodySize": 55972,
+            "decodedBodySize": 55972,
+            "duration": 2178.100000023842,
+            "initiatorType": "link"
+          }
+        ]
+      }
+    ],
+    "desktop": [
+      {
+        "lcp": 100,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75"
+        },
+        "cls": 0,
+        "inp": 48,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 4.799999952316284,
+            "initiatorType": "link"
+          },
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=1920&q=75",
+            "transferSize": 204519,
+            "encodedBodySize": 204219,
+            "decodedBodySize": 204219,
+            "duration": 2.299999952316284,
+            "initiatorType": "img"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 4.799999952316284,
+            "initiatorType": "link"
+          }
+        ]
+      },
+      {
+        "lcp": 104,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75"
+        },
+        "cls": 0,
+        "inp": 56,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 4.100000023841858,
+            "initiatorType": "link"
+          },
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=1920&q=75",
+            "transferSize": 204519,
+            "encodedBodySize": 204219,
+            "decodedBodySize": 204219,
+            "duration": 3.200000047683716,
+            "initiatorType": "img"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 4.100000023841858,
+            "initiatorType": "link"
+          }
+        ]
+      },
+      {
+        "lcp": 108,
+        "lcpElement": {
+          "tag": "IMG",
+          "className": "hero-image",
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75"
+        },
+        "cls": 0,
+        "inp": 56,
+        "heroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 5.799999952316284,
+            "initiatorType": "link"
+          },
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=1920&q=75",
+            "transferSize": 204519,
+            "encodedBodySize": 204219,
+            "decodedBodySize": 204219,
+            "duration": 3.100000023841858,
+            "initiatorType": "img"
+          }
+        ],
+        "finalTheme": "light",
+        "initialHeroResources": [
+          {
+            "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=1920&q=75",
+            "transferSize": 135692,
+            "encodedBodySize": 135392,
+            "decodedBodySize": 135392,
+            "duration": 5.799999952316284,
+            "initiatorType": "link"
+          }
+        ]
+      }
+    ]
+  },
+  "medians": {
+    "mobile": {
+      "lcp": 2344,
+      "cls": 0,
+      "inp": 64
+    },
+    "desktop": {
+      "lcp": 104,
+      "cls": 0,
+      "inp": 56
+    }
+  },
+  "firstLoadThemes": {
+    "light": {
+      "theme": "light",
+      "heroResources": [
+        {
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=828&q=75",
+          "transferSize": 86514,
+          "encodedBodySize": 86214,
+          "decodedBodySize": 86214,
+          "duration": 4.5,
+          "initiatorType": "link"
+        }
+      ],
+      "heroImages": [
+        {
+          "src": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=828&q=75",
+          "width": 390,
+          "height": 260,
+          "fetchPriority": "auto",
+          "visible": true
+        }
+      ],
+      "heroResponses": [
+        {
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-light.png&w=828&q=75",
+          "status": 200,
+          "contentType": "image/avif",
+          "contentLength": "86214",
+          "cacheControl": "public, max-age=14400, must-revalidate"
+        }
+      ]
+    },
+    "dark": {
+      "theme": "dark",
+      "heroResources": [
+        {
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+          "transferSize": 56272,
+          "encodedBodySize": 55972,
+          "decodedBodySize": 55972,
+          "duration": 3.700000047683716,
+          "initiatorType": "link"
+        }
+      ],
+      "heroImages": [
+        {
+          "src": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+          "width": 390,
+          "height": 260,
+          "fetchPriority": "auto",
+          "visible": true
+        }
+      ],
+      "heroResponses": [
+        {
+          "url": "http://127.0.0.1:3013/_next/image?url=%2Fhero%2Fcreative-pipeline-dark.png&w=828&q=75",
+          "status": 200,
+          "contentType": "image/avif",
+          "contentLength": "55972",
+          "cacheControl": "public, max-age=14400, must-revalidate"
+        }
+      ]
+    }
+  }
+}
