@@ -66,27 +66,20 @@ function parseArgs(argv) {
 }
 
 async function loadDeps() {
-  // playwright + @axe-core/playwright are peer deps, kept out of the skill install. Published
-  // adapters may use playwright-chromium so a clean package install includes its browser runtime.
-  // Prefer that scoped runtime when present; a monorepo may also expose a different root
-  // Playwright version whose cached browser is not compatible with the adapter package.
+  // playwright + @axe-core/playwright are peer deps, kept out of the skill install.
   // One-command setup: node skills/design-review/scripts/setup-capture.mjs
   let chromium;
   let AxeBuilder = null;
   try {
-    ({ chromium } = await import('playwright-chromium'));
+    ({ chromium } = await import('playwright'));
   } catch {
-    try {
-      ({ chromium } = await import('playwright'));
-    } catch {
-      console.error(
-        'capture.mjs needs Playwright + @axe-core/playwright. One-command setup\n' +
-          '(run from your project root):\n' +
-          `  node ${SETUP_SCRIPT}\n` +
-          '  (verify only: add --check)',
-      );
-      process.exit(2);
-    }
+    console.error(
+      'capture.mjs needs Playwright + @axe-core/playwright. One-command setup\n' +
+        '(run from your project root):\n' +
+        `  node ${SETUP_SCRIPT}\n` +
+        '  (verify only: add --check)',
+    );
+    process.exit(2);
   }
   try {
     ({ default: AxeBuilder } = await import('@axe-core/playwright'));
