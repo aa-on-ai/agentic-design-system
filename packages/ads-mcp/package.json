@@ -1,6 +1,7 @@
 {
   "name": "ads-mcp",
   "version": "0.1.0",
+  "mcpName": "io.github.aa-on-ai/agentic-design-system",
   "description": "Local MCP server for Agentic Design System render, evaluation, and decision-trace runs.",
   "keywords": [
     "model-context-protocol",
@@ -24,18 +25,22 @@
     "ads-mcp": "dist/cli.js"
   },
   "files": [
+    "LICENSE",
+    "assets/ads-mark.png",
     "dist/*.js",
     "dist/*.js.map",
     "dist/*.d.ts",
     "dist/vendor",
     "scripts/postinstall.mjs",
-    "README.md"
+    "README.md",
+    "server.json"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "postinstall": "node scripts/postinstall.mjs",
     "test": "npm run build && node --test dist/test/*.test.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm test"
   },
   "engines": {
     "node": ">=20"

@@ -187,13 +187,15 @@ code {
   display: grid;
   width: 32px;
   height: 32px;
+  flex: 0 0 auto;
   place-items: center;
-  border: 2px solid currentColor;
-  border-radius: 50% 50% 45% 55%;
-  color: var(--text);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1rem;
-  font-style: italic;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--text) 22%, transparent);
+  border-radius: 50%;
+  background: #06182a url("/brand/ads-mark.png") center / cover no-repeat;
+  box-shadow:
+    0 2px 8px color-mix(in srgb, #06182a 22%, transparent),
+    inset 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .hero-toolbar {
@@ -1803,7 +1805,8 @@ code {
   max-width: 430px;
 }
 
-.footer-wordmark {
+.site-footer .footer-wordmark {
+  display: flex;
   gap: 15px;
   color: #fff4df;
   text-decoration: none;
@@ -1815,11 +1818,13 @@ code {
   height: 48px;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(244, 232, 208, 0.48);
-  border-radius: 50% 50% 45% 55%;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.45rem;
-  font-style: italic;
+  overflow: hidden;
+  border: 1px solid rgba(244, 232, 208, 0.32);
+  border-radius: 50%;
+  background: #06182a url("/brand/ads-mark.png") center / cover no-repeat;
+  box-shadow:
+    0 8px 24px rgba(2, 12, 23, 0.38),
+    inset 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .footer-wordmark > span:last-child {

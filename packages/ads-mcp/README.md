@@ -1,5 +1,7 @@
 # ads-mcp
 
+![Agentic Design System logo](./assets/ads-mark.png)
+
 Local MCP adapter for Agentic Design System. It turns ADS rendering, deterministic gates,
 evaluation receipts, and decision provenance into a stable three-tool sequence for coding agents.
 
@@ -61,6 +63,8 @@ The server initialization instructions tell clients to use this sequence:
 ```text
 ads_render -> ads_evaluate -> ads_trace
 ```
+
+Registry name: `io.github.aa-on-ai/agentic-design-system`.
 
 ## Tools
 

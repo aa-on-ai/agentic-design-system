@@ -33,7 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="hero-section" aria-labelledby="hero-title">
         <header className="site-header">
           <a className="wordmark focus-ring" href="#top" aria-label="Agentic Design System home">
-            <span className="wordmark-mark" aria-hidden="true">A</span>
+            <span className="wordmark-mark" aria-hidden="true" />
             <span>Agentic Design System</span>
           </a>
           <nav className="hero-toolbar" aria-label="Primary navigation">

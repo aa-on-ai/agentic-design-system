@@ -1,5 +1,7 @@
 # Agentic Design System
 
+![Agentic Design System logo](./demos/public/brand/ads-mark.png)
+
 Design governance for coding agents that build UI.
 
 [See the live workshop](https://agentic-design-system.vercel.app) · [Read the design philosophy](./PHILOSOPHY.md)
@@ -210,16 +212,15 @@ The repository also contains a local stdio MCP package that exposes the ADS evid
 three tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
 
 ```bash
-npm --prefix packages/ads-mcp install
-npm run mcp:test
-node packages/ads-mcp/dist/cli.js --root /absolute/path/to/project
+npx --yes ads-mcp@0.1.0 --root /absolute/path/to/project
 ```
 
 The MCP server is intentionally local-first. It confines project files and run artifacts to the
 configured root, renders localhost URLs by default, records model-free deterministic evidence, and
 requires explicit human judgment when no visual judge is configured. See the
 [`ads-mcp` package guide](./packages/ads-mcp/README.md) and
-[`v0.1 API contract`](./docs/ads-mcp-api-contract.md).
+[`v0.1 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
+`io.github.aa-on-ai/agentic-design-system`.
 
 ## Repository map
 

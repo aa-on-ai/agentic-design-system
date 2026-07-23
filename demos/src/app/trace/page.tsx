@@ -127,7 +127,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
 
       <header className={styles.header}>
         <Link className={`wordmark focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <span className="wordmark-mark" aria-hidden="true">A</span>
+          <span className="wordmark-mark" aria-hidden="true" />
           <span>Agentic Design System</span>
         </Link>
         <nav className={styles.headerNav} aria-label="Primary navigation">

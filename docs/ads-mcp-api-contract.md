@@ -284,7 +284,8 @@ The first release is done when:
 ## Explicitly out of scope for v0.1
 
 - Remote hosting, OAuth, multi-tenant state, queues, databases, resumable HTTP sessions, an MCP App
-  UI, automatic deployment, autonomous revision loops, or publishing to the MCP Registry.
+  UI, automatic deployment, or autonomous revision loops. Public package and Registry distribution
+  do not change the local stdio runtime boundary.
 - A new render or grading engine. The MCP package adapts the existing ADS implementation.
 - Silent model selection or hidden paid calls.
 

@@ -25,6 +25,22 @@ export const metadata: Metadata = {
   title: "Agentic Design System",
   description:
     "An installable design system for your coding agent. Skills and templates for intent, baseline, rubric, evidence, and grader loops on UI work.",
+  icons: {
+    icon: [
+      {
+        url: "/brand/ads-mark.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    apple: [
+      {
+        url: "/brand/ads-mark.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({

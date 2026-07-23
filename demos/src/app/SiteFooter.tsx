@@ -12,7 +12,7 @@ export function SiteFooter({ topHref = "#top", assemblyHref = "#assembly-line" }
       <FooterEmber />
       <div className="footer-brand">
         <Link className="footer-wordmark focus-ring" href={topHref} aria-label="Back to the top">
-          <span className="footer-wordmark-mark" aria-hidden="true">A</span>
+          <span className="footer-wordmark-mark" aria-hidden="true" />
           <span>
             <strong>Agentic Design System</strong>
             <small>Open-source design governance</small>

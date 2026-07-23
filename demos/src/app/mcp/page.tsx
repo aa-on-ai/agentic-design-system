@@ -57,7 +57,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
 
       <header className={styles.header}>
         <Link className={`wordmark focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <span className="wordmark-mark" aria-hidden="true">A</span>
+          <span className="wordmark-mark" aria-hidden="true" />
           <span>Agentic Design System</span>
         </Link>
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
@@ -235,7 +235,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
 
       <footer className={styles.footer}>
         <Link className={`wordmark focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
-          <span className="wordmark-mark" aria-hidden="true">A</span>
+          <span className="wordmark-mark" aria-hidden="true" />
           <span>Agentic Design System</span>
         </Link>
         <span>ads-mcp · local stdio · v0.1</span>

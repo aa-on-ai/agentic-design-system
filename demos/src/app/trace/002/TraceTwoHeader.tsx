@@ -6,7 +6,7 @@ export function TraceTwoHeader() {
   return (
     <header className={styles.header}>
       <Link className={`wordmark focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-        <span className="wordmark-mark" aria-hidden="true">A</span>
+        <span className="wordmark-mark" aria-hidden="true" />
         <span>Agentic Design System</span>
       </Link>
       <div className={styles.headerMeta} aria-label="Proof status">
