@@ -21,13 +21,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm ci --prefix demos
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run release:check
       - name: Require a frozen-suite packet for ADS behavior changes
         env:
           REGRESSION_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: npm run regression:gate -- --base "$REGRESSION_BASE_SHA"
-      - run: npm ci --prefix demos
       - run: npm run build --prefix demos
       - name: Verify the homepage in Chromium and WebKit
         run: |
@@ -52,3 +52,6 @@ jobs:
           npm run homepage:hardening -- http://127.0.0.1:3000
           npm run homepage:blend -- http://127.0.0.1:3000
           ADS_SECTION_BLEND_BROWSER=webkit npm run homepage:blend -- http://127.0.0.1:3000
+      - run: npm ci --prefix packages/ads-mcp
+      - run: npm run mcp:test
+      - run: npm run mcp:package-smoke

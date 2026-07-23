@@ -1,0 +1,46 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.aa-on-ai/agentic-design-system",
+  "title": "Agentic Design System",
+  "description": "Render, evaluate, and trace web UI decisions with deterministic Agentic Design System evidence.",
+  "websiteUrl": "https://agentic-design-system.vercel.app/mcp",
+  "icons": [
+    {
+      "src": "https://agentic-design-system.vercel.app/brand/ads-mark.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/aa-on-ai/agentic-design-system",
+    "source": "github",
+    "subfolder": "packages/ads-mcp"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "ads-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "--root"
+        },
+        {
+          "type": "positional",
+          "valueHint": "project_root",
+          "description": "Absolute path to the project ADS may read and write.",
+          "format": "filepath",
+          "isRequired": true
+        }
+      ]
+    }
+  ]
+}
