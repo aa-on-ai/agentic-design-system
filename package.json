@@ -27,6 +27,7 @@
     "trace-002:inspector": "node testing/trace-002-inspector.mjs",
     "trace-002:mobile": "node testing/trace-002-mobile.mjs",
     "mcp-lab:runtime": "node testing/mcp-lab-runtime.mjs",
+    "mcp:package-smoke": "node testing/mcp-package-smoke.mjs",
     "playwright:install": "playwright install chromium",
     "mcp:build": "npm --prefix packages/ads-mcp run build",
     "mcp:test": "npm --prefix packages/ads-mcp test"

@@ -356,7 +356,8 @@
   .heroCopy { max-width: 720px; }
   .sequenceTicket { width: min(520px, 94%); margin: 0 auto; transform: rotate(0.5deg); }
   .boundaryStrip { grid-template-columns: repeat(2, 1fr); }
-  .boundaryStrip div:nth-child(2) { border-right: 0; }
+  .boundaryStrip div:nth-child(odd) { padding-left: 0; }
+  .boundaryStrip div:nth-child(even) { border-right: 0; }
   .boundaryStrip div:nth-child(n+3) { border-top: 1px solid rgba(249,236,210,0.16); }
   .sectionIntro,
   .resourcesSection { gap: 42px; grid-template-columns: 1fr; }
@@ -384,6 +385,7 @@
   .boundaryStrip { padding: 0 16px; }
   .boundaryStrip div { min-height: 94px; padding: 19px 12px 19px 0; }
   .boundaryStrip div:not(:first-child) { padding-left: 12px; }
+  .boundaryStrip div:nth-child(odd) { padding-left: 0; }
   .boundaryStrip strong { font-size: 1.05rem; }
   .toolsSection { padding: 84px 0 92px; }
   .sectionIntro { margin-bottom: 42px; }

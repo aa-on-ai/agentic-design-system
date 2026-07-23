@@ -14,6 +14,7 @@ await mkdir(outputDirectory, { recursive: true });
 
 const cases = [
   { name: "chromium-desktop", width: 1280, height: 800, isMobile: false, hasTouch: false },
+  { name: "chromium-tablet", width: 768, height: 1024, isMobile: false, hasTouch: true },
   {
     name: "chromium-ios-like",
     width: 390,
@@ -67,6 +68,26 @@ for (const testCase of cases) {
     }
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true);
 
+    let boundaryAlignment = "four columns";
+    if (testCase.width <= 900) {
+      const boundaryCells = await page.locator('section[aria-label="MCP boundaries"] > div').evaluateAll((items) =>
+        items.map((item) => {
+          const label = item.querySelector("span");
+          if (!(label instanceof HTMLElement)) throw new Error("boundary item is missing its label");
+          return {
+            labelLeft: label.getBoundingClientRect().left,
+            borderRightWidth: Number.parseFloat(getComputedStyle(item).borderRightWidth),
+          };
+        }),
+      );
+      assert.equal(boundaryCells.length, 4);
+      assert.ok(Math.abs(boundaryCells[0].labelLeft - boundaryCells[2].labelLeft) < 0.5);
+      assert.ok(Math.abs(boundaryCells[1].labelLeft - boundaryCells[3].labelLeft) < 0.5);
+      assert.equal(boundaryCells[1].borderRightWidth, 0);
+      assert.equal(boundaryCells[3].borderRightWidth, 0);
+      boundaryAlignment = "two aligned rows";
+    }
+
     const contractResponse = await fetch(new URL("/mcp/contract.json", baseUrl));
     const contract = { ok: contractResponse.ok, body: await contractResponse.json() };
     assert.equal(contract.ok, true);
@@ -83,6 +104,7 @@ for (const testCase of cases) {
       disclosures: 3,
       themeToggle,
       horizontalOverflow: false,
+      boundaryAlignment,
       contractTools: contract.body.sequence,
       screenshot,
     });

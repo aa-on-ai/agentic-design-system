@@ -2,6 +2,23 @@
   "name": "ads-mcp",
   "version": "0.1.0",
   "description": "Local MCP server for Agentic Design System render, evaluation, and decision-trace runs.",
+  "keywords": [
+    "model-context-protocol",
+    "mcp",
+    "design-systems",
+    "ui-testing",
+    "playwright",
+    "accessibility"
+  ],
+  "homepage": "https://agentic-design-system.vercel.app/mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aa-on-ai/agentic-design-system.git",
+    "directory": "packages/ads-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/aa-on-ai/agentic-design-system/issues"
+  },
   "type": "module",
   "bin": {
     "ads-mcp": "dist/cli.js"
@@ -21,6 +38,9 @@
   "engines": {
     "node": ">=20"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@axe-core/playwright": "^4.10.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -36,5 +56,5 @@
     "@types/node": "^22.15.0",
     "typescript": "^5.8.3"
   },
-  "license": "Apache-2.0"
+  "license": "MIT"
 }

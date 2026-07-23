@@ -3,7 +3,21 @@
 Local MCP adapter for Agentic Design System. It turns ADS rendering, deterministic gates,
 evaluation receipts, and decision provenance into a stable three-tool sequence for coding agents.
 
-## Build and run
+## Run from npm
+
+Point the server at the project whose UI you want ADS to inspect:
+
+```bash
+npx --yes ads-mcp@0.1.0 --root /absolute/path/to/project
+```
+
+If Playwright reports a missing Chromium binary, install it once:
+
+```bash
+npx playwright install chromium
+```
+
+## Build from source
 
 From the ADS repository:
 
@@ -12,12 +26,6 @@ npm --prefix packages/ads-mcp install
 npm --prefix packages/ads-mcp run build
 npx playwright install chromium
 node packages/ads-mcp/dist/cli.js --root /absolute/path/to/project
-```
-
-The published-package command will be:
-
-```bash
-npx ads-mcp --root /absolute/path/to/project
 ```
 
 Optional server flags:
@@ -30,15 +38,16 @@ Optional server flags:
 
 ## Client configuration
 
-Use the built binary as a local stdio server. Replace both absolute paths:
+Use the published package as a local stdio server. Replace the project path:
 
 ```json
 {
   "mcpServers": {
     "ads": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "/absolute/path/to/agentic-design-system/packages/ads-mcp/dist/cli.js",
+        "--yes",
+        "ads-mcp@0.1.0",
         "--root",
         "/absolute/path/to/project"
       ]
@@ -157,6 +166,6 @@ cases.
 - Local stdio only. No remote HTTP, OAuth, hosted service, or MCP App UI.
 - Web rendering only. SwiftUI and other platform adapters are post-v0.1 work.
 - Human visual judgment remains required.
-- The package is not yet published to npm or the MCP Registry.
 
-See `../../docs/ads-mcp-api-contract.md` in the source repository for the canonical contract.
+See the [canonical API contract](https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-api-contract.md)
+for the complete protocol.
