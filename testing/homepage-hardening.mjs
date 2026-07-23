@@ -24,7 +24,8 @@ const failures = [];
 const receipts = [];
 const pageReadySelector = 'main[data-ads-homepage][data-page-ready="true"]';
 const expectedInstallCommand = "npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes";
-const browserStepTimeoutMs = 20_000;
+const browserStepTimeoutMs = 40_000;
+const stationPhaseTimeoutMs = 5_000;
 
 function fail(scope, message) {
   failures.push(`${scope}: ${message}`);
@@ -133,20 +134,20 @@ async function settleAtStation(page, stage) {
         climber.getAttribute("data-station") === targetStage;
     },
     stage,
-    { timeout: 3_000 },
+    { timeout: stationPhaseTimeoutMs },
   );
   const arrival = await readStationState(page, stage);
 
   await page.waitForFunction(
     () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "peeking",
     undefined,
-    { timeout: 3_000 },
+    { timeout: stationPhaseTimeoutMs },
   );
   const peeking = await readStationState(page, stage);
   await page.waitForFunction(
     () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "resting",
     undefined,
-    { timeout: 3_000 },
+    { timeout: stationPhaseTimeoutMs },
   );
   const resting = await readStationState(page, stage);
   await page.waitForTimeout(120);
