@@ -11,10 +11,11 @@ Point the server at the project whose UI you want ADS to inspect:
 npx --yes ads-mcp@0.1.0 --root /absolute/path/to/project
 ```
 
-If Playwright reports a missing Chromium binary, install it once:
+The package installs its own Chromium runtime. If installation ran with
+`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`, install the browser once:
 
 ```bash
-npx playwright install chromium
+npx --package playwright-chromium playwright install chromium
 ```
 
 ## Build from source
@@ -24,7 +25,6 @@ From the ADS repository:
 ```bash
 npm --prefix packages/ads-mcp install
 npm --prefix packages/ads-mcp run build
-npx playwright install chromium
 node packages/ads-mcp/dist/cli.js --root /absolute/path/to/project
 ```
 

@@ -28,11 +28,14 @@ try {
   assert.equal(packed.name, "ads-mcp");
   assert.ok(packed.files.some(({ path: file }) => file === "dist/cli.js"));
   assert.ok(packed.files.some(({ path: file }) => file === "dist/vendor/capture.mjs"));
+  assert.ok(packed.files.some(({ path: file }) => file === "scripts/postinstall.mjs"));
   assert.ok(packed.files.some(({ path: file }) => file === "LICENSE"));
 
   const archive = path.join(temporaryRoot, packed.filename);
   const consumerRoot = path.join(temporaryRoot, "consumer");
   const projectRoot = path.join(temporaryRoot, "project");
+  const browserRoot = path.join(temporaryRoot, "browsers");
+  const consumerEnvironment = { ...process.env, PLAYWRIGHT_BROWSERS_PATH: browserRoot };
   await Promise.all([
     mkdir(consumerRoot, { recursive: true }),
     mkdir(path.join(projectRoot, "skills", "design-review"), { recursive: true }),
@@ -48,11 +51,11 @@ try {
   await execFileAsync(
     "npm",
     ["install", "--no-audit", "--no-fund", archive],
-    { cwd: consumerRoot, maxBuffer: 10 * 1024 * 1024 },
+    { cwd: consumerRoot, env: consumerEnvironment, maxBuffer: 10 * 1024 * 1024 },
   );
 
   const executable = path.join(consumerRoot, "node_modules", ".bin", "ads-mcp");
-  const { stdout: help } = await execFileAsync(executable, ["--help"]);
+  const { stdout: help } = await execFileAsync(executable, ["--help"], { env: consumerEnvironment });
   assert.match(help, /Usage: ads-mcp --root/);
 
   const requireFromConsumer = createRequire(path.join(consumerRoot, "package.json"));
@@ -77,6 +80,7 @@ try {
   const transport = new StdioClientTransport({
     command: executable,
     args: ["--root", projectRoot],
+    env: consumerEnvironment,
     stderr: "pipe",
   });
   client = new Client({ name: "ads-package-smoke", version: "1.0.0" });
