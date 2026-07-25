@@ -9,7 +9,16 @@ export type ComponentTarget = {
   exportName?: string;
 };
 
-export type RenderTarget = UrlTarget | ComponentTarget;
+export type SwiftUiTarget = {
+  type: 'swiftui';
+  projectPath: string;
+  scheme: string;
+  sourcePath?: string;
+  configuration?: 'Debug' | 'Release';
+  device?: string;
+};
+
+export type RenderTarget = UrlTarget | ComponentTarget | SwiftUiTarget;
 
 export type Viewport = {
   width: number;
@@ -41,7 +50,71 @@ export type EvaluateInput = {
     task: string;
     criteria: Array<{ name: string; weight: number }>;
   };
-  judge?: { mode?: 'none' };
+  judge?: { mode?: 'none' | 'configured' };
+};
+
+export type FindingCategory =
+  | 'layout_spacing_hierarchy'
+  | 'polish_consistency'
+  | 'typography'
+  | 'originality'
+  | 'color_contrast'
+  | 'interaction_motion'
+  | 'cues_affordances'
+  | 'brand_fit_tone';
+
+export type FindingSeverity = 'minor' | 'major' | 'blocker';
+
+export type NormalizedBox = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type VisualFinding = {
+  category: FindingCategory;
+  severity: FindingSeverity;
+  rubricRow: string;
+  state: string;
+  breakpoint: string;
+  artifact: string;
+  target: {
+    description: string;
+    normalizedBox?: NormalizedBox;
+  };
+  observation: string;
+  evidence: string[];
+};
+
+export type VisualJudgeRequest = {
+  schemaVersion: 1;
+  runId: string;
+  target: RenderTarget;
+  rubric: EvaluateInput['rubric'];
+  gates: Record<string, unknown>;
+  comparison: Record<string, unknown> | null;
+  screenshots: Array<{
+    state: string;
+    breakpoint: string;
+    artifact: string;
+    path: string;
+  }>;
+};
+
+export type VisualJudgeResult = {
+  provider: string;
+  model: string;
+  modelCalls: number;
+  verdict: 'satisfied' | 'needs_revision' | 'failed';
+  scores: Record<string, number>;
+  findings: VisualFinding[];
+  nextRevisionPrompt: string;
+};
+
+export type VisualJudge = {
+  id: string;
+  evaluate: (request: VisualJudgeRequest, signal?: AbortSignal) => Promise<VisualJudgeResult>;
 };
 
 export type TraceDecision = {
@@ -81,8 +154,8 @@ export type RunManifest = {
   runId: string;
   generatedAt: string;
   projectRootSha256: string;
-  platform: 'web';
-  renderer: 'playwright-chromium';
+  platform: 'web' | 'swiftui';
+  renderer: string;
   detectors: string[];
   target: RenderTarget;
   adsRelease: string | null;
@@ -120,6 +193,25 @@ export type CaptureRunnerArgs = {
 
 export type CaptureRunner = (args: CaptureRunnerArgs) => Promise<void>;
 
+export type SwiftUiRenderArgs = {
+  root: string;
+  target: SwiftUiTarget;
+  projectPath: string;
+  sourcePath?: string;
+  states: string[];
+  viewports: Viewport[];
+  settleMs: number;
+  outDir: string;
+  timeoutMs: number;
+  signal?: AbortSignal;
+};
+
+export type SwiftUiRenderer = {
+  id: string;
+  detectors: string[];
+  render: (args: SwiftUiRenderArgs) => Promise<void>;
+};
+
 export type RenderOutput = {
   schemaVersion: 1;
   runId: string;
@@ -142,7 +234,7 @@ export type EvaluateOutput = {
   status: 'complete' | 'blocked' | 'needs_human';
   verdict: 'satisfied' | 'needs_revision' | 'failed' | null;
   scores: Record<string, number> | null;
-  findings: unknown[];
+  findings: VisualFinding[];
   gates: Record<string, unknown>;
   comparison: Record<string, unknown> | null;
   nextRevisionPrompt: string;
@@ -170,4 +262,16 @@ export type ServerConfig = {
   runsDir: string;
   allowedOrigins: Set<string>;
   timeoutMs: number;
+  judgeCommand?: {
+    command: string;
+    args: string[];
+    provider: string;
+    model: string;
+  };
+  swiftUiCommand?: {
+    command: string;
+    args: string[];
+    renderer: string;
+    detectors: string[];
+  };
 };

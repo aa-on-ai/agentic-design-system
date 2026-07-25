@@ -1,14 +1,16 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, symlink, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, realpath, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import {
+  canonicalExecutable,
   canonicalRoot,
   ensureDirectoryInside,
   normalizeAllowedOrigin,
   redactUrl,
   resolveFileInside,
+  resolvePathInside,
   validateRenderUrl,
 } from '../security.js';
 
@@ -46,4 +48,12 @@ test('receipt URLs redact common secret query parameters', () => {
   const redacted = redactUrl('http://localhost:3000/?token=abc&view=orders&api_key=xyz');
   assert.doesNotMatch(redacted, /abc|xyz/);
   assert.match(redacted, /view=orders/);
+});
+
+test('SwiftUI project paths may be confined directories while adapter executables must be absolute files', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ads-security-swiftui-'));
+  await mkdir(path.join(root, 'App.xcodeproj'), { recursive: true });
+  assert.equal(await resolvePathInside(root, 'App.xcodeproj'), path.join(root, 'App.xcodeproj'));
+  assert.equal(await canonicalExecutable(process.execPath), await realpath(process.execPath));
+  await assert.rejects(canonicalExecutable('node'), /absolute path/);
 });

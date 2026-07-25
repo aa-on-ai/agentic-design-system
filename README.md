@@ -206,20 +206,21 @@ Only then did the grader return `satisfied`.
 - [OpenClaw](./integrations/openclaw.md)
 - [Hermes](./integrations/hermes.md)
 
-## MCP server (v0.1)
+## MCP server (v0.2)
 
 The repository also contains a local stdio MCP package that exposes the ADS evidence spine as
 three tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
 
 ```bash
-npx --yes ads-mcp@0.1.0 --root /absolute/path/to/project
+npx --yes ads-mcp@0.2.0 --root /absolute/path/to/project
 ```
 
 The MCP server is intentionally local-first. It confines project files and run artifacts to the
-configured root, renders localhost URLs by default, records model-free deterministic evidence, and
-requires explicit human judgment when no visual judge is configured. See the
+configured root, renders web or startup-configured SwiftUI targets, and records model-free
+deterministic evidence by default. Provider-neutral command adapters can add explicit visual
+judgment without changing the three-tool API or silently selecting a model. See the
 [`ads-mcp` package guide](./packages/ads-mcp/README.md) and
-[`v0.1 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
+[`v0.2 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
 `io.github.aa-on-ai/agentic-design-system`.
 
 ## Repository map
@@ -260,7 +261,8 @@ testing/install-matrix.sh aa-on-ai/agentic-design-system
 
 ADS is an early public package. The skills, templates, runbooks, and rendered checks are usable now. The grader loop is workflow-driven, not a hosted service.
 
-- Agents still need real product context and human judgment.
+- Agents still need real product context. Without a configured visual judge, evaluation stops for
+  human judgment.
 - Structural checks cannot decide whether a visual direction is tasteful.
 - Separate grader context is recommended when the host supports it.
 - Creative passes can over-steer utility UI, so they stay opt-in.

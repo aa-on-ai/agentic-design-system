@@ -57,6 +57,8 @@ try {
   const executable = path.join(consumerRoot, "node_modules", ".bin", "ads-mcp");
   const { stdout: help } = await execFileAsync(executable, ["--help"], { env: consumerEnvironment });
   assert.match(help, /Usage: ads-mcp --root/);
+  assert.match(help, /--judge-command/);
+  assert.match(help, /--swiftui-command/);
 
   const requireFromConsumer = createRequire(path.join(consumerRoot, "package.json"));
   const [{ Client }, { StdioClientTransport }] = await Promise.all([

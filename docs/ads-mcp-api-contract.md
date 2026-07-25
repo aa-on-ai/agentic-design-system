@@ -1,4 +1,4 @@
-# ads-mcp API contract (proposed v0.1)
+# ads-mcp API contract (v0.2)
 
 ## Decision
 
@@ -27,6 +27,13 @@ Optional server flags:
 - `--allow-origin <origin>`: repeatable allow-list for non-local URLs. Localhost is allowed by
   default; other origins are denied unless explicitly listed.
 - `--timeout-ms <number>`: default tool timeout, capped by the server.
+- `--judge-command <absolute-path>`, `--judge-provider <name>`, and `--judge-model <name>`:
+  configure one visual-judge command adapter and immutable receipt metadata.
+- `--judge-arg <value>`: repeatable fixed argument passed to the visual-judge executable.
+- `--swiftui-command <absolute-path>`: configure one SwiftUI snapshot command adapter.
+- `--swiftui-arg <value>`: repeatable fixed argument passed to the SwiftUI executable.
+- `--swiftui-renderer <name>` and repeatable `--swiftui-detector <name>`: attributable
+  platform receipts written to the run manifest.
 
 The server exposes instructions describing the expected sequence:
 
@@ -36,7 +43,7 @@ ads_render -> ads_evaluate -> ads_trace
 
 ## Tool 1: `ads_render`
 
-Render a real URL or isolated TSX component into inspectable evidence.
+Render a real URL, isolated TSX component, or configured SwiftUI target into inspectable evidence.
 
 ### Input
 
@@ -68,12 +75,14 @@ Render a real URL or isolated TSX component into inspectable evidence.
 
 - `{ "type": "url", "url": "http://..." }`
 - `{ "type": "component", "path": "src/Orders.tsx", "exportName": "default" }`
+- `{ "type": "swiftui", "projectPath": "Orders.xcodeproj", "scheme": "Orders", "sourcePath": "Orders/ContentView.swift", "configuration": "Debug", "device": "iPhone 16 Pro" }`
 
-All component and provenance paths must resolve under the configured project root. Component
-targets are captured as artifact files automatically; URL targets declare the implementation files
-that later decisions may trace through `provenance.artifactFiles`. URL targets must use HTTP(S) and
-pass the server origin policy. `file:`, arbitrary shell commands, and unrestricted output paths are
-not accepted.
+All component, SwiftUI, and provenance paths must resolve under the configured project root.
+Component targets and optional SwiftUI source paths are captured as artifact files automatically;
+URL targets declare implementation files that later decisions may trace through
+`provenance.artifactFiles`. URL targets must use HTTP(S) and pass the server origin policy.
+SwiftUI targets require a startup-configured adapter and preserve a blocked run when it is missing.
+`file:`, arbitrary shell commands, and unrestricted output paths are not accepted.
 
 ### Structured output
 
@@ -130,15 +139,16 @@ packet.
     ]
   },
   "judge": {
-    "mode": "none"
+    "mode": "configured"
   }
 }
 ```
 
 `judge.mode` defaults to `none`, which runs deterministic rendered gates and returns
-`needs_human` when visual judgment remains unresolved. A later explicit `configured` mode may use a
-credential already present in the environment; it must name the model, record the provider/model in
-the receipt, and never silently fall back to a paid call.
+`needs_human` when visual judgment remains unresolved. `configured` invokes the visual-judge
+executable selected at server startup. The adapter may use credentials already present in its
+environment, but the server never selects a provider or model. Both startup configuration and
+per-call `judge.mode: "configured"` are required before a model call can occur.
 
 ### Structured output
 
@@ -146,13 +156,30 @@ the receipt, and never silently fall back to a paid call.
 {
   "schemaVersion": 1,
   "runId": "run_...",
-  "status": "needs_human",
-  "verdict": null,
-  "scores": null,
-  "findings": [],
+  "status": "complete",
+  "verdict": "needs_revision",
+  "scores": {
+    "Design Quality": 7,
+    "Originality": 6,
+    "Craft": 8,
+    "Functionality": 8
+  },
+  "findings": [
+    {
+      "category": "cues_affordances",
+      "severity": "major",
+      "rubricRow": "Functionality",
+      "state": "readonly",
+      "breakpoint": "390x844",
+      "artifact": "ads://runs/run_.../screenshots/readonly-390x844.png",
+      "target": { "description": "Primary action row" },
+      "observation": "An enabled action contradicts the read-only state.",
+      "evidence": ["ads://runs/run_.../screenshots/readonly-390x844.png"]
+    }
+  ],
   "gates": {},
   "comparison": null,
-  "nextRevisionPrompt": "",
+  "nextRevisionPrompt": "Disable the contradictory action in the read-only state, then re-render.",
   "artifacts": {
     "receipt": "ads://runs/run_.../receipt",
     "report": "ads://runs/run_.../report"
@@ -163,7 +190,12 @@ the receipt, and never silently fall back to a paid call.
 `status` is `complete`, `blocked`, or `needs_human`. `verdict` is `satisfied`, `needs_revision`,
 `failed`, or `null` when judgment is unresolved. Findings use ADS's existing stable categories,
 severity levels, breakpoint/state fields, evidence references, and normalized regions. Missing or
-incomparable evidence is reported explicitly and cannot be treated as a pass.
+incomparable evidence is reported explicitly and cannot be treated as a pass. The server validates
+rubric score keys, ranges, finding references, normalized regions, and verdict consistency before
+accepting adapter output.
+
+The command adapter protocol is defined separately in
+[`ads-mcp-command-adapters.md`](./ads-mcp-command-adapters.md).
 
 ## Tool 3: `ads_trace`
 
@@ -253,7 +285,7 @@ created -> rendered -> evaluated -> traced
   on cancellation.
 - Run IDs are generated by the server. Repeating a tool creates a new run or stage receipt instead
   of overwriting prior evidence.
-- Concurrent runs use separate directories; the v0.1 server caps browser concurrency at one.
+- Concurrent runs use separate directories; the server caps web browser concurrency at one.
 - Logs go to stderr so stdio protocol output remains clean.
 
 ## Security boundary
@@ -264,45 +296,52 @@ created -> rendered -> evaluated -> traced
 - Localhost-only URL rendering by default; other origins require an explicit startup allow-list.
 - No environment dump, secret persistence, or credentials in receipts.
 - Model judging is opt-in, records the model used, and fails honestly when credentials are absent.
-- Remote Streamable HTTP is out of scope for v0.1 because it requires authentication, stronger SSRF
+- Command adapters use fixed argv execution without a shell, require canonical absolute
+  executables, cap stdout, and are killed on cancellation.
+- Remote Streamable HTTP is out of scope for v0.2 because it requires authentication, stronger SSRF
   controls, and sandboxing.
 
 ## Verification contract
 
-The first release is done when:
+The v0.2 source release is done when:
 
 1. MCP initialize and `tools/list` expose exactly these three tools with stable schemas.
 2. Each tool passes success, invalid-input, timeout, cancellation, and incomplete-evidence tests.
 3. A fixture completes `ads_render -> ads_evaluate -> ads_trace` and all returned resource links
    resolve.
-4. Path traversal, denied origins, missing browsers, missing states, and missing judge credentials
-   fail explicitly.
+4. Path traversal, denied origins, missing browsers, missing states, invalid judge output, and
+   missing adapters fail explicitly.
 5. MCP Inspector can invoke every tool and inspect every resource.
-6. One real client completes the full sequence from a clean project checkout.
+6. One real client completes the full sequence from a packed, clean consumer install.
 7. README includes install, client configuration, example calls, output receipts, and limitations.
 
-## Explicitly out of scope for v0.1
+## Explicitly out of scope for v0.2
 
 - Remote hosting, OAuth, multi-tenant state, queues, databases, resumable HTTP sessions, an MCP App
   UI, automatic deployment, or autonomous revision loops. Public package and Registry distribution
   do not change the local stdio runtime boundary.
 - A new render or grading engine. The MCP package adapts the existing ADS implementation.
 - Silent model selection or hidden paid calls.
+- Bundled provider SDKs or a universal SwiftUI/Xcode snapshot harness. Platform- and
+  provider-specific behavior remains behind explicit command adapters.
 
-## Post-v0.1 adapter backlog
+## Adapter architecture
 
-- Keep the public three-tool sequence stable while adding platform adapters behind `ads_render`.
+- The public three-tool sequence stays stable while platform adapters sit behind `ads_render`.
 - Record `platform`, `renderer`, and `detectors` in every run manifest so adapter evidence remains
   attributable without changing the evaluation or trace protocols.
-- Explore SwiftUI as the first non-web adapter. Use Xcode Previews or snapshot outputs as rendered
-  evidence and ingest SwiftLint, SwiftSyntax, and asset-catalog checks as platform detector receipts.
-  `impeccable-swift` is a useful reference implementation, not a v0.1 dependency.
+- SwiftUI is the first non-web adapter. It accepts Xcode Preview, snapshot-test, or simulator
+  outputs as rendered evidence and can ingest SwiftLint, SwiftSyntax, asset-catalog, and
+  touch-target detector receipts.
+- Every requested SwiftUI state and viewport pair must have one root-level PNG. Adapter
+  availability, build success, declared detector availability, and detector failure arrays are
+  hard gates.
 - Preserve the distinction between product context and visual-system context. Accept a
   `PRODUCT.md` plus `DESIGN.md` pair when projects use it, while keeping ADS's existing project
   identity intake compatible for projects that do not.
 
-## Approval
+## Release boundary
 
-Approve the three tool contracts, local stdio boundary, and same-repository package location before
-implementation. After approval, implementation should stay inside this contract unless a source
-constraint proves it cannot.
+The v0.2 implementation keeps the v0.1 three-tool contract and local stdio boundary. npm
+publication, MCP Registry validation, and public-site claims remain separate release actions after
+source verification.

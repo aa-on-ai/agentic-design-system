@@ -3,12 +3,14 @@ import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { CommandSwiftUiRenderer, CommandVisualJudge } from './command-adapters.js';
 import { mountComponent } from './component.js';
 import {
   combineAbortSignals,
   portablePath,
   redactUrl,
   resolveFileInside,
+  resolvePathInside,
   sha256,
   validateRenderUrl,
 } from './security.js';
@@ -24,8 +26,11 @@ import type {
   RenderTarget,
   RunManifest,
   ServerConfig,
+  SwiftUiRenderer,
   TraceInput,
   TraceOutput,
+  VisualJudge,
+  VisualJudgeResult,
   Viewport,
 } from './types.js';
 
@@ -35,8 +40,10 @@ const COMPARE_SCRIPT = fileURLToPath(new URL('./vendor/compare.mjs', import.meta
 const DEFAULT_STATES = ['default'];
 const DEFAULT_VIEWPORTS = [{ width: 390, height: 844 }, { width: 1280, height: 800 }];
 
-type ServiceOptions = {
+export type ServiceOptions = {
   captureRunner?: CaptureRunner;
+  visualJudge?: VisualJudge;
+  swiftUiRenderer?: SwiftUiRenderer;
 };
 
 type ResourceResult = {
@@ -86,16 +93,36 @@ function normalizeViewports(viewports: Viewport[] | undefined): Viewport[] {
 }
 
 function sanitizedTarget(target: RenderTarget): RenderTarget {
-  return target.type === 'url'
-    ? { type: 'url', url: redactUrl(target.url) }
-    : { type: 'component', path: target.path, exportName: target.exportName || 'default' };
+  if (target.type === 'url') return { type: 'url', url: redactUrl(target.url) };
+  if (target.type === 'component') {
+    return { type: 'component', path: target.path, exportName: target.exportName || 'default' };
+  }
+  return {
+    type: 'swiftui',
+    projectPath: target.projectPath,
+    scheme: target.scheme,
+    ...(target.sourcePath ? { sourcePath: target.sourcePath } : {}),
+    configuration: target.configuration || 'Debug',
+    ...(target.device ? { device: target.device } : {}),
+  };
 }
 
 function arrayLength(value: unknown): number {
   return Array.isArray(value) ? value.length : 0;
 }
 
-function renderBlockers(gates: Record<string, unknown>, states: string[], maxCls: number): string[] {
+function stateBlockers(gates: Record<string, unknown>, states: string[]): string[] {
+  const blockers: string[] = [];
+  const rendered = gates.stateRendered;
+  for (const state of states) {
+    if (!rendered || typeof rendered !== 'object' || (rendered as Record<string, unknown>)[state] !== true) {
+      blockers.push(`requested state did not render distinctly: ${state}`);
+    }
+  }
+  return blockers;
+}
+
+function webRenderBlockers(gates: Record<string, unknown>, states: string[], maxCls: number): string[] {
   const blockers: string[] = [];
   if (gates.axeAvailable !== true) blockers.push('axe evidence is unavailable');
   if (Number(gates.seriousAxeViolations || 0) > 0) blockers.push('serious or critical axe violations remain');
@@ -107,13 +134,126 @@ function renderBlockers(gates: Record<string, unknown>, states: string[], maxCls
   if (Number(gates.maxCumulativeLayoutShift || 0) > maxCls || arrayLength(gates.clsFailures) > 0) {
     blockers.push(`cumulative layout shift exceeds ${maxCls}`);
   }
-  const rendered = gates.stateRendered;
+  blockers.push(...stateBlockers(gates, states));
+  return blockers;
+}
+
+function swiftUiRenderBlockers(
+  gates: Record<string, unknown>,
+  states: string[],
+  detectors: string[],
+): string[] {
+  const blockers: string[] = [];
+  if (gates.adapterAvailable !== true) blockers.push('SwiftUI adapter evidence is unavailable');
+  if (gates.buildSucceeded !== true) blockers.push('SwiftUI build or preview capture did not succeed');
+  blockers.push(...stateBlockers(gates, states));
+  const detectorGates: Record<string, { available: string; failures: string; label: string }> = {
+    swiftlint: { available: 'swiftLintAvailable', failures: 'swiftLintErrors', label: 'SwiftLint' },
+    swiftsyntax: { available: 'swiftSyntaxAvailable', failures: 'swiftSyntaxErrors', label: 'SwiftSyntax' },
+    'asset-catalog': {
+      available: 'assetCatalogAvailable',
+      failures: 'assetCatalogErrors',
+      label: 'asset catalog',
+    },
+    'touch-target-44pt': {
+      available: 'touchTargetsAvailable',
+      failures: 'touchTargetsUnder44',
+      label: '44pt touch-target',
+    },
+  };
+  for (const detector of detectors) {
+    const contract = detectorGates[detector];
+    if (!contract) continue;
+    if (gates[contract.available] !== true) blockers.push(`${contract.label} evidence is unavailable`);
+    if (arrayLength(gates[contract.failures]) > 0) blockers.push(`${contract.label} failures remain`);
+  }
+  return blockers;
+}
+
+async function snapshotBlockers(
+  evidenceDirectory: string,
+  evidence: CaptureEvidence,
+  states: string[],
+  viewports: Viewport[],
+): Promise<string[]> {
+  const blockers: string[] = [];
+  const snapshots = evidence.snapshots || [];
+  const pairs = new Set<string>();
+  for (const snapshot of snapshots) {
+    if (
+      !snapshot.screenshot
+      || path.basename(snapshot.screenshot) !== snapshot.screenshot
+      || !snapshot.screenshot.endsWith('.png')
+    ) {
+      blockers.push('snapshot evidence contains an invalid screenshot filename');
+      continue;
+    }
+    const pair = `${snapshot.state}\u0000${snapshot.breakpoint}`;
+    if (pairs.has(pair)) blockers.push(`snapshot evidence contains a duplicate pair: ${snapshot.state}/${snapshot.breakpoint}`);
+    pairs.add(pair);
+    try {
+      await resolveFileInside(evidenceDirectory, snapshot.screenshot);
+    } catch {
+      blockers.push(`snapshot file is missing: ${snapshot.screenshot}`);
+    }
+  }
   for (const state of states) {
-    if (!rendered || typeof rendered !== 'object' || (rendered as Record<string, unknown>)[state] !== true) {
-      blockers.push(`requested state did not render distinctly: ${state}`);
+    for (const { width, height } of viewports) {
+      const breakpoint = `${width}x${height}`;
+      if (!pairs.has(`${state}\u0000${breakpoint}`)) {
+        blockers.push(`snapshot evidence is missing: ${state}/${breakpoint}`);
+      }
     }
   }
   return blockers;
+}
+
+function validateJudgeResult(
+  result: VisualJudgeResult,
+  rubric: EvaluateInput['rubric'],
+  allowedArtifacts: Map<string, { state: string; breakpoint: string }>,
+): VisualJudgeResult {
+  if (!result.provider.trim() || !result.model.trim()) throw new Error('judge provider and model are required');
+  if (!Number.isInteger(result.modelCalls) || result.modelCalls < 0) {
+    throw new Error('judge modelCalls must be a non-negative integer');
+  }
+  const criteria = new Set(rubric.criteria.map(({ name }) => name));
+  const scoreNames = Object.keys(result.scores);
+  if (scoreNames.length !== criteria.size || scoreNames.some((name) => !criteria.has(name))) {
+    throw new Error('judge scores must match the requested rubric criteria exactly');
+  }
+  for (const [name, score] of Object.entries(result.scores)) {
+    if (!Number.isFinite(score) || score < 0 || score > 10) {
+      throw new Error(`judge score must be between 0 and 10: ${name}`);
+    }
+  }
+  for (const finding of result.findings) {
+    if (!criteria.has(finding.rubricRow)) throw new Error(`finding references an unknown rubric row: ${finding.rubricRow}`);
+    const referencedScreenshot = allowedArtifacts.get(finding.artifact);
+    if (!referencedScreenshot) throw new Error(`finding references unknown artifact: ${finding.artifact}`);
+    if (
+      finding.state !== referencedScreenshot.state
+      || finding.breakpoint !== referencedScreenshot.breakpoint
+    ) {
+      throw new Error('finding state and breakpoint must match its screenshot artifact');
+    }
+    if (finding.evidence.some((artifact) => !allowedArtifacts.has(artifact))) {
+      throw new Error('finding evidence must reference supplied screenshot artifacts');
+    }
+  }
+  if (
+    result.verdict === 'satisfied'
+    && result.findings.some((finding) =>
+      finding.severity === 'blocker'
+      || (finding.category === 'cues_affordances' && finding.severity === 'major')
+    )
+  ) {
+    throw new Error('judge cannot return satisfied with blocking findings');
+  }
+  if (result.verdict !== 'satisfied' && !result.nextRevisionPrompt.trim()) {
+    throw new Error('judge must return a nextRevisionPrompt for a non-satisfied verdict');
+  }
+  return result;
 }
 
 async function defaultCaptureRunner(args: Parameters<CaptureRunner>[0]): Promise<void> {
@@ -194,11 +334,19 @@ export class AdsService {
   readonly config: ServerConfig;
   readonly store: RunStore;
   private readonly captureRunner: CaptureRunner;
+  private readonly visualJudge?: VisualJudge;
+  private readonly swiftUiRenderer?: SwiftUiRenderer;
 
   private constructor(config: ServerConfig, store: RunStore, options: ServiceOptions) {
     this.config = config;
     this.store = store;
     this.captureRunner = options.captureRunner || defaultCaptureRunner;
+    this.visualJudge = options.visualJudge || (
+      config.judgeCommand ? new CommandVisualJudge(config.judgeCommand) : undefined
+    );
+    this.swiftUiRenderer = options.swiftUiRenderer || (
+      config.swiftUiCommand ? new CommandSwiftUiRenderer(config.swiftUiCommand) : undefined
+    );
   }
 
   static async create(config: ServerConfig, options: ServiceOptions = {}): Promise<AdsService> {
@@ -236,25 +384,42 @@ export class AdsService {
     const sourceFiles = await collectRecords(this.config.root, provenance.sourceFiles || [], 'source');
     const artifactInputs = [...(provenance.artifactFiles || [])];
     if (input.target.type === 'component') artifactInputs.push(input.target.path);
+    if (input.target.type === 'swiftui' && input.target.sourcePath) artifactInputs.push(input.target.sourcePath);
     const artifactFiles = await collectRecords(this.config.root, artifactInputs, 'artifact');
     if (input.target.type === 'url') validateRenderUrl(input.target.url, this.config.allowedOrigins);
+    let swiftProjectPath: string | undefined;
+    let swiftSourcePath: string | undefined;
+    if (input.target.type === 'swiftui') {
+      if (!input.target.scheme.trim()) throw new Error('SwiftUI target scheme is required');
+      swiftProjectPath = await resolvePathInside(this.config.root, input.target.projectPath);
+      if (input.target.sourcePath) {
+        swiftSourcePath = await resolveFileInside(this.config.root, input.target.sourcePath);
+      }
+    }
 
     const target = sanitizedTarget(input.target);
-    const manifest: RunManifest = {
-      schemaVersion: 1,
-      runId,
-      generatedAt: now(),
-      projectRootSha256: sha256(this.config.root),
-      platform: 'web',
-      renderer: 'playwright-chromium',
-      detectors: [
+    const platform = target.type === 'swiftui' ? 'swiftui' : 'web';
+    const renderer = platform === 'swiftui'
+      ? this.swiftUiRenderer?.id || 'unconfigured'
+      : 'playwright-chromium';
+    const detectors = platform === 'swiftui'
+      ? this.swiftUiRenderer?.detectors || []
+      : [
         'axe-wcag2a-aa',
         'horizontal-overflow',
         'main-and-live-regions',
         'cumulative-layout-shift',
         'state-distinctness',
         'touch-target-44px',
-      ],
+      ];
+    const manifest: RunManifest = {
+      schemaVersion: 1,
+      runId,
+      generatedAt: now(),
+      projectRootSha256: sha256(this.config.root),
+      platform,
+      renderer,
+      detectors,
       target,
       adsRelease: provenance.adsRelease || null,
       skillFiles: mergeSkillRecords(observed, declared),
@@ -270,28 +435,49 @@ export class AdsService {
       let captureError: string | null = null;
 
       try {
-        if (input.target.type === 'component') {
-          const mounted = await mountComponent(
-            this.config.root,
-            input.target.path,
-            input.target.exportName || 'default',
-            path.join(directory, 'mount'),
-          );
-          captureUrl = mounted.url;
-          closeMounted = mounted.close;
+        await mkdir(evidenceDirectory, { recursive: true });
+        if (input.target.type === 'swiftui') {
+          if (!this.swiftUiRenderer || !swiftProjectPath) {
+            throw new Error(
+              'SwiftUI adapter is not configured; start ads-mcp with --swiftui-command and --swiftui-renderer',
+            );
+          }
+          await this.swiftUiRenderer.render({
+            root: this.config.root,
+            target: input.target,
+            projectPath: swiftProjectPath,
+            ...(swiftSourcePath ? { sourcePath: swiftSourcePath } : {}),
+            states,
+            viewports,
+            settleMs,
+            outDir: evidenceDirectory,
+            timeoutMs: this.config.timeoutMs,
+            signal: combineAbortSignals(signal, this.config.timeoutMs),
+          });
+        } else {
+          if (input.target.type === 'component') {
+            const mounted = await mountComponent(
+              this.config.root,
+              input.target.path,
+              input.target.exportName || 'default',
+              path.join(directory, 'mount'),
+            );
+            captureUrl = mounted.url;
+            closeMounted = mounted.close;
+          }
+          await this.captureRunner({
+            url: captureUrl,
+            states,
+            viewports,
+            ...(input.waitFor ? { waitFor: input.waitFor } : {}),
+            settleMs,
+            maxCls,
+            outDir: evidenceDirectory,
+            cwd: this.config.root,
+            timeoutMs: this.config.timeoutMs,
+            signal: combineAbortSignals(signal, this.config.timeoutMs),
+          });
         }
-        await this.captureRunner({
-          url: captureUrl,
-          states,
-          viewports,
-          ...(input.waitFor ? { waitFor: input.waitFor } : {}),
-          settleMs,
-          maxCls,
-          outDir: evidenceDirectory,
-          cwd: this.config.root,
-          timeoutMs: this.config.timeoutMs,
-          signal: combineAbortSignals(signal, this.config.timeoutMs),
-        });
       } catch (error) {
         captureError = safeError(error);
       } finally {
@@ -303,23 +489,38 @@ export class AdsService {
       try {
         evidence = JSON.parse(await readFile(path.join(evidenceDirectory, 'evidence.json'), 'utf8')) as CaptureEvidence;
       } catch {
+        const fallbackTarget = target.type === 'url'
+          ? target.url
+          : target.type === 'component'
+            ? `component:${target.path}`
+            : `swiftui:${target.projectPath}#${target.scheme}`;
         evidence = {
-          url: target.type === 'url' ? target.url : `component:${target.path}`,
+          url: fallbackTarget,
           capturedStates: states,
           breakpoints: viewports.map(({ width, height }) => `${width}x${height}`),
           snapshots: [],
-          gates: {},
+          gates: target.type === 'swiftui'
+            ? { adapterAvailable: Boolean(this.swiftUiRenderer), buildSucceeded: false, stateRendered: {} }
+            : {},
           captureError,
         };
         await writeJson(path.join(evidenceDirectory, 'evidence.json'), evidence);
       }
-      evidence.url = target.type === 'url' ? target.url : `component:${target.path}`;
+      if (target.type === 'swiftui') {
+        delete evidence.url;
+        evidence.target = target;
+      } else {
+        evidence.url = target.type === 'url' ? target.url : `component:${target.path}`;
+      }
       await writeJson(path.join(evidenceDirectory, 'evidence.json'), evidence);
 
       const gates = summarizeCaptureEvidence(evidence);
       const blockers = [
         ...(captureError ? [`capture failed: ${captureError}`] : []),
-        ...renderBlockers(gates, states, maxCls),
+        ...(platform === 'swiftui'
+          ? swiftUiRenderBlockers(gates, states, manifest.detectors)
+          : webRenderBlockers(gates, states, maxCls)),
+        ...await snapshotBlockers(evidenceDirectory, evidence, states, viewports),
       ];
       const screenshots = (evidence.snapshots || [])
         .map(({ screenshot }) => screenshot)
@@ -361,12 +562,18 @@ export class AdsService {
 
   async evaluate(input: EvaluateInput, signal?: AbortSignal): Promise<EvaluateOutput> {
     const run = await this.store.readJson<{ status: 'complete' | 'blocked'; blockers?: string[] }>(input.runId, 'run.json');
+    const manifest = await this.store.readJson<RunManifest>(input.runId, 'manifest.json');
     const evidence = await this.store.readJson<CaptureEvidence>(input.runId, 'evidence/evidence.json');
     const gates = summarizeCaptureEvidence(evidence);
     const judgeMode = input.judge?.mode || 'none';
-    if (judgeMode !== 'none') throw new Error(`unsupported judge mode in v0.1: ${judgeMode}`);
     if (!input.rubric.task.trim()) throw new Error('rubric.task is required');
     if (!input.rubric.criteria.length) throw new Error('rubric.criteria needs at least one criterion');
+    const criterionNames = input.rubric.criteria.map(({ name }) => name.trim());
+    if (criterionNames.some((name) => !name)) throw new Error('rubric criterion names are required');
+    if (new Set(criterionNames).size !== criterionNames.length) throw new Error('rubric criterion names must be unique');
+    if (input.rubric.criteria.some(({ weight }) => !Number.isFinite(weight) || weight <= 0)) {
+      throw new Error('rubric criterion weights must be positive numbers');
+    }
 
     return this.store.writeStage(input.runId, 'evaluation', async (stageDirectory, stageId) => {
       let comparison: Record<string, unknown> | null = null;
@@ -415,19 +622,63 @@ export class AdsService {
         }
       }
 
-      const hardBlocked = run.status !== 'complete' || blockers.some((blocker) =>
-        blocker.includes('zero usable pairs') || blocker.includes('baseline run is not complete') || blocker.includes('receipt is missing'),
-      );
+      const hardBlocked = run.status !== 'complete' || blockers.length > 0;
+      let judgeResult: VisualJudgeResult | null = null;
+      if (!hardBlocked && judgeMode === 'configured') {
+        if (!this.visualJudge) {
+          blockers.push(
+            'configured visual judge is unavailable; start ads-mcp with --judge-command, --judge-provider, and --judge-model',
+          );
+        } else {
+          const screenshots = (evidence.snapshots || []).map((snapshot) => {
+            const artifact = resourceUri(
+              input.runId,
+              `screenshots/${encodeURIComponent(snapshot.screenshot)}`,
+            );
+            return {
+              state: snapshot.state,
+              breakpoint: snapshot.breakpoint,
+              artifact,
+              path: path.join(this.store.runDirectory(input.runId), 'evidence', snapshot.screenshot),
+            };
+          });
+          const allowedArtifacts = new Map(
+            screenshots.map(({ artifact, state, breakpoint }) => [artifact, { state, breakpoint }]),
+          );
+          try {
+            judgeResult = validateJudgeResult(
+              await this.visualJudge.evaluate({
+                schemaVersion: 1,
+                runId: input.runId,
+                target: manifest.target,
+                rubric: input.rubric,
+                gates,
+                comparison,
+                screenshots,
+              }, combineAbortSignals(signal, this.config.timeoutMs)),
+              input.rubric,
+              allowedArtifacts,
+            );
+          } catch (error) {
+            blockers.push(`visual judge could not complete: ${safeError(error)}`);
+          }
+        }
+      }
+      const status = hardBlocked || (judgeMode === 'configured' && !judgeResult)
+        ? 'blocked'
+        : judgeMode === 'none'
+          ? 'needs_human'
+          : 'complete';
       const output: EvaluateOutput = {
         schemaVersion: 1,
         runId: input.runId,
-        status: hardBlocked ? 'blocked' : 'needs_human',
-        verdict: null,
-        scores: null,
-        findings: [],
+        status,
+        verdict: judgeResult?.verdict || null,
+        scores: judgeResult?.scores || null,
+        findings: judgeResult?.findings || [],
         gates,
         comparison,
-        nextRevisionPrompt: '',
+        nextRevisionPrompt: judgeResult?.nextRevisionPrompt || '',
         blockers: stableUnique(blockers),
         artifacts: {
           receipt: resourceUri(input.runId, 'receipt'),
@@ -439,7 +690,19 @@ export class AdsService {
         stageId,
         generatedAt: now(),
         rubric: input.rubric,
-        judge: { mode: judgeMode, modelCalls: 0 },
+        judge: judgeResult
+          ? {
+            mode: judgeMode,
+            adapter: this.visualJudge?.id,
+            provider: judgeResult.provider,
+            model: judgeResult.model,
+            modelCalls: judgeResult.modelCalls,
+          }
+          : {
+            mode: judgeMode,
+            ...(judgeMode === 'configured' && this.visualJudge ? { adapter: this.visualJudge.id } : {}),
+            modelCalls: 0,
+          },
       });
       const report = [
         `# ADS evaluation ${input.runId}`,
@@ -450,6 +713,11 @@ export class AdsService {
         '',
         'Deterministic rendered gates are attached in `receipt.json`.',
         judgeMode === 'none' ? 'Visual judgment remains unresolved and requires a human or configured judge.' : '',
+        judgeResult ? `Visual judge: ${judgeResult.provider}/${judgeResult.model}` : '',
+        judgeResult ? `Verdict: ${judgeResult.verdict}` : '',
+        judgeResult ? `Scores: ${JSON.stringify(judgeResult.scores)}` : '',
+        judgeResult?.findings.length ? `Findings: ${JSON.stringify(judgeResult.findings)}` : '',
+        judgeResult?.nextRevisionPrompt ? `Next revision: ${judgeResult.nextRevisionPrompt}` : '',
         output.blockers.length ? `Blockers: ${output.blockers.join('; ')}` : 'Blockers: none',
         '',
       ].filter(Boolean).join('\n');

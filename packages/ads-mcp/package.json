@@ -1,15 +1,17 @@
 {
   "name": "ads-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "mcpName": "io.github.aa-on-ai/agentic-design-system",
-  "description": "Local MCP server for Agentic Design System render, evaluation, and decision-trace runs.",
+  "description": "Local MCP server for Agentic Design System rendering, pluggable visual judgment, SwiftUI evidence, and decision traces.",
   "keywords": [
     "model-context-protocol",
     "mcp",
     "design-systems",
     "ui-testing",
     "playwright",
-    "accessibility"
+    "accessibility",
+    "swiftui",
+    "visual-evaluation"
   ],
   "homepage": "https://agentic-design-system.vercel.app/mcp",
   "repository": {

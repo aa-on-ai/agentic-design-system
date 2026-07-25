@@ -10,6 +10,14 @@ const targetSchema = z.discriminatedUnion('type', [
     path: z.string().min(1),
     exportName: z.string().min(1).optional(),
   }),
+  z.object({
+    type: z.literal('swiftui'),
+    projectPath: z.string().min(1),
+    scheme: z.string().min(1),
+    sourcePath: z.string().min(1).optional(),
+    configuration: z.enum(['Debug', 'Release']).optional(),
+    device: z.string().min(1).optional(),
+  }),
 ]);
 
 const renderInputSchema = {
@@ -57,8 +65,37 @@ const evaluateInputSchema = {
       weight: z.number().positive(),
     })).min(1).max(20),
   }),
-  judge: z.object({ mode: z.literal('none').optional() }).optional(),
+  judge: z.object({ mode: z.enum(['none', 'configured']).optional() }).optional(),
 };
+
+const findingSchema = z.object({
+  category: z.enum([
+    'layout_spacing_hierarchy',
+    'polish_consistency',
+    'typography',
+    'originality',
+    'color_contrast',
+    'interaction_motion',
+    'cues_affordances',
+    'brand_fit_tone',
+  ]),
+  severity: z.enum(['minor', 'major', 'blocker']),
+  rubricRow: z.string(),
+  state: z.string(),
+  breakpoint: z.string(),
+  artifact: z.string(),
+  target: z.object({
+    description: z.string(),
+    normalizedBox: z.object({
+      x: z.number(),
+      y: z.number(),
+      width: z.number(),
+      height: z.number(),
+    }).optional(),
+  }),
+  observation: z.string(),
+  evidence: z.array(z.string()),
+});
 
 const evaluateOutputSchema = {
   schemaVersion: z.literal(1),
@@ -66,7 +103,7 @@ const evaluateOutputSchema = {
   status: z.enum(['complete', 'blocked', 'needs_human']),
   verdict: z.enum(['satisfied', 'needs_revision', 'failed']).nullable(),
   scores: z.record(z.string(), z.number()).nullable(),
-  findings: z.array(z.unknown()),
+  findings: z.array(findingSchema),
   gates: z.record(z.string(), z.unknown()),
   comparison: z.record(z.string(), z.unknown()).nullable(),
   nextRevisionPrompt: z.string(),
@@ -145,19 +182,20 @@ async function resourceResponse(service: AdsService, uri: URL) {
 
 export function createAdsMcpServer(service: AdsService): McpServer {
   const server = new McpServer(
-    { name: 'ads-mcp', version: '0.1.0' },
+    { name: 'ads-mcp', version: '0.2.0' },
     {
       instructions: [
         'Use the tools in sequence: ads_render -> ads_evaluate -> ads_trace.',
         'Rendered deterministic gates must complete before evaluation.',
-        'ads_evaluate returns needs_human when visual judgment is unresolved.',
+        'ads_evaluate returns needs_human when visual judgment is unresolved, or a typed verdict when judge.mode is configured.',
+        'SwiftUI targets require a startup-configured SwiftUI command adapter.',
       ].join(' '),
     },
   );
 
   server.registerTool('ads_render', {
     title: 'Render ADS evidence',
-    description: 'Render an allowed web URL or root-confined TSX component into ADS screenshots and deterministic gate evidence.',
+    description: 'Render an allowed web URL, root-confined TSX component, or configured SwiftUI target into ADS screenshots and deterministic gate evidence.',
     inputSchema: renderInputSchema,
     outputSchema: renderOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
@@ -165,7 +203,7 @@ export function createAdsMcpServer(service: AdsService): McpServer {
 
   server.registerTool('ads_evaluate', {
     title: 'Evaluate an ADS run',
-    description: 'Normalize deterministic gates and optional baseline comparison for a rendered ADS run.',
+    description: 'Normalize deterministic gates and optional baseline comparison, then run an explicitly configured visual judge when requested.',
     inputSchema: evaluateInputSchema,
     outputSchema: evaluateOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
