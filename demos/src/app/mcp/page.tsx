@@ -42,7 +42,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
     headline: "The Agentic Design System MCP loop",
     description: metadata.description,
     datePublished: "2026-07-22",
-    dateModified: "2026-07-22",
+    dateModified: "2026-07-25",
     author: { "@type": "Person", name: "Aaron Thomas" },
     about: ["Model Context Protocol", "Agentic Design System", "UI evaluation"],
     codeRepository: MCP_CONTRACT.source,
@@ -61,7 +61,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <span>Agentic Design System</span>
         </Link>
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
-          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.1</span>
+          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.2</span>
           <a
             className={`hero-pill focus-ring ${styles.iconLink}`}
             href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp"
@@ -80,8 +80,8 @@ export default async function McpPage({ searchParams }: McpPageProps) {
             <h1 id="mcp-title">The design loop,<br /><em>callable.</em></h1>
             <p className={styles.heroLede}>
               Three tools let a coding agent render the interface, check the evidence, and prove
-              why consequential decisions exist. The machine handles receipts. A human still owns
-              visual judgment.
+              why consequential decisions exist. The default stays model-free. Add explicit
+              adapters when the work needs visual judgment or SwiftUI evidence.
             </p>
             <div className={styles.heroActions}>
               <a className={`${styles.action} ${styles.primaryAction} focus-ring`} href="#run">
@@ -107,15 +107,15 @@ export default async function McpPage({ searchParams }: McpPageProps) {
                 </li>
               ))}
             </ol>
-            <p><Terminal size={15} aria-hidden="true" /> npx ads-mcp --root /your/project</p>
+            <p><Terminal size={15} aria-hidden="true" /> npx ads-mcp@0.2.0 --root /your/project</p>
           </aside>
         </section>
 
         <section className={styles.boundaryStrip} aria-label="MCP boundaries">
           <div><span>Transport</span><strong>Local stdio</strong></div>
           <div><span>Tools</span><strong>Exactly 3</strong></div>
-          <div><span>Evidence</span><strong>Real browser</strong></div>
-          <div><span>Visual verdict</span><strong>Human-owned</strong></div>
+          <div><span>Render targets</span><strong>Web + SwiftUI</strong></div>
+          <div><span>Visual verdict</span><strong>Explicit opt-in</strong></div>
         </section>
 
         <section className={styles.toolsSection} aria-labelledby="tools-title">
@@ -197,7 +197,8 @@ export default async function McpPage({ searchParams }: McpPageProps) {
               <strong><code>needs_human</code> is a feature.</strong>
               <p>
                 Axe, overflow, state coverage, touch targets, and CLS can clear mechanically.
-                Whether the interface is coherent, original, and right for the product still needs judgment.
+                The default stops here for human review. A startup-configured judge can return typed
+                scores, findings, and revision prompts only when a call explicitly opts in.
               </p>
             </div>
           </aside>
@@ -238,7 +239,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <span className="wordmark-mark" aria-hidden="true" />
           <span>Agentic Design System</span>
         </Link>
-        <span>ads-mcp · local stdio · v0.1</span>
+        <span>ads-mcp · local stdio · v0.2</span>
       </footer>
     </main>
   );

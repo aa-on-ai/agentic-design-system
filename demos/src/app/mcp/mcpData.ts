@@ -1,9 +1,14 @@
 export const MCP_CONTRACT = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   name: "ads-mcp",
-  version: "0.1.0",
+  version: "0.2.0",
   transport: "local stdio",
   sequence: ["ads_render", "ads_evaluate", "ads_trace"],
+  capabilities: {
+    renderTargets: ["web", "swiftui"],
+    visualJudgment: ["none", "configured"],
+    publicTools: 3,
+  },
   tools: [
     {
       name: "ads_render",
@@ -11,7 +16,7 @@ export const MCP_CONTRACT = {
       verb: "See",
       title: "Render the interface",
       description:
-        "Capture a local URL or root-confined TSX component in a real browser, then run deterministic UI gates.",
+        "Capture a local URL or root-confined TSX component in a real browser, or call a configured SwiftUI snapshot adapter.",
       input: {
         target: { type: "url", url: "http://127.0.0.1:3000/mcp" },
         states: ["default"],
@@ -36,9 +41,10 @@ export const MCP_CONTRACT = {
       verb: "Check",
       title: "Evaluate the evidence",
       description:
-        "Normalize browser gates and optional visual comparison into a review packet without pretending deterministic checks are taste.",
+        "Normalize deterministic gates into a review packet, then keep judgment human-owned or call an explicitly configured visual judge.",
       input: {
-        runId: "run_mrwll3lh_3d44b4578720",
+        runId: "run_ms0ubiex_26ad1c244418",
+        judge: { mode: "none" },
         rubric: {
           task: "Make the ADS MCP understandable on mobile and desktop",
           criteria: [
@@ -64,7 +70,7 @@ export const MCP_CONTRACT = {
       description:
         "Verify that consequential decisions map to captured skill rules, source constraints, implementation files, and evidence from the same run.",
       input: {
-        runId: "run_mrwll3lh_3d44b4578720",
+        runId: "run_ms0ubiex_26ad1c244418",
         context: "ADS MCP public lab",
         decisions: ["semantic-contract-surface"],
       },
@@ -87,7 +93,10 @@ export const MCP_CONTRACT = {
   boundaries: {
     projectRoot: "Explicit --root; reads and writes stay inside it",
     network: "Localhost by default; other HTTP(S) origins require an allow-list",
-    judgment: "v0.1 never makes a paid model call and returns needs_human for visual judgment",
+    judgment:
+      "Model-free by default; configured judgment requires startup configuration plus per-call opt-in",
+    swiftui:
+      "SwiftUI requires a startup-configured renderer and preserves blocked evidence when unavailable",
     hosting: "Local stdio only; no remote MCP endpoint or hosted control plane",
   },
   source: "https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp",
@@ -95,8 +104,8 @@ export const MCP_CONTRACT = {
 
 export const FROZEN_RUN = {
   label: "Local MCP verification",
-  runId: "run_mrwll3lh_3d44b4578720",
-  capturedAt: "2026-07-22",
+  runId: "run_ms0ubiex_26ad1c244418",
+  capturedAt: "2026-07-25",
   client: "@modelcontextprotocol/sdk",
   browser: "Playwright Chromium",
   sequence: [

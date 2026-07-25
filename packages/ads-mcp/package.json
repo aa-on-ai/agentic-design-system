@@ -2,7 +2,7 @@
   "name": "ads-mcp",
   "version": "0.2.0",
   "mcpName": "io.github.aa-on-ai/agentic-design-system",
-  "description": "Local MCP server for Agentic Design System rendering, pluggable visual judgment, SwiftUI evidence, and decision traces.",
+  "description": "Render web and SwiftUI evidence, run explicit visual judgment, and trace ADS UI decisions.",
   "keywords": [
     "model-context-protocol",
     "mcp",
