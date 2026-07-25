@@ -12,4 +12,4 @@
 ## Source
 
 - [Repository](https://github.com/aa-on-ai/agentic-design-system): Skills, workflows, verification scripts, and documentation.
-- [ads-mcp package](https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp): Local stdio MCP implementation.
+- [ads-mcp package](https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp): Local stdio MCP with web and SwiftUI render evidence plus explicit visual-judge adapters.

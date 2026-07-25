@@ -10,7 +10,7 @@ evaluation receipts, and decision provenance into a stable three-tool sequence f
 Point the server at the project whose UI you want ADS to inspect:
 
 ```bash
-npx --yes ads-mcp@0.1.0 --root /absolute/path/to/project
+npx --yes ads-mcp@0.2.0 --root /absolute/path/to/project
 ```
 
 The package installs its own Chromium runtime. If installation ran with
@@ -37,6 +37,10 @@ Optional server flags:
 - `--allow-origin <origin>` allows one non-local HTTP(S) origin. Repeat the flag for additional
   origins.
 - `--timeout-ms <number>` changes the per-tool timeout. The default is 30 seconds.
+- `--judge-command`, `--judge-provider`, and `--judge-model` configure an explicit visual-judge
+  adapter. `--judge-arg` is repeatable.
+- `--swiftui-command` configures a SwiftUI snapshot adapter. `--swiftui-arg` and
+  `--swiftui-detector` are repeatable; `--swiftui-renderer` labels the renderer in run manifests.
 
 ## Client configuration
 
@@ -49,7 +53,7 @@ Use the published package as a local stdio server. Replace the project path:
       "command": "npx",
       "args": [
         "--yes",
-        "ads-mcp@0.1.0",
+        "ads-mcp@0.2.0",
         "--root",
         "/absolute/path/to/project"
       ]
@@ -70,8 +74,9 @@ Registry name: `io.github.aa-on-ai/agentic-design-system`.
 
 ### `ads_render`
 
-Render an allowed URL or root-confined TSX component. The tool captures requested states and
-viewports, runs the existing ADS rendered gates, and returns `ads://runs/...` resources.
+Render an allowed URL, root-confined TSX component, or startup-configured SwiftUI target. The tool
+captures requested states and viewports, runs the applicable platform gates, and returns
+`ads://runs/...` resources.
 
 ```json
 {
@@ -91,10 +96,29 @@ A render is `complete` only when axe, overflow, landmarks and live regions, requ
 and touch-target gates have usable passing evidence. Missing browser dependencies, timeouts, and
 gate failures return a preserved `blocked` run instead of a false success.
 
+SwiftUI uses the same public tool through an external snapshot adapter:
+
+```json
+{
+  "target": {
+    "type": "swiftui",
+    "projectPath": "Orders.xcodeproj",
+    "scheme": "Orders",
+    "sourcePath": "Orders/ContentView.swift",
+    "configuration": "Debug",
+    "device": "iPhone 16 Pro"
+  },
+  "states": ["default", "loading", "empty", "error"],
+  "viewports": [{ "width": 393, "height": 852 }]
+}
+```
+
 ### `ads_evaluate`
 
-Normalize a rendered run and optionally compare it with another run. In v0.1, `judge.mode` is
-`none`; visual judgment therefore returns `needs_human` even when deterministic gates pass.
+Normalize a rendered run and optionally compare it with another run. The default
+`judge.mode: "none"` remains model-free and returns `needs_human` when deterministic gates pass.
+`judge.mode: "configured"` invokes the visual-judge adapter selected at server startup and returns
+a typed verdict, rubric scores, findings, and next revision prompt.
 
 ```json
 {
@@ -108,9 +132,14 @@ Normalize a rendered run and optionally compare it with another run. In v0.1, `j
       { "name": "Craft", "weight": 20 },
       { "name": "Functionality", "weight": 15 }
     ]
-  }
+  },
+  "judge": { "mode": "configured" }
 }
 ```
+
+The server validates exact rubric score keys, ADS finding categories, severities, evidence links,
+normalized screenshot regions, and verdict consistency before accepting the result. Missing,
+timed-out, or inconsistent judge output returns `blocked`, never a pass.
 
 ### `ads_trace`
 
@@ -152,7 +181,10 @@ reports, traces, and trace validation.
 - URL inputs must use HTTP(S). Localhost is allowed by default; other origins need startup
   allow-listing.
 - URL credentials are rejected and common secret query parameters are redacted from receipts.
-- Paid model calls are not implemented in v0.1.
+- External adapters run as fixed argv processes without a shell. Executables must be absolute
+  paths and stdout is bounded.
+- A model call requires both startup configuration and per-evaluation
+  `judge.mode: "configured"`; provider, model, and call count are written to the receipt.
 
 ## Verify
 
@@ -161,15 +193,20 @@ npm test
 ```
 
 The suite covers the real stdio initialization flow, a complete MCP client sequence, Chromium URL
-and TSX component capture, rendered comparisons, resource reads, repeated stage receipts, timeout
-and incomplete-evidence behavior, path traversal, symlink escape, origin denial, and trace failure
-cases.
+and TSX component capture, command-adapter JSON exchange, configured visual verdicts, SwiftUI
+snapshot evidence, rendered comparisons, resource reads, repeated stage receipts, timeout and
+incomplete-evidence behavior, path traversal, symlink escape, origin denial, and trace failures.
 
-## v0.1 limits
+## v0.2 limits
 
 - Local stdio only. No remote HTTP, OAuth, hosted service, or MCP App UI.
-- Web rendering only. SwiftUI and other platform adapters are post-v0.1 work.
-- Human visual judgment remains required.
+- The core package does not bundle provider SDKs, select a model, or ship a universal Xcode
+  snapshot harness. Operators supply explicit command adapters for their environment.
+- SwiftUI evidence depends on the configured adapter's build, state injection, and detector
+  capabilities.
+- The default path remains deterministic and returns `needs_human`; automated judgment is
+  deliberately opt-in.
 
 See the [canonical API contract](https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-api-contract.md)
-for the complete protocol.
+and [command adapter protocol](https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-command-adapters.md)
+for the complete interfaces.

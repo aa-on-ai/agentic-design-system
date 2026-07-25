@@ -39,9 +39,10 @@ try {
       settleMs: 150,
       provenance: {
         observedSkillFiles: ["skills/agent-friendly-design/SKILL.md"],
-        sourceFiles: ["docs/run-reports/2026-07-22-ads-mcp-lab-page.md"],
+        sourceFiles: ["docs/run-reports/2026-07-25-ads-mcp-v0.2.md"],
         artifactFiles: [
           "demos/src/app/mcp/page.tsx",
+          "demos/src/app/mcp/mcpData.ts",
           "demos/src/app/mcp/mcp.module.css",
         ],
         adsRelease: "v1.3.1",
@@ -84,8 +85,8 @@ try {
             excerpt: "use native elements: `<button>`, `<nav>`, `<main>`, `<article>`, `<section>`, `<header>`, `<footer>`, `<aside>`",
           },
           sourceConstraint: {
-            path: "docs/run-reports/2026-07-22-ads-mcp-lab-page.md",
-            excerpt: "The visible example is backed by a real MCP client run, not invented product telemetry.",
+            path: "docs/run-reports/2026-07-25-ads-mcp-v0.2.md",
+            excerpt: "The package tests include real Chromium URL and TSX captures, real JSON subprocess exchange for",
           },
           evidence: [rendered.artifacts.evidence],
         },

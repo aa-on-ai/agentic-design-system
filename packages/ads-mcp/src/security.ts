@@ -30,6 +30,13 @@ export async function canonicalRoot(root: string): Promise<string> {
 }
 
 export async function resolveFileInside(root: string, input: string): Promise<string> {
+  const resolved = await resolvePathInside(root, input);
+  const details = await stat(resolved);
+  if (!details.isFile()) throw new Error(`expected a file: ${input}`);
+  return resolved;
+}
+
+export async function resolvePathInside(root: string, input: string): Promise<string> {
   const lexical = path.resolve(root, input);
   if (!isInside(root, lexical) || lexical === root) {
     throw new Error(`path escapes the configured root: ${input}`);
@@ -38,8 +45,15 @@ export async function resolveFileInside(root: string, input: string): Promise<st
   if (!isInside(root, resolved) || resolved === root) {
     throw new Error(`path resolves outside the configured root: ${input}`);
   }
+  return resolved;
+}
+
+export async function canonicalExecutable(input: string): Promise<string> {
+  if (!path.isAbsolute(input)) throw new Error(`adapter command must be an absolute path: ${input}`);
+  const resolved = await realpath(input);
   const details = await stat(resolved);
-  if (!details.isFile()) throw new Error(`expected a file: ${input}`);
+  if (!details.isFile()) throw new Error(`adapter command must be a file: ${input}`);
+  if ((details.mode & 0o111) === 0) throw new Error(`adapter command is not executable: ${input}`);
   return resolved;
 }
 
