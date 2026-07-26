@@ -41,7 +41,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
   })}\n`);
 };
 
-test('MCP initialize and tools/list keep the stable three-tool surface in v0.2', async () => {
+test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.1', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ads-server-'));
   const service = await AdsService.create({
     root,
@@ -58,6 +58,11 @@ test('MCP initialize and tools/list keep the stable three-tool surface in v0.2',
     const tools = await client.listTools();
     assert.deepEqual(tools.tools.map(({ name }) => name).sort(), ['ads_evaluate', 'ads_render', 'ads_trace']);
     assert.equal(tools.tools.length, 3);
+    const render = tools.tools.find(({ name }) => name === 'ads_render');
+    const states = (
+      render?.inputSchema as { properties?: { states?: { description?: string } } }
+    ).properties?.states;
+    assert.match(states?.description || '', /#state=<name>/);
   } finally {
     await client.close();
     await server.close();
@@ -140,6 +145,9 @@ test('compiled stdio binary completes the full sequence through a real MCP clien
     assert.equal((traceResult.structuredContent as { valid: boolean }).valid, true);
     const evidence = await client.readResource({ uri: rendered.artifacts.evidence });
     assert.equal(evidence.contents.length, 1);
+    const resources = await client.listResources();
+    assert.ok(resources.resources.some(({ uri }) => uri === rendered.artifacts.evidence));
+    assert.ok(resources.resources.some(({ uri }) => uri.includes(`/screenshots/`)));
   } finally {
     await client.close();
     await new Promise<void>((resolve, reject) => fixtureServer.close((error) => error ? reject(error) : resolve()));
@@ -213,6 +221,13 @@ test('a real MCP client completes render, evaluate, trace, and resource reads', 
     const resource = await client.readResource({ uri: rendered.artifacts.evidence });
     assert.equal(resource.contents.length, 1);
     assert.match('text' in resource.contents[0]! ? resource.contents[0].text : '', /seriousAxeViolations/);
+    const resources = await client.listResources();
+    for (const artifact of ['evidence', 'receipt', 'trace', 'trace-validation']) {
+      assert.ok(
+        resources.resources.some(({ uri }) => uri === `ads://runs/${rendered.runId}/${artifact}`),
+        `resources/list is missing ${artifact}`,
+      );
+    }
   } finally {
     await client.close();
     await server.close();

@@ -44,7 +44,7 @@ for (const testCase of cases) {
     process.stderr.write(`[mcp-lab] ${testCase.name}: inspect\n`);
     await page.locator("main[data-mcp-lab]").waitFor({ timeout: 10_000 });
     assert.match(await page.locator("h1").innerText(), /design loop/i);
-    assert.match(await page.locator("main[data-mcp-lab] > header").textContent(), /v0\.2/i);
+    assert.match(await page.locator("main[data-mcp-lab] > header").textContent(), /v0\.2\.1/i);
     assert.deepEqual(
       await page.locator("[data-mcp-tools] > li").evaluateAll((items) => items.map((item) => item.getAttribute("data-tool-name"))),
       ["ads_render", "ads_evaluate", "ads_trace"],
@@ -92,7 +92,7 @@ for (const testCase of cases) {
     const contractResponse = await fetch(new URL("/mcp/contract.json", baseUrl));
     const contract = { ok: contractResponse.ok, body: await contractResponse.json() };
     assert.equal(contract.ok, true);
-    assert.equal(contract.body.version, "0.2.0");
+    assert.equal(contract.body.version, "0.2.1");
     assert.deepEqual(contract.body.sequence, ["ads_render", "ads_evaluate", "ads_trace"]);
     assert.deepEqual(contract.body.capabilities.renderTargets, ["web", "swiftui"]);
     assert.deepEqual(contract.body.capabilities.visualJudgment, ["none", "configured"]);

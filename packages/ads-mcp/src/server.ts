@@ -1,42 +1,49 @@
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as z from 'zod/v4';
+import { ADS_MCP_VERSION } from './browser.js';
 import { AdsService } from './service.js';
 import type { EvaluateOutput, RenderOutput, TraceOutput } from './types.js';
 
 const targetSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('url'), url: z.string().url() }),
+  z.object({
+    type: z.literal('url'),
+    url: z.string().url().describe('Local HTTP(S) URL to render; non-local origins require --allow-origin.'),
+  }),
   z.object({
     type: z.literal('component'),
-    path: z.string().min(1),
-    exportName: z.string().min(1).optional(),
+    path: z.string().min(1).describe('Root-confined TSX component path.'),
+    exportName: z.string().min(1).optional().describe('Named export to mount; defaults to default.'),
   }),
   z.object({
     type: z.literal('swiftui'),
-    projectPath: z.string().min(1),
-    scheme: z.string().min(1),
-    sourcePath: z.string().min(1).optional(),
-    configuration: z.enum(['Debug', 'Release']).optional(),
-    device: z.string().min(1).optional(),
+    projectPath: z.string().min(1).describe('Root-confined Xcode project or workspace path.'),
+    scheme: z.string().min(1).describe('Xcode scheme passed to the configured SwiftUI adapter.'),
+    sourcePath: z.string().min(1).optional().describe('Optional root-confined Swift source file.'),
+    configuration: z.enum(['Debug', 'Release']).optional().describe('Build configuration; defaults to Debug.'),
+    device: z.string().min(1).optional().describe('Requested simulator or device label.'),
   }),
-]);
+]).describe('Interface target to render as web, TSX component, or configured SwiftUI evidence.');
 
 const renderInputSchema = {
   target: targetSchema,
-  states: z.array(z.string().min(1)).max(16).optional(),
+  states: z.array(z.string().min(1)).max(16).optional().describe(
+    'States to capture. URL targets receive each non-default state as #state=<name>; '
+    + 'the default state uses the original URL. Defaults to ["default"].',
+  ),
   viewports: z.array(z.object({
-    width: z.number().int().min(240).max(7680),
-    height: z.number().int().min(240).max(7680),
-  })).max(12).optional(),
-  waitFor: z.string().min(1).max(500).optional(),
-  settleMs: z.number().int().min(0).max(30_000).optional(),
-  maxCls: z.number().min(0).max(1).optional(),
+    width: z.number().int().min(240).max(7680).describe('Viewport width in CSS pixels.'),
+    height: z.number().int().min(240).max(7680).describe('Viewport height in CSS pixels.'),
+  })).max(12).optional().describe('Viewports to capture; defaults to mobile 390x844 and desktop 1280x800.'),
+  waitFor: z.string().min(1).max(500).optional().describe('Optional CSS selector to await before capture.'),
+  settleMs: z.number().int().min(0).max(30_000).optional().describe('Additional settle time per state in milliseconds.'),
+  maxCls: z.number().min(0).max(1).optional().describe('Maximum allowed cumulative layout shift; defaults to 0.1.'),
   provenance: z.object({
-    observedSkillFiles: z.array(z.string().min(1)).max(100).optional(),
-    declaredSkillFiles: z.array(z.string().min(1)).max(100).optional(),
-    sourceFiles: z.array(z.string().min(1)).max(100).optional(),
-    artifactFiles: z.array(z.string().min(1)).max(100).optional(),
-    adsRelease: z.string().min(1).max(200).optional(),
-  }).optional(),
+    observedSkillFiles: z.array(z.string().min(1)).max(100).optional().describe('Skill files actually observed before render.'),
+    declaredSkillFiles: z.array(z.string().min(1)).max(100).optional().describe('Relevant skill files declared but not observed.'),
+    sourceFiles: z.array(z.string().min(1)).max(100).optional().describe('Root-confined brief or source-constraint files.'),
+    artifactFiles: z.array(z.string().min(1)).max(100).optional().describe('Root-confined implementation artifacts to hash.'),
+    adsRelease: z.string().min(1).max(200).optional().describe('Optional ADS release or rule-set label.'),
+  }).optional().describe('Files hashed prospectively for later decision-trace verification.'),
 };
 
 const renderOutputSchema = {
@@ -182,7 +189,7 @@ async function resourceResponse(service: AdsService, uri: URL) {
 
 export function createAdsMcpServer(service: AdsService): McpServer {
   const server = new McpServer(
-    { name: 'ads-mcp', version: '0.2.0' },
+    { name: 'ads-mcp', version: ADS_MCP_VERSION },
     {
       instructions: [
         'Use the tools in sequence: ads_render -> ads_evaluate -> ads_trace.',
@@ -199,7 +206,11 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: renderInputSchema,
     outputSchema: renderOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
-  }, async (input, extra) => toolResult(await service.render(input, extra.signal)));
+  }, async (input, extra) => {
+    const result = toolResult(await service.render(input, extra.signal));
+    server.sendResourceListChanged();
+    return result;
+  });
 
   server.registerTool('ads_evaluate', {
     title: 'Evaluate an ADS run',
@@ -207,7 +218,11 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: evaluateInputSchema,
     outputSchema: evaluateOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
-  }, async (input, extra) => toolResult(await service.evaluate(input, extra.signal)));
+  }, async (input, extra) => {
+    const result = toolResult(await service.evaluate(input, extra.signal));
+    server.sendResourceListChanged();
+    return result;
+  });
 
   server.registerTool('ads_trace', {
     title: 'Trace ADS decisions',
@@ -215,11 +230,17 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: traceInputSchema,
     outputSchema: traceOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
-  }, async (input) => toolResult(await service.trace(input)));
+  }, async (input) => {
+    const result = toolResult(await service.trace(input));
+    server.sendResourceListChanged();
+    return result;
+  });
 
   server.registerResource(
     'ads-run-artifact',
-    new ResourceTemplate('ads://runs/{runId}/{artifact}', { list: undefined }),
+    new ResourceTemplate('ads://runs/{runId}/{artifact}', {
+      list: async () => ({ resources: await service.listResources() }),
+    }),
     { title: 'ADS run artifact', mimeType: 'application/octet-stream' },
     async (uri) => resourceResponse(service, uri),
   );

@@ -1,6 +1,6 @@
 {
   "name": "ads-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "mcpName": "io.github.aa-on-ai/agentic-design-system",
   "description": "Render web and SwiftUI evidence, run explicit visual judgment, and trace ADS UI decisions.",
   "keywords": [
@@ -33,14 +33,12 @@
     "dist/*.js.map",
     "dist/*.d.ts",
     "dist/vendor",
-    "scripts/postinstall.mjs",
     "README.md",
     "server.json"
   ],
   "scripts": {
     "build": "node scripts/build.mjs",
-    "postinstall": "node scripts/postinstall.mjs",
-    "test": "npm run build && node --test dist/test/*.test.js",
+    "test": "npm run build && node dist/cli.js setup && node --test dist/test/*.test.js",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm test"
   },
@@ -55,7 +53,7 @@
     "@modelcontextprotocol/sdk": "^1.29.0",
     "esbuild": "^0.28.1",
     "pixelmatch": "^6.0.0",
-    "playwright": "npm:playwright-chromium@^1.49.0",
+    "playwright-core": "^1.61.1",
     "pngjs": "^7.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
