@@ -3,6 +3,7 @@ import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
+import { requireBrowser } from './browser.js';
 import { CommandSwiftUiRenderer, CommandVisualJudge } from './command-adapters.js';
 import { mountComponent } from './component.js';
 import {
@@ -257,6 +258,7 @@ function validateJudgeResult(
 }
 
 async function defaultCaptureRunner(args: Parameters<CaptureRunner>[0]): Promise<void> {
+  await requireBrowser();
   const command = [
     CAPTURE_SCRIPT,
     args.url,
@@ -863,6 +865,65 @@ export class AdsService {
       mimeType: resource.mimeType,
       name: resource.name,
     };
+  }
+
+  async listResources(): Promise<Array<{ uri: string; name: string; mimeType: string }>> {
+    const resources: Array<{ uri: string; name: string; mimeType: string }> = [];
+    for (const runId of await this.store.listRunIds()) {
+      resources.push(
+        {
+          uri: resourceUri(runId, 'manifest'),
+          name: `${runId} manifest`,
+          mimeType: 'application/json',
+        },
+        {
+          uri: resourceUri(runId, 'evidence'),
+          name: `${runId} rendered evidence`,
+          mimeType: 'application/json',
+        },
+      );
+      try {
+        const evidence = await this.store.readJson<CaptureEvidence>(runId, 'evidence/evidence.json');
+        for (const snapshot of evidence.snapshots || []) {
+          if (
+            path.basename(snapshot.screenshot) !== snapshot.screenshot
+            || !snapshot.screenshot.endsWith('.png')
+          ) {
+            continue;
+          }
+          resources.push({
+            uri: resourceUri(runId, `screenshots/${encodeURIComponent(snapshot.screenshot)}`),
+            name: `${runId} ${snapshot.state}@${snapshot.breakpoint}`,
+            mimeType: 'image/png',
+          });
+        }
+      } catch {
+        // A preserved run without readable evidence still exposes its manifest.
+      }
+      for (const stage of [
+        { kind: 'evaluation' as const, artifact: 'receipt', file: 'receipt.json', mimeType: 'application/json' },
+        { kind: 'evaluation' as const, artifact: 'report', file: 'report.md', mimeType: 'text/markdown' },
+        { kind: 'trace' as const, artifact: 'trace', file: 'trace.json', mimeType: 'application/json' },
+        {
+          kind: 'trace' as const,
+          artifact: 'trace-validation',
+          file: 'trace-validation.json',
+          mimeType: 'application/json',
+        },
+      ]) {
+        try {
+          await this.store.latestStagePath(runId, stage.kind, stage.file);
+          resources.push({
+            uri: resourceUri(runId, stage.artifact),
+            name: `${runId} ${stage.artifact}`,
+            mimeType: stage.mimeType,
+          });
+        } catch {
+          // The stage has not been written for this run.
+        }
+      }
+    }
+    return resources;
   }
 
   private async verifyTracedFile(

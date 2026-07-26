@@ -65,4 +65,6 @@ test('CLI config preserves explicit adapter arguments and deduplicated detector 
   assert.deepEqual(config.swiftUiCommand?.detectors, ['swiftlint', 'asset-catalog']);
   assert.match(HELP, /--judge-command/);
   assert.match(HELP, /--swiftui-command/);
+  assert.match(HELP, /ads-mcp setup/);
+  assert.match(HELP, /ads-mcp doctor/);
 });

@@ -53,5 +53,6 @@ jobs:
           npm run homepage:blend -- http://127.0.0.1:3000
           ADS_SECTION_BLEND_BROWSER=webkit npm run homepage:blend -- http://127.0.0.1:3000
       - run: npm ci --prefix packages/ads-mcp
+      - run: npm run mcp:cold-start
       - run: npm run mcp:test
       - run: npm run mcp:package-smoke

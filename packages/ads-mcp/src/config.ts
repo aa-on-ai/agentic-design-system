@@ -1,7 +1,10 @@
 import { canonicalExecutable, canonicalRoot, normalizeAllowedOrigin } from './security.js';
 import type { ServerConfig } from './types.js';
 
-export const HELP = `Usage: ads-mcp --root <absolute-project-path> [options]
+export const HELP = `Usage:
+  ads-mcp --root <absolute-project-path> [options]
+  ads-mcp setup
+  ads-mcp doctor [--json]
 
 Options:
   --runs-dir <relative-path>  Run storage under root (default: .ads/runs)
@@ -16,6 +19,10 @@ Options:
   --swiftui-renderer <name>   Renderer recorded in SwiftUI manifests
   --swiftui-detector <name>   SwiftUI detector receipt; repeatable
   --help                      Show this help
+
+Commands:
+  setup                       Install the Chromium runtime used by ads_render
+  doctor                      Report whether the Chromium runtime is ready
 `;
 
 function valueAfter(argv: string[], index: number, flag: string): string {

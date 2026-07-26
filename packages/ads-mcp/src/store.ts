@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { cp, mkdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { ensureDirectoryInside, isInside } from './security.js';
 
@@ -28,6 +28,16 @@ export class RunStore {
     const directory = path.join(this.runsRoot, runId);
     if (!isInside(this.runsRoot, directory)) throw new Error(`invalid run ID: ${runId}`);
     return directory;
+  }
+
+  async listRunIds(limit = 25): Promise<string[]> {
+    const entries = await readdir(this.runsRoot, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isDirectory() && RUN_ID.test(entry.name))
+      .map((entry) => entry.name)
+      .sort()
+      .reverse()
+      .slice(0, limit);
   }
 
   async createRun<T>(

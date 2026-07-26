@@ -66,20 +66,24 @@ function parseArgs(argv) {
 }
 
 async function loadDeps() {
-  // playwright + @axe-core/playwright are peer deps, kept out of the skill install.
-  // One-command setup: node skills/design-review/scripts/setup-capture.mjs
+  // The standalone skill uses playwright; the published ADS MCP uses playwright-core so the
+  // server can connect before a browser is provisioned.
   let chromium;
   let AxeBuilder = null;
   try {
-    ({ chromium } = await import('playwright'));
+    ({ chromium } = await import('playwright-core'));
   } catch {
-    console.error(
-      'capture.mjs needs Playwright + @axe-core/playwright. One-command setup\n' +
-        '(run from your project root):\n' +
-        `  node ${SETUP_SCRIPT}\n` +
-        '  (verify only: add --check)',
-    );
-    process.exit(2);
+    try {
+      ({ chromium } = await import('playwright'));
+    } catch {
+      console.error(
+        'capture.mjs needs playwright-core or playwright plus @axe-core/playwright. One-command setup\n' +
+          '(run from your project root):\n' +
+          `  node ${SETUP_SCRIPT}\n` +
+          '  (verify only: add --check)',
+      );
+      process.exit(2);
+    }
   }
   try {
     ({ default: AxeBuilder } = await import('@axe-core/playwright'));
@@ -279,7 +283,10 @@ async function main() {
   const outDir = opts.out || path.join(process.cwd(), 'evidence', host);
   await fs.mkdir(outDir, { recursive: true });
 
-  const browser = await chromium.launch();
+  const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+  const browser = await chromium.launch({
+    ...(executablePath ? { executablePath } : {}),
+  });
   const evidence = {
     url: opts.url,
     capturedStates: opts.states,

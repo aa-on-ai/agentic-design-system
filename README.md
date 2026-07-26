@@ -206,13 +206,14 @@ Only then did the grader return `satisfied`.
 - [OpenClaw](./integrations/openclaw.md)
 - [Hermes](./integrations/hermes.md)
 
-## MCP server (v0.2)
+## MCP server (v0.2.1)
 
 The repository also contains a local stdio MCP package that exposes the ADS evidence spine as
 three tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
 
 ```bash
-npx --yes ads-mcp@0.2.0 --root /absolute/path/to/project
+npx --yes ads-mcp@0.2.1 setup
+npx --yes ads-mcp@0.2.1 --root /absolute/path/to/project
 ```
 
 The MCP server is intentionally local-first. It confines project files and run artifacts to the

@@ -61,7 +61,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <span>Agentic Design System</span>
         </Link>
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
-          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.2</span>
+          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.2.1</span>
           <a
             className={`hero-pill focus-ring ${styles.iconLink}`}
             href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp"
@@ -107,7 +107,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
                 </li>
               ))}
             </ol>
-            <p><Terminal size={15} aria-hidden="true" /> npx ads-mcp@0.2.0 --root /your/project</p>
+            <p><Terminal size={15} aria-hidden="true" /> npx ads-mcp@0.2.1 --root /your/project</p>
           </aside>
         </section>
 
@@ -239,7 +239,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <span className="wordmark-mark" aria-hidden="true" />
           <span>Agentic Design System</span>
         </Link>
-        <span>ads-mcp · local stdio · v0.2</span>
+        <span>ads-mcp · local stdio · v0.2.1</span>
       </footer>
     </main>
   );

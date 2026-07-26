@@ -17,6 +17,19 @@ the comparison/render/eval-loop authority smokes, and the frozen adjacent-action
 the install scripts default to
 `skills@1.5.19`; override `SKILLS_CLI_PACKAGE` only when deliberately certifying a newer CLI.
 
+## MCP cold startup
+
+Verify a clean npm cache can install and initialize the published-package shape inside Claude
+Code's 30-second MCP connection budget, without downloading Chromium:
+
+```bash
+npm ci --prefix packages/ads-mcp
+npm run mcp:cold-start
+```
+
+The smoke uses an isolated npm cache and browser directory, requires exactly the three ADS tools,
+then proves the first browser-dependent render blocks with the explicit `ads-mcp setup` command.
+
 ## frozen adjacent-action regression
 
 ADS v1.3.1 has a checksum-locked five-case baseline under

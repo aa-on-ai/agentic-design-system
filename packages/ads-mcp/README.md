@@ -10,15 +10,20 @@ evaluation receipts, and decision provenance into a stable three-tool sequence f
 Point the server at the project whose UI you want ADS to inspect:
 
 ```bash
-npx --yes ads-mcp@0.2.0 --root /absolute/path/to/project
+npx --yes ads-mcp@0.2.1 --root /absolute/path/to/project
 ```
 
-The package installs its own Chromium runtime. If installation ran with
-`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`, install the browser once:
+The MCP server connects without downloading a browser, so cold clients can discover its tools
+inside their startup budget. Before the first web render, verify or install Chromium once:
 
 ```bash
-npx --package playwright-chromium playwright install chromium
+npx --yes ads-mcp@0.2.1 doctor
+npx --yes ads-mcp@0.2.1 setup
 ```
+
+If Chromium is missing, `ads_render` preserves a blocked run with the same setup command instead of
+timing out or fabricating evidence. Operators may also set
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` to an existing compatible Chromium executable.
 
 ## Build from source
 
@@ -53,7 +58,7 @@ Use the published package as a local stdio server. Replace the project path:
       "command": "npx",
       "args": [
         "--yes",
-        "ads-mcp@0.2.0",
+        "ads-mcp@0.2.1",
         "--root",
         "/absolute/path/to/project"
       ]
@@ -69,6 +74,10 @@ ads_render -> ads_evaluate -> ads_trace
 ```
 
 Registry name: `io.github.aa-on-ai/agentic-design-system`.
+
+For URL targets, the default state uses the original URL. Every requested non-default state is
+loaded as `#state=<name>`, so the application should read the `state` parameter from
+`location.hash`.
 
 ## Tools
 
@@ -176,6 +185,11 @@ Run artifacts live under `<root>/.ads/runs/<runId>/`. Tools return short structu
 read-only resource links for manifests, rendered evidence, screenshots, evaluation receipts,
 reports, traces, and trace validation.
 
+`resources/list` enumerates recent run artifacts so a client can recover them after losing a tool
+response. Resource URIs are stable logical identifiers rather than disk paths. For example,
+`ads://runs/<runId>/screenshots/default-390x844.png` maps to
+`<root>/.ads/runs/<runId>/evidence/default-390x844.png`; clients should use `resources/read`.
+
 - No arbitrary command tool or caller-selected output path.
 - Project file reads and run writes stay under `--root`, including symlink checks.
 - URL inputs must use HTTP(S). Localhost is allowed by default; other origins need startup
@@ -197,9 +211,10 @@ and TSX component capture, command-adapter JSON exchange, configured visual verd
 snapshot evidence, rendered comparisons, resource reads, repeated stage receipts, timeout and
 incomplete-evidence behavior, path traversal, symlink escape, origin denial, and trace failures.
 
-## v0.2 limits
+## v0.2.1 limits
 
 - Local stdio only. No remote HTTP, OAuth, hosted service, or MCP App UI.
+- Browser acquisition is explicit through `ads-mcp setup`; MCP startup never downloads Chromium.
 - The core package does not bundle provider SDKs, select a model, or ship a universal Xcode
   snapshot harness. Operators supply explicit command adapters for their environment.
 - SwiftUI evidence depends on the configured adapter's build, state injection, and detector

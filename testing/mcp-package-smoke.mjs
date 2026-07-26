@@ -26,16 +26,25 @@ try {
   );
   const [packed] = JSON.parse(packOutput);
   assert.equal(packed.name, "ads-mcp");
+  assert.equal(packed.version, "0.2.1");
   assert.ok(packed.files.some(({ path: file }) => file === "dist/cli.js"));
   assert.ok(packed.files.some(({ path: file }) => file === "dist/vendor/capture.mjs"));
-  assert.ok(packed.files.some(({ path: file }) => file === "scripts/postinstall.mjs"));
+  assert.equal(
+    packed.files.some(({ path: file }) => file === "scripts/postinstall.mjs"),
+    false,
+    "the package must not contain a browser-download postinstall",
+  );
   assert.ok(packed.files.some(({ path: file }) => file === "LICENSE"));
 
   const archive = path.join(temporaryRoot, packed.filename);
   const consumerRoot = path.join(temporaryRoot, "consumer");
   const projectRoot = path.join(temporaryRoot, "project");
   const browserRoot = path.join(temporaryRoot, "browsers");
-  const consumerEnvironment = { ...process.env, PLAYWRIGHT_BROWSERS_PATH: browserRoot };
+  const consumerEnvironment = {
+    ...process.env,
+    PLAYWRIGHT_BROWSERS_PATH: browserRoot,
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1",
+  };
   await Promise.all([
     mkdir(consumerRoot, { recursive: true }),
     mkdir(path.join(projectRoot, "skills", "design-review"), { recursive: true }),
@@ -55,8 +64,28 @@ try {
   );
 
   const executable = path.join(consumerRoot, "node_modules", ".bin", "ads-mcp");
+  await assert.rejects(
+    execFileAsync(executable, ["doctor", "--json"], { env: consumerEnvironment }),
+    (error) => {
+      const report = JSON.parse(error.stdout || "{}");
+      assert.equal(error.code, 1);
+      assert.equal(report.browser?.ready, false);
+      assert.equal(report.browser?.setupCommand, "npx --yes ads-mcp@0.2.1 setup");
+      return true;
+    },
+  );
+  await execFileAsync(executable, ["setup"], {
+    env: consumerEnvironment,
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  const { stdout: doctorOutput } = await execFileAsync(executable, ["doctor", "--json"], {
+    env: consumerEnvironment,
+  });
+  assert.equal(JSON.parse(doctorOutput).browser?.ready, true);
   const { stdout: help } = await execFileAsync(executable, ["--help"], { env: consumerEnvironment });
-  assert.match(help, /Usage: ads-mcp --root/);
+  assert.match(help, /ads-mcp --root/);
+  assert.match(help, /ads-mcp setup/);
+  assert.match(help, /ads-mcp doctor/);
   assert.match(help, /--judge-command/);
   assert.match(help, /--swiftui-command/);
 
@@ -139,6 +168,7 @@ try {
     status: "passed",
     package: `${packed.name}@${packed.version}`,
     archive: packed.filename,
+    browserSetup: "explicit",
     tools: tools.tools.map(({ name }) => name),
     sequence: [rendered.status, evaluateResult.structuredContent.status, traceResult.structuredContent.valid],
   }, null, 2)}\n`);

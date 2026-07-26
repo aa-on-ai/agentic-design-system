@@ -1,13 +1,15 @@
 export const MCP_CONTRACT = {
   schemaVersion: 2,
   name: "ads-mcp",
-  version: "0.2.0",
+  version: "0.2.1",
   transport: "local stdio",
   sequence: ["ads_render", "ads_evaluate", "ads_trace"],
   capabilities: {
     renderTargets: ["web", "swiftui"],
     visualJudgment: ["none", "configured"],
     publicTools: 3,
+    browserProvisioning: "explicit setup",
+    resourceDiscovery: "listable recent runs",
   },
   tools: [
     {
@@ -98,6 +100,8 @@ export const MCP_CONTRACT = {
     swiftui:
       "SwiftUI requires a startup-configured renderer and preserves blocked evidence when unavailable",
     hosting: "Local stdio only; no remote MCP endpoint or hosted control plane",
+    browser:
+      "Cold startup never downloads Chromium; run ads-mcp setup once before rendered evidence",
   },
   source: "https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp",
 } as const;
