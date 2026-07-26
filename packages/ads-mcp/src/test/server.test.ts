@@ -41,7 +41,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
   })}\n`);
 };
 
-test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.1', async () => {
+test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.2', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ads-server-'));
   const service = await AdsService.create({
     root,
@@ -63,6 +63,85 @@ test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.1
       render?.inputSchema as { properties?: { states?: { description?: string } } }
     ).properties?.states;
     assert.match(states?.description || '', /#state=<name>/);
+    const instructions = client.getInstructions() || '';
+    assert.match(instructions, /Call ads_trace only when the render manifest contains/);
+    assert.match(instructions, /Never invent provenance paths/);
+    assert.ok(instructions.indexOf('Never invent provenance paths') < 512);
+    const trace = tools.tools.find(({ name }) => name === 'ads_trace');
+    assert.match(trace?.description || '', /Read the manifest first and never invent file paths/);
+  } finally {
+    await client.close();
+    await server.close();
+  }
+});
+
+test('URL-only runs without provenance return one actionable trace-not-applicable error', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ads-url-only-trace-'));
+  const service = await AdsService.create({
+    root,
+    runsDir: '.ads/runs',
+    allowedOrigins: new Set(),
+    timeoutMs: 1_000,
+  }, { captureRunner: fakeCapture });
+  const server = createAdsMcpServer(service);
+  const client = new Client({ name: 'ads-url-only-client', version: '1.0.0' });
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  await server.connect(serverTransport);
+  await client.connect(clientTransport);
+  try {
+    const renderResult = await client.callTool({
+      name: 'ads_render',
+      arguments: {
+        target: { type: 'url', url: 'http://localhost:3000/mcp' },
+        viewports: [{ width: 390, height: 844 }],
+      },
+    });
+    const rendered = renderResult.structuredContent as {
+      runId: string;
+      status: string;
+      artifacts: { evidence: string; manifest: string };
+    };
+    assert.equal(rendered.status, 'complete');
+
+    const evaluationResult = await client.callTool({
+      name: 'ads_evaluate',
+      arguments: {
+        runId: rendered.runId,
+        rubric: { task: 'Review the public MCP page', criteria: [{ name: 'Functionality', weight: 100 }] },
+        judge: { mode: 'none' },
+      },
+    });
+    assert.equal((evaluationResult.structuredContent as { status: string }).status, 'needs_human');
+
+    const manifestResource = await client.readResource({ uri: rendered.artifacts.manifest });
+    const manifest = JSON.parse(
+      'text' in manifestResource.contents[0]! ? manifestResource.contents[0].text : '{}',
+    ) as { skillFiles: unknown[]; sourceFiles: unknown[]; artifactFiles: unknown[] };
+    assert.deepEqual(manifest.skillFiles, []);
+    assert.deepEqual(manifest.sourceFiles, []);
+    assert.deepEqual(manifest.artifactFiles, []);
+
+    const traceResult = await client.callTool({
+      name: 'ads_trace',
+      arguments: {
+        runId: rendered.runId,
+        context: 'Public URL review',
+        decisions: [{
+          id: 'requested-default-capture',
+          decision: 'Capture the requested default state.',
+          artifact: { path: 'https://agentic-design-system.vercel.app/mcp' },
+          rule: { path: 'user-request', excerpt: 'Render the default state.' },
+          sourceConstraint: { path: 'user-request', excerpt: 'Render the default state.' },
+          evidence: [rendered.artifacts.evidence],
+        }],
+      },
+    });
+    const traced = traceResult.structuredContent as { valid: boolean; errors: string[] };
+    assert.equal(traced.valid, false);
+    assert.deepEqual(traced.errors, [
+      'trace not applicable: render manifest is missing required provenance (observed skill files, source files, artifact files); rerun ads_render with provenance.observedSkillFiles, provenance.sourceFiles, and provenance.artifactFiles before calling ads_trace',
+    ]);
+    assert.doesNotMatch(traced.errors.join('\n'), /ENOENT|realpath|user-request|https:/);
   } finally {
     await client.close();
     await server.close();

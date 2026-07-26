@@ -70,6 +70,21 @@ function stableUnique(values: string[]): string[] {
   return [...new Set(values)];
 }
 
+function traceProvenanceError(manifest: RunManifest): string | null {
+  const missing: string[] = [];
+  if (!manifest.skillFiles.some((record) => record.loadStatus === 'observed')) {
+    missing.push('observed skill files');
+  }
+  if (!manifest.sourceFiles.length) missing.push('source files');
+  if (!manifest.artifactFiles.length) missing.push('artifact files');
+  if (!missing.length) return null;
+  return [
+    `trace not applicable: render manifest is missing required provenance (${missing.join(', ')});`,
+    'rerun ads_render with provenance.observedSkillFiles, provenance.sourceFiles,',
+    'and provenance.artifactFiles before calling ads_trace',
+  ].join(' ');
+}
+
 function normalizeStates(states: string[] | undefined): string[] {
   const requested = stableUnique((states?.length ? states : DEFAULT_STATES).map((state) => state.trim()));
   if (requested.some((state) => !/^[a-z][a-z0-9_-]{0,63}$/i.test(state))) {
@@ -736,39 +751,43 @@ export class AdsService {
 
     return this.store.writeStage(input.runId, 'trace', async (stageDirectory, stageId) => {
       const errors: string[] = run.status === 'complete' ? [] : ['render run is blocked and cannot support a valid trace'];
+      const provenanceError = run.status === 'complete' ? traceProvenanceError(manifest) : null;
+      if (provenanceError) errors.push(provenanceError);
       const skillMap = new Map(manifest.skillFiles.map((record) => [record.path, record]));
       const sourceMap = new Map(manifest.sourceFiles.map((record) => [record.path, record]));
       const artifactMap = new Map(manifest.artifactFiles.map((record) => [record.path, record]));
       const seen = new Set<string>();
 
-      for (const [index, decision] of input.decisions.entries()) {
-        const label = `decision[${index}] ${decision.id || '(missing id)'}`;
-        if (!decision.id.trim()) errors.push(`${label}: id is required`);
-        if (seen.has(decision.id)) errors.push(`${label}: duplicate id`);
-        seen.add(decision.id);
-        if (!decision.decision.trim()) errors.push(`${label}: decision text is required`);
+      if (run.status === 'complete' && !provenanceError) {
+        for (const [index, decision] of input.decisions.entries()) {
+          const label = `decision[${index}] ${decision.id || '(missing id)'}`;
+          if (!decision.id.trim()) errors.push(`${label}: id is required`);
+          if (seen.has(decision.id)) errors.push(`${label}: duplicate id`);
+          seen.add(decision.id);
+          if (!decision.decision.trim()) errors.push(`${label}: decision text is required`);
 
-        await this.verifyTracedFile(label, decision.rule.path, decision.rule.excerpt, skillMap, errors, true);
-        await this.verifyTracedFile(
-          label,
-          decision.sourceConstraint.path,
-          decision.sourceConstraint.excerpt,
-          sourceMap,
-          errors,
-          false,
-        );
-        await this.verifyTracedFile(label, decision.artifact.path, null, artifactMap, errors, false);
-        if (!decision.evidence.length) errors.push(`${label}: at least one evidence resource is required`);
-        for (const evidenceUri of decision.evidence) {
-          try {
-            const parsed = new URL(evidenceUri);
-            const parts = parsed.pathname.split('/').filter(Boolean).map(decodeURIComponent);
-            if (parsed.protocol !== 'ads:' || parsed.hostname !== 'runs' || parts[0] !== input.runId) {
-              throw new Error('evidence must reference this run');
+          await this.verifyTracedFile(label, decision.rule.path, decision.rule.excerpt, skillMap, errors, true);
+          await this.verifyTracedFile(
+            label,
+            decision.sourceConstraint.path,
+            decision.sourceConstraint.excerpt,
+            sourceMap,
+            errors,
+            false,
+          );
+          await this.verifyTracedFile(label, decision.artifact.path, null, artifactMap, errors, false);
+          if (!decision.evidence.length) errors.push(`${label}: at least one evidence resource is required`);
+          for (const evidenceUri of decision.evidence) {
+            try {
+              const parsed = new URL(evidenceUri);
+              const parts = parsed.pathname.split('/').filter(Boolean).map(decodeURIComponent);
+              if (parsed.protocol !== 'ads:' || parsed.hostname !== 'runs' || parts[0] !== input.runId) {
+                throw new Error('evidence must reference this run');
+              }
+              await this.readResource(evidenceUri);
+            } catch (error) {
+              errors.push(`${label}: invalid evidence ${evidenceUri}: ${safeError(error)}`);
             }
-            await this.readResource(evidenceUri);
-          } catch (error) {
-            errors.push(`${label}: invalid evidence ${evidenceUri}: ${safeError(error)}`);
           }
         }
       }

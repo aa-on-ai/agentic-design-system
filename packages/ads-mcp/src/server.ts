@@ -125,11 +125,23 @@ const traceInputSchema = {
     id: z.string().min(1),
     decision: z.string().min(1),
     artifact: z.object({
-      path: z.string().min(1),
+      path: z.string().min(1).describe(
+        'Exact root-relative path from manifest.artifactFiles; never use a URL or placeholder.',
+      ),
       location: z.string().min(1).optional(),
     }),
-    rule: z.object({ path: z.string().min(1), excerpt: z.string().min(1) }),
-    sourceConstraint: z.object({ path: z.string().min(1), excerpt: z.string().min(1) }),
+    rule: z.object({
+      path: z.string().min(1).describe(
+        'Exact root-relative path from an observed manifest.skillFiles record; never invent a path.',
+      ),
+      excerpt: z.string().min(1),
+    }),
+    sourceConstraint: z.object({
+      path: z.string().min(1).describe(
+        'Exact root-relative path from manifest.sourceFiles; never use a prompt label or placeholder.',
+      ),
+      excerpt: z.string().min(1),
+    }),
     evidence: z.array(z.string().min(1)).min(1),
   })).min(1).max(50),
 };
@@ -192,7 +204,10 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     { name: 'ads-mcp', version: ADS_MCP_VERSION },
     {
       instructions: [
-        'Use the tools in sequence: ads_render -> ads_evaluate -> ads_trace.',
+        'Use ads_render, then ads_evaluate.',
+        'Call ads_trace only when the render manifest contains at least one observed skill file, source file, and artifact file; otherwise stop after evaluation.',
+        'Before tracing, read the manifest and use its exact root-relative provenance paths and exact file excerpts.',
+        'Never invent provenance paths or use prompt labels or URLs as file paths.',
         'Rendered deterministic gates must complete before evaluation.',
         'ads_evaluate returns needs_human when visual judgment is unresolved, or a typed verdict when judge.mode is configured.',
         'SwiftUI targets require a startup-configured SwiftUI command adapter.',
@@ -226,7 +241,7 @@ export function createAdsMcpServer(service: AdsService): McpServer {
 
   server.registerTool('ads_trace', {
     title: 'Trace ADS decisions',
-    description: 'Verify final interface decisions against captured skill rules, source constraints, implementation artifacts, and run evidence.',
+    description: 'For runs with captured provenance, verify final interface decisions against exact manifest skill, source, artifact, and evidence records. Read the manifest first and never invent file paths.',
     inputSchema: traceInputSchema,
     outputSchema: traceOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },

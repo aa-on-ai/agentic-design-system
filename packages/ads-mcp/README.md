@@ -3,22 +3,22 @@
 ![Agentic Design System logo](./assets/ads-mark.png)
 
 Local MCP adapter for Agentic Design System. It turns ADS rendering, deterministic gates,
-evaluation receipts, and decision provenance into a stable three-tool sequence for coding agents.
+evaluation receipts, and decision provenance into a stable three-tool surface for coding agents.
 
 ## Run from npm
 
 Point the server at the project whose UI you want ADS to inspect:
 
 ```bash
-npx --yes ads-mcp@0.2.1 --root /absolute/path/to/project
+npx --yes ads-mcp@0.2.2 --root /absolute/path/to/project
 ```
 
 The MCP server connects without downloading a browser, so cold clients can discover its tools
 inside their startup budget. Before the first web render, verify or install Chromium once:
 
 ```bash
-npx --yes ads-mcp@0.2.1 doctor
-npx --yes ads-mcp@0.2.1 setup
+npx --yes ads-mcp@0.2.2 doctor
+npx --yes ads-mcp@0.2.2 setup
 ```
 
 If Chromium is missing, `ads_render` preserves a blocked run with the same setup command instead of
@@ -58,7 +58,7 @@ Use the published package as a local stdio server. Replace the project path:
       "command": "npx",
       "args": [
         "--yes",
-        "ads-mcp@0.2.1",
+        "ads-mcp@0.2.2",
         "--root",
         "/absolute/path/to/project"
       ]
@@ -67,11 +67,16 @@ Use the published package as a local stdio server. Replace the project path:
 }
 ```
 
-The server initialization instructions tell clients to use this sequence:
+The server initialization instructions tell clients to render and evaluate first:
 
 ```text
-ads_render -> ads_evaluate -> ads_trace
+ads_render -> ads_evaluate
 ```
+
+`ads_trace` is conditional. Call it only after reading the run manifest and confirming it contains
+at least one observed skill file, source file, and artifact file. Use the exact root-relative paths
+and excerpts captured in that manifest. Never invent provenance paths or substitute prompt labels
+or URLs.
 
 Registry name: `io.github.aa-on-ai/agentic-design-system`.
 
@@ -156,6 +161,10 @@ Verify final decisions against files hashed during render. Rule files must have 
 observed, source and artifact files must be present and unchanged, excerpts must be exact, and all
 evidence URIs must resolve inside the same run.
 
+For URL-only inspection without captured provenance, stop after `ads_evaluate`. If a client calls
+`ads_trace` anyway, the server returns one actionable `trace not applicable` error without
+resolving caller-invented paths.
+
 ```json
 {
   "runId": "run_...",
@@ -211,7 +220,7 @@ and TSX component capture, command-adapter JSON exchange, configured visual verd
 snapshot evidence, rendered comparisons, resource reads, repeated stage receipts, timeout and
 incomplete-evidence behavior, path traversal, symlink escape, origin denial, and trace failures.
 
-## v0.2.1 limits
+## v0.2.2 limits
 
 - Local stdio only. No remote HTTP, OAuth, hosted service, or MCP App UI.
 - Browser acquisition is explicit through `ads-mcp setup`; MCP startup never downloads Chromium.

@@ -1,7 +1,7 @@
 export const MCP_CONTRACT = {
   schemaVersion: 2,
   name: "ads-mcp",
-  version: "0.2.1",
+  version: "0.2.2",
   transport: "local stdio",
   sequence: ["ads_render", "ads_evaluate", "ads_trace"],
   capabilities: {
@@ -70,7 +70,7 @@ export const MCP_CONTRACT = {
       verb: "Explain",
       title: "Trace the decisions",
       description:
-        "Verify that consequential decisions map to captured skill rules, source constraints, implementation files, and evidence from the same run.",
+        "When provenance was captured during render, verify that consequential decisions map to exact manifest skill rules, source constraints, implementation files, and evidence from the same run.",
       input: {
         runId: "run_ms0ubiex_26ad1c244418",
         context: "ADS MCP public lab",
@@ -102,6 +102,8 @@ export const MCP_CONTRACT = {
     hosting: "Local stdio only; no remote MCP endpoint or hosted control plane",
     browser:
       "Cold startup never downloads Chromium; run ads-mcp setup once before rendered evidence",
+    trace:
+      "Conditional on captured provenance; URL-only inspection stops after evaluation",
   },
   source: "https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp",
 } as const;

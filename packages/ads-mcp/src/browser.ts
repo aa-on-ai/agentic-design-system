@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 
-export const ADS_MCP_VERSION = '0.2.1';
+export const ADS_MCP_VERSION = '0.2.2';
 export const BROWSER_SETUP_COMMAND = `npx --yes ads-mcp@${ADS_MCP_VERSION} setup`;
 export const BROWSER_DOCTOR_COMMAND = `npx --yes ads-mcp@${ADS_MCP_VERSION} doctor`;
 
