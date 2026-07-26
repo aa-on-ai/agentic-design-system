@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1e7">
+  <title>Glasshouse irrigation operations</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f4f1e7;
+      --paper: #fdfcf7;
+      --paper-deep: #e9eee5;
+      --ink: #173126;
+      --ink-soft: #4d6258;
+      --line: #ccd7ce;
+      --line-strong: #9fb1a3;
+      --leaf: #216448;
+      --leaf-dark: #164b36;
+      --leaf-pale: #dce9df;
+      --warning: #a95512;
+      --warning-ink: #673207;
+      --warning-pale: #fff0d2;
+      --danger: #9b372a;
+      --danger-ink: #6f2118;
+      --danger-pale: #fbe8e3;
+      --radius-small: 8px;
+      --radius-medium: 16px;
+      --shadow: 0 1px 2px rgba(24, 49, 38, 0.05), 0 12px 34px rgba(24, 49, 38, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--canvas);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    button,
+    a { font: inherit; }
+
+    button,
+    a,
+    [tabindex] {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .shell {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: max(24px, env(safe-area-inset-top)) 0 max(56px, env(safe-area-inset-bottom));
+    }
+
+    .masthead {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 0 2px 24px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .identity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .house-mark {
+      position: relative;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border: 2px solid var(--leaf);
+      border-radius: 22px 22px 10px 10px;
+      background: var(--leaf-pale);
+    }
+
+    .house-mark::before {
+      content: "";
+      position: absolute;
+      left: 19px;
+      top: 7px;
+      width: 2px;
+      height: 27px;
+      background: var(--leaf);
+      transform: rotate(22deg);
+      transform-origin: bottom;
+    }
+
+    .house-mark::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 13px;
+      width: 16px;
+      height: 9px;
+      border-top: 2px solid var(--leaf);
+      border-radius: 50%;
+      transform: rotate(-24deg);
+    }
+
+    .eyebrow {
+      margin: 0 0 2px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .system-state {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      gap: 9px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-small);
+      background: rgba(253, 252, 247, 0.7);
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .state-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--leaf);
+      box-shadow: 0 0 0 3px var(--leaf-pale);
+    }
+
+    .system-state.offline {
+      border-color: #e4bbb2;
+      background: var(--danger-pale);
+      color: var(--danger-ink);
+    }
+
+    .system-state.offline .state-dot {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px #f4cbc3;
+    }
+
+    main {
+      width: 100%;
+      padding-top: 44px;
+    }
+
+    .run-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px 48px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 720px;
+      margin-bottom: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+
+    .lede {
+      max-width: 680px;
+      margin-bottom: 0;
+      color: var(--ink-soft);
+      font-size: 18px;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .run-clock {
+      min-width: 178px;
+      padding: 0 0 6px 24px;
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .clock-time {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 42px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .clock-note {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+
+    .action-band {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 20px 24px;
+      margin-top: 36px;
+      padding: 20px 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-medium);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .action-context {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+
+    .action-context strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 148px;
+      min-height: 48px;
+      padding: 11px 18px;
+      border: 1px solid var(--leaf);
+      border-radius: var(--radius-small);
+      background: var(--leaf);
+      color: #fffef8;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 160ms ease, border-color 160ms ease, transform 100ms ease;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--leaf-dark);
+    }
+
+    .button:active:not(:disabled) { transform: scale(0.97); }
+
+    .button:focus-visible {
+      outline: 3px solid #d17c2d;
+      outline-offset: 3px;
+    }
+
+    .button:disabled {
+      border-color: #bec8c0;
+      background: #dce1dc;
+      color: #5b685f;
+      cursor: not-allowed;
+      opacity: 1;
+    }
+
+    .helper {
+      grid-column: 1 / -1;
+      margin: -8px 0 0;
+      color: var(--danger-ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--warning);
+      border-radius: 0 var(--radius-small) var(--radius-small) 0;
+      background: var(--warning-pale);
+      color: var(--warning-ink);
+    }
+
+    .notice-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid #d58a45;
+      border-radius: 50%;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .notice h2,
+    .alert-panel h2,
+    .empty-panel h2 {
+      margin-bottom: 4px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    .notice p,
+    .alert-panel p,
+    .empty-panel p { margin-bottom: 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 44px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin-bottom: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .section-head p {
+      margin-bottom: 2px;
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .zone-list {
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line-strong);
+      list-style: none;
+    }
+
+    .zone-row {
+      display: grid;
+      grid-template-columns: 48px minmax(190px, 1.35fr) minmax(128px, 0.8fr) minmax(150px, 0.9fr);
+      align-items: center;
+      gap: 16px 22px;
+      min-height: 112px;
+      padding: 20px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .zone-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--paper);
+      color: var(--ink-soft);
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+    }
+
+    .zone-name {
+      margin: 0 0 3px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .zone-crop,
+    .reading-label,
+    .route-note {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+
+    .reading-value {
+      display: block;
+      margin-bottom: 2px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .status-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+      color: var(--leaf-dark);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .status-label::before {
+      content: "✓";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--leaf-pale);
+      font-size: 12px;
+    }
+
+    .status-label.warning {
+      color: var(--warning-ink);
+    }
+
+    .status-label.warning::before {
+      content: "!";
+      border: 1px solid #d8904d;
+      background: var(--warning-pale);
+    }
+
+    .run-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-strong);
+      color: var(--ink-soft);
+      font-size: 14px;
+    }
+
+    .run-footer p { margin: 0; }
+
+    .run-footer strong { color: var(--ink); }
+
+    .alert-panel,
+    .empty-panel,
+    .loading-panel {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: var(--radius-medium);
+    }
+
+    .alert-panel {
+      border: 1px solid #e1b2aa;
+      border-left: 5px solid var(--danger);
+      background: var(--danger-pale);
+      color: var(--danger-ink);
+    }
+
+    .alert-kicker {
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .alert-panel h2 {
+      color: #572018;
+      font-size: 25px;
+    }
+
+    .alert-detail {
+      max-width: 760px;
+      text-wrap: pretty;
+    }
+
+    .empty-panel {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .empty-panel h2 { font-size: 27px; }
+
+    .empty-panel p {
+      max-width: 670px;
+      color: var(--ink-soft);
+      text-wrap: pretty;
+    }
+
+    .loading-panel {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .loading-message {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 3px solid var(--leaf-pale);
+      border-top-color: var(--leaf);
+      border-radius: 50%;
+      animation: spin 800ms linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .skeleton-line,
+    .skeleton-row {
+      overflow: hidden;
+      background: #e3e8e2;
+      position: relative;
+    }
+
+    .skeleton-line::after,
+    .skeleton-row::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 1.4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer { to { transform: translateX(100%); } }
+
+    .skeleton-line {
+      width: min(520px, 80%);
+      height: 16px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+
+    .skeleton-line.short { width: min(310px, 58%); }
+
+    .skeleton-row {
+      height: 84px;
+      margin-top: 16px;
+      border-radius: var(--radius-small);
+    }
+
+    .status-toast {
+      position: fixed;
+      right: max(20px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
+      z-index: 10;
+      max-width: min(340px, calc(100% - 40px));
+      min-height: 48px;
+      padding: 12px 16px;
+      border-radius: var(--radius-small);
+      background: var(--ink);
+      color: #fffef8;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .status-toast[hidden] { display: none; }
+
+    @media (hover: hover) and (pointer: fine) {
+      .button:hover:not(:disabled) {
+        border-color: var(--leaf-dark);
+        background: var(--leaf-dark);
+      }
+
+      .button.secondary:hover:not(:disabled) {
+        background: var(--leaf-pale);
+        color: var(--leaf-dark);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 32px, 620px); }
+
+      .masthead {
+        align-items: center;
+        padding-bottom: 18px;
+      }
+
+      .house-mark {
+        width: 38px;
+        height: 38px;
+      }
+
+      .house-mark::before { left: 17px; height: 24px; }
+      .house-mark::after { left: 8px; }
+
+      .brand-name { font-size: 18px; }
+
+      .system-state {
+        min-height: 40px;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      main { padding-top: 32px; }
+
+      .run-header {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 22px;
+      }
+
+      h1 { font-size: clamp(38px, 12vw, 52px); }
+
+      .lede { font-size: 17px; }
+
+      .run-clock {
+        min-width: 0;
+        padding: 0;
+        border-left: 0;
+      }
+
+      .clock-time { font-size: 36px; }
+
+      .action-band {
+        grid-template-columns: 1fr;
+        margin-top: 28px;
+        padding: 20px;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-content: stretch;
+      }
+
+      .button { min-width: 0; }
+
+      .helper { grid-column: 1; }
+
+      .zone-row {
+        grid-template-columns: 44px minmax(0, 1fr) minmax(96px, auto);
+        gap: 12px 14px;
+        padding: 20px 0;
+      }
+
+      .zone-reading {
+        grid-column: 2;
+      }
+
+      .zone-status {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        align-self: center;
+      }
+
+      .run-footer {
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .shell { width: calc(100% - 28px); }
+
+      .masthead { gap: 12px; }
+
+      .eyebrow { font-size: 11px; }
+      .brand-name { font-size: 17px; }
+
+      .system-state .state-detail { display: none; }
+
+      .actions { grid-template-columns: 1fr; }
+
+      .notice {
+        grid-template-columns: 1fr;
+        padding: 18px;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .section-head p { text-align: left; }
+
+      .zone-row {
+        grid-template-columns: 42px minmax(0, 1fr);
+      }
+
+      .zone-status {
+        grid-column: 2;
+        grid-row: auto;
+      }
+
+      .status-label { margin-bottom: 3px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="action-status" class="status-toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    const app = document.getElementById('app');
+    const actionStatus = document.getElementById('action-status');
+
+    const zones = `
+      <section aria-labelledby="zones-title">
+        <div class="section-head">
+          <h2 id="zones-title">Run order</h2>
+          <p>Last probes at 06:12 · controller GH-02</p>
+        </div>
+        <ol class="zone-list">
+          <li class="zone-row">
+            <span class="zone-index" aria-hidden="true">1</span>
+            <div>
+              <h3 class="zone-name">B2 · Propagation</h3>
+              <p class="zone-crop">Basil plugs · mist bench 4</p>
+            </div>
+            <div class="zone-reading">
+              <span class="reading-value">24%</span>
+              <p class="reading-label">Moisture · target 28–32%</p>
+            </div>
+            <div class="zone-status">
+              <span class="status-label warning">Needs attention</span>
+              <p class="route-note">First stop · 6 min soak</p>
+            </div>
+          </li>
+          <li class="zone-row">
+            <span class="zone-index" aria-hidden="true">2</span>
+            <div>
+              <h3 class="zone-name">C1 · Vine row</h3>
+              <p class="zone-crop">Cucumber · west trellis</p>
+            </div>
+            <div class="zone-reading">
+              <span class="reading-value">31%</span>
+              <p class="reading-label">Moisture · target 29–34%</p>
+            </div>
+            <div class="zone-status">
+              <span class="status-label">On plan</span>
+              <p class="route-note">Second stop · 5 min drip</p>
+            </div>
+          </li>
+          <li class="zone-row">
+            <span class="zone-index" aria-hidden="true">3</span>
+            <div>
+              <h3 class="zone-name">A3 · Nursery</h3>
+              <p class="zone-crop">Pepper starts · south bench</p>
+            </div>
+            <div class="zone-reading">
+              <span class="reading-value">37%</span>
+              <p class="reading-label">Moisture · target 34–39%</p>
+            </div>
+            <div class="zone-status">
+              <span class="status-label">Stable</span>
+              <p class="route-note">Final stop · 5 min soak</p>
+            </div>
+          </li>
+        </ol>
+      </section>`;
+
+    function header(status, offline = false) {
+      return `
+        <header class="masthead">
+          <div class="identity">
+            <span class="house-mark" aria-hidden="true"></span>
+            <div>
+              <p class="eyebrow">North range</p>
+              <p class="brand-name">Glasshouse irrigation</p>
+            </div>
+          </div>
+          <div class="system-state ${offline ? 'offline' : ''}">
+            <span class="state-dot" aria-hidden="true"></span>
+            <span>${status}</span>
+            <span class="state-detail">· GH-02</span>
+          </div>
+        </header>`;
+    }
+
+    function runHeader({ eyebrow, title, lede, clock, clockNote, clockLabel = '' }) {
+      return `
+        <div class="run-header">
+          <div>
+            <p class="eyebrow">${eyebrow}</p>
+            <h1>${title}</h1>
+            <p class="lede">${lede}</p>
+          </div>
+          <div class="run-clock" ${clockLabel ? `aria-label="${clockLabel}"` : ''}>
+            <span class="clock-time">${clock}</span>
+            <span class="clock-note">${clockNote}</span>
+          </div>
+        </div>`;
+    }
+
+    function actions({ disabled = false, context, helper = '' }) {
+      return `
+        <section class="action-band" aria-label="Run actions">
+          <p class="action-context">${context}</p>
+          <div class="actions">
+            <button class="button" type="button" data-action="adjust" ${disabled ? 'disabled aria-describedby="schedule-helper"' : ''}>Adjust schedule</button>
+            <a class="button secondary" href="tel:+14155550187" data-action="call">Call grower</a>
+          </div>
+          ${helper ? `<p class="helper" id="schedule-helper">${helper}</p>` : ''}
+        </section>`;
+    }
+
+    function footer(note = 'Vents open · outside temperature 18°C') {
+      return `
+        <footer class="run-footer">
+          <p><strong>Run total</strong> · 16 minutes · 1,840 L planned</p>
+          <p>${note}</p>
+        </footer>`;
+    }
+
+    const views = {
+      default: () => `
+        <div class="shell">
+          ${header('Telemetry live')}
+          <main>
+            ${runHeader({
+              eyebrow: 'Saturday · morning run',
+              title: 'Watering starts at 06:40',
+              lede: 'Three zones are queued. Propagation is below its moisture floor and leads the run.',
+              clock: '27 min',
+              clockNote: 'until valves open',
+              clockLabel: 'Run begins in 27 minutes'
+            })}
+            ${actions({
+              context: '<strong>The plan is editable.</strong> Controller GH-02 is receiving current probe readings.'
+            })}
+            <section class="notice" aria-labelledby="attention-title">
+              <span class="notice-icon" aria-hidden="true">!</span>
+              <div>
+                <h2 id="attention-title">Zone B2 needs attention</h2>
+                <p>Propagation is at 24%, four points below its moisture floor. It remains first in the run with a six-minute soak.</p>
+              </div>
+            </section>
+            ${zones}
+            ${footer()}
+          </main>
+        </div>`,
+
+      loading: () => `
+        <div class="shell">
+          ${header('Checking telemetry')}
+          <main>
+            ${runHeader({
+              eyebrow: 'Saturday · morning run',
+              title: 'Preparing the watering run',
+              lede: 'The latest zone readings are being checked before the valve plan is shown.',
+              clock: '--:--',
+              clockNote: 'start time'
+            })}
+            <section class="loading-panel" role="status" aria-live="polite" aria-busy="true" aria-label="Loading irrigation data">
+              <div class="loading-message"><span class="spinner" aria-hidden="true"></span>Checking controller and moisture probes…</div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+              <div class="skeleton-row"></div>
+            </section>
+          </main>
+        </div>`,
+
+      empty: () => `
+        <div class="shell">
+          ${header('Telemetry live')}
+          <main>
+            ${runHeader({
+              eyebrow: 'Saturday · morning run',
+              title: 'No watering run is scheduled',
+              lede: 'All eight zones are within their moisture bands. The glasshouse is ready for the next planned cycle.',
+              clock: '8 / 8',
+              clockNote: 'zones within target'
+            })}
+            <section class="empty-panel" aria-labelledby="empty-title">
+              <p class="eyebrow">Queue clear</p>
+              <h2 id="empty-title">Plan the next cycle when the crop team is ready</h2>
+              <p>Probe readings will remain visible here. Adjust the schedule to add a run, or call the grower if today’s crop plan has changed.</p>
+            </section>
+            ${actions({
+              context: '<strong>No exception is blocking changes.</strong> Scheduling and grower contact are both available.'
+            })}
+            ${footer('Last full probe sweep · 06:12')}
+          </main>
+        </div>`,
+
+      error: () => `
+        <div class="shell">
+          ${header('Telemetry offline', true)}
+          <main>
+            ${runHeader({
+              eyebrow: 'Saturday · safe mode',
+              title: 'The last verified plan is on hold',
+              lede: 'Controller GH-02 stopped reporting after 06:12. Schedule changes are blocked until telemetry returns.',
+              clock: '06:12',
+              clockNote: 'last verified reading',
+              clockLabel: 'Last verified at 6:12 AM'
+            })}
+            <section class="alert-panel" role="alert" aria-live="assertive" aria-labelledby="offline-title">
+              <p class="alert-kicker">Telemetry offline · safe mode active</p>
+              <h2 id="offline-title">Schedule editing is blocked</h2>
+              <p class="alert-detail">The controller cannot validate valve changes without live probe data. Zone B2 was already below target at the last reading, so call Maya Chen to arrange a manual check.</p>
+            </section>
+            ${actions({
+              disabled: true,
+              context: '<strong>Calling the grower still works.</strong> Maya Chen is the on-duty crop lead until 14:00.',
+              helper: 'Adjust schedule is disabled while GH-02 is offline. Safe mode prevents unverified valve changes.'
+            })}
+            ${zones}
+            ${footer('Readings are historical · do not infer current moisture')}
+          </main>
+        </div>`
+    };
+
+    function currentState() {
+      const state = new URLSearchParams(location.hash.replace(/^#/, '')).get('state') || 'default';
+      return Object.prototype.hasOwnProperty.call(views, state) ? state : 'default';
+    }
+
+    function showStatus(message) {
+      actionStatus.textContent = message;
+      actionStatus.hidden = false;
+      window.clearTimeout(showStatus.timer);
+      showStatus.timer = window.setTimeout(() => {
+        actionStatus.hidden = true;
+      }, 3200);
+    }
+
+    function render() {
+      const state = currentState();
+      document.documentElement.dataset.state = state;
+      document.title = `${state === 'default' ? 'Irrigation run' : state[0].toUpperCase() + state.slice(1)} · Glasshouse irrigation`;
+      app.innerHTML = views[state]();
+
+      const adjust = app.querySelector('[data-action="adjust"]');
+      if (adjust && !adjust.disabled) {
+        adjust.addEventListener('click', () => showStatus('Schedule editor ready for the 06:40 run.'));
+      }
+
+      const call = app.querySelector('[data-action="call"]');
+      if (call) {
+        call.addEventListener('click', () => showStatus('Opening a call to Maya Chen, on-duty grower.'));
+      }
+    }
+
+    window.addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+</html>
