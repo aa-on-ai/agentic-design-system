@@ -26,7 +26,7 @@ try {
   );
   const [packed] = JSON.parse(packOutput);
   assert.equal(packed.name, "ads-mcp");
-  assert.equal(packed.version, "0.2.1");
+  assert.equal(packed.version, "0.2.2");
   assert.ok(packed.files.some(({ path: file }) => file === "dist/cli.js"));
   assert.ok(packed.files.some(({ path: file }) => file === "dist/vendor/capture.mjs"));
   assert.equal(
@@ -70,7 +70,7 @@ try {
       const report = JSON.parse(error.stdout || "{}");
       assert.equal(error.code, 1);
       assert.equal(report.browser?.ready, false);
-      assert.equal(report.browser?.setupCommand, "npx --yes ads-mcp@0.2.1 setup");
+      assert.equal(report.browser?.setupCommand, "npx --yes ads-mcp@0.2.2 setup");
       return true;
     },
   );
@@ -119,6 +119,8 @@ try {
 
   const tools = await client.listTools();
   assert.deepEqual(tools.tools.map(({ name }) => name).sort(), ["ads_evaluate", "ads_render", "ads_trace"]);
+  assert.match(client.getInstructions() || "", /Call ads_trace only when the render manifest contains/);
+  assert.match(client.getInstructions() || "", /Never invent provenance paths/);
   const renderResult = await client.callTool({
     name: "ads_render",
     arguments: {
@@ -164,6 +166,41 @@ try {
   const evidence = await client.readResource({ uri: rendered.artifacts.evidence });
   assert.equal(evidence.contents.length, 1);
 
+  const urlOnlyRenderResult = await client.callTool({
+    name: "ads_render",
+    arguments: {
+      target: { type: "url", url: `http://127.0.0.1:${port}/` },
+      viewports: [{ width: 390, height: 844 }],
+      waitFor: "main",
+      settleMs: 25,
+    },
+  });
+  const urlOnlyRendered = urlOnlyRenderResult.structuredContent;
+  assert.equal(urlOnlyRendered.status, "complete");
+  const urlOnlyTraceResult = await client.callTool({
+    name: "ads_trace",
+    arguments: {
+      runId: urlOnlyRendered.runId,
+      context: "URL-only package smoke",
+      decisions: [{
+        id: "requested-default-capture",
+        decision: "Capture the requested default state.",
+        artifact: { path: "https://agentic-design-system.vercel.app/mcp" },
+        rule: { path: "user-request", excerpt: "Render the default state." },
+        sourceConstraint: { path: "user-request", excerpt: "Render the default state." },
+        evidence: [urlOnlyRendered.artifacts.evidence],
+      }],
+    },
+  });
+  assert.equal(urlOnlyTraceResult.structuredContent.valid, false);
+  assert.deepEqual(urlOnlyTraceResult.structuredContent.errors, [
+    "trace not applicable: render manifest is missing required provenance (observed skill files, source files, artifact files); rerun ads_render with provenance.observedSkillFiles, provenance.sourceFiles, and provenance.artifactFiles before calling ads_trace",
+  ]);
+  assert.doesNotMatch(
+    urlOnlyTraceResult.structuredContent.errors.join("\n"),
+    /ENOENT|realpath|user-request|https:/,
+  );
+
   process.stdout.write(`${JSON.stringify({
     status: "passed",
     package: `${packed.name}@${packed.version}`,
@@ -171,6 +208,10 @@ try {
     browserSetup: "explicit",
     tools: tools.tools.map(({ name }) => name),
     sequence: [rendered.status, evaluateResult.structuredContent.status, traceResult.structuredContent.valid],
+    urlOnlyTrace: {
+      valid: urlOnlyTraceResult.structuredContent.valid,
+      errors: urlOnlyTraceResult.structuredContent.errors,
+    },
   }, null, 2)}\n`);
 } finally {
   if (client) await client.close().catch(() => {});

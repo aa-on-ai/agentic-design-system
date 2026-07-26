@@ -27,7 +27,7 @@ try {
   );
   const [packed] = JSON.parse(packOutput);
   assert.equal(packed.name, "ads-mcp");
-  assert.equal(packed.version, "0.2.1");
+  assert.equal(packed.version, "0.2.2");
   assert.equal(
     packed.files.some(({ path: file }) => file === "scripts/postinstall.mjs"),
     false,
@@ -102,7 +102,7 @@ try {
   });
   const rendered = renderResult.structuredContent;
   assert.equal(rendered.status, "blocked");
-  assert.ok(rendered.blockers.some((blocker) => blocker.includes("ads-mcp@0.2.1 setup")));
+  assert.ok(rendered.blockers.some((blocker) => blocker.includes("ads-mcp@0.2.2 setup")));
   const resources = await client.listResources();
   assert.ok(resources.resources.some(({ uri }) => uri === rendered.artifacts.evidence));
   assert.deepEqual(await readdir(browserRoot), [], "cold MCP startup must not download Chromium");

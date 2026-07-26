@@ -35,11 +35,16 @@ Optional server flags:
 - `--swiftui-renderer <name>` and repeatable `--swiftui-detector <name>`: attributable
   platform receipts written to the run manifest.
 
-The server exposes instructions describing the expected sequence:
+The server instructions always begin with:
 
 ```text
-ads_render -> ads_evaluate -> ads_trace
+ads_render -> ads_evaluate
 ```
+
+`ads_trace` is conditional. The client reads the render manifest first and calls trace only when
+the run captured at least one observed skill file, source file, and artifact file. Trace inputs use
+the exact root-relative manifest paths and exact file excerpts. Prompt labels, URLs, and invented
+paths are never provenance.
 
 ## Tool 1: `ads_render`
 
@@ -202,6 +207,10 @@ The command adapter protocol is defined separately in
 Verify that consequential decisions map to skill rules, source constraints, artifacts, and rendered
 evidence captured in the same run.
 
+The tool applies only to runs with the three required provenance categories. URL-only inspection
+without captured provenance stops after `ads_evaluate`. If trace is called anyway, the server
+returns one actionable `trace not applicable` error and does not resolve the supplied paths.
+
 ### Input
 
 ```json
@@ -307,13 +316,15 @@ The v0.2 source release is done when:
 
 1. MCP initialize and `tools/list` expose exactly these three tools with stable schemas.
 2. Each tool passes success, invalid-input, timeout, cancellation, and incomplete-evidence tests.
-3. A fixture completes `ads_render -> ads_evaluate -> ads_trace` and all returned resource links
-   resolve.
+3. A provenance-backed fixture completes `ads_render -> ads_evaluate -> ads_trace` and all returned
+   resource links resolve.
 4. Path traversal, denied origins, missing browsers, missing states, invalid judge output, and
    missing adapters fail explicitly.
-5. MCP Inspector can invoke every tool and inspect every resource.
-6. One real client completes the full sequence from a packed, clean consumer install.
-7. README includes install, client configuration, example calls, output receipts, and limitations.
+5. A URL-only run without provenance returns one actionable trace-not-applicable error without
+   attempting to resolve caller-invented paths.
+6. MCP Inspector can invoke every tool and inspect every resource.
+7. One real client completes the applicable full sequence from a packed, clean consumer install.
+8. README includes install, client configuration, example calls, output receipts, and limitations.
 
 ## Explicitly out of scope for v0.2
 

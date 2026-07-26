@@ -25,9 +25,9 @@ test('doctor reports an explicit setup path when Chromium is absent', async () =
           version?: string;
           browser?: { ready?: boolean; setupCommand?: string };
         };
-        assert.equal(report.version, '0.2.1');
+        assert.equal(report.version, '0.2.2');
         assert.equal(report.browser?.ready, false);
-        assert.equal(report.browser?.setupCommand, 'npx --yes ads-mcp@0.2.1 setup');
+        assert.equal(report.browser?.setupCommand, 'npx --yes ads-mcp@0.2.2 setup');
         return true;
       },
     );
@@ -54,7 +54,7 @@ test('a missing browser preserves a blocked run with an actionable setup command
       viewports: [{ width: 390, height: 844 }],
     });
     assert.equal(rendered.status, 'blocked');
-    assert.ok(rendered.blockers.some((blocker) => blocker.includes('ads-mcp@0.2.1 setup')));
+    assert.ok(rendered.blockers.some((blocker) => blocker.includes('ads-mcp@0.2.2 setup')));
     const evidence = JSON.parse(
       (await service.readResource(rendered.artifacts.evidence)).bytes.toString('utf8'),
     ) as { captureError?: string };
