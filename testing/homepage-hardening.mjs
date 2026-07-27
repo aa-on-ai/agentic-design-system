@@ -188,7 +188,8 @@ async function verifyKeyboard(page, scope) {
   });
   await page.waitForTimeout(50);
 
-  const expectedCount = await page.locator('a[href], button:not([disabled])').count();
+  const controlSelector = '.theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
+  const expectedCount = await page.locator(controlSelector).count();
   const visited = [];
   for (let index = 0; index < expectedCount; index += 1) {
     await page.keyboard.press("Tab");
@@ -196,7 +197,7 @@ async function verifyKeyboard(page, scope) {
     const focused = await page.evaluate(() => {
       const element = document.activeElement;
       if (!(element instanceof HTMLElement)) return null;
-      const controls = [...document.querySelectorAll('a[href], button:not([disabled])')];
+      const controls = [...document.querySelectorAll('.theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
       return {

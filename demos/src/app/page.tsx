@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { HomepageReady } from "./HomepageReady";
 import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
+import { ReleaseClose } from "./ReleaseClose";
 import { SiteFooter } from "./SiteFooter";
 import { ThemeToggle } from "./ThemeToggle";
 import { WorkshopRun } from "./WorkshopRun";
@@ -83,24 +84,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <WorkshopRun />
 
-      <section className="release-bay" aria-labelledby="release-title">
-        <div className="release-door" aria-hidden="true"><i /><i /><i /><i /></div>
-        <div className="release-copy">
-          <p>Repo-local / MIT licensed</p>
-          <h2 id="release-title">Give your agent<br />a UI review loop.</h2>
-          <span>Install all 10 skills into the project where your coding agent works. No hosted service, account, or black box.</span>
-        </div>
-        <div className="release-actions">
-          <div className="release-primary-action">
-            <span>Install the complete skill pack</span>
-            <InstallCommand variant="strip" />
-            <small>Codex shown. Tested commands and activation are available for all five supported agents.</small>
-          </div>
-          <a className="release-github focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md">
-            <Github size={18} aria-hidden="true" /> Choose your agent and activate ADS
-          </a>
-        </div>
-      </section>
+      <ReleaseClose />
 
       <SiteFooter />
     </main>

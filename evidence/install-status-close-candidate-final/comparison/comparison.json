@@ -1,0 +1,75 @@
+{
+  "generatedBy": "compare.mjs",
+  "toolVersion": "0.4.0",
+  "schemaVersion": 1,
+  "baselineDir": "/Users/moltbot/clawd/worktrees/ads-install-status-close/evidence/install-status-close-baseline",
+  "candidateDir": "/Users/moltbot/clawd/worktrees/ads-install-status-close/evidence/install-status-close-candidate-final",
+  "baselineUrl": "https://agentic-design-system.vercel.app/",
+  "candidateUrl": "http://127.0.0.1:3028/",
+  "pixelmatchThreshold": 0.1,
+  "pixelmatchIncludeAA": false,
+  "pairsCompared": 3,
+  "pairsIdentical": 0,
+  "maxChangedPct": 27.075,
+  "meanChangedPct": 22.731,
+  "incomparable": [],
+  "pairs": [
+    {
+      "key": "default@1280x900",
+      "state": "default",
+      "breakpoint": "1280x900",
+      "baselineScreenshot": "default-1280x900.png",
+      "candidateScreenshot": "default-1280x900.png",
+      "dimensions": {
+        "baseline": "1280x6273",
+        "candidate": "1280x7105",
+        "match": false
+      },
+      "changedPixels": 1766098,
+      "outOfBoundsPixels": 1064960,
+      "totalPixels": 9094400,
+      "changedPct": 19.42,
+      "changedPctRaw": 19.419620865587614,
+      "identical": false,
+      "diffImage": "diff-default-1280x900.png"
+    },
+    {
+      "key": "default@390x844",
+      "state": "default",
+      "breakpoint": "390x844",
+      "baselineScreenshot": "default-390x844.png",
+      "candidateScreenshot": "default-390x844.png",
+      "dimensions": {
+        "baseline": "390x7041",
+        "candidate": "390x8855",
+        "match": false
+      },
+      "changedPixels": 935038,
+      "outOfBoundsPixels": 707460,
+      "totalPixels": 3453450,
+      "changedPct": 27.075,
+      "changedPctRaw": 27.07547524938829,
+      "identical": false,
+      "diffImage": "diff-default-390x844.png"
+    },
+    {
+      "key": "default@768x900",
+      "state": "default",
+      "breakpoint": "768x900",
+      "baselineScreenshot": "default-768x900.png",
+      "candidateScreenshot": "default-768x900.png",
+      "dimensions": {
+        "baseline": "768x7528",
+        "candidate": "768x9030",
+        "match": false
+      },
+      "changedPixels": 1504697,
+      "outOfBoundsPixels": 1153536,
+      "totalPixels": 6935040,
+      "changedPct": 21.697,
+      "changedPctRaw": 21.69701977205611,
+      "identical": false,
+      "diffImage": "diff-default-768x900.png"
+    }
+  ]
+}

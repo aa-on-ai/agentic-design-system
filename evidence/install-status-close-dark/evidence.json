@@ -1,0 +1,122 @@
+{
+  "url": "http://127.0.0.1:3028/?theme=dark",
+  "capturedStates": [
+    "default"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x900"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(249, 236, 210)",
+        "backgroundColor": "rgb(7, 21, 36)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 5352,
+      "renderedTextSample": "Agentic Design System is a repo-local skill pack for coding agents. This page shows its input, browser checks, corrected screen, evidence report, and separate grader verdict. Agentic Design System Open source repo-local UI skill pack A design system for agents. Proof for humans. ",
+      "renderSignature": "c920f3ee",
+      "probe": {}
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x900",
+      "screenshot": "default-1280x900.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(249, 236, 210)",
+        "backgroundColor": "rgb(7, 21, 36)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 5731,
+      "renderedTextSample": "Agentic Design System is a repo-local skill pack for coding agents. This page shows its input, browser checks, corrected screen, evidence report, and separate grader verdict. Agentic Design System Open source repo-local UI skill pack A design system for agents. Proof for humans. ",
+      "renderSignature": "94e2c5a1",
+      "probe": {}
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true
+    },
+    "renderedFonts": [
+      "\"DM Sans\", \"DM Sans Fallback\", sans-serif"
+    ],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x900",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}
