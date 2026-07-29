@@ -84,6 +84,35 @@ For URL targets, the default state uses the original URL. Every requested non-de
 loaded as `#state=<name>`, so the application should read the `state` parameter from
 `location.hash`.
 
+## Protocol and extension posture
+
+The server is built on the split MCP TypeScript SDK v2 packages and starts through
+`serveStdio`. One binary accepts both legacy `initialize` clients and modern clients that
+negotiate the `2026-07-28` protocol through `server/discover`.
+
+Run identifiers are durable handles backed by `<root>/.ads/runs`, not MCP session identifiers.
+Render, evaluate, trace, and resource reads therefore recover across fresh client, server, and
+service instances on the same project filesystem.
+
+The server advertises the stable MCP Apps extension as `io.modelcontextprotocol/ui`. Each ADS tool
+links to `ui://ads/review`, a self-contained
+`text/html;profile=mcp-app` resource that can display evidence, gates, findings, blockers, and
+decision traces inline. The app uses the `2026-01-26` Apps protocol and only requests server-tool
+and server-resource access from a compatible host. Hosts without Apps support retain the same
+three-tool and resource surface.
+
+Current extension decisions are deliberate:
+
+- ADS does not advertise the `io.modelcontextprotocol/tasks` extension. Render and evaluation
+  remain bounded synchronous calls because they do not yet need an asynchronous lifecycle; ADS
+  will adopt the extension only with a concrete long-running operation and a verified TypeScript
+  SDK and host path. It does not use the deprecated core task vocabulary.
+- Local stdio does not add an authentication layer. Any future remote transport must implement the
+  current MCP OAuth/OIDC authorization model before it is enabled.
+- The filesystem run store is suitable for one local project root and is independent of an MCP
+  session. Hosted or replicated operation requires a shared durable store and concurrency controls
+  before it can claim the same recovery guarantee.
+
 ## Tools
 
 ### `ads_render`
@@ -215,14 +244,18 @@ response. Resource URIs are stable logical identifiers rather than disk paths. F
 npm test
 ```
 
-The suite covers the real stdio initialization flow, a complete MCP client sequence, Chromium URL
-and TSX component capture, command-adapter JSON exchange, configured visual verdicts, SwiftUI
-snapshot evidence, rendered comparisons, resource reads, repeated stage receipts, timeout and
+The suite covers legacy initialization and modern `server/discover`, the MCP App handshake and
+inline review action, a complete MCP client sequence, cross-server run recovery, Chromium URL and
+TSX component capture, command-adapter JSON exchange, configured visual verdicts, SwiftUI snapshot
+evidence, rendered comparisons, resource reads, repeated stage receipts, timeout and
 incomplete-evidence behavior, path traversal, symlink escape, origin denial, and trace failures.
 
-## v0.2.2 limits
+## Current limits
 
-- Local stdio only. No remote HTTP, OAuth, hosted service, or MCP App UI.
+- Local stdio only. No remote HTTP, OAuth, or hosted service.
+- The MCP App is an optional progressive enhancement; host-native rendering still depends on the
+  host implementing the stable Apps extension.
+- Tasks are intentionally not advertised.
 - Browser acquisition is explicit through `ads-mcp setup`; MCP startup never downloads Chromium.
 - The core package does not bundle provider SDKs, select a model, or ship a universal Xcode
   snapshot harness. Operators supply explicit command adapters for their environment.

@@ -32,6 +32,7 @@
     "dist/*.js",
     "dist/*.js.map",
     "dist/*.d.ts",
+    "dist/app/review.html",
     "dist/vendor",
     "README.md",
     "server.json"
@@ -50,14 +51,15 @@
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.0",
-    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@modelcontextprotocol/client": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.0.0",
     "esbuild": "^0.28.1",
     "pixelmatch": "^6.0.0",
     "playwright-core": "^1.61.1",
     "pngjs": "^7.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

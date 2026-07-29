@@ -219,7 +219,9 @@ npx --yes ads-mcp@0.2.2 --root /absolute/path/to/project
 The MCP server is intentionally local-first. It confines project files and run artifacts to the
 configured root, renders web or startup-configured SwiftUI targets, and records model-free
 deterministic evidence by default. Provider-neutral command adapters can add explicit visual
-judgment without changing the three-tool API or silently selecting a model. See the
+judgment without changing the three-tool API or silently selecting a model. The SDK v2 server
+accepts both legacy initialization and MCP `2026-07-28` discovery, while compatible hosts can
+render the optional `ui://ads/review` MCP App. See the
 [`ads-mcp` package guide](./packages/ads-mcp/README.md) and
 [`v0.2 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
 `io.github.aa-on-ai/agentic-design-system`.
