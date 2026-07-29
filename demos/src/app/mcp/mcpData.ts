@@ -1,7 +1,7 @@
 export const MCP_CONTRACT = {
   schemaVersion: 2,
   name: "ads-mcp",
-  version: "0.2.2",
+  version: "0.3.0",
   transport: "local stdio",
   sequence: ["ads_render", "ads_evaluate", "ads_trace"],
   capabilities: {

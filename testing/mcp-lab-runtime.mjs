@@ -92,7 +92,7 @@ for (const testCase of cases) {
     const contractResponse = await fetch(new URL("/mcp/contract.json", baseUrl));
     const contract = { ok: contractResponse.ok, body: await contractResponse.json() };
     assert.equal(contract.ok, true);
-    assert.equal(contract.body.version, "0.2.2");
+    assert.equal(contract.body.version, "0.3.0");
     assert.deepEqual(contract.body.sequence, ["ads_render", "ads_evaluate", "ads_trace"]);
     assert.deepEqual(contract.body.capabilities.renderTargets, ["web", "swiftui"]);
     assert.deepEqual(contract.body.capabilities.visualJudgment, ["none", "configured"]);

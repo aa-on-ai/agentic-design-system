@@ -45,7 +45,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
   })}\n`);
 };
 
-test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.2', async () => {
+test('MCP initialize and tools/list keep the stable three-tool surface in v0.3.0', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ads-server-'));
   const service = await AdsService.create({
     root,

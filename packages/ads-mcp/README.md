@@ -10,15 +10,15 @@ evaluation receipts, and decision provenance into a stable three-tool surface fo
 Point the server at the project whose UI you want ADS to inspect:
 
 ```bash
-npx --yes ads-mcp@0.2.2 --root /absolute/path/to/project
+npx --yes ads-mcp@0.3.0 --root /absolute/path/to/project
 ```
 
 The MCP server connects without downloading a browser, so cold clients can discover its tools
 inside their startup budget. Before the first web render, verify or install Chromium once:
 
 ```bash
-npx --yes ads-mcp@0.2.2 doctor
-npx --yes ads-mcp@0.2.2 setup
+npx --yes ads-mcp@0.3.0 doctor
+npx --yes ads-mcp@0.3.0 setup
 ```
 
 If Chromium is missing, `ads_render` preserves a blocked run with the same setup command instead of
@@ -58,7 +58,7 @@ Use the published package as a local stdio server. Replace the project path:
       "command": "npx",
       "args": [
         "--yes",
-        "ads-mcp@0.2.2",
+        "ads-mcp@0.3.0",
         "--root",
         "/absolute/path/to/project"
       ]

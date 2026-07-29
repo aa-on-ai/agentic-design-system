@@ -206,14 +206,14 @@ Only then did the grader return `satisfied`.
 - [OpenClaw](./integrations/openclaw.md)
 - [Hermes](./integrations/hermes.md)
 
-## MCP server (v0.2.2)
+## MCP server (v0.3.0)
 
 The repository also contains a local stdio MCP package that exposes the ADS evidence spine as
 three tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
 
 ```bash
-npx --yes ads-mcp@0.2.2 setup
-npx --yes ads-mcp@0.2.2 --root /absolute/path/to/project
+npx --yes ads-mcp@0.3.0 setup
+npx --yes ads-mcp@0.3.0 --root /absolute/path/to/project
 ```
 
 The MCP server is intentionally local-first. It confines project files and run artifacts to the
@@ -223,7 +223,7 @@ judgment without changing the three-tool API or silently selecting a model. The 
 accepts both legacy initialization and MCP `2026-07-28` discovery, while compatible hosts can
 render the optional `ui://ads/review` MCP App. See the
 [`ads-mcp` package guide](./packages/ads-mcp/README.md) and
-[`v0.2 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
+[`v0.3 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
 `io.github.aa-on-ai/agentic-design-system`.
 
 ## Repository map

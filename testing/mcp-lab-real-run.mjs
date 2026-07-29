@@ -6,8 +6,8 @@ import { pathToFileURL } from "node:url";
 
 const requireFromMcp = createRequire(new URL("../packages/ads-mcp/package.json", import.meta.url));
 const [{ Client }, { StdioClientTransport }] = await Promise.all([
-  import(pathToFileURL(requireFromMcp.resolve("@modelcontextprotocol/sdk/client/index.js")).href),
-  import(pathToFileURL(requireFromMcp.resolve("@modelcontextprotocol/sdk/client/stdio.js")).href),
+  import(pathToFileURL(requireFromMcp.resolve("@modelcontextprotocol/client")).href),
+  import(pathToFileURL(requireFromMcp.resolve("@modelcontextprotocol/client/stdio")).href),
 ]);
 
 const urlIndex = process.argv.indexOf("--url");

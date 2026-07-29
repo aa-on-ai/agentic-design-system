@@ -1,6 +1,6 @@
 {
   "name": "ads-mcp",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "mcpName": "io.github.aa-on-ai/agentic-design-system",
   "description": "Render web and SwiftUI evidence, run explicit visual judgment, and trace ADS UI decisions.",
   "keywords": [

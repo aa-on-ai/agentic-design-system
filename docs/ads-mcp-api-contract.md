@@ -1,4 +1,4 @@
-# ads-mcp API contract (v0.2)
+# ads-mcp API contract (v0.3)
 
 ## Decision
 
@@ -330,12 +330,12 @@ created -> rendered -> evaluated -> traced
 - Model judging is opt-in, records the model used, and fails honestly when credentials are absent.
 - Command adapters use fixed argv execution without a shell, require canonical absolute
   executables, cap stdout, and are killed on cancellation.
-- Remote Streamable HTTP is out of scope for v0.2 because it requires authentication, stronger SSRF
+- Remote Streamable HTTP is out of scope for v0.3 because it requires authentication, stronger SSRF
   controls, and sandboxing.
 
 ## Verification contract
 
-The v0.2 source release is done when:
+The v0.3 source release is done when:
 
 1. Legacy `initialize` and modern `server/discover` both expose exactly these three tools with
    stable schemas.
@@ -354,7 +354,7 @@ The v0.2 source release is done when:
 10. README includes install, client configuration, example calls, output receipts, extension
     decisions, and limitations.
 
-## Explicitly out of scope for v0.2
+## Explicitly out of scope for v0.3
 
 - Remote hosting, OAuth, multi-tenant state, queues, databases, resumable HTTP sessions, MCP Tasks,
   automatic deployment, or autonomous revision loops. Public package and Registry distribution do
@@ -381,6 +381,6 @@ The v0.2 source release is done when:
 
 ## Release boundary
 
-The v0.2 implementation keeps the v0.1 three-tool contract and local stdio boundary. npm
+The v0.3 implementation keeps the v0.1 three-tool contract and local stdio boundary. npm
 publication, MCP Registry validation, and public-site claims remain separate release actions after
 source verification.
