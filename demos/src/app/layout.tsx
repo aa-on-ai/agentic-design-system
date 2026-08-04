@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import Script from "next/script";
 import { DM_Sans, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 const bodyFont = DM_Sans({
   variable: "--font-body-face",
@@ -22,9 +23,9 @@ const displayFont = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Agentic Design System",
-  description:
-    "An installable design system for your coding agent. Skills and templates for intent, baseline, rubric, evidence, and grader loops on UI work.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
   icons: {
     icon: [
       {
