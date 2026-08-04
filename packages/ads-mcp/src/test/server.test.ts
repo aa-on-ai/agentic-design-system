@@ -5,11 +5,15 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { Client, InMemoryTransport } from '@modelcontextprotocol/client';
+import { StdioClientTransport } from '@modelcontextprotocol/client/stdio';
 import { AdsService } from '../service.js';
-import { createAdsMcpServer } from '../server.js';
+import {
+  ADS_REVIEW_APP_MIME_TYPE,
+  ADS_REVIEW_APP_URI,
+  MCP_APPS_EXTENSION_ID,
+  createAdsMcpServer,
+} from '../server.js';
 import type { CaptureRunner } from '../types.js';
 
 const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) => {
@@ -41,7 +45,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
   })}\n`);
 };
 
-test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.2', async () => {
+test('MCP initialize and tools/list keep the stable three-tool surface in v0.3.0', async () => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ads-server-'));
   const service = await AdsService.create({
     root,
@@ -58,6 +62,18 @@ test('MCP initialize and tools/list keep the stable three-tool surface in v0.2.2
     const tools = await client.listTools();
     assert.deepEqual(tools.tools.map(({ name }) => name).sort(), ['ads_evaluate', 'ads_render', 'ads_trace']);
     assert.equal(tools.tools.length, 3);
+    for (const tool of tools.tools) {
+      assert.equal(
+        (tool._meta as { ui?: { resourceUri?: string } } | undefined)?.ui?.resourceUri,
+        ADS_REVIEW_APP_URI,
+      );
+    }
+    assert.deepEqual(client.getServerCapabilities()?.extensions?.[MCP_APPS_EXTENSION_ID], {
+      mimeTypes: [ADS_REVIEW_APP_MIME_TYPE],
+    });
+    const appResource = await client.readResource({ uri: ADS_REVIEW_APP_URI });
+    assert.equal(appResource.contents[0]?.mimeType, ADS_REVIEW_APP_MIME_TYPE);
+    assert.match('text' in appResource.contents[0]! ? appResource.contents[0].text : '', /ADS evidence review/);
     const render = tools.tools.find(({ name }) => name === 'ads_render');
     const states = (
       render?.inputSchema as { properties?: { states?: { description?: string } } }
@@ -148,8 +164,8 @@ test('URL-only runs without provenance return one actionable trace-not-applicabl
   }
 });
 
-test('compiled stdio binary completes the full sequence through a real MCP client', async () => {
-  const root = await mkdtemp(path.join(os.tmpdir(), 'ads-stdio-'));
+async function runCompiledStdioSequence(era: 'legacy' | 'modern'): Promise<void> {
+  const root = await mkdtemp(path.join(os.tmpdir(), `ads-stdio-${era}-`));
   await Promise.all([
     mkdir(path.join(root, 'skills', 'design-review'), { recursive: true }),
     mkdir(path.join(root, 'src'), { recursive: true }),
@@ -178,10 +194,29 @@ test('compiled stdio binary completes the full sequence through a real MCP clien
     stderr: 'pipe',
   });
   const client = new Client({ name: 'ads-stdio-test-client', version: '1.0.0' });
+  if (era === 'modern') {
+    client.setVersionNegotiation({ mode: { pin: '2026-07-28' } });
+  }
   await client.connect(transport);
   try {
+    assert.equal(client.getProtocolEra(), era);
+    if (era === 'modern') {
+      assert.equal(client.getNegotiatedProtocolVersion(), '2026-07-28');
+      assert.deepEqual(client.getDiscoverResult()?.capabilities.extensions?.[MCP_APPS_EXTENSION_ID], {
+        mimeTypes: [ADS_REVIEW_APP_MIME_TYPE],
+      });
+    }
     const tools = await client.listTools();
     assert.deepEqual(tools.tools.map(({ name }) => name).sort(), ['ads_evaluate', 'ads_render', 'ads_trace']);
+    for (const tool of tools.tools) {
+      assert.equal(
+        (tool._meta as { ui?: { resourceUri?: string } } | undefined)?.ui?.resourceUri,
+        ADS_REVIEW_APP_URI,
+      );
+    }
+    const appResource = await client.readResource({ uri: ADS_REVIEW_APP_URI });
+    assert.equal(appResource.contents[0]?.mimeType, ADS_REVIEW_APP_MIME_TYPE);
+    assert.match('text' in appResource.contents[0]! ? appResource.contents[0].text : '', /ui\/initialize/);
     const renderResult = await client.callTool({
       name: 'ads_render',
       arguments: {
@@ -231,6 +266,14 @@ test('compiled stdio binary completes the full sequence through a real MCP clien
     await client.close();
     await new Promise<void>((resolve, reject) => fixtureServer.close((error) => error ? reject(error) : resolve()));
   }
+}
+
+test('compiled stdio binary completes the full sequence through legacy initialize', async () => {
+  await runCompiledStdioSequence('legacy');
+});
+
+test('compiled stdio binary completes the full sequence through modern server/discover', async () => {
+  await runCompiledStdioSequence('modern');
 });
 
 test('a real MCP client completes render, evaluate, trace, and resource reads', async () => {
@@ -310,5 +353,87 @@ test('a real MCP client completes render, evaluate, trace, and resource reads', 
   } finally {
     await client.close();
     await server.close();
+  }
+});
+
+test('run handles recover across fresh server and service instances without MCP session state', async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ads-stateless-recovery-'));
+  await Promise.all([
+    mkdir(path.join(root, 'skills', 'design-review'), { recursive: true }),
+    mkdir(path.join(root, 'src'), { recursive: true }),
+  ]);
+  await Promise.all([
+    writeFile(path.join(root, 'skills', 'design-review', 'SKILL.md'), 'Rule: keep actions reachable.\n'),
+    writeFile(path.join(root, 'brief.md'), 'Constraint: actions remain reachable.\n'),
+    writeFile(path.join(root, 'src', 'Orders.tsx'), 'export default function Orders() { return null; }\n'),
+  ]);
+  const config = {
+    root,
+    runsDir: '.ads/runs',
+    allowedOrigins: new Set<string>(),
+    timeoutMs: 2_000,
+  };
+
+  const renderService = await AdsService.create(config, { captureRunner: fakeCapture });
+  const renderServer = createAdsMcpServer(renderService);
+  const renderClient = new Client({ name: 'ads-render-session', version: '1.0.0' });
+  const [renderClientTransport, renderServerTransport] = InMemoryTransport.createLinkedPair();
+  await renderServer.connect(renderServerTransport);
+  await renderClient.connect(renderClientTransport);
+  const renderResult = await renderClient.callTool({
+    name: 'ads_render',
+    arguments: {
+      target: { type: 'url', url: 'http://localhost:3000/orders' },
+      provenance: {
+        observedSkillFiles: ['skills/design-review/SKILL.md'],
+        sourceFiles: ['brief.md'],
+        artifactFiles: ['src/Orders.tsx'],
+      },
+    },
+  });
+  const rendered = renderResult.structuredContent as {
+    runId: string;
+    artifacts: { evidence: string };
+  };
+  await renderClient.close();
+  await renderServer.close();
+
+  const recoveryService = await AdsService.create(config, { captureRunner: fakeCapture });
+  const recoveryServer = createAdsMcpServer(recoveryService);
+  const recoveryClient = new Client({ name: 'ads-recovery-session', version: '1.0.0' });
+  const [recoveryClientTransport, recoveryServerTransport] = InMemoryTransport.createLinkedPair();
+  await recoveryServer.connect(recoveryServerTransport);
+  await recoveryClient.connect(recoveryClientTransport);
+  try {
+    const evaluateResult = await recoveryClient.callTool({
+      name: 'ads_evaluate',
+      arguments: {
+        runId: rendered.runId,
+        rubric: { task: 'Review orders', criteria: [{ name: 'Functionality', weight: 100 }] },
+      },
+    });
+    assert.equal((evaluateResult.structuredContent as { status: string }).status, 'needs_human');
+
+    const traceResult = await recoveryClient.callTool({
+      name: 'ads_trace',
+      arguments: {
+        runId: rendered.runId,
+        context: 'Recovered orders review',
+        decisions: [{
+          id: 'reachable-action',
+          decision: 'Keep actions reachable.',
+          artifact: { path: 'src/Orders.tsx' },
+          rule: { path: 'skills/design-review/SKILL.md', excerpt: 'Rule: keep actions reachable.' },
+          sourceConstraint: { path: 'brief.md', excerpt: 'Constraint: actions remain reachable.' },
+          evidence: [rendered.artifacts.evidence],
+        }],
+      },
+    });
+    assert.equal((traceResult.structuredContent as { valid: boolean }).valid, true);
+    const resources = await recoveryClient.listResources();
+    assert.ok(resources.resources.some(({ uri }) => uri === `ads://runs/${rendered.runId}/trace-validation`));
+  } finally {
+    await recoveryClient.close();
+    await recoveryServer.close();
   }
 });

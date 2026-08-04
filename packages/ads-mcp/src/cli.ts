@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import {
   ADS_MCP_VERSION,
   browserStatus,
@@ -50,9 +50,7 @@ async function main(): Promise<void> {
     return;
   }
   const service = await AdsService.create(config);
-  const server = createAdsMcpServer(service);
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
+  await serveStdio(() => createAdsMcpServer(service));
   console.error(`ads-mcp ${ADS_MCP_VERSION} running on stdio for ${config.root}`);
 }
 

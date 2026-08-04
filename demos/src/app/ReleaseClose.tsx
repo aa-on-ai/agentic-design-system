@@ -24,7 +24,7 @@ const hostAcceptance = [
 ];
 
 const boundaries = [
-  <>Provision Chromium explicitly with <code>npx --yes ads-mcp@0.2.2 setup</code>.</>,
+  <>Provision Chromium explicitly with <code>npx --yes ads-mcp@0.3.0 setup</code>.</>,
   <>Allow every non-local render origin in the server configuration.</>,
   <>Without a configured visual judge, evaluation honestly stops at <code>needs_human</code>.</>,
 ];
@@ -65,7 +65,7 @@ export function ReleaseClose() {
           <section className="release-ledger" aria-labelledby="host-ledger-title">
             <header>
               <div>
-                <p>Local MCP · v0.2.2</p>
+                <p>Local MCP · v0.3.0</p>
                 <h3 id="host-ledger-title">Host acceptance, without the hand-waving.</h3>
               </div>
               <span>3 verified / 1 limited / 1 untested</span>

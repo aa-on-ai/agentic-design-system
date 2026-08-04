@@ -26,7 +26,7 @@ try {
   );
   const [packed] = JSON.parse(packOutput);
   assert.equal(packed.name, "ads-mcp");
-  assert.equal(packed.version, "0.2.2");
+  assert.equal(packed.version, "0.3.0");
   assert.ok(packed.files.some(({ path: file }) => file === "dist/cli.js"));
   assert.ok(packed.files.some(({ path: file }) => file === "dist/vendor/capture.mjs"));
   assert.equal(
@@ -70,7 +70,7 @@ try {
       const report = JSON.parse(error.stdout || "{}");
       assert.equal(error.code, 1);
       assert.equal(report.browser?.ready, false);
-      assert.equal(report.browser?.setupCommand, "npx --yes ads-mcp@0.2.2 setup");
+      assert.equal(report.browser?.setupCommand, "npx --yes ads-mcp@0.3.0 setup");
       return true;
     },
   );
@@ -91,8 +91,8 @@ try {
 
   const requireFromConsumer = createRequire(path.join(consumerRoot, "package.json"));
   const [{ Client }, { StdioClientTransport }] = await Promise.all([
-    import(pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/sdk/client/index.js"))),
-    import(pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/sdk/client/stdio.js"))),
+    import(pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/client"))),
+    import(pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/client/stdio"))),
   ]);
 
   fixtureServer = createServer((_request, response) => {

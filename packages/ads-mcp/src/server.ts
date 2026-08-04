@@ -1,8 +1,30 @@
-import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
+import { readFile } from 'node:fs/promises';
 import * as z from 'zod/v4';
 import { ADS_MCP_VERSION } from './browser.js';
 import { AdsService } from './service.js';
 import type { EvaluateOutput, RenderOutput, TraceOutput } from './types.js';
+
+export const ADS_REVIEW_APP_URI = 'ui://ads/review';
+export const ADS_REVIEW_APP_MIME_TYPE = 'text/html;profile=mcp-app';
+export const MCP_APPS_EXTENSION_ID = 'io.modelcontextprotocol/ui';
+
+const appToolMeta = {
+  ui: {
+    resourceUri: ADS_REVIEW_APP_URI,
+    visibility: ['model', 'app'],
+  },
+};
+
+const appResourceMeta = {
+  ui: {
+    csp: {
+      connectDomains: [],
+      resourceDomains: [],
+    },
+    prefersBorder: true,
+  },
+};
 
 const targetSchema = z.discriminatedUnion('type', [
   z.object({
@@ -203,6 +225,13 @@ export function createAdsMcpServer(service: AdsService): McpServer {
   const server = new McpServer(
     { name: 'ads-mcp', version: ADS_MCP_VERSION },
     {
+      capabilities: {
+        extensions: {
+          [MCP_APPS_EXTENSION_ID]: {
+            mimeTypes: [ADS_REVIEW_APP_MIME_TYPE],
+          },
+        },
+      },
       instructions: [
         'Use ads_render, then ads_evaluate.',
         'Call ads_trace only when the render manifest contains at least one observed skill file, source file, and artifact file; otherwise stop after evaluation.',
@@ -221,8 +250,9 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: renderInputSchema,
     outputSchema: renderOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
-  }, async (input, extra) => {
-    const result = toolResult(await service.render(input, extra.signal));
+    _meta: appToolMeta,
+  }, async (input, ctx) => {
+    const result = toolResult(await service.render(input, ctx.mcpReq.signal));
     server.sendResourceListChanged();
     return result;
   });
@@ -233,8 +263,9 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: evaluateInputSchema,
     outputSchema: evaluateOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
-  }, async (input, extra) => {
-    const result = toolResult(await service.evaluate(input, extra.signal));
+    _meta: appToolMeta,
+  }, async (input, ctx) => {
+    const result = toolResult(await service.evaluate(input, ctx.mcpReq.signal));
     server.sendResourceListChanged();
     return result;
   });
@@ -245,12 +276,31 @@ export function createAdsMcpServer(service: AdsService): McpServer {
     inputSchema: traceInputSchema,
     outputSchema: traceOutputSchema,
     annotations: { destructiveHint: false, idempotentHint: false, openWorldHint: false },
+    _meta: appToolMeta,
   }, async (input) => {
     const result = toolResult(await service.trace(input));
     server.sendResourceListChanged();
     return result;
   });
 
+  server.registerResource(
+    'ads-evidence-review-app',
+    ADS_REVIEW_APP_URI,
+    {
+      title: 'ADS evidence review',
+      description: 'Inline review surface for rendered evidence, deterministic gates, findings, blockers, and decision traces.',
+      mimeType: ADS_REVIEW_APP_MIME_TYPE,
+      _meta: appResourceMeta,
+    },
+    async (uri) => ({
+      contents: [{
+        uri: uri.toString(),
+        mimeType: ADS_REVIEW_APP_MIME_TYPE,
+        text: await readFile(new URL('./app/review.html', import.meta.url), 'utf8'),
+        _meta: appResourceMeta,
+      }],
+    }),
+  );
   server.registerResource(
     'ads-run-artifact',
     new ResourceTemplate('ads://runs/{runId}/{artifact}', {
