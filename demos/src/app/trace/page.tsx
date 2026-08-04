@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, FileCheck2, Github } from "lucide-react";
+import { BrandLockup } from "../BrandLockup";
 import { SiteFooter } from "../SiteFooter";
 import { ThemeToggle } from "../ThemeToggle";
 import styles from "./trace.module.css";
@@ -126,9 +127,8 @@ export default async function TracePage({ searchParams }: TracePageProps) {
       />
 
       <header className={styles.header}>
-        <Link className={`wordmark focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <span className="wordmark-mark" aria-hidden="true" />
-          <span>Agentic Design System</span>
+        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
+          <BrandLockup />
         </Link>
         <nav className={styles.headerNav} aria-label="Primary navigation">
           <Link className={`${styles.headerLink} focus-ring`} href="/#assembly-line">One UI run</Link>

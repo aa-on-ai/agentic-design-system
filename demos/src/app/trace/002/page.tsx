@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BrandLockup } from "../../BrandLockup";
 import { ProofGallery } from "./ProofGallery";
 import { ProofReceipts } from "./ProofReceipts";
 import { ProofResult } from "./ProofResult";
@@ -42,8 +43,8 @@ export default function TraceTwoPage() {
         <TraceClose />
       </article>
       <footer className={styles.footer}>
-        <a className={`wordmark focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
-          <span className="wordmark-mark" aria-hidden="true" /><span>Agentic Design System</span>
+        <a className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
+          <BrandLockup />
         </a>
         <span>Pawprint proof case · frozen ADS v1.3.1 evidence</span>
       </footer>

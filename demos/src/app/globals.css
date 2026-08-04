@@ -171,31 +171,55 @@ code {
   transform: translateX(-50%);
 }
 
-.wordmark {
+.brand-lockup {
   display: inline-flex;
   min-height: 48px;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   color: var(--text);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
   text-decoration: none;
 }
 
-.wordmark-mark {
-  display: grid;
-  width: 32px;
-  height: 32px;
+.brand-lockup-mark {
+  display: block;
+  width: 44px;
+  height: 44px;
   flex: 0 0 auto;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--text) 22%, transparent);
   border-radius: 50%;
   background: #06182a url("/brand/ads-mark.png") center / cover no-repeat;
-  box-shadow:
-    0 2px 8px color-mix(in srgb, #06182a 22%, transparent),
-    inset 0 1px rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 18px color-mix(in srgb, #06182a 24%, transparent);
+  transition-property: transform, box-shadow;
+  transition-duration: 160ms;
+  transition-timing-function: ease-out;
+}
+
+.brand-lockup:hover .brand-lockup-mark {
+  transform: scale(1.035);
+  box-shadow: 0 8px 22px color-mix(in srgb, #06182a 30%, transparent);
+}
+
+.brand-lockup-type {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.brand-lockup-name {
+  font-size: 0.96rem;
+  font-weight: 680;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.brand-lockup-descriptor {
+  color: var(--muted);
+  font-family: var(--font-label), monospace;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .hero-toolbar {
@@ -2125,44 +2149,17 @@ code {
 
 .site-footer .footer-wordmark {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   color: #fff4df;
   text-decoration: none;
 }
 
-.footer-wordmark-mark {
-  display: grid;
-  width: 48px;
-  height: 48px;
-  flex: 0 0 auto;
-  place-items: center;
-  overflow: hidden;
-  border: 1px solid rgba(244, 232, 208, 0.32);
-  border-radius: 50%;
-  background: #06182a url("/brand/ads-mark.png") center / cover no-repeat;
-  box-shadow:
-    0 8px 24px rgba(2, 12, 23, 0.38),
-    inset 0 1px rgba(255, 255, 255, 0.16);
+.site-footer .brand-lockup-mark {
+  box-shadow: 0 8px 24px rgba(2, 12, 23, 0.38);
 }
 
-.footer-wordmark > span:last-child {
-  display: grid;
-  gap: 5px;
-}
-
-.footer-wordmark strong {
-  font-size: 1.02rem;
-  font-weight: 620;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
-}
-
-.footer-wordmark small {
+.site-footer .brand-lockup-descriptor {
   color: #9f9079;
-  font-family: var(--font-label), monospace;
-  font-size: 0.56rem;
-  letter-spacing: 0.025em;
-  line-height: 1.35;
 }
 
 .footer-brand p {
@@ -2382,16 +2379,22 @@ code {
     width: calc(100% - 32px);
   }
 
-  .wordmark {
-    max-width: 170px;
-    font-size: 0.7rem;
-    line-height: 1.2;
+  .brand-lockup {
+    max-width: none;
+    gap: 10px;
   }
 
-  .wordmark-mark {
-    width: 30px;
-    height: 30px;
-    flex: 0 0 auto;
+  .brand-lockup-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-lockup-name {
+    font-size: 0.88rem;
+  }
+
+  .brand-lockup-descriptor {
+    font-size: 0.52rem;
   }
 
   .hero-pill {
