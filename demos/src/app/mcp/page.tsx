@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Braces, Check, CircleAlert, Github, Terminal } from "lucide-react";
+import { BrandLockup } from "../BrandLockup";
 import { ThemeToggle } from "../ThemeToggle";
 import { FROZEN_RUN, MCP_CONTRACT } from "./mcpData";
 import styles from "./mcp.module.css";
@@ -56,9 +57,8 @@ export default async function McpPage({ searchParams }: McpPageProps) {
       />
 
       <header className={styles.header}>
-        <Link className={`wordmark focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <span className="wordmark-mark" aria-hidden="true" />
-          <span>Agentic Design System</span>
+        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
+          <BrandLockup />
         </Link>
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
           <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.3.0</span>
@@ -235,9 +235,8 @@ export default async function McpPage({ searchParams }: McpPageProps) {
       </article>
 
       <footer className={styles.footer}>
-        <Link className={`wordmark focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
-          <span className="wordmark-mark" aria-hidden="true" />
-          <span>Agentic Design System</span>
+        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
+          <BrandLockup />
         </Link>
         <span>ads-mcp · local stdio · v0.3.0</span>
       </footer>

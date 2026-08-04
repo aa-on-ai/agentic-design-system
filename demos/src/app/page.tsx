@@ -1,5 +1,6 @@
 import { Github } from "lucide-react";
 import { cookies } from "next/headers";
+import { BrandLockup } from "./BrandLockup";
 import { HomepageReady } from "./HomepageReady";
 import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
@@ -33,9 +34,12 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="hero-section" aria-labelledby="hero-title">
         <header className="site-header">
-          <a className="wordmark focus-ring" href="#top" aria-label="Agentic Design System home">
-            <span className="wordmark-mark" aria-hidden="true" />
-            <span>Agentic Design System</span>
+          <a
+            className="brand-lockup focus-ring"
+            href="#top"
+            aria-label="Agentic Design System home"
+          >
+            <BrandLockup />
           </a>
           <nav className="hero-toolbar" aria-label="Primary navigation">
             <a

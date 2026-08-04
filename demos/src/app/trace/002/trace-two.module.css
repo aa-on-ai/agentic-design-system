@@ -376,6 +376,7 @@
 
 .footer { display: flex; min-height: 120px; padding: 0 max(32px, calc((100vw - 1180px) / 2)); align-items: center; justify-content: space-between; background: #17120e; color: #bcae91; font-size: 0.63rem; }
 .footer .wordmark { color: #bcae91; }
+.footer .wordmark :global(.brand-lockup-descriptor) { color: #bcae91; }
 
 .stateShell { width: min(720px, calc(100% - 48px)); min-height: 100vh; margin: 0 auto; padding: 18vh 0 96px; }
 .stateShell h1 { max-width: 680px; margin-top: 22px; font-size: clamp(3.2rem, 7vw, 5.8rem); }

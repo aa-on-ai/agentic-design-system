@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandLockup } from "./BrandLockup";
 import { FooterEmber } from "./FooterEmber";
 
 type SiteFooterProps = {
@@ -6,17 +7,20 @@ type SiteFooterProps = {
   assemblyHref?: string;
 };
 
-export function SiteFooter({ topHref = "#top", assemblyHref = "#assembly-line" }: SiteFooterProps = {}) {
+export function SiteFooter({
+  topHref = "#top",
+  assemblyHref = "#assembly-line",
+}: SiteFooterProps = {}) {
   return (
     <footer className="site-footer">
       <FooterEmber />
       <div className="footer-brand">
-        <Link className="footer-wordmark focus-ring" href={topHref} aria-label="Back to the top">
-          <span className="footer-wordmark-mark" aria-hidden="true" />
-          <span>
-            <strong>Agentic Design System</strong>
-            <small>Open-source design governance</small>
-          </span>
+        <Link
+          className="brand-lockup footer-wordmark focus-ring"
+          href={topHref}
+          aria-label="Back to the top"
+        >
+          <BrandLockup />
         </Link>
         <p>Design judgment, made repeatable for coding agents.</p>
       </div>
