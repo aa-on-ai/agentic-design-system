@@ -79,19 +79,23 @@ function Toggle({
       aria-checked={enabled}
       aria-label={ariaLabel}
       onClick={() => onChange(!enabled)}
-      className={[
-        "relative inline-flex h-7 w-12 items-center rounded-full transition duration-200 ease-out",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2",
-        enabled ? "bg-neutral-900" : "bg-neutral-300",
-      ].join(" ")}
+      className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 focus-visible:ring-offset-2"
     >
       <span
         className={[
-          "inline-block h-5 w-5 rounded-full bg-white shadow-sm outline outline-1 outline-black/[0.06]",
-          "transition duration-200 ease-out",
-          enabled ? "translate-x-6" : "translate-x-1",
+          "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-200 ease-out",
+          enabled ? "bg-neutral-900" : "bg-neutral-300",
         ].join(" ")}
-      />
+        aria-hidden="true"
+      >
+        <span
+          className={[
+            "inline-block h-5 w-5 rounded-full bg-white shadow-sm outline outline-1 outline-black/[0.06]",
+            "transition-transform duration-200 ease-out",
+            enabled ? "translate-x-6" : "translate-x-1",
+          ].join(" ")}
+        />
+      </span>
     </button>
   );
 }
@@ -155,7 +159,6 @@ export default function NotionAISettingsPage() {
   const [workspaceTraining, setWorkspaceTraining] = useState(false);
   const [meetingNotes, setMeetingNotes] = useState(true);
   const [smartSearch, setSmartSearch] = useState(true);
-  const [seatManagement, setSeatManagement] = useState(true);
 
   const enabledSeats = useMemo(
     () => workspaceMembers.filter((m) => m.seats === "AI enabled").length,
@@ -465,6 +468,11 @@ export default function NotionAISettingsPage() {
                         </Badge>
                         <button
                           type="button"
+                          aria-label={
+                            enabled
+                              ? `Manage AI access for ${member.name}`
+                              : `Enable AI for ${member.name}`
+                          }
                           className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-medium text-neutral-700 outline outline-1 outline-black/[0.08] transition duration-150 ease-out hover:bg-neutral-100 active:scale-[0.98]"
                         >
                           {enabled ? "Manage access" : "Enable AI"}
@@ -511,6 +519,11 @@ export default function NotionAISettingsPage() {
 
                     <button
                       type="button"
+                      aria-label={
+                        connector.status === "Connected"
+                          ? `Manage ${connector.name} connection`
+                          : `Reconnect ${connector.name}`
+                      }
                       className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-medium text-neutral-700 outline outline-1 outline-black/[0.08] transition duration-150 ease-out hover:bg-neutral-100 active:scale-[0.98]"
                     >
                       {connector.status === "Connected"
@@ -643,7 +656,7 @@ export default function NotionAISettingsPage() {
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-5 border-b border-black/8 pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
-              <p className="text-sm font-medium text-neutral-500">Settings</p>
+              <p className="text-sm font-medium text-neutral-600">Settings</p>
               <h1 className="mt-1 text-balance text-3xl font-semibold tracking-[-0.04em] text-neutral-950 sm:text-4xl">
                 AI
               </h1>
@@ -653,7 +666,11 @@ export default function NotionAISettingsPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div
+              className="flex flex-wrap gap-2"
+              role="group"
+              aria-label="Notion AI demo state"
+            >
               {(["loaded", "loading", "empty", "error"] as ViewState[]).map(
                 (state) => (
                   <button
@@ -669,7 +686,9 @@ export default function NotionAISettingsPage() {
                         : "bg-white text-neutral-700 outline outline-1 outline-black/[0.08] hover:bg-neutral-100",
                     ].join(" ")}
                   >
-                    {state.charAt(0).toUpperCase() + state.slice(1)}
+                    {state === "loaded"
+                      ? "Default"
+                      : state.charAt(0).toUpperCase() + state.slice(1)}
                   </button>
                 )
               )}

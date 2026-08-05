@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { AdsRunArtifact, type ArtifactStage } from "./AdsRunArtifact";
 import { AssemblyLineClimber } from "./AssemblyLineClimber";
 
@@ -45,7 +46,9 @@ function Station({
         <h2 id={id}>{title}</h2>
         <p className="station-description">{description}</p>
         <div className="station-proof">
-          <span className="station-proof-mark" aria-hidden="true"><span>+</span></span>
+          <span className="station-proof-mark" aria-hidden="true">
+            <Plus size={17} strokeWidth={2.5} />
+          </span>
           <div><p>{proofLabel}</p><strong>{proof}</strong><span>{notes.join(" · ")}</span></div>
         </div>
       </div>

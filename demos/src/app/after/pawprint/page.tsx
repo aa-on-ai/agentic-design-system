@@ -170,8 +170,10 @@ function MetricCard({
   return (
     <div
       className={cn(
-        "rounded-2xl bg-white p-6 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_rgba(16,24,40,0.06)] outline outline-1 outline-black/5",
-        emphasis && "bg-neutral-950 text-white outline-white/10"
+        "rounded-2xl p-6 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_rgba(16,24,40,0.06)] outline outline-1",
+        emphasis
+          ? "bg-neutral-950 text-white outline-white/10"
+          : "bg-white outline-black/5"
       )}
     >
       <p className={cn("text-sm font-medium", emphasis ? "text-white/70" : "text-neutral-600")}>{label}</p>
@@ -264,7 +266,7 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
             onClick={onRetry}
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-transform duration-150 hover:bg-neutral-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2"
           >
-            Retry
+            Try again
           </button>
           <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition-colors duration-150 hover:bg-neutral-200 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2">
             View incident history
@@ -438,7 +440,7 @@ export default function PawprintAdminDashboard() {
                     </div>
                     <span className="mt-1 h-2.5 w-2.5 rounded-full bg-rose-500" aria-hidden="true" />
                   </div>
-                  <button className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-rose-700 px-3.5 py-2.5 text-sm font-medium text-white transition-transform duration-150 hover:bg-rose-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-rose-700 focus:ring-offset-2">
+                  <button className="mt-4 inline-flex min-h-12 items-center rounded-xl bg-rose-700 px-3.5 py-2.5 text-sm font-medium text-white transition-transform duration-150 hover:bg-rose-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-rose-700 focus:ring-offset-2">
                     Reassign walk
                   </button>
                 </div>
@@ -533,7 +535,7 @@ export default function PawprintAdminDashboard() {
               <div
                 className="flex flex-wrap gap-2"
                 role="group"
-                aria-label="Dashboard preview states"
+                aria-label="Pawprint demo state"
               >
                 {(["loaded", "loading", "empty", "error"] as ViewState[]).map((state) => (
                   <button
@@ -541,13 +543,15 @@ export default function PawprintAdminDashboard() {
                     onClick={() => setViewState(state)}
                     aria-pressed={viewState === state}
                     className={cn(
-                      "inline-flex min-h-11 items-center justify-center rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2",
+                      "inline-flex min-h-12 items-center justify-center rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2",
                       viewState === state
                         ? "bg-neutral-950 text-white"
                         : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                     )}
                   >
-                    {state.charAt(0).toUpperCase() + state.slice(1)}
+                    {state === "loaded"
+                      ? "Default"
+                      : state.charAt(0).toUpperCase() + state.slice(1)}
                   </button>
                 ))}
               </div>
