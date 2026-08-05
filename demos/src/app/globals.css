@@ -201,7 +201,7 @@ code {
 .brand-lockup-type {
   min-width: 0;
   display: grid;
-  gap: 4px;
+  gap: 3px;
 }
 
 .brand-lockup-name {
@@ -214,10 +214,10 @@ code {
 
 .brand-lockup-descriptor {
   color: var(--muted);
-  font-family: var(--font-label), monospace;
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.6rem;
+  font-weight: 760;
+  letter-spacing: 0.035em;
   line-height: 1;
   text-transform: uppercase;
 }
@@ -1985,11 +1985,17 @@ code {
   align-items: start;
   gap: 56px;
   border-top: 2px solid color-mix(in srgb, var(--release-text) 52%, transparent);
+  background: var(--release-bg);
   grid-template-columns: minmax(260px, 0.55fr) minmax(0, 1.45fr);
 }
 
 .release-faq > header {
   padding-top: 28px;
+}
+
+.release-faq header > p {
+  font-size: 0.72rem;
+  letter-spacing: 0.035em;
 }
 
 .release-faq-list {
@@ -2007,14 +2013,14 @@ code {
 .release-faq summary {
   position: relative;
   display: flex;
-  min-height: 72px;
+  min-height: 84px;
   padding: 20px 52px 20px 0;
   align-items: center;
   color: var(--release-text);
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 710;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.125rem, 1.25vw, 1.3rem);
+  font-weight: 680;
+  letter-spacing: -0.025em;
   line-height: 1.35;
   list-style: none;
 }
@@ -2028,8 +2034,8 @@ code {
   right: 4px;
   content: "+";
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--release-text) 48%, transparent);
   border-radius: 50%;
@@ -2052,10 +2058,10 @@ code {
 .release-faq details > p {
   max-width: 780px;
   margin: -4px 52px 24px 0;
-  color: color-mix(in srgb, var(--release-text) 78%, transparent);
-  font-size: 0.9rem;
-  font-weight: 550;
-  line-height: var(--leading-body);
+  color: color-mix(in srgb, var(--release-text) 86%, transparent);
+  font-size: 1rem;
+  font-weight: 540;
+  line-height: 1.58;
   text-wrap: pretty;
 }
 
@@ -2906,14 +2912,14 @@ code {
   }
 
   .release-faq summary {
-    min-height: 64px;
+    min-height: 68px;
     padding-right: 48px;
-    font-size: 0.92rem;
+    font-size: 1rem;
   }
 
   .release-faq details > p {
     margin-right: 0;
-    font-size: 0.84rem;
+    font-size: 0.92rem;
   }
 
   .release-door { right: -34%; width: 90%; opacity: 0.44; }
