@@ -1,4 +1,4 @@
-import { Github } from "lucide-react";
+import { ArrowUpRight, Github } from "lucide-react";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseFaq } from "./ReleaseFaq";
 
@@ -55,7 +55,7 @@ export function ReleaseClose() {
                 <Github size={18} aria-hidden="true" /> Choose your agent
               </a>
               <a className="release-github focus-ring" href="/mcp">
-                Inspect the local MCP <span aria-hidden="true">↗</span>
+                Inspect the local MCP <ArrowUpRight size={18} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -98,7 +98,7 @@ export function ReleaseClose() {
               ))}
             </ol>
             <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-api-contract.md">
-              Read the MCP contract <span aria-hidden="true">↗</span>
+              Read the MCP contract <ArrowUpRight size={18} aria-hidden="true" />
             </a>
           </aside>
         </div>

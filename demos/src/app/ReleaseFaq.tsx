@@ -1,3 +1,8 @@
+"use client";
+
+import { Plus } from "lucide-react";
+import { useState } from "react";
+
 const questions = [
   {
     question: "Do I need the MCP server?",
@@ -22,6 +27,16 @@ const questions = [
 ];
 
 export function ReleaseFaq() {
+  const [openQuestions, setOpenQuestions] = useState<number[]>([]);
+
+  function toggleQuestion(index: number) {
+    setOpenQuestions((current) => (
+      current.includes(index)
+        ? current.filter((item) => item !== index)
+        : [...current, index]
+    ));
+  }
+
   return (
     <section className="release-faq" aria-labelledby="release-faq-title">
       <header>
@@ -29,12 +44,42 @@ export function ReleaseFaq() {
         <h3 id="release-faq-title">The useful questions.</h3>
       </header>
       <div className="release-faq-list">
-        {questions.map((item) => (
-          <details key={item.question}>
-            <summary className="focus-ring">{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
+        {questions.map((item, index) => {
+          const isOpen = openQuestions.includes(index);
+          const triggerId = `release-faq-trigger-${index}`;
+          const panelId = `release-faq-panel-${index}`;
+
+          return (
+            <div className="release-faq-item" data-open={isOpen} key={item.question}>
+              <h4>
+                <button
+                  aria-controls={panelId}
+                  aria-expanded={isOpen}
+                  className="focus-ring"
+                  id={triggerId}
+                  onClick={() => toggleQuestion(index)}
+                  type="button"
+                >
+                  <span>{item.question}</span>
+                  <span className="release-faq-icon" aria-hidden="true">
+                    <Plus size={18} strokeWidth={2.25} />
+                  </span>
+                </button>
+              </h4>
+              <div
+                aria-hidden={!isOpen}
+                aria-labelledby={triggerId}
+                className="release-faq-answer"
+                id={panelId}
+                role="region"
+              >
+                <div>
+                  <p>{item.answer}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

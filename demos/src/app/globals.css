@@ -490,13 +490,12 @@ code {
   text-decoration: none;
 }
 
-.tour-link span {
+.tour-link svg {
   color: var(--orange);
-  font-size: 1.2rem;
   transition: transform 160ms ease-out;
 }
 
-.tour-link:hover span {
+.tour-link:hover svg {
   transform: translateY(3px);
 }
 
@@ -937,12 +936,6 @@ code {
   font-size: 1.05rem;
   font-weight: 850;
   line-height: 1;
-}
-
-.station-proof-mark > span {
-  display: block;
-  line-height: 1;
-  transform: translateY(-1px);
 }
 
 .station-proof p,
@@ -2002,60 +1995,80 @@ code {
   display: grid;
 }
 
-.release-faq details {
+.release-faq-item {
   border-bottom: 1px solid color-mix(in srgb, var(--release-text) 38%, transparent);
 }
 
-.release-faq details:first-child {
+.release-faq-item:first-child {
   border-top: 1px solid color-mix(in srgb, var(--release-text) 38%, transparent);
 }
 
-.release-faq summary {
-  position: relative;
+.release-faq-item h4 {
+  margin: 0;
+}
+
+.release-faq-item button {
   display: flex;
+  width: 100%;
   min-height: 84px;
-  padding: 20px 52px 20px 0;
+  padding: 20px 4px 20px 0;
   align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border: 0;
+  background: transparent;
   color: var(--release-text);
   cursor: pointer;
+  font: inherit;
   font-size: clamp(1.125rem, 1.25vw, 1.3rem);
   font-weight: 680;
   letter-spacing: -0.025em;
   line-height: 1.35;
-  list-style: none;
+  text-align: left;
 }
 
-.release-faq summary::-webkit-details-marker {
-  display: none;
-}
-
-.release-faq summary::after {
-  position: absolute;
-  right: 4px;
-  content: "+";
+.release-faq-icon {
   display: grid;
   width: 40px;
   height: 40px;
+  flex: 0 0 40px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--release-text) 48%, transparent);
   border-radius: 50%;
-  font-family: var(--font-label), monospace;
-  font-size: 1rem;
-  font-weight: 700;
   transition-property: transform, background-color;
-  transition-duration: 160ms;
-  transition-timing-function: ease-out;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+  will-change: transform;
 }
 
-.release-faq summary:hover::after {
+.release-faq-item button:hover .release-faq-icon {
   background: color-mix(in srgb, var(--release-text) 9%, transparent);
 }
 
-.release-faq details[open] summary::after {
-  transform: rotate(45deg);
+.release-faq-item[data-open="true"] .release-faq-icon {
+  transform: rotate(135deg);
 }
 
-.release-faq details > p {
+.release-faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition-property: grid-template-rows, opacity;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.release-faq-item[data-open="true"] .release-faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.release-faq-answer > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.release-faq-answer p {
   max-width: 780px;
   margin: -4px 52px 24px 0;
   color: color-mix(in srgb, var(--release-text) 86%, transparent);
@@ -2063,6 +2076,13 @@ code {
   font-weight: 540;
   line-height: 1.58;
   text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .release-faq-icon,
+  .release-faq-answer {
+    transition-duration: 0.01ms;
+  }
 }
 
 .release-bay .focus-ring:focus-visible {
@@ -2911,13 +2931,13 @@ code {
     padding-top: 24px;
   }
 
-  .release-faq summary {
+  .release-faq-item button {
     min-height: 68px;
-    padding-right: 48px;
+    padding-right: 4px;
     font-size: 1rem;
   }
 
-  .release-faq details > p {
+  .release-faq-answer p {
     margin-right: 0;
     font-size: 0.92rem;
   }
