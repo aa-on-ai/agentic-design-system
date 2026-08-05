@@ -1998,10 +1998,6 @@ code {
   border-bottom: 1px solid color-mix(in srgb, var(--release-text) 38%, transparent);
 }
 
-.release-faq-item:first-child {
-  border-top: 1px solid color-mix(in srgb, var(--release-text) 38%, transparent);
-}
-
 .release-faq-item h4 {
   margin: 0;
 }
