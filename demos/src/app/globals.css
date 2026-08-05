@@ -104,17 +104,16 @@ body {
   overscroll-behavior-y: none;
 }
 
-button,
-a {
-  font: inherit;
-}
+@layer base {
+  button,
+  a {
+    font: inherit;
+  }
 
-button {
-  color: inherit;
-}
-
-a {
-  color: inherit;
+  button,
+  a {
+    color: inherit;
+  }
 }
 
 code {

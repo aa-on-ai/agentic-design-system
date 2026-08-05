@@ -292,20 +292,26 @@ export default function CanopyLandingPage() {
 
           <div id="preview" className="lg:pl-4">
             {renderWeatherPanel()}
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">Preview states</span>
+            <div
+              className="mt-4 flex flex-wrap items-center gap-2"
+              role="group"
+              aria-label="Canopy demo state"
+            >
+              <span className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">Demo state</span>
               {(["loaded", "loading", "empty", "error"] as const).map((item) => (
                 <button
                   key={item}
                   onClick={() => setState(item)}
                   aria-pressed={state === item}
-                  className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 ${
+                  className={`inline-flex min-h-12 items-center rounded-full px-4 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 ${
                     state === item
                       ? "bg-emerald-900 text-white"
                       : "bg-white/80 text-stone-700 ring-1 ring-black/8 hover:bg-white"
                   }`}
                 >
-                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                  {item === "loaded"
+                    ? "Default"
+                    : item.charAt(0).toUpperCase() + item.slice(1)}
                 </button>
               ))}
             </div>

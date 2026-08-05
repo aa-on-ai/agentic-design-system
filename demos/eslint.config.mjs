@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Intentional anti-pattern fixtures used as visual baselines.
+    "src/app/before/**",
   ]),
 ]);
 
