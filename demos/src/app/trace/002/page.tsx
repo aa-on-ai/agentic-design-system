@@ -11,7 +11,7 @@ import { TraceTwoHero } from "./TraceTwoHero";
 import styles from "./trace-two.module.css";
 
 export const metadata: Metadata = {
-  title: "Pawprint repair proof · Agentic Design System",
+  title: "Pawprint repair proof | Agentic Design System",
   description: "See how ADS caught one contradictory action, repaired it, and proved every unrelated Pawprint state stayed untouched.",
 };
 
@@ -46,7 +46,7 @@ export default function TraceTwoPage() {
         <a className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
           <BrandLockup />
         </a>
-        <span>Pawprint proof case · frozen ADS v1.3.1 evidence</span>
+        <span>Pawprint proof case, frozen ADS version 1.3.1 evidence</span>
       </footer>
     </main>
   );

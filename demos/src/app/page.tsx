@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { BrandLockup } from "./BrandLockup";
@@ -109,18 +109,17 @@ export default async function Home({ searchParams }: HomeProps) {
                   className="install-guide-link focus-ring"
                   href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md"
                 >
-                  Codex example · choose your agent and activate ADS
-                  <ArrowUpRight size={14} aria-hidden="true" />
+                  Codex example, choose your agent and activate ADS
                 </a>
               </div>
               <a className="tour-link focus-ring" href="#assembly-line">
-                See one UI run <ArrowDown size={18} aria-hidden="true" />
+                See one UI run
               </a>
             </div>
           </div>
 
           <div className="hero-job-ticket" aria-hidden="true">
-            <span>Live run</span><b>Orders / UI review</b><small>input · evidence · verdict</small>
+            <span>Live run</span><b>Orders / UI review</b><small>Input, evidence, and verdict</small>
           </div>
           <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>

@@ -1,4 +1,4 @@
-import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { TRACE } from "./traceData";
 import styles from "./trace-two.module.css";
 
@@ -44,13 +44,11 @@ export function ProofReceipts() {
             <a key={label} className="focus-ring" href={href}>
               <CheckCircle2 size={18} aria-hidden="true" />
               <span>{label}</span>
-              <ArrowUpRight size={16} aria-hidden="true" />
             </a>
           ))}
           <a className="focus-ring" href="/trace/002/trace.json">
             <CheckCircle2 size={18} aria-hidden="true" />
             <span>Machine-readable trace</span>
-            <ArrowUpRight size={16} aria-hidden="true" />
           </a>
         </nav>
       </details>

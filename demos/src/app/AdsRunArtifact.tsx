@@ -16,7 +16,7 @@ function InputArtifact() {
       <p className="ads-artifact-summary">Make delayed orders impossible to miss before dispatch closes.</p>
       <dl>
         <div><dt>User</dt><dd>Operations lead</dd></div>
-        <div><dt>Must show</dt><dd>Loading · empty · error · 390px</dd></div>
+        <div><dt>Must show</dt><dd>Loading, empty, error, and 390px</dd></div>
         <div><dt>Stop when</dt><dd>Evidence + separate grader verdict</dd></div>
       </dl>
       <span className="ads-file-note">The agent now has a job it can fail.</span>
@@ -31,11 +31,11 @@ function FailedCheckArtifact() {
         <p className="ads-artifact-summary">The first browser capture exposes objective failures.</p>
         <OrderScreenPreview state="failed" />
       </div>
-      <ul className="ads-check-list" aria-label="Failed checks">
-        <li><b>FAIL 01</b><span>Horizontal overflow +36px</span></li>
-        <li><b>FAIL 02</b><span>Error state missing</span></li>
-        <li className="ads-check-list-muted"><b>PASS</b><span>Heading order</span></li>
-      </ul>
+      <div className="ads-check-list" aria-label="Failed checks">
+        <div><b>Failed check 01</b><span>Horizontal overflow, 36px</span></div>
+        <div><b>Failed check 02</b><span>Error state missing</span></div>
+        <div className="ads-check-list-muted"><b>Passed</b><span>Heading order</span></div>
+      </div>
     </div>
   );
 }
@@ -46,9 +46,9 @@ function CorrectedArtifact() {
       <p className="ads-artifact-summary">The coding agent repairs the actual screen against the brief.</p>
       <OrderScreenPreview state="fixed" />
       <div className="ads-repair-strip">
-        <span><b>+ Priority</b> urgent orders lead</span>
-        <span><b>+ States</b> loading / empty / error</span>
-        <span><b>+ Mobile</b> overflow removed</span>
+        <span><b>Priority</b> urgent orders lead</span>
+        <span><b>States</b> loading, empty, and error</span>
+        <span><b>Mobile</b> overflow removed</span>
       </div>
     </div>
   );
@@ -78,8 +78,8 @@ function VerdictArtifact() {
     <div className="ads-verdict-sheet">
       <p className="ads-artifact-summary">A separate critic can accept the evidence or send the screen back.</p>
       <div className="ads-verdict-main">
-        <span>VERDICT</span>
-        <strong>SATISFIED</strong>
+        <span>Verdict</span>
+        <strong>Satisfied</strong>
         <small>Evidence matches the outcome.</small>
       </div>
       <div className="ads-score-row">
@@ -87,7 +87,7 @@ function VerdictArtifact() {
         <span>Craft <b>9.1</b></span>
         <span>Function <b>9.0</b></span>
       </div>
-      <p className="ads-verdict-note">Other outcome: NEEDS REVISION · human if unresolved</p>
+      <p className="ads-verdict-note">The other outcome is needs revision, with a human review if it stays unresolved.</p>
     </div>
   );
 }

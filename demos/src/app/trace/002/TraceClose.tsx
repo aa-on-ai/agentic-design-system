@@ -11,9 +11,9 @@ export function TraceClose() {
       <div className={styles.closeAction}>
         <InstallCommand variant="strip" />
         <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md">
-          Choose your agent and activate ADS <span aria-hidden="true">↗</span>
+          Choose your agent and activate ADS
         </a>
-        <span>Open source · repo-local · inspectable</span>
+        <span>Open source, repo-local, and inspectable</span>
       </div>
     </section>
   );

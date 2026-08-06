@@ -50,7 +50,7 @@ export function OrderScreenPreview({ state }: { state: ScreenState }) {
         </div>
 
         <p className={fixed ? "run-screen-result run-screen-result--pass" : "run-screen-result run-screen-result--fail"}>
-          {fixed ? "FIXED · urgent work leads" : "FAIL · delayed order is buried"}
+          {fixed ? "Fixed, urgent work leads" : "Failed, the delayed order is buried"}
         </p>
       </div>
     </div>

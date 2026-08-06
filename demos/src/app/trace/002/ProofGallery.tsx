@@ -29,7 +29,7 @@ function ComparisonPanel({ kind, viewport, zoomed }: { kind: Exclude<Mode, "diff
   return (
     <figure className={`${styles.comparisonPanel} ${repaired ? "" : styles.baselinePanel}`}>
       <figcaption>
-        <span>{repaired ? "Repaired" : "Baseline"} · error / {viewport === "desktop" ? "1280" : "390"}</span>
+        <span>{repaired ? "Repaired" : "Baseline"} error at {viewport === "desktop" ? "1280" : "390"} pixels</span>
         <b>{repaired ? "State-aligned action" : "Contradictory action"}</b>
       </figcaption>
       <div
@@ -112,10 +112,10 @@ export function ProofGallery() {
         </div>
 
         <div className={styles.inspectorResult}>
-          <div><span>Changed</span><strong>Error · desktop + mobile</strong></div>
-          <div><span>Pixel-identical</span><strong>Default · loading · empty</strong></div>
+          <div><span>Changed</span><strong>Error on desktop and mobile</strong></div>
+          <div><span>Pixel-identical</span><strong>Default, loading, and empty</strong></div>
           <div><span>Recovery</span><strong>Retry remains active</strong></div>
-          <a href={mode === "baseline" ? source.baseline : source.repaired} target="_blank" rel="noreferrer">Open full-resolution original ↗</a>
+          <a href={mode === "baseline" ? source.baseline : source.repaired} target="_blank" rel="noreferrer">Open the full-resolution original</a>
         </div>
       </div>
     </section>
