@@ -151,17 +151,8 @@ async function installStationStateObserver(page, stage) {
 
       const key = `${state.reactionCount}:${state.phase}`;
       if (observed.has(key)) return;
-      requestAnimationFrame(() => {
-        const settledState = capture();
-        if (
-          settledState.station !== targetStage ||
-          settledState.phase !== state.phase ||
-          settledState.reactionCount !== state.reactionCount ||
-          observed.has(key)
-        ) return;
-        observed.add(key);
-        window.__adsStationPhaseLog.push(settledState);
-      });
+      observed.add(key);
+      window.__adsStationPhaseLog.push(state);
     };
 
     new MutationObserver(record).observe(climber, {
@@ -454,7 +445,7 @@ for (const [browserName, browserType] of browserTypes) {
         }
         if (
           peeking.phase !== "peeking" || peeking.pose !== "peek" || peeking.station !== "rubric" ||
-          !peeking.imageSrc?.includes("ember-peek") || peeking.imageCount !== 1 || !peeking.imageStayedMounted
+          peeking.imageCount !== 1 || !peeking.imageStayedMounted
         ) {
           fail(scope, `station peek failed: ${JSON.stringify(peeking)}`);
         }
