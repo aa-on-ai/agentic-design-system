@@ -46,7 +46,7 @@ const facts = await page.evaluate(() => {
   });
   const undersized = targets.flatMap((element) => {
     const rect = element.getBoundingClientRect();
-    return rect.width < 44 || rect.height < 44
+    return rect.width < 48 || rect.height < 48
       ? [{ label: element.getAttribute("aria-label") || element.textContent?.trim() || element.tagName, width: rect.width, height: rect.height }]
       : [];
   });

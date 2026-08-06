@@ -78,7 +78,7 @@
 - Chips, tags, or badges overflowing their containers on narrow widths.
 - Long model names or agency names causing horizontal overflow.
 - Fixed-width elements that don't adapt below 640px.
-- Touch targets under 44px on mobile.
+- Touch targets under 48px on mobile.
 - Nav that disappears on mobile with no replacement (hamburger, bottom tabs, etc.).
 
 ## Aaron-Specific Red Flags

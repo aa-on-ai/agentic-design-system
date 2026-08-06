@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Pawprint Dispatch</title>
+  <style>
+    :root {
+      --canvas: #f4f0e7;
+      --surface: #fffdf8;
+      --surface-strong: #ffffff;
+      --ink: #18302b;
+      --muted: #64716b;
+      --line: #dcd8ce;
+      --brand: #235b4e;
+      --brand-deep: #173b34;
+      --brand-soft: #dce9e1;
+      --warning: #9b4a2f;
+      --warning-soft: #f5e2d9;
+      --watch: #8a6418;
+      --watch-soft: #f7ebc9;
+      --good: #27624b;
+      --good-soft: #dcece3;
+      --shadow: 0 18px 45px rgba(40, 50, 43, 0.08);
+      --r-lg: 22px;
+      --r-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--canvas);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 88% -10%, rgba(35, 91, 78, 0.09), transparent 27rem),
+        var(--canvas);
+      font-family: "Avenir Next", Avenir, sans-serif;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    button {
+      min-width: 48px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition-property: background-color, color, border-color, transform;
+      transition-duration: 170ms;
+      transition-timing-function: ease-out;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: scale(0.97);
+      transition-duration: 100ms;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #c36a3c;
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      border-bottom: 1px solid rgba(24, 48, 43, 0.12);
+      background: rgba(255, 253, 248, 0.72);
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 52px));
+      min-height: 78px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .paw-mark {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      border-radius: 13px;
+      background: var(--brand);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
+    .paw-mark i {
+      position: absolute;
+      display: block;
+      background: #fff9ee;
+      border-radius: 50%;
+    }
+
+    .paw-mark i:nth-child(1) { width: 7px; height: 9px; left: 8px; top: 9px; transform: rotate(-24deg); }
+    .paw-mark i:nth-child(2) { width: 7px; height: 9px; left: 17px; top: 5px; }
+    .paw-mark i:nth-child(3) { width: 7px; height: 9px; right: 7px; top: 9px; transform: rotate(24deg); }
+    .paw-mark i:nth-child(4) { width: 17px; height: 14px; left: 12px; bottom: 7px; border-radius: 55% 55% 47% 47%; }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-copy h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-copy p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .today-chip {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 0 4px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .today-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--good);
+      box-shadow: 0 0 0 4px var(--good-soft);
+    }
+
+    .today-chip.is-offline {
+      color: #7a4230;
+    }
+
+    .today-chip.is-offline::before {
+      content: "!";
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #b36a50;
+      border-radius: 50%;
+      color: #7a4230;
+      background: transparent;
+      box-shadow: none;
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    .primary-button {
+      padding: 0 20px;
+      color: #fffdf8;
+      background: var(--brand);
+      box-shadow: 0 8px 20px rgba(35, 91, 78, 0.18);
+    }
+
+    .primary-button:hover {
+      background: var(--brand-deep);
+    }
+
+    button:disabled,
+    button:disabled:hover,
+    button:disabled:active {
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .primary-button:disabled {
+      color: #52615a;
+      border: 1px solid #b9c4be;
+      background: #d7ded9;
+    }
+
+    .icon-button:disabled {
+      color: #68756f;
+      border-color: #c7cec9;
+      background: #e5e9e5;
+    }
+
+    .secondary-button {
+      padding: 0 19px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+    }
+
+    .secondary-button:hover {
+      border-color: #b2afa6;
+      background: #faf8f2;
+    }
+
+    .workspace {
+      width: min(1180px, calc(100% - 52px));
+      margin: 0 auto;
+      padding: 30px 0 54px;
+    }
+
+    .day-heading {
+      min-height: 55px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .day-heading h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 3vw, 34px);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .sync {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .icon-button {
+      padding: 0;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .icon-button:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    #state-root {
+      min-height: 580px;
+    }
+
+    .priority {
+      position: relative;
+      min-height: 150px;
+      margin-bottom: 30px;
+      padding: 26px 28px 25px 32px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 28px;
+      border-radius: var(--r-lg);
+      color: #fdfaf2;
+      background: var(--brand-deep);
+      box-shadow: var(--shadow);
+    }
+
+    .priority::after {
+      content: "";
+      position: absolute;
+      right: -55px;
+      top: -82px;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(255, 255, 255, 0.025), 0 0 0 58px rgba(255, 255, 255, 0.018);
+      pointer-events: none;
+    }
+
+    .priority-copy {
+      position: relative;
+      z-index: 1;
+      min-width: 0;
+    }
+
+    .priority-label {
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #f5c9a7;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .priority-label::before {
+      content: "!";
+      width: 22px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid rgba(245, 201, 167, 0.55);
+      border-radius: 50%;
+      font-size: 12px;
+    }
+
+    .priority h3 {
+      margin: 0;
+      max-width: 690px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(24px, 2.5vw, 31px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      text-wrap: balance;
+    }
+
+    .priority-detail {
+      margin: 10px 0 0;
+      color: #cfdcd7;
+      font-size: 14px;
+      text-wrap: pretty;
+    }
+
+    .priority .primary-button {
+      position: relative;
+      z-index: 1;
+      min-width: 142px;
+      color: var(--brand-deep);
+      background: #fff9ee;
+      box-shadow: none;
+    }
+
+    .priority .primary-button:hover {
+      background: #f1dfcc;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(270px, 0.72fr);
+      align-items: start;
+      gap: 38px;
+    }
+
+    .section-heading {
+      min-height: 43px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .section-heading h3,
+    .rail-block h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    .section-heading p,
+    .rail-kicker {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .mobile-risk-summary {
+      display: none;
+    }
+
+    .walk-list {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      list-style: none;
+      border: 1px solid rgba(24, 48, 43, 0.1);
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      box-shadow: 0 12px 30px rgba(40, 50, 43, 0.045);
+    }
+
+    .walk-row {
+      min-height: 84px;
+      padding: 15px 18px;
+      display: grid;
+      grid-template-columns: 68px minmax(160px, 1.15fr) minmax(124px, 0.85fr) auto;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .walk-row:last-child {
+      border-bottom: 0;
+    }
+
+    .walk-row.is-current {
+      background: #f3f8f4;
+      box-shadow: inset 4px 0 0 var(--brand);
+    }
+
+    .walk-time {
+      display: flex;
+      flex-direction: column;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .walk-time strong {
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .dog-name,
+    .walker-name {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .route,
+    .walker-meta {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+      text-wrap: pretty;
+    }
+
+    .walker-name::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      margin-right: 7px;
+      display: inline-block;
+      border: 2px solid var(--brand);
+      border-radius: 50%;
+      vertical-align: 1px;
+    }
+
+    .status-pill {
+      min-width: max-content;
+      min-height: 32px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      justify-self: end;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .status-pill::before {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .status-pill.active { color: var(--good); background: var(--good-soft); }
+    .status-pill.active::before { content: "●"; }
+    .status-pill.watch { color: #6e4c0d; background: var(--watch-soft); }
+    .status-pill.watch::before { content: "▲"; }
+    .status-pill.ready { color: #45534d; background: #eceeea; }
+    .status-pill.ready::before { content: "○"; }
+    .status-pill.done { color: #59645f; background: #efefec; }
+    .status-pill.done::before { content: "✓"; }
+
+    .ops-rail {
+      padding-top: 55px;
+    }
+
+    .rail-block {
+      padding: 20px 2px 24px;
+      border-top: 1px solid rgba(24, 48, 43, 0.18);
+    }
+
+    .rail-block:first-child {
+      border-top-width: 2px;
+      border-top-color: var(--ink);
+    }
+
+    .coverage-number {
+      margin: 13px 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .coverage-number span {
+      color: var(--muted);
+      font-family: "Avenir Next", Avenir, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .coverage-bar {
+      height: 7px;
+      margin: 12px 0 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #deded7;
+    }
+
+    .coverage-bar span {
+      width: 86%;
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: var(--brand);
+    }
+
+    .rail-copy {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-wrap: pretty;
+    }
+
+    .risk-list {
+      margin: 13px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .risk-list li {
+      padding: 10px 0 10px 20px;
+      position: relative;
+      border-bottom: 1px solid rgba(24, 48, 43, 0.09);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .risk-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .risk-list li::before {
+      content: "!";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 14px;
+      height: 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--warning);
+      font-size: 9px;
+      line-height: 1;
+    }
+
+    .risk-list small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .feedback {
+      min-height: 20px;
+      margin: 20px 2px 0;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .state-shell {
+      min-height: 580px;
+    }
+
+    .state-intro {
+      min-height: 150px;
+      margin-bottom: 30px;
+      padding: 28px 30px;
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .state-intro h3 {
+      margin: 0 0 8px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .state-intro p {
+      max-width: 600px;
+      margin: 0;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .loading-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .loading-label::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      border: 3px solid var(--brand-soft);
+      border-top-color: var(--brand);
+      border-radius: 50%;
+    }
+
+    .skeleton-priority {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 13px;
+    }
+
+    .skeleton-line,
+    .skeleton-block {
+      display: block;
+      border-radius: 8px;
+      background: #e8e6df;
+    }
+
+    .skeleton-line { width: 72%; height: 18px; }
+    .skeleton-line.short { width: 43%; height: 12px; }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(270px, 0.72fr);
+      gap: 38px;
+    }
+
+    .skeleton-list {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      border-radius: var(--r-lg);
+      background: var(--surface);
+    }
+
+    .skeleton-row {
+      min-height: 62px;
+      display: grid;
+      grid-template-columns: 58px 1fr 28%;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .skeleton-row:last-child { border-bottom: 0; }
+    .skeleton-block { height: 12px; }
+    .skeleton-block.tall { width: 42px; height: 28px; }
+
+    .skeleton-side {
+      padding-top: 4px;
+      display: grid;
+      align-content: start;
+      gap: 18px;
+    }
+
+    .skeleton-side .skeleton-block:nth-child(1) { width: 58%; height: 14px; }
+    .skeleton-side .skeleton-block:nth-child(2) { width: 84%; height: 42px; }
+    .skeleton-side .skeleton-block:nth-child(3) { width: 100%; height: 1px; }
+    .skeleton-side .skeleton-block:nth-child(4) { width: 72%; height: 14px; }
+    .skeleton-side .skeleton-block:nth-child(5) { width: 94%; height: 58px; }
+
+    .empty-stage {
+      min-height: 420px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 132px minmax(0, 500px);
+      justify-content: center;
+      align-items: center;
+      gap: 44px;
+      border: 1px solid rgba(24, 48, 43, 0.1);
+      border-radius: var(--r-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .empty-paw {
+      position: relative;
+      width: 132px;
+      height: 132px;
+      border-radius: 42px 52px 44px 50px;
+      background: var(--brand-soft);
+      transform: rotate(-4deg);
+    }
+
+    .empty-paw::before {
+      content: "";
+      position: absolute;
+      width: 49px;
+      height: 41px;
+      left: 42px;
+      top: 58px;
+      border-radius: 55% 55% 48% 48%;
+      background: var(--brand);
+      box-shadow:
+        -35px -31px 0 -12px var(--brand),
+        0 -46px 0 -12px var(--brand),
+        35px -31px 0 -12px var(--brand);
+    }
+
+    .empty-copy h3 {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 4vw, 38px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .empty-copy p {
+      margin: 0 0 23px;
+      color: var(--muted);
+      font-size: 15px;
+      text-wrap: pretty;
+    }
+
+    .empty-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .error-panel {
+      min-height: 226px;
+      margin-bottom: 30px;
+      padding: 32px 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 28px;
+      border: 1px solid #dfb6a6;
+      border-left: 5px solid var(--warning);
+      border-radius: var(--r-lg);
+      background: #fffaf6;
+      box-shadow: var(--shadow);
+    }
+
+    .error-kicker {
+      margin: 0 0 9px;
+      color: var(--warning);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .error-panel h3 {
+      margin: 0 0 9px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 3vw, 34px);
+      line-height: 1.06;
+      letter-spacing: -0.035em;
+      text-wrap: balance;
+    }
+
+    .error-panel p {
+      max-width: 660px;
+      margin: 0;
+      color: #6e5f59;
+      text-wrap: pretty;
+    }
+
+    .error-panel .primary-button {
+      min-width: 128px;
+      background: var(--warning);
+      box-shadow: 0 8px 20px rgba(155, 74, 47, 0.16);
+    }
+
+    .offline-strip {
+      padding: 24px 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 26px;
+      border-top: 2px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .offline-item span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .offline-item strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner,
+      .workspace {
+        width: min(100% - 32px, 1180px);
+      }
+
+      .topbar-inner {
+        min-height: 72px;
+      }
+
+      .today-chip,
+      .header-actions .primary-button {
+        display: none;
+      }
+
+      .header-actions {
+        gap: 0;
+      }
+
+      .mobile-add {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .workspace {
+        padding-top: 23px;
+      }
+
+      .day-heading {
+        min-height: 49px;
+        margin-bottom: 18px;
+        align-items: center;
+      }
+
+      .day-heading h2 {
+        font-size: 27px;
+      }
+
+      .sync span {
+        display: none;
+      }
+
+      body[data-state="error"] .sync span {
+        max-width: 82px;
+        display: block;
+        color: #7a4230;
+        text-align: right;
+        line-height: 1.25;
+      }
+
+      .priority {
+        min-height: 222px;
+        margin-bottom: 27px;
+        padding: 25px 23px 23px;
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 20px;
+        border-radius: 20px;
+      }
+
+      .priority h3 {
+        max-width: 310px;
+        font-size: 25px;
+      }
+
+      .priority-detail {
+        max-width: 305px;
+        font-size: 13px;
+      }
+
+      .priority .primary-button {
+        width: 100%;
+      }
+
+      .content-grid,
+      .skeleton-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .section-heading {
+        min-height: 36px;
+        margin-bottom: 10px;
+      }
+
+      .schedule-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        row-gap: 7px;
+      }
+
+      .schedule-heading .mobile-risk-summary {
+        grid-column: 1 / -1;
+        min-height: 24px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #7a4230;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .schedule-heading .mobile-risk-summary::before {
+        content: "!";
+        width: 17px;
+        height: 17px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--warning);
+        font-size: 10px;
+        line-height: 1;
+      }
+
+      .walk-row {
+        min-height: 110px;
+        padding: 15px 15px 15px 17px;
+        grid-template-columns: 52px minmax(0, 1fr) auto;
+        grid-template-areas:
+          "time dog status"
+          "time walker walker";
+        align-items: start;
+        column-gap: 12px;
+        row-gap: 9px;
+      }
+
+      .walk-time { grid-area: time; }
+      .walk-dog { grid-area: dog; }
+      .walk-walker { grid-area: walker; }
+      .status-pill { grid-area: status; }
+
+      .walker-name,
+      .walker-meta {
+        display: inline;
+      }
+
+      .walker-meta::before {
+        content: " · ";
+      }
+
+      .status-pill {
+        min-width: auto;
+        min-height: 30px;
+        padding: 5px 8px;
+      }
+
+      .ops-rail {
+        padding-top: 0;
+      }
+
+      .state-shell {
+        min-height: 620px;
+      }
+
+      .state-intro {
+        min-height: 206px;
+        margin-bottom: 27px;
+        padding: 25px 23px;
+      }
+
+      .skeleton-grid {
+        gap: 24px;
+      }
+
+      .skeleton-side {
+        display: none;
+      }
+
+      .empty-stage {
+        min-height: 550px;
+        padding: 42px 25px;
+        grid-template-columns: 1fr;
+        justify-items: start;
+        align-content: center;
+        gap: 34px;
+      }
+
+      .empty-paw {
+        width: 106px;
+        height: 106px;
+        border-radius: 34px 42px 35px 40px;
+      }
+
+      .empty-paw::before {
+        left: 33px;
+        top: 46px;
+        transform: scale(0.8);
+        transform-origin: center;
+      }
+
+      .empty-copy h3 {
+        font-size: 31px;
+      }
+
+      .empty-copy .primary-button {
+        width: 100%;
+      }
+
+      .error-panel {
+        min-height: 330px;
+        margin-bottom: 27px;
+        padding: 27px 23px;
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .error-panel h3 {
+        font-size: 30px;
+      }
+
+      .error-panel .primary-button {
+        width: 100%;
+      }
+
+      .offline-strip {
+        padding: 20px 4px;
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+
+    @media (min-width: 761px) {
+      .mobile-add {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-lockup">
+        <span class="paw-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <div class="brand-copy">
+          <h1>Pawprint</h1>
+          <p>Dispatch</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="today-chip" id="schedule-freshness">Live schedule</div>
+        <button class="primary-button" type="button" data-action="new-walk">+ New walk</button>
+        <button class="icon-button mobile-add" type="button" data-action="new-walk" aria-label="Create a new walk">+</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <div class="day-heading">
+      <div>
+        <p class="eyebrow">Saturday · July 18</p>
+        <h2>Today’s walks</h2>
+      </div>
+      <div class="sync">
+        <span id="sync-status">Synced 10:42 AM</span>
+        <button class="icon-button" id="refresh-schedule" type="button" data-action="refresh" aria-label="Refresh schedule">↻</button>
+      </div>
+    </div>
+
+    <div id="state-root"></div>
+    <p id="action-feedback" class="feedback" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const walkRows = [
+      {
+        time: "10:30",
+        period: "AM",
+        dog: "Milo + Pepper",
+        route: "Lakeview loop · 45 min",
+        walker: "Jamal Reed",
+        meta: "handoff due",
+        status: "Needs check-in",
+        statusClass: "watch",
+        current: true
+      },
+      {
+        time: "11:15",
+        period: "AM",
+        dog: "Bea",
+        route: "Cedar Park · 30 min",
+        walker: "Nora Kim",
+        meta: "0.8 mi away",
+        status: "On the way",
+        statusClass: "active"
+      },
+      {
+        time: "12:00",
+        period: "PM",
+        dog: "Atlas",
+        route: "Riverside trail · 60 min",
+        walker: "Elena Ruiz",
+        meta: "confirmed",
+        status: "Ready",
+        statusClass: "ready"
+      },
+      {
+        time: "1:30",
+        period: "PM",
+        dog: "Winnie + Dot",
+        route: "Old Town circuit · 45 min",
+        walker: "Theo Brooks",
+        meta: "confirmed",
+        status: "Ready",
+        statusClass: "ready"
+      }
+    ];
+
+    function scheduleRows() {
+      return walkRows.map((walk) => `
+        <li class="walk-row${walk.current ? " is-current" : ""}">
+          <time class="walk-time" datetime="2026-07-18T${walk.period === "PM" && walk.time !== "12:00" ? String(Number(walk.time.split(":")[0]) + 12).padStart(2, "0") + ":" + walk.time.split(":")[1] : walk.time}">
+            <strong>${walk.time}</strong>${walk.period}
+          </time>
+          <div class="walk-dog">
+            <p class="dog-name">${walk.dog}</p>
+            <p class="route">${walk.route}</p>
+          </div>
+          <div class="walk-walker">
+            <p class="walker-name">${walk.walker}</p>
+            <p class="walker-meta">${walk.meta}</p>
+          </div>
+          <span class="status-pill ${walk.statusClass}">${walk.status}</span>
+        </li>
+      `).join("");
+    }
+
+    const states = {
+      default: () => `
+        <section class="priority" aria-labelledby="priority-title">
+          <div class="priority-copy">
+            <p class="priority-label">Next action · due in 18 min</p>
+            <h3 id="priority-title">Confirm Milo’s handoff with Jamal</h3>
+            <p class="priority-detail">Jamal is running 12 minutes late. Milo’s entry note requires an in-person key handoff before 11:20.</p>
+          </div>
+          <button class="primary-button" type="button" data-action="call-walker">Call Jamal</button>
+        </section>
+
+        <div class="content-grid">
+          <section aria-labelledby="schedule-title">
+            <div class="section-heading schedule-heading">
+              <h3 id="schedule-title">Walk schedule</h3>
+              <p>4 remaining · 2 completed</p>
+              <span class="mobile-risk-summary">Active risks · 2 need attention</span>
+            </div>
+            <ol class="walk-list">${scheduleRows()}</ol>
+          </section>
+
+          <div class="ops-rail">
+            <section class="rail-block" aria-labelledby="coverage-title">
+              <p class="rail-kicker">Walker coverage</p>
+              <h3 id="coverage-title" class="coverage-number">6 / 7 <span>walks assigned</span></h3>
+              <div class="coverage-bar" aria-hidden="true"><span></span></div>
+              <p class="rail-copy">One 4:30 PM River North walk still needs a walker.</p>
+            </section>
+
+            <section class="rail-block" aria-labelledby="risk-title">
+              <p class="rail-kicker">Active risks</p>
+              <h3 id="risk-title">2 need attention</h3>
+              <ul class="risk-list">
+                <li>Late walker handoff<small>Milo + Pepper · due 11:20</small></li>
+                <li>Unfilled afternoon walk<small>Poppy · starts 4:30 PM</small></li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      `,
+
+      loading: () => `
+        <section class="state-shell" role="status" aria-live="polite" aria-busy="true" aria-labelledby="loading-title">
+          <div class="state-intro skeleton-priority">
+            <div id="loading-title" class="loading-label">Updating today’s routes and walker locations…</div>
+            <span class="skeleton-line" aria-hidden="true"></span>
+            <span class="skeleton-line short" aria-hidden="true"></span>
+          </div>
+          <div class="skeleton-grid" aria-hidden="true">
+            <div class="skeleton-list">
+              <div class="skeleton-row"><span class="skeleton-block tall"></span><span class="skeleton-block"></span><span class="skeleton-block"></span></div>
+              <div class="skeleton-row"><span class="skeleton-block tall"></span><span class="skeleton-block"></span><span class="skeleton-block"></span></div>
+              <div class="skeleton-row"><span class="skeleton-block tall"></span><span class="skeleton-block"></span><span class="skeleton-block"></span></div>
+              <div class="skeleton-row"><span class="skeleton-block tall"></span><span class="skeleton-block"></span><span class="skeleton-block"></span></div>
+            </div>
+            <div class="skeleton-side">
+              <span class="skeleton-block"></span><span class="skeleton-block"></span><span class="skeleton-block"></span><span class="skeleton-block"></span><span class="skeleton-block"></span>
+            </div>
+          </div>
+        </section>
+      `,
+
+      empty: () => `
+        <section class="empty-stage" aria-labelledby="empty-title">
+          <div class="empty-paw" aria-hidden="true"></div>
+          <div class="empty-copy">
+            <p class="eyebrow">The board is clear</p>
+            <h3 id="empty-title">No walks scheduled yet</h3>
+            <p>Build today’s route board by adding the first booking. Walker coverage and dispatch risks will appear here automatically.</p>
+            <button class="primary-button" type="button" data-action="new-walk">Add the first walk</button>
+            <div class="empty-note">Saturday schedule · accepting bookings until 6:00 PM</div>
+          </div>
+        </section>
+      `,
+
+      error: () => `
+        <section class="state-shell">
+          <div class="error-panel" role="alert" aria-live="assertive" aria-labelledby="error-title">
+            <div>
+              <p class="error-kicker">Schedule connection lost</p>
+              <h3 id="error-title">We can’t refresh the dispatch board</h3>
+              <p>The last verified schedule is still available below. Retry before assigning or changing a walk so no booking is missed.</p>
+            </div>
+            <button class="primary-button" type="button" data-action="retry">Retry now</button>
+          </div>
+          <section aria-labelledby="offline-title">
+            <div class="section-heading">
+              <h3 id="offline-title">Last verified at 10:42 AM</h3>
+              <p>Read-only snapshot</p>
+            </div>
+            <div class="offline-strip">
+              <div class="offline-item"><span>Next walk</span><strong>11:15 AM · Bea</strong></div>
+              <div class="offline-item"><span>Coverage</span><strong>6 of 7 walks assigned</strong></div>
+              <div class="offline-item"><span>Action</span><strong>Confirm Milo’s key handoff</strong></div>
+            </div>
+          </section>
+        </section>
+      `
+    };
+
+    const root = document.getElementById("state-root");
+    const feedback = document.getElementById("action-feedback");
+    const scheduleFreshness = document.getElementById("schedule-freshness");
+    const syncStatus = document.getElementById("sync-status");
+    const refreshSchedule = document.getElementById("refresh-schedule");
+
+    function activeState() {
+      const value = new URLSearchParams(location.hash.replace(/^#/, "")).get("state") || "default";
+      return Object.prototype.hasOwnProperty.call(states, value) ? value : "default";
+    }
+
+    function render() {
+      const state = activeState();
+      root.innerHTML = states[state]();
+      root.dataset.state = state;
+      document.body.dataset.state = state;
+      const isOffline = state === "error";
+      scheduleFreshness.classList.toggle("is-offline", isOffline);
+      scheduleFreshness.textContent = isOffline ? "Read-only schedule" : "Live schedule";
+      syncStatus.textContent = isOffline ? "Last verified 10:42 AM" : "Synced 10:42 AM";
+      refreshSchedule.setAttribute("aria-label", isOffline ? "Retry schedule connection" : "Refresh schedule");
+      document.querySelectorAll('button[data-action="new-walk"]').forEach((button) => {
+        button.disabled = isOffline;
+        if (!button.closest(".header-actions")) return;
+        if (button.classList.contains("mobile-add")) {
+          button.setAttribute(
+            "aria-label",
+            isOffline ? "New walk unavailable until the schedule reconnects" : "Create a new walk"
+          );
+        } else {
+          button.textContent = isOffline ? "New walk unavailable" : "+ New walk";
+        }
+        if (isOffline) {
+          button.setAttribute("aria-describedby", "schedule-freshness error-title");
+        } else {
+          button.removeAttribute("aria-describedby");
+        }
+      });
+      feedback.textContent = "";
+      document.title = `Pawprint Dispatch · ${state[0].toUpperCase()}${state.slice(1)}`;
+    }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === "retry") {
+        location.hash = "state=loading";
+        return;
+      }
+      if (action === "refresh") {
+        if (activeState() === "error") {
+          location.hash = "state=loading";
+          return;
+        }
+        feedback.textContent = "Schedule is up to date as of 10:42 AM.";
+      } else if (action === "call-walker") {
+        feedback.textContent = "Jamal’s contact card is ready. Call handoff remains due by 11:20 AM.";
+      } else if (action === "new-walk") {
+        feedback.textContent = "New walk setup is ready for booking details.";
+      }
+    });
+
+    window.addEventListener("hashchange", render);
+    render();
+  </script>
+</body>
+</html>

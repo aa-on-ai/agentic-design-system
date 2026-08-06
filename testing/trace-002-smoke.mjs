@@ -54,7 +54,7 @@ assert.match(artifact, /data-action="retry"/);
 assert.match(page, /<ProofGallery \/>/);
 assert.match(page, /<ProofResult \/>/);
 assert.match(hero, /ember-peek\.png/);
-assert.match(hero, /The schedule went read-only/);
+assert.match(hero, /A read-only state still had/);
 assert.match(gallery, /\["baseline", "repaired", "diff"\]/);
 assert.match(gallery, /requestFullscreen/);
 assert.match(gallery, /unoptimized/);

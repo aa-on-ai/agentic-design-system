@@ -78,6 +78,9 @@ async function main() {
 
     const failEvidence = await captureFixture('production-gates-fail.html', path.join(tempDir, 'fail'));
     const failGates = failEvidence.gates;
+    ok('48px authority catches controls that the legacy 44px field allows',
+      failGates.touchTargetsUnder48.length === STATES.length && failGates.touchTargetsUnder44.length === 0,
+      JSON.stringify({ under48: failGates.touchTargetsUnder48, under44: failGates.touchTargetsUnder44 }));
     ok('missing main fails every captured state', failGates.landmarkFailures.length === STATES.length, JSON.stringify(failGates.landmarkFailures));
     ok('plain loading and error copy fail live-region semantics', failGates.liveRegionFailures.length === 2, JSON.stringify(failGates.liveRegionFailures));
     ok('late insertion produces measured CLS above threshold',
@@ -93,6 +96,7 @@ async function main() {
     ok('authority names the main-landmark failure', failedAssessment.blockingReasons.some((reason) => /main landmark missing/.test(reason)));
     ok('authority names the live-region failure', failedAssessment.blockingReasons.some((reason) => /required live region missing/.test(reason)));
     ok('authority names the CLS failure', failedAssessment.blockingReasons.some((reason) => /CLS exceeded/.test(reason)));
+    ok('authority names the 48px target failure', failedAssessment.blockingReasons.some((reason) => /under 48x48/.test(reason)));
 
     const unmeasured = receiptFor(passEvidence);
     delete unmeasured.gates.landmarkFailures;

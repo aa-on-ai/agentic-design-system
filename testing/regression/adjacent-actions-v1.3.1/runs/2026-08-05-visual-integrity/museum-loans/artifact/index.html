@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2eee5">
+  <title>Loan record · North River Museum</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f2eee5;
+      --sheet: #fbf8f1;
+      --ink: #24251f;
+      --muted: #69695e;
+      --faint: #67665e;
+      --line: #d8d0c1;
+      --line-strong: #beb3a2;
+      --wine: #712f35;
+      --wine-deep: #592329;
+      --wine-wash: #f2e5e3;
+      --olive: #536149;
+      --olive-wash: #e5e9df;
+      --amber: #765317;
+      --amber-wash: #f5ead0;
+      --disabled-bg: #e4dfd5;
+      --disabled-ink: #817d73;
+      --focus: #1d6374;
+      --radius: 10px;
+      --shadow: 0 18px 50px rgba(52, 43, 31, 0.09), 0 2px 8px rgba(52, 43, 31, 0.05);
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 0;
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body {
+      min-width: 0;
+      min-height: 100svh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(113, 47, 53, 0.022) 1px, transparent 1px) 0 0 / 100% 32px,
+        var(--paper);
+      font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    [href]:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .site-header {
+      border-bottom: 1px solid rgba(113, 47, 53, 0.18);
+      background: rgba(242, 238, 229, 0.96);
+    }
+
+    .header-inner {
+      width: min(1120px, calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .museum-name {
+      margin: 0;
+      color: var(--wine-deep);
+      font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.015em;
+    }
+
+    .workspace-name {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 48px 0 calc(72px + env(safe-area-inset-bottom));
+    }
+
+    .record-shell {
+      overflow: clip;
+      background: var(--sheet);
+      border: 1px solid rgba(91, 73, 53, 0.16);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .record-heading {
+      position: relative;
+      padding: 42px 48px 40px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .record-heading::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 5px;
+      background: var(--wine);
+    }
+
+    .eyebrow-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow,
+    .folio {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .folio {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 152px;
+      gap: 40px;
+      align-items: center;
+    }
+
+    h1,
+    h2 {
+      font-family: "Iowan Old Style", Baskerville, Georgia, serif;
+      text-wrap: balance;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 0.98;
+    }
+
+    .object-meta {
+      max-width: 720px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      text-wrap: pretty;
+    }
+
+    .object-mark {
+      width: 152px;
+      height: 152px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: #eee6d9;
+      color: var(--wine);
+    }
+
+    .object-mark svg {
+      width: 98px;
+      height: 98px;
+    }
+
+    .record-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+      align-items: start;
+    }
+
+    .record-primary {
+      min-width: 0;
+      padding: 42px 48px 52px;
+    }
+
+    .decision-panel {
+      min-width: 0;
+      align-self: stretch;
+      padding: 42px 40px 48px;
+      border-left: 1px solid var(--line);
+      background: #f5f0e7;
+    }
+
+    .section-kicker {
+      margin: 0 0 10px;
+      color: var(--wine-deep);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 29px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .section-intro {
+      max-width: 660px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .condition-note {
+      margin: 28px 0 0;
+      padding: 24px 0 24px 24px;
+      border-left: 3px solid var(--amber);
+      background: linear-gradient(90deg, var(--amber-wash), rgba(245, 234, 208, 0));
+    }
+
+    .note-label {
+      margin: 0 0 6px;
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .note-title {
+      margin: 0;
+      font-weight: 750;
+    }
+
+    .note-copy {
+      max-width: 620px;
+      margin: 6px 0 0;
+      color: #5d5549;
+      text-wrap: pretty;
+    }
+
+    .custody-section {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+
+    .custody-list {
+      position: relative;
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .custody-list::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      bottom: 22px;
+      left: 7px;
+      width: 1px;
+      background: var(--line-strong);
+    }
+
+    .custody-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 16px minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+      padding-bottom: 25px;
+    }
+
+    .custody-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .custody-dot {
+      position: relative;
+      z-index: 1;
+      width: 15px;
+      height: 15px;
+      margin-top: 4px;
+      border: 3px solid var(--sheet);
+      border-radius: 50%;
+      background: var(--olive);
+      box-shadow: 0 0 0 1px var(--olive);
+    }
+
+    .custody-item.is-current .custody-dot {
+      background: var(--wine);
+      box-shadow: 0 0 0 1px var(--wine);
+    }
+
+    .custody-title,
+    .custody-copy,
+    .custody-date {
+      margin: 0;
+    }
+
+    .custody-title {
+      font-weight: 750;
+    }
+
+    .custody-copy {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 14px;
+      text-wrap: pretty;
+    }
+
+    .custody-date {
+      padding-left: 12px;
+      color: var(--faint);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .status-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: var(--amber-wash);
+      color: #66450c;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .status-symbol {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+    }
+
+    .decision-copy {
+      margin: 12px 0 0;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .permission-alert {
+      margin: 0 0 24px;
+      padding: 18px;
+      border: 1px solid #d2aaa6;
+      border-radius: var(--radius);
+      background: var(--wine-wash);
+      color: #4c2529;
+    }
+
+    .permission-alert strong,
+    .permission-alert span {
+      display: block;
+    }
+
+    .permission-alert span {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .decision-facts {
+      margin: 28px 0 0;
+      padding: 0;
+    }
+
+    .decision-facts > div {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 16px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .decision-facts dt,
+    .decision-facts dd {
+      margin: 0;
+    }
+
+    .decision-facts dt {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .decision-facts dd {
+      font-size: 14px;
+      font-weight: 700;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      width: 100%;
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 750;
+      text-align: center;
+      transition-property: background-color, border-color, color, transform;
+      transition-duration: 160ms;
+      transition-timing-function: ease-out;
+    }
+
+    .button-primary {
+      background: var(--wine);
+      color: #fffaf3;
+      box-shadow: 0 2px 0 var(--wine-deep);
+    }
+
+    .button-secondary {
+      border-color: var(--line-strong);
+      background: var(--sheet);
+      color: var(--wine-deep);
+    }
+
+    .button:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .button:disabled {
+      border-color: #d3cdc2;
+      background: var(--disabled-bg);
+      color: var(--disabled-ink);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .action-helper {
+      margin: 10px 2px 0;
+      color: #6b4a49;
+      font-size: 13px;
+      line-height: 1.45;
+      text-wrap: pretty;
+    }
+
+    .fine-print {
+      margin: 22px 0 0;
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      right: max(24px, env(safe-area-inset-right));
+      bottom: max(24px, env(safe-area-inset-bottom));
+      z-index: 10;
+      max-width: min(360px, calc(100vw - 48px));
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: #2e382a;
+      color: #f8f5ed;
+      box-shadow: 0 12px 30px rgba(32, 34, 27, 0.2);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .loading-shell {
+      min-height: 620px;
+      padding: 42px 48px 52px;
+    }
+
+    .loading-status {
+      margin: 0 0 38px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.75fr);
+      gap: 56px;
+    }
+
+    .skeleton-line,
+    .skeleton-block {
+      background: #e5ded1;
+      border-radius: 5px;
+    }
+
+    .skeleton-line {
+      height: 14px;
+      margin-bottom: 14px;
+    }
+
+    .skeleton-line.short {
+      width: 38%;
+    }
+
+    .skeleton-line.medium {
+      width: 68%;
+    }
+
+    .skeleton-title {
+      width: 76%;
+      height: 56px;
+      margin: 18px 0 24px;
+    }
+
+    .skeleton-block {
+      height: 150px;
+      margin-top: 34px;
+    }
+
+    .skeleton-side {
+      height: 440px;
+    }
+
+    .empty-shell {
+      min-height: 610px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+      gap: 72px;
+      align-items: center;
+      padding: 64px;
+    }
+
+    .empty-figure {
+      position: relative;
+      min-height: 330px;
+      border: 1px solid var(--line);
+      background: #eee7da;
+    }
+
+    .empty-figure::before,
+    .empty-figure::after {
+      content: "";
+      position: absolute;
+      border: 1px solid var(--line-strong);
+    }
+
+    .empty-figure::before {
+      inset: 42px;
+    }
+
+    .empty-figure::after {
+      width: 94px;
+      height: 94px;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .empty-kicker {
+      margin: 0 0 12px;
+      color: var(--wine-deep);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .empty-copy {
+      max-width: 540px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      text-wrap: pretty;
+    }
+
+    .empty-actions {
+      max-width: 280px;
+      margin-top: 30px;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .button-primary:hover:not(:disabled) {
+        background: var(--wine-deep);
+      }
+
+      .button-secondary:hover:not(:disabled) {
+        border-color: var(--wine);
+        background: #f2ebe1;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .header-inner,
+      main {
+        width: min(100% - 32px, 680px);
+      }
+
+      main {
+        padding-top: 24px;
+      }
+
+      .record-heading,
+      .record-primary,
+      .decision-panel {
+        padding-right: 28px;
+        padding-left: 28px;
+      }
+
+      .record-body,
+      .skeleton-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .decision-panel {
+        border-top: 1px solid var(--line);
+        border-left: 0;
+      }
+
+      .skeleton-grid {
+        gap: 32px;
+      }
+
+      .skeleton-side {
+        height: 280px;
+      }
+
+      .empty-shell {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 48px;
+      }
+
+      .empty-figure {
+        min-height: 230px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-inner {
+        min-height: 64px;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1px;
+        padding: 10px 0;
+      }
+
+      .museum-name {
+        font-size: 17px;
+      }
+
+      .workspace-name {
+        font-size: 11px;
+      }
+
+      main {
+        padding-bottom: calc(48px + env(safe-area-inset-bottom));
+      }
+
+      .record-shell {
+        border-radius: 12px;
+      }
+
+      body[data-state="error"] .record-shell {
+        display: flex;
+        flex-direction: column;
+      }
+
+      body[data-state="error"] .record-body {
+        display: contents;
+      }
+
+      body[data-state="error"] .decision-panel {
+        order: 1;
+        padding: 22px;
+        border-top: 0;
+        border-bottom: 1px solid var(--line);
+        background: #f7f0e8;
+      }
+
+      body[data-state="error"] .record-heading {
+        order: 2;
+      }
+
+      body[data-state="error"] .record-primary {
+        order: 3;
+      }
+
+      body[data-state="error"] .decision-panel .status-line,
+      body[data-state="error"] .decision-panel .section-kicker,
+      body[data-state="error"] .decision-panel .decision-copy,
+      body[data-state="error"] .decision-panel .decision-facts,
+      body[data-state="error"] .decision-panel .fine-print {
+        display: none;
+      }
+
+      body[data-state="error"] .decision-panel h2 {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      body[data-state="error"] .permission-alert {
+        margin-bottom: 16px;
+        padding: 14px 16px;
+      }
+
+      body[data-state="error"] .actions {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr);
+        gap: 10px;
+        margin-top: 0;
+      }
+
+      body[data-state="error"] .button {
+        min-height: 64px;
+        padding: 10px;
+        font-size: 14px;
+        line-height: 1.25;
+      }
+
+      body[data-state="error"] .action-helper {
+        margin-top: 10px;
+        font-size: 12px;
+      }
+
+      .record-heading {
+        padding: 28px 22px 30px;
+      }
+
+      .record-primary,
+      .decision-panel {
+        padding: 32px 22px 38px;
+      }
+
+      .eyebrow-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 22px;
+      }
+
+      .title-row {
+        grid-template-columns: 1fr;
+        gap: 26px;
+      }
+
+      h1 {
+        font-size: clamp(38px, 12vw, 48px);
+      }
+
+      .object-mark {
+        width: 116px;
+        height: 116px;
+      }
+
+      .object-mark svg {
+        width: 74px;
+        height: 74px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+
+      .condition-note {
+        margin-top: 24px;
+        padding: 20px 0 20px 18px;
+      }
+
+      .custody-section {
+        margin-top: 38px;
+        padding-top: 32px;
+      }
+
+      .custody-item {
+        grid-template-columns: 16px minmax(0, 1fr);
+        gap: 14px;
+      }
+
+      .custody-date {
+        grid-column: 2;
+        padding: 4px 0 0;
+      }
+
+      .decision-facts > div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .decision-facts dd {
+        text-align: left;
+      }
+
+      .loading-shell {
+        min-height: 610px;
+        padding: 32px 22px 38px;
+      }
+
+      .skeleton-title {
+        height: 86px;
+      }
+
+      .empty-shell {
+        min-height: 610px;
+        padding: 36px 22px 42px;
+      }
+
+      .empty-figure {
+        order: -1;
+        min-height: 180px;
+      }
+
+      .empty-figure::before {
+        inset: 28px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="museum-name">North River Museum</p>
+      <p class="workspace-name">Registrar · Outbound loans</p>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+  <div id="feedback" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    const app = document.querySelector('#app');
+    const feedback = document.querySelector('#feedback');
+    const validStates = new Set(['default', 'loading', 'empty', 'error']);
+
+    function currentState() {
+      const params = new URLSearchParams(location.hash.replace(/^#/, ''));
+      const requested = params.get('state') || 'default';
+      return validStates.has(requested) ? requested : 'default';
+    }
+
+    function objectMark() {
+      return `
+        <div class="object-mark" role="img" aria-label="Profile drawing of the kylix drinking cup">
+          <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <path d="M18 43h84c-4 22-19 34-42 34S22 65 18 43Z" fill="none" stroke="currentColor" stroke-width="4"/>
+            <path d="M16 48C7 47 8 33 20 35M104 48c9-1 8-15-4-13M60 77v14m-20 5h40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="4"/>
+            <path d="M32 52c8 5 17 7 28 7s20-2 28-7" fill="none" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>`;
+    }
+
+    function pageHeading(text, id) {
+      return `<h1${id ? ` id="${id}"` : ''}>${text}</h1>`;
+    }
+
+    function heading() {
+      return `
+        <header class="record-heading">
+          <div class="eyebrow-row">
+            <p class="eyebrow">Traveling loan · NRM 1978.45</p>
+            <p class="folio">File OBL-26-014</p>
+          </div>
+          <div class="title-row">
+            <div>
+              ${pageHeading('Attic red-figure kylix')}
+              <p class="object-meta">Attributed to the Penthesilea Painter · Athens, circa 460 BCE · Terracotta, 12.4 × 31.8 cm</p>
+            </div>
+            ${objectMark()}
+          </div>
+        </header>`;
+    }
+
+    function actionPanel(isPermissionError) {
+      const permissionAlert = isPermissionError ? `
+        <div class="permission-alert" role="alert" aria-live="assertive">
+          <strong>Approval permission required</strong>
+          <span>Your registrar role can review this loan, but only a senior registrar can approve an outbound transfer.</span>
+        </div>` : '';
+
+      const disabled = isPermissionError ? ' disabled aria-describedby="approval-help"' : '';
+      const helper = isPermissionError ? `
+        <p class="action-helper" id="approval-help">Ask the senior registrar to approve the transfer. You can still download and share the signed condition report.</p>` : '';
+
+      return `
+        <aside class="decision-panel" aria-labelledby="decision-title">
+          ${permissionAlert}
+          <div class="status-line"><span class="status-symbol" aria-hidden="true"></span>${isPermissionError ? 'Approval on hold' : 'Awaiting approval'}</div>
+          <p class="section-kicker">Transfer readiness</p>
+          <h2 id="decision-title">Ready for custody sign-off</h2>
+          <p class="decision-copy">Condition evidence is complete. The object may leave storage after authorization and courier acknowledgement.</p>
+
+          <dl class="decision-facts">
+            <div><dt>Destination</dt><dd>Musée des Arts Anciens, Lyon</dd></div>
+            <div><dt>Crate seal</dt><dd>NR-8814 · intact</dd></div>
+            <div><dt>Courier</dt><dd>Amara Okafor</dd></div>
+            <div><dt>Departure</dt><dd>22 Jul · 07:40</dd></div>
+          </dl>
+
+          <div class="actions">
+            <button class="button button-primary" id="approve-transfer" type="button"${disabled}>Approve transfer</button>
+            <button class="button button-secondary" id="download-report" type="button">Download condition report</button>
+          </div>
+          ${helper}
+          <p class="fine-print">Condition report CR-1978.45-R3 · signed 18 Jul 2026 by Elena Márquez, Objects Conservator</p>
+        </aside>`;
+    }
+
+    function record(state) {
+      const isPermissionError = state === 'error';
+      return `
+        <article class="record-shell" data-state="${state}">
+          ${heading()}
+          <div class="record-body">
+            <section class="record-primary" aria-labelledby="condition-title">
+              <p class="section-kicker">Condition &amp; custody</p>
+              <h2 id="condition-title">Stable, with one monitored edge</h2>
+              <p class="section-intro">Packing may proceed under the approved mount plan. No new movement was recorded during the 18 July comparison exam.</p>
+
+              <div class="condition-note">
+                <p class="note-label">Handling note · rim at 2 o’clock</p>
+                <p class="note-title">14 mm area of pre-existing glaze lift</p>
+                <p class="note-copy">Consolidated in 2019 and unchanged under raking light. Keep the Tyvek collar clear of the marked edge; do not lift by either handle.</p>
+              </div>
+
+              <section class="custody-section" aria-labelledby="custody-title">
+                <p class="section-kicker">Custody trail</p>
+                <h2 id="custody-title">Four checks before departure</h2>
+                <ol class="custody-list">
+                  <li class="custody-item">
+                    <span class="custody-dot" aria-hidden="true"></span>
+                    <div><p class="custody-title">Comparison exam signed</p><p class="custody-copy">Photography set 1978.45-R3 reconciled with the object.</p></div>
+                    <p class="custody-date">18 Jul · 14:10</p>
+                  </li>
+                  <li class="custody-item">
+                    <span class="custody-dot" aria-hidden="true"></span>
+                    <div><p class="custody-title">Microclimate crate sealed</p><p class="custody-copy">RH logger ML-204 paired; seal NR-8814 recorded intact.</p></div>
+                    <p class="custody-date">19 Jul · 09:25</p>
+                  </li>
+                  <li class="custody-item is-current">
+                    <span class="custody-dot" aria-hidden="true"></span>
+                    <div><p class="custody-title">Transfer approval</p><p class="custody-copy">Current step · authorization must be recorded before release.</p></div>
+                    <p class="custody-date">Due 21 Jul</p>
+                  </li>
+                  <li class="custody-item">
+                    <span class="custody-dot" aria-hidden="true"></span>
+                    <div><p class="custody-title">Courier acknowledgement</p><p class="custody-copy">Amara Okafor will countersign at the south loading bay.</p></div>
+                    <p class="custody-date">22 Jul · 07:20</p>
+                  </li>
+                </ol>
+              </section>
+            </section>
+            ${actionPanel(isPermissionError)}
+          </div>
+        </article>`;
+    }
+
+    function loadingState() {
+      return `
+        <section class="record-shell loading-shell" aria-labelledby="loading-title" aria-busy="true">
+          <p class="loading-status" id="loading-title" role="status" aria-live="polite">Loading loan record and custody history…</p>
+          <div class="skeleton-grid" aria-hidden="true">
+            <div>
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-block skeleton-title"></div>
+              <div class="skeleton-line medium"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-block"></div>
+              <div class="skeleton-block"></div>
+            </div>
+            <div class="skeleton-block skeleton-side"></div>
+          </div>
+        </section>`;
+    }
+
+    function emptyState() {
+      return `
+        <section class="record-shell empty-shell" aria-labelledby="empty-title">
+          <div>
+            <p class="empty-kicker">Outbound loans</p>
+            ${pageHeading('No loan selected', 'empty-title')}
+            <p class="empty-copy">Choose an active loan to review its object record, condition evidence, custody trail, and transfer permissions.</p>
+            <div class="empty-actions">
+              <button class="button button-primary" id="open-loan" type="button">Open active loan</button>
+            </div>
+          </div>
+          <div class="empty-figure" aria-hidden="true"></div>
+        </section>`;
+    }
+
+    function showFeedback(message) {
+      feedback.innerHTML = `<div class="toast" role="status">${message}</div>`;
+      window.setTimeout(() => { feedback.innerHTML = ''; }, 3200);
+    }
+
+    function bindActions(state) {
+      document.querySelector('#open-loan')?.addEventListener('click', () => {
+        location.hash = 'state=default';
+      });
+
+      document.querySelector('#approve-transfer')?.addEventListener('click', () => {
+        if (state === 'default') showFeedback('Transfer approved and added to the custody log.');
+      });
+
+      document.querySelector('#download-report')?.addEventListener('click', () => {
+        const report = [
+          'NORTH RIVER MUSEUM — CONDITION REPORT',
+          'Object: Attic red-figure kylix (NRM 1978.45)',
+          'Report: CR-1978.45-R3',
+          'Status: Stable with monitored glaze lift at rim, 2 o’clock',
+          'Signed: Elena Márquez, Objects Conservator — 18 Jul 2026'
+        ].join('\n');
+        const url = URL.createObjectURL(new Blob([report], { type: 'text/plain' }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'condition-report-NRM-1978-45.txt';
+        link.click();
+        URL.revokeObjectURL(url);
+        showFeedback('Condition report downloaded.');
+      });
+    }
+
+    function render() {
+      const state = currentState();
+      document.body.dataset.state = state;
+      app.innerHTML = state === 'loading' ? loadingState() : state === 'empty' ? emptyState() : record(state);
+      bindActions(state);
+    }
+
+    window.addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+</html>

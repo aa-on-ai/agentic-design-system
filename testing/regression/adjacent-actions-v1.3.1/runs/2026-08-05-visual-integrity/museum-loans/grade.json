@@ -1,0 +1,50 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 8,
+    "originality": 8,
+    "craft": 8,
+    "functionality": 9
+  },
+  "weightedScore": 8.15,
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": "",
+  "priorFindingClosure": [
+    {
+      "id": "finding-001",
+      "status": "closed",
+      "artifact": "evidence/error-390x844.png",
+      "evidence": "Within the first 844px, the screenshot states Approval permission required, explains that only a senior registrar can approve, shows Approve transfer visibly disabled, shows Download condition report visibly enabled and actionable, and explicitly says the signed condition report remains available. The composition is visibly distinct from evidence/default-390x844.png."
+    }
+  ],
+  "gbrainCheck": {
+    "source": "exact_page",
+    "slugOrQuery": "channels/agentic-design",
+    "evidenceState": "found",
+    "result": "found",
+    "fallback": "none",
+    "receipt": "inherited_from_parent"
+  },
+  "sourceTruth": {
+    "benchmarkContract": "../../BENCHMARK-CONTRACT.md",
+    "caseOutcome": "../outcome.md",
+    "priorGrade": "../iteration-1/grade.json",
+    "priorGraderReport": "../iteration-1/grader-report.md",
+    "adsReleaseSha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "taskScope": "Screenshot-only regrade of the one allowed Museum finding-001 repair.",
+  "overreachBoundary": "No implementation source, other case, prior benchmark, archived score, deploy, or public write was inspected or changed.",
+  "runArtifact": "iteration-2/evidence/evidence.json and all 8 iteration-2 PNGs",
+  "scorerResult": "satisfied; weightedScore=8.15",
+  "stopCondition": "done_verified",
+  "routeUsed": "independent ADS grader / high-judgment",
+  "filesChanged": [
+    "iteration-2/grader-report.md",
+    "iteration-2/grade.json"
+  ],
+  "verification": "8/8 screenshots inspected at original detail; finding-001 closure, default and desktop preservation, rendered gates, and adjacent-action consistency verified.",
+  "gitEvidence": "no git changes; no tracked diff, index change, commit, branch, push, deploy, or external mutation",
+  "artifact": "iteration-2/grader-report.md and iteration-2/grade.json",
+  "deviations": "none"
+}

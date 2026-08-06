@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { StateCrossfade } from "../StateCrossfade";
 
 export default function CanopyLandingPage() {
   const [state, setState] = useState<"loaded" | "loading" | "empty" | "error">("loaded");
+  const [signupSaved, setSignupSaved] = useState(false);
 
   const hourly = useMemo(
     () => [
@@ -45,7 +47,8 @@ export default function CanopyLandingPage() {
   const renderWeatherPanel = () => {
     if (state === "loading") {
       return (
-        <div className="rounded-[28px] bg-white/80 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05),0_12px_40px_rgba(15,23,42,0.08)] ring-1 ring-black/5 backdrop-blur md:p-5">
+        <div role="status" aria-live="polite" aria-busy="true" className="rounded-[28px] bg-white/80 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05),0_12px_40px_rgba(15,23,42,0.08)] ring-1 ring-black/5 backdrop-blur md:p-5">
+          <span className="sr-only">Loading the forecast</span>
           <div className="rounded-2xl bg-stone-50 p-5 md:p-6">
             <div className="animate-pulse space-y-5">
               <div className="space-y-2">
@@ -79,14 +82,6 @@ export default function CanopyLandingPage() {
                   Add a city to start tracking conditions, rain timing, and the temperature shifts that matter today.
                 </p>
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-900 px-5 text-sm font-medium text-white transition-transform duration-150 hover:bg-emerald-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2">
-                  Add your first city
-                </button>
-                <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-medium text-stone-700 ring-1 ring-black/8 transition-colors duration-150 hover:bg-stone-100 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2">
-                  Use current location
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -95,7 +90,7 @@ export default function CanopyLandingPage() {
 
     if (state === "error") {
       return (
-        <div className="rounded-[28px] bg-white/80 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05),0_12px_40px_rgba(15,23,42,0.08)] ring-1 ring-black/5 backdrop-blur md:p-5">
+        <div role="alert" className="rounded-[28px] bg-white/80 p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05),0_12px_40px_rgba(15,23,42,0.08)] ring-1 ring-black/5 backdrop-blur md:p-5">
           <div className="rounded-2xl bg-stone-50 p-6 md:p-7">
             <div className="space-y-4">
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-xl ring-1 ring-rose-200">
@@ -113,9 +108,6 @@ export default function CanopyLandingPage() {
                   className="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-900 px-5 text-sm font-medium text-white transition-transform duration-150 hover:bg-emerald-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2"
                 >
                   Try again
-                </button>
-                <button className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-medium text-stone-700 ring-1 ring-black/8 transition-colors duration-150 hover:bg-stone-100 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2">
-                  View saved cities
                 </button>
               </div>
             </div>
@@ -155,7 +147,7 @@ export default function CanopyLandingPage() {
                 key={item.label}
                 className="rounded-[20px] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05)] ring-1 ring-black/5"
               >
-                <div className="text-xs font-medium uppercase tracking-[0.14em] text-stone-500">{item.label}</div>
+                <div className="text-[13px] font-semibold text-stone-500">{item.label}</div>
                 <div className="mt-2 text-lg font-semibold tracking-[-0.02em] text-stone-900">{item.value}</div>
               </div>
             ))}
@@ -164,7 +156,7 @@ export default function CanopyLandingPage() {
           <div className="mt-6 rounded-[20px] bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.05)] ring-1 ring-black/5">
             <div className="flex items-center justify-between gap-4">
               <h3 className="text-sm font-medium text-stone-700">Today at a glance</h3>
-              <span className="text-xs text-stone-500">Next 6 hours</span>
+              <span className="text-[13px] text-stone-500">Next 6 hours</span>
             </div>
             <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
               {hourly.map((item) => (
@@ -172,12 +164,12 @@ export default function CanopyLandingPage() {
                   key={item.time}
                   className="rounded-2xl bg-stone-50 px-3 py-4 text-center transition-colors duration-150 hover:bg-stone-100"
                 >
-                  <div className="text-xs font-medium text-stone-500">{item.time}</div>
+                  <div className="text-[13px] font-medium text-stone-500">{item.time}</div>
                   <div className="mt-2 text-xl">{item.icon}</div>
                   <div className="mt-2 text-base font-semibold text-stone-900 [font-variant-numeric:tabular-nums]">
                     {item.temp}°
                   </div>
-                  <div className="mt-1 text-xs text-stone-500">{item.rain} rain</div>
+                  <div className="mt-1 text-[13px] text-stone-500">{item.rain} rain</div>
                 </div>
               ))}
             </div>
@@ -200,14 +192,14 @@ export default function CanopyLandingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#f7f7f3_0%,#eef3ee_42%,#f6f4ef_100%)] text-stone-900 antialiased">
+    <main id="top" className="min-h-screen bg-[linear-gradient(180deg,#f7f7f3_0%,#eef3ee_42%,#f6f4ef_100%)] text-stone-900 antialiased">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top,rgba(98,140,114,0.16),transparent_58%)]"
       />
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
         <header className="flex items-center justify-between py-5 sm:py-6">
-          <a href="#" className="flex min-h-12 items-center gap-3 rounded-full pr-3 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2">
+          <a href="#top" className="flex min-h-12 items-center gap-3 rounded-full pr-3 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-900 text-sm font-semibold text-white shadow-[0_1px_2px_rgba(15,23,42,0.1)]">
               C
             </div>
@@ -235,12 +227,12 @@ export default function CanopyLandingPage() {
             </a>
           </nav>
 
-          <button
-            className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full bg-white/80 text-stone-700 ring-1 ring-black/8 transition-colors duration-150 hover:bg-white md:hidden"
-            aria-label="Open navigation"
+          <a
+            href="#signup"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-emerald-900 px-4 text-sm font-medium text-white transition-colors duration-150 hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 md:hidden"
           >
-            ☰
-          </button>
+            Early access
+          </a>
         </header>
 
         <section className="grid flex-1 items-center gap-10 py-8 md:gap-12 md:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-16">
@@ -291,13 +283,13 @@ export default function CanopyLandingPage() {
           </div>
 
           <div id="preview" className="lg:pl-4">
-            {renderWeatherPanel()}
+            <StateCrossfade stateKey={state}>{renderWeatherPanel()}</StateCrossfade>
             <div
               className="mt-4 flex flex-wrap items-center gap-2"
               role="group"
               aria-label="Canopy demo state"
             >
-              <span className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">Demo state</span>
+              <span className="text-[13px] font-semibold text-stone-500">Demo state</span>
               {(["loaded", "loading", "empty", "error"] as const).map((item) => (
                 <button
                   key={item}
@@ -320,7 +312,7 @@ export default function CanopyLandingPage() {
 
         <section id="features" className="py-10 sm:py-14 lg:py-20">
           <div className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-stone-500">Why Canopy</p>
+            <p className="text-sm font-semibold text-stone-500">Why Canopy</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-stone-950 [text-wrap:balance] sm:text-4xl">
               Forecasts with hierarchy, so the right detail arrives at the right moment.
             </h2>
@@ -356,7 +348,7 @@ export default function CanopyLandingPage() {
             </div>
 
             <aside className="rounded-[28px] bg-emerald-950 p-5 text-emerald-50 shadow-[0_1px_2px_rgba(15,23,42,0.05),0_12px_32px_rgba(15,23,42,0.08)] md:p-6">
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-emerald-200/80">Built for real routines</p>
+              <p className="text-sm font-semibold text-emerald-200/80">Built for real routines</p>
               <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em] [text-wrap:balance]">
                 Know whether to open the windows, bike to dinner, or move the picnic indoors.
               </h3>
@@ -372,8 +364,7 @@ export default function CanopyLandingPage() {
                   "Saved places for home, work, and weekends",
                   "Alert summaries written in plain language",
                 ].map((item) => (
-                  <div key={item} className="flex items-start gap-3 rounded-2xl bg-white/8 p-3 ring-1 ring-white/10">
-                    <div className="mt-1 text-emerald-300">•</div>
+                  <div key={item} className="rounded-r-2xl border-l-2 border-emerald-300/60 bg-white/8 px-4 py-3">
                     <p className="text-sm leading-6 text-emerald-50/90">{item}</p>
                   </div>
                 ))}
@@ -385,7 +376,7 @@ export default function CanopyLandingPage() {
         <section id="cities" className="py-10 sm:py-14 lg:py-20">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
-              <p className="text-sm font-medium uppercase tracking-[0.16em] text-stone-500">City snapshots</p>
+              <p className="text-sm font-semibold text-stone-500">City snapshots</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-stone-950 [text-wrap:balance] sm:text-4xl">
                 A better read on today, wherever the forecast gets complicated.
               </h2>
@@ -411,7 +402,7 @@ export default function CanopyLandingPage() {
                       {city.temp}
                     </div>
                     <div className="mt-1 text-sm text-stone-500">
-                      H {city.hi} · L {city.lo}
+                      High {city.hi}, low {city.lo}
                     </div>
                   </div>
                 </div>
@@ -432,7 +423,7 @@ export default function CanopyLandingPage() {
           <div className="rounded-[32px] bg-stone-950 px-5 py-8 text-white shadow-[0_1px_2px_rgba(15,23,42,0.06),0_20px_50px_rgba(15,23,42,0.18)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
             <div className="grid gap-8 lg:grid-cols-[1fr_420px] lg:items-end">
               <div className="max-w-2xl">
-                <p className="text-sm font-medium uppercase tracking-[0.16em] text-stone-400">Early access</p>
+                <p className="text-sm font-semibold text-stone-400">Early access</p>
                 <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white [text-wrap:balance] sm:text-4xl">
                   Be first to try the forecast app that leaves the clutter outside.
                 </h2>
@@ -441,7 +432,14 @@ export default function CanopyLandingPage() {
                 </p>
               </div>
 
-              <form className="rounded-[24px] bg-white p-4 text-stone-900 shadow-[0_1px_2px_rgba(15,23,42,0.06)]">
+              <form
+                className="rounded-[24px] bg-white p-4 text-stone-900 shadow-[0_1px_2px_rgba(15,23,42,0.06)]"
+                data-ads-handled-submit
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  setSignupSaved(true);
+                }}
+              >
                 <label htmlFor="email" className="block text-sm font-medium text-stone-700">
                   Email address
                 </label>
@@ -449,24 +447,29 @@ export default function CanopyLandingPage() {
                   id="email"
                   type="email"
                   placeholder="you@company.com"
+                  required
+                  disabled={signupSaved}
                   className="mt-2 h-12 w-full rounded-2xl border-0 bg-stone-50 px-4 text-sm text-stone-900 outline-none ring-1 ring-black/8 transition focus:ring-2 focus:ring-emerald-700"
                 />
-                <p className="mt-2 text-xs leading-5 text-stone-500">
-                  We’ll only send launch news, early invites, and major weather feature updates.
+                <p className="mt-2 text-[13px] leading-5 text-stone-500" aria-live="polite">
+                  {signupSaved
+                    ? "Preview saved in this demo. No information was sent."
+                    : "This preview demonstrates the signup state. It does not send information."}
                 </p>
                 <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                   <button
                     type="submit"
-                    className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full bg-emerald-900 px-5 text-sm font-medium text-white transition-transform duration-150 hover:bg-emerald-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2"
+                    disabled={signupSaved}
+                    className="inline-flex min-h-12 flex-1 items-center justify-center rounded-full bg-emerald-900 px-5 text-sm font-medium text-white transition-transform duration-150 hover:bg-emerald-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 disabled:cursor-default disabled:bg-emerald-950/60"
                   >
-                    Join the waitlist
+                    {signupSaved ? "Preview saved" : "Save preview signup"}
                   </button>
-                  <button
-                    type="button"
+                  <a
+                    href="#features"
                     className="inline-flex min-h-12 items-center justify-center rounded-full bg-stone-100 px-5 text-sm font-medium text-stone-700 transition-colors duration-150 hover:bg-stone-200 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-stone-400 focus:ring-offset-2"
                   >
-                    View product updates
-                  </button>
+                    Review features
+                  </a>
                 </div>
               </form>
             </div>

@@ -12,7 +12,9 @@ if (!url) {
 }
 
 const failures = [];
-const browserTypes = [["Chromium", chromium], ["WebKit", webkit]];
+const requestedBrowser = process.env.ADS_TEST_BROWSER?.toLowerCase();
+const browserTypes = [["Chromium", chromium], ["WebKit", webkit]]
+  .filter(([name]) => !requestedBrowser || name.toLowerCase() === requestedBrowser);
 
 for (const [browserName, browserType] of browserTypes) {
   const browser = await browserType.launch({ headless: true });
@@ -42,8 +44,8 @@ for (const [browserName, browserType] of browserTypes) {
     };
   });
 
-  if (controls.actionCount !== 5 || controls.actionIcons !== controls.actionCount) {
-    failures.push(`${browserName}: ${controls.actionIcons}/${controls.actionCount} homepage actions use Lucide icons`);
+  if (controls.actionCount !== 5 || controls.actionIcons !== 1) {
+    failures.push(`${browserName}: homepage actions expose ${controls.actionIcons} icons across ${controls.actionCount} links (expected one GitHub mark and no decorative arrows)`);
   }
   if (controls.rawActionSymbols !== 0) {
     failures.push(`${browserName}: ${controls.rawActionSymbols} homepage actions still use symbol glyphs`);
@@ -128,4 +130,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("PASS: FAQ motion, reduced motion, and homepage Lucide icon coverage verified in Chromium and WebKit");
+console.log(`PASS: FAQ motion, reduced motion, and arrow-free homepage action coverage verified in ${browserTypes.map(([name]) => name).join(" and ")}`);

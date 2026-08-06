@@ -12,7 +12,7 @@ const markup = `<!doctype html>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ADS browser fixture</title>
-    <style>body{font-family:system-ui;margin:0}main{padding:24px}button{min-width:44px;min-height:44px}</style>
+    <style>body{font-family:system-ui;margin:0}main{padding:24px}button{min-width:48px;min-height:48px}</style>
   </head>
   <body>
     <main id="app"></main>
@@ -97,7 +97,7 @@ export default function Fixture() {
     <h1>Orders</h1>
     {state === 'loading' ? <p role="status">Loading orders</p> :
       state === 'error' ? <p role="alert">Orders could not load</p> :
-      <button type="button" style={{ minWidth: 44, minHeight: 44 }}>Create order</button>}
+      <button type="button" style={{ minWidth: 48, minHeight: 48 }}>Create order</button>}
   </main>;
 }
 `);

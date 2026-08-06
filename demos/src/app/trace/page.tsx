@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { ArrowUpRight, CheckCircle2, FileCheck2, Github } from "lucide-react";
+import { CheckCircle2, FileCheck2, Github } from "lucide-react";
 import { BrandLockup } from "../BrandLockup";
 import { SiteFooter } from "../SiteFooter";
 import { ThemeToggle } from "../ThemeToggle";
@@ -33,7 +33,7 @@ const decisions: Decision[] = [
       "The Orders screen includes default, loading, empty, and error states instead of treating the happy path as the whole product.",
     skill: "ux-baseline-check",
     skillHash: "0cd0438dee",
-    rule: "Every screen ships with ALL states covered. No exceptions. This is the minimum bar.",
+    rule: "Every screen ships with all states covered. No exceptions. This is the minimum bar.",
     source: "loop-demo/README.md",
     constraint:
       "Task: an ‘Orders’ admin screen with default/loading/empty/error states, gated at 390 / 768 / 1280px.",
@@ -52,11 +52,11 @@ const decisions: Decision[] = [
     id: "02",
     title: "Mobile touch targets",
     decision:
-      "Interactive controls were enlarged until every measured mobile target cleared the 44px gate.",
+      "Interactive controls were enlarged until every measured mobile target cleared the 48px gate.",
     skill: "design-review / mobile",
     skillHash: "e2b379b311",
     rule:
-      "Touch targets are at least 44×44px on iOS or 48×48px on Android, with enough spacing to avoid mis-taps.",
+      "Touch targets are at least 48×48px, with enough spacing to avoid mis-taps.",
     source: "presets/utilitarian-app.md",
     constraint: "Touch targets and responsive behavior handled cleanly.",
     evidence: [
@@ -94,7 +94,7 @@ const decisions: Decision[] = [
 ];
 
 export const metadata: Metadata = {
-  title: "Decision trace · Agentic Design System",
+  title: "Decision trace | Agentic Design System",
   description:
     "Follow an ADS interface decision from the governing skill and source constraint to the rendered evidence that cleared it.",
 };
@@ -166,7 +166,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
               <div><dt>Release</dt><dd>v1.2.0</dd></div>
             </dl>
             <a className={`${styles.rawLink} focus-ring`} href={`${repo}/blob/main/docs/loop-demo/decision-trace.json`}>
-              Open raw trace <ArrowUpRight size={16} aria-hidden="true" />
+              Open raw trace
             </a>
           </aside>
         </section>
@@ -246,7 +246,6 @@ export default async function TracePage({ searchParams }: TracePageProps) {
                             <a className="focus-ring" href={evidence.href}>
                               <CheckCircle2 size={17} aria-hidden="true" />
                               {evidence.label}
-                              <ArrowUpRight size={15} aria-hidden="true" />
                             </a>
                           </li>
                         ))}
@@ -265,7 +264,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
           <p>A reviewer should answer all three in under two minutes, without asking the agent to reconstruct its reasoning.</p>
           <div className={styles.closeActions}>
             <a className={`${styles.primaryAction} focus-ring`} href={`${repo}/blob/main/workflows/decision-provenance.md`}>
-              Read the provenance workflow <ArrowUpRight size={17} aria-hidden="true" />
+              Read the provenance workflow
             </a>
             <a className={`${styles.secondaryAction} focus-ring`} href={`${repo}/releases/tag/v1.2.0`}>
               View the v1.2.0 release

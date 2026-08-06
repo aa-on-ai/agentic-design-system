@@ -36,7 +36,7 @@ The verdict is render-authoritative:
 
 - a bundle/capture failure blocks the comparison and writes an explicit skip receipt
 - serious/critical axe violations, horizontal overflow, missing main/live-region semantics,
-  unavailable or over-budget CLS, sub-44px touch targets, or a missing distinct requested state
+  unavailable or over-budget CLS, sub-48px touch targets, or a missing distinct requested state
   block the candidate
 - an unresolved screenshot judge returns `needs-human`; it never silently passes
 - source anti-pattern, state, accessibility, and responsive checks remain advisory diagnostics

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { StateCrossfade } from "../StateCrossfade";
 
 type ViewState = "loaded" | "loading" | "empty" | "error";
 
@@ -168,7 +169,8 @@ export default function NotionAISettingsPage() {
   const renderContent = () => {
     if (viewState === "loading") {
       return (
-        <div className="space-y-6" aria-live="polite" aria-busy="true">
+        <div className="space-y-6" role="status" aria-live="polite" aria-busy="true">
+          <span className="sr-only">Loading workspace AI settings</span>
           <div className="rounded-3xl bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)] outline outline-1 outline-black/[0.06]">
             <div className="animate-pulse space-y-4">
               <div className="h-5 w-40 rounded bg-neutral-200" />
@@ -210,7 +212,7 @@ export default function NotionAISettingsPage() {
 
     if (viewState === "error") {
       return (
-        <div className="rounded-3xl bg-white p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)] outline outline-1 outline-black/[0.06]">
+        <div role="alert" className="rounded-3xl bg-white p-8 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)] outline outline-1 outline-black/[0.06]">
           <div className="max-w-xl">
             <Badge tone="warning">Settings unavailable</Badge>
             <h2 className="mt-4 text-2xl font-semibold tracking-[-0.02em] text-neutral-950">
@@ -228,12 +230,6 @@ export default function NotionAISettingsPage() {
                 className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition duration-150 ease-out hover:bg-neutral-800 active:scale-[0.98]"
               >
                 Try again
-              </button>
-              <button
-                type="button"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition duration-150 ease-out hover:bg-neutral-200 active:scale-[0.98]"
-              >
-                Contact support
               </button>
             </div>
           </div>
@@ -261,12 +257,6 @@ export default function NotionAISettingsPage() {
                 className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition duration-150 ease-out hover:bg-neutral-800 active:scale-[0.98]"
               >
                 Assign AI seats
-              </button>
-              <button
-                type="button"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition duration-150 ease-out hover:bg-neutral-200 active:scale-[0.98]"
-              >
-                Review pricing
               </button>
             </div>
           </div>
@@ -429,14 +419,6 @@ export default function NotionAISettingsPage() {
             <SectionCard
               title="Seat management"
               description="Assign AI access to members who need it most. You can review usage before adding more seats."
-              action={
-                <button
-                  type="button"
-                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition duration-150 ease-out hover:bg-neutral-800 active:scale-[0.98]"
-                >
-                  Assign seats
-                </button>
-              }
             >
               <div className="space-y-3">
                 {workspaceMembers.map((member) => {
@@ -451,7 +433,7 @@ export default function NotionAISettingsPage() {
                           <h3 className="truncate text-sm font-medium text-neutral-950">
                             {member.name}
                           </h3>
-                          <span className="text-sm text-neutral-400">•</span>
+                          <span className="text-sm text-neutral-400" aria-hidden="true">/</span>
                           <span className="text-sm text-neutral-600">
                             {member.role}
                           </span>
@@ -466,17 +448,6 @@ export default function NotionAISettingsPage() {
                         <Badge tone={enabled ? "success" : "neutral"}>
                           {member.seats}
                         </Badge>
-                        <button
-                          type="button"
-                          aria-label={
-                            enabled
-                              ? `Manage AI access for ${member.name}`
-                              : `Enable AI for ${member.name}`
-                          }
-                          className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-medium text-neutral-700 outline outline-1 outline-black/[0.08] transition duration-150 ease-out hover:bg-neutral-100 active:scale-[0.98]"
-                        >
-                          {enabled ? "Manage access" : "Enable AI"}
-                        </button>
                       </div>
                     </div>
                   );
@@ -517,19 +488,6 @@ export default function NotionAISettingsPage() {
                       </p>
                     </div>
 
-                    <button
-                      type="button"
-                      aria-label={
-                        connector.status === "Connected"
-                          ? `Manage ${connector.name} connection`
-                          : `Reconnect ${connector.name}`
-                      }
-                      className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-xl bg-white px-3 py-2 text-sm font-medium text-neutral-700 outline outline-1 outline-black/[0.08] transition duration-150 ease-out hover:bg-neutral-100 active:scale-[0.98]"
-                    >
-                      {connector.status === "Connected"
-                        ? "Manage"
-                        : "Reconnect"}
-                    </button>
                   </div>
                 ))}
               </div>
@@ -560,12 +518,6 @@ export default function NotionAISettingsPage() {
                     underlying page has already been shared with them.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition duration-150 ease-out hover:bg-neutral-200 active:scale-[0.98]"
-                >
-                  Review admin controls
-                </button>
               </div>
             </SectionCard>
 
@@ -585,7 +537,7 @@ export default function NotionAISettingsPage() {
                         27
                       </div>
                     </div>
-                    <div className="text-sm text-emerald-700">↑ 18% vs last month</div>
+                    <div className="text-sm text-emerald-700">18% more than last month</div>
                   </div>
                 </div>
                 <div className="rounded-2xl bg-neutral-50 p-4 outline outline-1 outline-black/[0.05]">
@@ -695,7 +647,7 @@ export default function NotionAISettingsPage() {
             </div>
           </header>
 
-          {renderContent()}
+          <StateCrossfade stateKey={viewState}>{renderContent()}</StateCrossfade>
         </div>
       </div>
     </main>

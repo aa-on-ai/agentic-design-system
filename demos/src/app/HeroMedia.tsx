@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Theme = "light" | "dark";
 
@@ -17,11 +17,21 @@ export function HeroMedia({ initialTheme }: { initialTheme: Theme }) {
   const visibleThemeRef = useRef<Theme>(initialTheme);
   const [visibleTheme, setVisibleTheme] = useState<Theme>(initialTheme);
   const [pendingTheme, setPendingTheme] = useState<Theme | null>(null);
+  const [revealReady, setRevealReady] = useState(false);
+
+  const settleTheme = useCallback((theme: Theme) => {
+    if (activeTheme() !== theme) return;
+    visibleThemeRef.current = theme;
+    setVisibleTheme(theme);
+    setPendingTheme(null);
+    setRevealReady(false);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
     const syncTheme = () => {
       const next = activeTheme();
+      setRevealReady(false);
       setPendingTheme(next === visibleThemeRef.current ? null : next);
     };
 
@@ -31,11 +41,14 @@ export function HeroMedia({ initialTheme }: { initialTheme: Theme }) {
     return () => observer.disconnect();
   }, []);
 
-  const settleTheme = (theme: Theme) => {
-    if (activeTheme() !== theme) return;
-    visibleThemeRef.current = theme;
-    setVisibleTheme(theme);
-    setPendingTheme(null);
+  useEffect(() => {
+    if (!pendingTheme || !revealReady) return;
+    const fallback = window.setTimeout(() => settleTheme(pendingTheme), 900);
+    return () => window.clearTimeout(fallback);
+  }, [pendingTheme, revealReady, settleTheme]);
+
+  const startReveal = () => {
+    requestAnimationFrame(() => requestAnimationFrame(() => setRevealReady(true)));
   };
 
   return (
@@ -55,8 +68,12 @@ export function HeroMedia({ initialTheme }: { initialTheme: Theme }) {
           alt=""
           fill
           sizes="100vw"
-          className="hero-image hero-image--pending"
-          onLoad={() => settleTheme(pendingTheme)}
+          loading="eager"
+          className={`hero-image hero-image--pending${revealReady ? " is-revealing" : ""}`}
+          onLoad={startReveal}
+          onTransitionEnd={(event) => {
+            if (event.propertyName === "clip-path") settleTheme(pendingTheme);
+          }}
         />
       ) : null}
     </div>

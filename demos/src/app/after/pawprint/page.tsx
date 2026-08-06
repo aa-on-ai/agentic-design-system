@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { StateCrossfade } from "../StateCrossfade";
 
 type ViewState = "loaded" | "loading" | "empty" | "error";
 
@@ -196,7 +197,8 @@ function MetricCard({
 
 function LoadingState() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" role="status" aria-live="polite" aria-busy="true">
+      <span className="sr-only">Loading today&apos;s operations board</span>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[0, 1, 2].map((i) => (
           <div
@@ -236,14 +238,6 @@ function EmptyState() {
           Scheduled walks, handoff issues, and live route updates will appear here once bookings start coming in. You can
           add a recurring client or open same-day availability for your walkers.
         </p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-transform duration-150 hover:bg-neutral-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2">
-            Add a booking
-          </button>
-          <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition-colors duration-150 hover:bg-neutral-200 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2">
-            Manage walker availability
-          </button>
-        </div>
       </div>
     </section>
   );
@@ -251,7 +245,7 @@ function EmptyState() {
 
 function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
-    <section className="rounded-3xl bg-white p-10 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_rgba(16,24,40,0.06)] outline outline-1 outline-black/5">
+    <section role="alert" className="rounded-3xl bg-white p-10 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_8px_24px_rgba(16,24,40,0.06)] outline outline-1 outline-black/5">
       <div className="max-w-xl">
         <StatusPill tone="red">Dispatch data unavailable</StatusPill>
         <h2 className="mt-4 text-2xl font-semibold tracking-tight text-neutral-950" style={{ textWrap: "balance" }}>
@@ -267,9 +261,6 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-transform duration-150 hover:bg-neutral-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2"
           >
             Try again
-          </button>
-          <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-100 px-4 py-3 text-sm font-medium text-neutral-700 transition-colors duration-150 hover:bg-neutral-200 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2">
-            View incident history
           </button>
         </div>
       </div>
@@ -332,7 +323,7 @@ export default function PawprintAdminDashboard() {
             </div>
 
             <div className="mt-4 hidden md:block">
-              <div className="grid grid-cols-[1.2fr_1fr_0.9fr_0.8fr_0.9fr] gap-4 px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] text-neutral-500">
+              <div className="grid grid-cols-[1.2fr_1fr_0.9fr_0.8fr_0.9fr] gap-4 px-3 py-2 text-[13px] font-semibold text-neutral-500">
                 <span>Dog & client</span>
                 <span>Route</span>
                 <span>Time</span>
@@ -341,9 +332,9 @@ export default function PawprintAdminDashboard() {
               </div>
               <div className="mt-2 space-y-2">
                 {walks.map((walk) => (
-                  <button
+                  <div
                     key={walk.id}
-                    className="grid w-full grid-cols-[1.2fr_1fr_0.9fr_0.8fr_0.9fr] gap-4 rounded-2xl px-3 py-4 text-left transition-colors duration-150 hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2"
+                    className="grid w-full grid-cols-[1.2fr_1fr_0.9fr_0.8fr_0.9fr] gap-4 rounded-2xl px-3 py-4 text-left"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-3">
@@ -353,7 +344,7 @@ export default function PawprintAdminDashboard() {
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-neutral-950">{walk.dog}</p>
                           <p className="truncate text-sm text-neutral-500">
-                            {walk.breed} · {walk.owner}
+                            {walk.breed}, {walk.owner}
                           </p>
                         </div>
                       </div>
@@ -373,21 +364,21 @@ export default function PawprintAdminDashboard() {
                     <div className="self-center">
                       <WalkStatusBadge status={walk.status} />
                     </div>
-                  </button>
+                  </div>
                 ))}
               </div>
             </div>
 
             <div className="mt-4 space-y-3 md:hidden">
               {walks.map((walk) => (
-                <button
+                <article
                   key={walk.id}
-                  className="w-full rounded-2xl bg-neutral-50 p-4 text-left transition-colors duration-150 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2"
+                  className="w-full rounded-2xl bg-neutral-50 p-4 text-left"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-neutral-950">
-                        {walk.dog} <span className="font-normal text-neutral-500">· {walk.breed}</span>
+                        {walk.dog} <span className="font-normal text-neutral-500">({walk.breed})</span>
                       </p>
                       <p className="mt-1 text-sm text-neutral-600">{walk.owner}</p>
                     </div>
@@ -414,7 +405,7 @@ export default function PawprintAdminDashboard() {
                     </div>
                   </div>
                   <p className="mt-3 text-sm leading-6 text-neutral-600">{walk.notes}</p>
-                </button>
+                </article>
               ))}
             </div>
           </div>
@@ -440,9 +431,9 @@ export default function PawprintAdminDashboard() {
                     </div>
                     <span className="mt-1 h-2.5 w-2.5 rounded-full bg-rose-500" aria-hidden="true" />
                   </div>
-                  <button className="mt-4 inline-flex min-h-12 items-center rounded-xl bg-rose-700 px-3.5 py-2.5 text-sm font-medium text-white transition-transform duration-150 hover:bg-rose-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-rose-700 focus:ring-offset-2">
-                    Reassign walk
-                  </button>
+                  <p className="mt-4 border-l-2 border-rose-300 pl-3 text-sm font-medium leading-6 text-rose-800">
+                    Reassignment is unavailable in this static preview.
+                  </p>
                 </div>
 
                 <div className="rounded-2xl bg-neutral-50 p-4 outline outline-1 outline-black/5">
@@ -470,7 +461,7 @@ export default function PawprintAdminDashboard() {
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-neutral-900">{walker.name}</p>
                       <p className="truncate text-sm text-neutral-500">
-                        {walker.zone} · Next {walker.nextStart}
+                        {walker.zone}, next {walker.nextStart}
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
@@ -515,14 +506,6 @@ export default function PawprintAdminDashboard() {
                 </p>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:justify-end">
-                <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-transform duration-150 hover:bg-neutral-800 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2">
-                  Create walk
-                </button>
-                <button className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-medium text-neutral-700 outline outline-1 outline-black/10 transition-colors duration-150 hover:bg-neutral-50 active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2">
-                  Export route sheet
-                </button>
-              </div>
             </div>
 
             <div className="mt-6 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
@@ -558,7 +541,9 @@ export default function PawprintAdminDashboard() {
             </div>
           </header>
 
-          <section className="pt-6 lg:pt-8">{content}</section>
+          <section className="pt-6 lg:pt-8">
+            <StateCrossfade stateKey={viewState}>{content}</StateCrossfade>
+          </section>
         </div>
       </div>
     </main>

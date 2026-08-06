@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseFaq } from "./ReleaseFaq";
 
@@ -6,8 +6,8 @@ const hostAcceptance = [
   {
     tone: "verified",
     status: "Verified",
-    hosts: "Codex · OpenClaw · Claude Code",
-    detail: "Primary render → evaluate → trace loop and fresh-session resource recovery passed on macOS.",
+    hosts: "Codex, OpenClaw, and Claude Code",
+    detail: "The primary render, evaluation, trace loop, and fresh-session resource recovery passed on macOS.",
   },
   {
     tone: "limited",
@@ -55,7 +55,7 @@ export function ReleaseClose() {
                 <Github size={18} aria-hidden="true" /> Choose your agent
               </a>
               <a className="release-github focus-ring" href="/mcp">
-                Inspect the local MCP <ArrowUpRight size={18} aria-hidden="true" />
+                Inspect the local MCP
               </a>
             </div>
           </div>
@@ -65,7 +65,7 @@ export function ReleaseClose() {
           <section className="release-ledger" aria-labelledby="host-ledger-title">
             <header>
               <div>
-                <p>Local MCP · v0.3.0</p>
+                <p>Local MCP, version 0.3.0</p>
                 <h3 id="host-ledger-title">Host acceptance, without the hand-waving.</h3>
               </div>
               <span>3 verified / 1 limited / 1 untested</span>
@@ -82,7 +82,7 @@ export function ReleaseClose() {
               ))}
             </dl>
             <p className="release-ledger-note">
-              Acceptance run <time dateTime="2026-07-27">July 27, 2026</time> · macOS · public npm package
+              Acceptance run on <time dateTime="2026-07-27">July 27, 2026</time> for macOS and the public npm package
             </p>
           </section>
 
@@ -98,7 +98,7 @@ export function ReleaseClose() {
               ))}
             </ol>
             <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-api-contract.md">
-              Read the MCP contract <ArrowUpRight size={18} aria-hidden="true" />
+              Read the MCP contract
             </a>
           </aside>
         </div>

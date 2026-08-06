@@ -599,7 +599,7 @@ function renderBrowserGateRows(result: PromptResult): string[] {
       ? `${gates.landmarkFailures.length} landmark / ${gates.liveRegionFailures.length} live`
       : 'unmeasured';
     const cls = gates.clsAvailable === true ? gates.maxCumulativeLayoutShift : 'unavailable';
-    return `| ${name} | ${variant.rendered.authority.status} | ${gates.seriousAxeViolations ?? '?'} | ${(gates.horizontalOverflowAt || []).join(', ') || 'none'} | ${(gates.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states || 'none'} | ${variant.judgeTotal}/50 |`;
+    return `| ${name} | ${variant.rendered.authority.status} | ${gates.seriousAxeViolations ?? '?'} | ${(gates.horizontalOverflowAt || []).join(', ') || 'none'} | ${(gates.touchTargetsUnder48 || gates.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states || 'none'} | ${variant.judgeTotal}/50 |`;
   });
 }
 

@@ -36,7 +36,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
       liveRegionFailures: [],
       stateRendered: Object.fromEntries(states.map((state) => [state, true])),
       renderedFonts: ['system-ui'],
-      touchTargetsUnder44: [],
+      touchTargetsUnder48: [],
       clsAvailable: true,
       clsFailures: [],
       maxCumulativeLayoutShift: 0,

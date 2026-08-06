@@ -37,7 +37,7 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
       landmarkFailures: [],
       liveRegionFailures: [],
       stateRendered: Object.fromEntries(states.map((state) => [state, true])),
-      touchTargetsUnder44: [],
+      touchTargetsUnder48: [],
       clsAvailable: true,
       clsFailures: [],
       maxCumulativeLayoutShift: 0,
@@ -177,7 +177,7 @@ async function runCompiledStdioSequence(era: 'legacy' | 'modern'): Promise<void>
   ]);
   const fixtureServer = createServer((_request, response) => {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
-    response.end('<!doctype html><html lang="en"><head><title>Orders</title><meta name="viewport" content="width=device-width"></head><body><main><h1>Orders</h1><button style="min-width:44px;min-height:44px">Create order</button></main></body></html>');
+    response.end('<!doctype html><html lang="en"><head><title>Orders</title><meta name="viewport" content="width=device-width"></head><body><main><h1>Orders</h1><button style="min-width:48px;min-height:48px">Create order</button></main></body></html>');
   });
   const port = await new Promise<number>((resolve, reject) => {
     fixtureServer.once('error', reject);

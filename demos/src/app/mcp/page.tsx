@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { ArrowDown, ArrowUpRight, Braces, Check, CircleAlert, Github, Terminal } from "lucide-react";
+import { Braces, Check, CircleAlert, Github, Terminal } from "lucide-react";
 import { BrandLockup } from "../BrandLockup";
 import { ThemeToggle } from "../ThemeToggle";
 import { FROZEN_RUN, MCP_CONTRACT } from "./mcpData";
@@ -12,7 +12,7 @@ type McpPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "MCP lab · Agentic Design System",
+  title: "MCP lab | Agentic Design System",
   description:
     "See the three-tool ADS MCP loop turn a local interface into rendered evidence, an evaluation packet, and verified decision provenance.",
 };
@@ -61,7 +61,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <BrandLockup />
         </Link>
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
-          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio · v0.3.0</span>
+          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio, version 0.3.0</span>
           <a
             className={`hero-pill focus-ring ${styles.iconLink}`}
             href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp"
@@ -76,7 +76,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
       <article>
         <section className={styles.hero} aria-labelledby="mcp-title">
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>MCP lab · one local evidence loop</p>
+            <p className={styles.eyebrow}>MCP lab, one local evidence loop</p>
             <h1 id="mcp-title">The design loop,<br /><em>callable.</em></h1>
             <p className={styles.heroLede}>
               Three tools let a coding agent render the interface, check the evidence, and prove
@@ -85,7 +85,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
             </p>
             <div className={styles.heroActions}>
               <a className={`${styles.action} ${styles.primaryAction} focus-ring`} href="#run">
-                Follow a real run <ArrowDown size={16} aria-hidden="true" />
+                Follow a real run
               </a>
               <a className={`${styles.action} ${styles.secondaryAction} focus-ring`} href="/mcp/contract.json">
                 Read the JSON contract <Braces size={17} aria-hidden="true" />
@@ -143,7 +143,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
                   <p>{tool.description}</p>
                 </div>
                 <details className={styles.schemaDisclosure}>
-                  <summary>Inspect request + result <ArrowDown size={15} aria-hidden="true" /></summary>
+                  <summary>Inspect request and result</summary>
                   <div className={styles.schemaGrid}>
                     <JsonBlock label="request" value={tool.input} />
                     <JsonBlock label="result" value={tool.output} />
@@ -225,10 +225,10 @@ export default async function McpPage({ searchParams }: McpPageProps) {
           <h2 id="close-title">Proof travels with the work.<br /><em>Judgment does not disappear.</em></h2>
           <div className={styles.closeActions}>
             <a className={`${styles.action} ${styles.primaryAction} focus-ring`} href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp">
-              Inspect the implementation <ArrowUpRight size={16} aria-hidden="true" />
+              Inspect the implementation
             </a>
             <Link className={`${styles.action} ${styles.secondaryAction} focus-ring`} href="/trace/002">
-              See a decision trace <ArrowUpRight size={16} aria-hidden="true" />
+              See a decision trace
             </Link>
           </div>
         </section>
@@ -238,7 +238,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
           <BrandLockup />
         </Link>
-        <span>ads-mcp · local stdio · v0.3.0</span>
+        <span>ads-mcp, local stdio, version 0.3.0</span>
       </footer>
     </main>
   );

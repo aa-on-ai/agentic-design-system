@@ -34,7 +34,7 @@ export const MCP_CONTRACT = {
         viewports: ["390x844", "1280x800"],
         seriousAxeViolations: 0,
         horizontalOverflowAt: [],
-        touchTargetsUnder44: [],
+        touchTargetsUnder48: [],
       },
     },
     {
@@ -115,7 +115,7 @@ export const FROZEN_RUN = {
   client: "@modelcontextprotocol/sdk",
   browser: "Playwright Chromium",
   sequence: [
-    { tool: "ads_render", result: "complete", detail: "2 viewports · 0 blocking gates" },
+    { tool: "ads_render", result: "complete", detail: "2 viewports with 0 blocking gates" },
     { tool: "ads_evaluate", result: "needs_human", detail: "deterministic checks passed" },
     { tool: "ads_trace", result: "valid", detail: "decision provenance verified" },
   ],

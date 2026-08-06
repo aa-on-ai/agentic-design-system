@@ -374,8 +374,8 @@ try {
       const releaseBay = document.querySelector(".release-bay");
       const releaseLink = document.querySelector(".release-github");
       const releaseDoorScrews = [...document.querySelectorAll(".release-door i")];
-      const proofMark = document.querySelector(".station--release .station-proof-mark");
-      if (!floor || !climber || !ember || !releaseStation || !releaseMarker || !releaseCopy || !releaseBay || !releaseLink || !proofMark) {
+      const proofBlock = document.querySelector(".station--release .station-proof");
+      if (!floor || !climber || !ember || !releaseStation || !releaseMarker || !releaseCopy || !releaseBay || !releaseLink || !proofBlock) {
         return { missing: true };
       }
 
@@ -409,7 +409,6 @@ try {
         return styles.display !== "none" && styles.visibility !== "hidden" && rect.right > 0 && rect.left < innerWidth && rect.bottom > 0 && rect.top < innerHeight;
       }).length;
 
-      const proofGlyph = proofMark.querySelector(":scope > span");
       return {
         missing: false,
         intersectsReleaseCopy,
@@ -417,7 +416,11 @@ try {
         releaseLinkContentClipped: releaseLink.scrollWidth > releaseLink.clientWidth + 1
           || Boolean(linkTextRect && linkTextRect.right > Math.min(linkRect.right, bayRect.right) + 1),
         visibleScrews,
-        hasOpticalProofGlyph: Boolean(proofGlyph),
+        hasStructuredProof: Boolean(
+          proofBlock.querySelector(":scope > p")
+          && proofBlock.querySelector(":scope > strong")
+          && proofBlock.querySelector(":scope > span")
+        ),
       };
     });
 
@@ -432,8 +435,8 @@ try {
       if (width <= 720 && responsivePolish.visibleScrews > 0) {
         fail(width, `mobile release bay leaves ${responsivePolish.visibleScrews} orphaned door screw(s) visible`);
       }
-      if (!responsivePolish.hasOpticalProofGlyph) {
-        fail(width, "proof plus lacks an optically centered glyph wrapper");
+      if (!responsivePolish.hasStructuredProof) {
+        fail(width, "release proof is missing its label, result, or supporting note");
       }
     }
 

@@ -1,4 +1,4 @@
-import { ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { TRACE } from "./traceData";
 import styles from "./trace-two.module.css";
 
@@ -6,7 +6,7 @@ const metrics = [
   ["Screenshots", `${TRACE.evidence.screenshots} / ${TRACE.evidence.screenshots}`],
   ["Serious axe violations", String(TRACE.evidence.seriousOrCriticalAxeViolations)],
   ["Horizontal overflow", TRACE.evidence.horizontalOverflow ? "Found" : "None"],
-  ["Targets under 44px", String(TRACE.evidence.touchTargetsUnder44)],
+  ["Targets under 48px", String(TRACE.evidence.touchTargetsUnder48)],
   ["Maximum CLS", TRACE.evidence.maxCumulativeLayoutShift.toFixed(5)],
   ["Fresh rerun delta", `${TRACE.evidence.publicRerunPerceptualDeltaPct}%`],
 ] as const;
@@ -44,13 +44,11 @@ export function ProofReceipts() {
             <a key={label} className="focus-ring" href={href}>
               <CheckCircle2 size={18} aria-hidden="true" />
               <span>{label}</span>
-              <ArrowUpRight size={16} aria-hidden="true" />
             </a>
           ))}
           <a className="focus-ring" href="/trace/002/trace.json">
             <CheckCircle2 size={18} aria-hidden="true" />
             <span>Machine-readable trace</span>
-            <ArrowUpRight size={16} aria-hidden="true" />
           </a>
         </nav>
       </details>

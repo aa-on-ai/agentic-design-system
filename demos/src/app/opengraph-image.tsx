@@ -74,7 +74,6 @@ export default function OpenGraphImage() {
                   fontSize: 14,
                   fontWeight: 700,
                   letterSpacing: "0.18em",
-                  textTransform: "uppercase",
                 }}
               >
                 System
@@ -116,10 +115,10 @@ export default function OpenGraphImage() {
                 letterSpacing: "0.08em",
               }}
             >
-              OPEN SOURCE
+              Open source
             </span>
             <span style={{ color: "#f9ecd2", fontSize: 14, fontWeight: 700, letterSpacing: "0.055em" }}>
-              BRIEF · BROWSER-TESTED REPAIR · EVIDENCE · VERDICT
+              Brief, browser-tested repair, evidence, and verdict
             </span>
           </div>
         </div>

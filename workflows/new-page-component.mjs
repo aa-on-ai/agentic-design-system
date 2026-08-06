@@ -74,7 +74,7 @@ const CAPTURE_SCHEMA = {
     'landmarkFailures',
     'liveRegionFailures',
     'stateRendered',
-    'touchTargetsUnder44',
+    'touchTargetsUnder48',
     'clsAvailable',
     'clsThreshold',
     'maxCumulativeLayoutShift',
@@ -97,9 +97,9 @@ const CAPTURE_SCHEMA = {
       items: { type: 'object' },
     },
     stateRendered: { type: 'object', description: 'map of state -> boolean (did it render non-trivial content)' },
-    touchTargetsUnder44: {
+    touchTargetsUnder48: {
       type: 'array',
-      description: 'from evidence.json gates.touchTargetsUnder44 — interactive controls smaller than 44x44',
+      description: 'from evidence.json gates.touchTargetsUnder48 — interactive controls smaller than 48x48',
       items: {
         type: 'object',
         required: ['selector', 'size'],
@@ -177,8 +177,8 @@ while (iteration < MAX_ITERS) {
     : `Revise ${ARTIFACT_MODE ? ARTIFACT : TARGET}. The independent grader returned needs_revision.\n\n` +
       `EXACT REVISION INSTRUCTION:\n${lastGrade.nextRevisionPrompt}\n\n` +
       `Do NOT introduce any new axe violations, and fix the specific rendered-evidence failure cited. ` +
-      `If touch targets are cited: give EVERY interactive control a >=44px target in every state — buttons/inputs/selects via min-height + padding, ` +
-      `and inline text links via display:inline-block with padding (or min-height/min-width) so the clickable box clears 44px. Don't miss row links. ` +
+      `If touch targets are cited: give EVERY interactive control a >=48px target in every state — buttons/inputs/selects via min-height + padding, ` +
+      `and inline text links via display:inline-block with padding (or min-height/min-width) so the clickable box clears 48px. Don't miss row links. ` +
       `Then run an adjacent-action consistency sweep in every changed state and breakpoint: inspect nearby primary, secondary, toolbar, and inline actions, not only the named target. ` +
       `When a state is read-only, disabled, offline, permission-limited, or destructive, remove, disable, relabel, or visibly explain actions that contradict it; ` +
       `use native disabled semantics for visible inactive controls and preserve active actions in unaffected states. ` +
@@ -202,7 +202,7 @@ while (iteration < MAX_ITERS) {
   const missingStates = Object.entries(capture.stateRendered)
     .filter(([, rendered]) => !rendered)
     .map(([s]) => s);
-  const smallTargets = capture.touchTargetsUnder44 || [];
+  const smallTargets = capture.touchTargetsUnder48 || [];
   const landmarkFailures = capture.landmarkFailures || [];
   const liveRegionFailures = capture.liveRegionFailures || [];
   const clsFailures = capture.clsFailures || [];
@@ -238,11 +238,11 @@ while (iteration < MAX_ITERS) {
       `Rendered font(s) actually used: ${capture.renderedFonts.join(', ') || 'unknown'}.\n` +
       `Deterministic gate result this iteration: ${gatePass ? 'PASS' : 'FAIL'} ` +
       `(axe serious=${capture.seriousAxeViolations}, overflow=[${capture.horizontalOverflowAt.join(',')}], missing states=[${missingStates.join(',')}], ` +
-      `touch targets <44px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}, ` +
+      `touch targets <48px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}, ` +
       `landmark failures=${landmarkFailures.length}, live-region failures=${liveRegionFailures.length}, ` +
       `max CLS=${capture.maxCumulativeLayoutShift}/${capture.clsThreshold}, CLS failures=${clsFailures.length}).\n\n` +
       `Rule: if the deterministic gate FAILED, you cannot return "satisfied". If touch targets failed, the nextRevisionPrompt MUST ` +
-      `instruct enlarging the listed interactive controls (links, buttons, inputs, selects) to a minimum 44x44px target at mobile ` +
+      `instruct enlarging the listed interactive controls (links, buttons, inputs, selects) to a minimum 48x48px target at mobile ` +
       `(e.g. padding or min-height/min-width), without breaking layout. ` +
       `If landmark, live-region, or CLS gates failed, the nextRevisionPrompt MUST cite the failing state/breakpoint and required repair. ` +
       `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, semantics, CLS, axe issues, overflow) ` +
@@ -298,7 +298,7 @@ const report = await agent(
       landmarkFailures: h.capture.landmarkFailures,
       liveRegionFailures: h.capture.liveRegionFailures,
       stateRendered: h.capture.stateRendered,
-      touchTargetsUnder44: (h.capture.touchTargetsUnder44 || []).length,
+      touchTargetsUnder48: (h.capture.touchTargetsUnder48 || []).length,
       clsAvailable: h.capture.clsAvailable,
       clsThreshold: h.capture.clsThreshold,
       maxCumulativeLayoutShift: h.capture.maxCumulativeLayoutShift,
