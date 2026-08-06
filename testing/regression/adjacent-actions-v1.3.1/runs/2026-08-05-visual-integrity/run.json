@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-08-05-visual-integrity",
+  "createdAt": "2026-08-06T04:00:59.390Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "53b2ca6dba19ae4210d906ad4b8b06f5a487b549",
+  "behaviorDigest": "4a2e53c1b5cee9265c4c1e956412a20b5fabbd6bb5637d548c1a0dd2d41934b6",
+  "behaviorFileCount": 65,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "Fresh Chromium recapture from ADS behavior digest 4a2e53c1: 8/8 state-breakpoint screenshots passed the 48px rendered gates and compared bit-for-bit identical to the prior passing Pawprint packet.",
+      "graderContext": "The prior independent Pawprint grade was retained only after the strict 8/8 comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "Fresh Chromium recapture from ADS behavior digest 4a2e53c1: 8/8 state-breakpoint screenshots passed the 48px rendered gates and compared bit-for-bit identical to the prior passing Glasshouse packet.",
+      "graderContext": "The prior independent Glasshouse grade was retained only after the strict 8/8 comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "Fresh Chromium recapture from ADS behavior digest 4a2e53c1: 8/8 state-breakpoint screenshots passed the 48px rendered gates and compared bit-for-bit identical to the prior passing Museum packet.",
+      "graderContext": "The prior independent Museum grade was retained only after the strict 8/8 comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "Fresh Chromium recapture from ADS behavior digest 4a2e53c1: 8/8 state-breakpoint screenshots passed the 48px rendered gates and compared bit-for-bit identical to the prior passing Kitchen packet.",
+      "graderContext": "The prior independent Kitchen grade was retained only after the strict 8/8 comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "Fresh Chromium recapture from ADS behavior digest 4a2e53c1: 8/8 state-breakpoint screenshots passed the 48px rendered gates and compared bit-for-bit identical to the prior passing Radio packet.",
+      "graderContext": "The prior independent Radio grade was retained only after the strict 8/8 comparison was identical and the candidate verifier re-executed native default/error action semantics."
+    }
+  ]
+}

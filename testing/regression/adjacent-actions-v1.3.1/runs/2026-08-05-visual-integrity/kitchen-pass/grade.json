@@ -1,0 +1,26 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "Design Quality": 8,
+    "Originality": 8,
+    "Craft": 9,
+    "Functionality": 8
+  },
+  "weightedScore": 8.2,
+  "findings": [
+    {
+      "id": "finding-001",
+      "category": "layout_spacing_hierarchy",
+      "severity": "minor",
+      "rubricRow": "Functionality",
+      "state": "default",
+      "breakpoint": "390x844",
+      "artifact": "evidence/default-390x844.png",
+      "target": "Primary action stack beneath Station readiness",
+      "observation": "The first actionable control begins just below the 844px initial viewport, so a mobile expediter must scroll before reaching Fire next course even though the lead copy says Table 14 is next.",
+      "evidence": "The full-page default-390x844 screenshot places the action stack immediately after the readiness rows, below the first viewport."
+    }
+  ],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}
