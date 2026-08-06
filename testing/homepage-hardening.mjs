@@ -211,7 +211,14 @@ async function readObservedStationState(page, stage, phase) {
 async function settleAtStation(page, stage) {
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    window.dispatchEvent(new Event("scroll"));
   });
+  await page.waitForFunction(() => {
+    const climber = document.querySelector(".assembly-climber");
+    return climber?.getAttribute("data-phase") === "staged" &&
+      climber.getAttribute("data-station") === "between";
+  }, undefined, { timeout: 5_000 });
   await installStationStateObserver(page, stage);
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const aligned = await page.evaluate((targetStage) => {
