@@ -145,7 +145,10 @@ function webRenderBlockers(gates: Record<string, unknown>, states: string[], max
   if (arrayLength(gates.horizontalOverflowAt) > 0) blockers.push('horizontal overflow was rendered');
   if (arrayLength(gates.landmarkFailures) > 0) blockers.push('a rendered state is missing its main landmark');
   if (arrayLength(gates.liveRegionFailures) > 0) blockers.push('a loading or error state is missing live-region semantics');
-  if (arrayLength(gates.touchTargetsUnder44) > 0) blockers.push('undersized touch targets remain');
+  const undersizedTargets = Array.isArray(gates.touchTargetsUnder48)
+    ? gates.touchTargetsUnder48
+    : gates.touchTargetsUnder44;
+  if (arrayLength(undersizedTargets) > 0) blockers.push('undersized touch targets remain');
   if (gates.clsAvailable !== true) blockers.push('CLS evidence is unavailable');
   if (Number(gates.maxCumulativeLayoutShift || 0) > maxCls || arrayLength(gates.clsFailures) > 0) {
     blockers.push(`cumulative layout shift exceeds ${maxCls}`);
@@ -427,7 +430,7 @@ export class AdsService {
         'main-and-live-regions',
         'cumulative-layout-shift',
         'state-distinctness',
-        'touch-target-44px',
+        'touch-target-48px',
       ];
     const manifest: RunManifest = {
       schemaVersion: 1,

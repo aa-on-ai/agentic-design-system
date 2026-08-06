@@ -132,6 +132,23 @@ code {
   border: 0;
 }
 
+.ads-state-crossfade {
+  display: grid;
+}
+
+.ads-state-frame {
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-in-out;
+}
+
+.ads-state-frame.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .theme-page {
   min-height: 100vh;
   background: var(--page);
@@ -357,7 +374,7 @@ code {
   gap: 10px;
   color: var(--muted);
   font-family: var(--font-label), monospace;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.035em;
   line-height: var(--leading-label);
@@ -419,12 +436,12 @@ code {
 
 .install-guide-link {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 48px;
   align-items: center;
   gap: 6px;
   color: var(--muted);
   font-family: var(--font-label), monospace;
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   font-weight: 650;
   line-height: var(--leading-label);
   text-decoration: none;
@@ -471,7 +488,7 @@ code {
   padding-right: 4px;
   align-items: center;
   gap: 9px;
-  font-size: 0.71rem;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 
@@ -499,7 +516,7 @@ code {
   place-items: center;
   border-left: 1px solid rgba(255, 240, 210, 0.16);
   color: #fff0d2;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -545,7 +562,7 @@ code {
 
 .hero-job-ticket span,
 .hero-job-ticket small {
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   letter-spacing: 0.035em;
 }
 
@@ -784,7 +801,7 @@ code {
   margin: 0 0 16px;
   color: var(--orange-ink);
   font-family: var(--font-label), monospace;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.035em;
   line-height: 1.45;
@@ -805,7 +822,7 @@ code {
   display: inline-flex;
   max-width: 650px;
   margin-top: 32px;
-  min-height: 44px;
+  min-height: 48px;
   padding: 8px 0;
   align-items: center;
   border-bottom: 2px solid var(--orange);
@@ -1021,7 +1038,7 @@ code {
 }
 
 .machine-header {
-  min-height: 44px;
+  min-height: 48px;
   margin-bottom: 10px;
   padding: 0 2px;
 }
@@ -1128,7 +1145,7 @@ code {
 }
 
 .ads-artifact-header {
-  min-height: 44px;
+  min-height: 48px;
   padding: 0 14px;
   border-bottom: 1px solid #cfc5b5;
   background: #e8e2d7;
@@ -1144,7 +1161,7 @@ code {
 .ads-artifact-header code {
   overflow: hidden;
   color: #6c6154;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1171,7 +1188,7 @@ code {
   border-top: 1px solid #d8d0c4;
   background: #f0ebe1;
   color: #786d60;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.015em;
 }
@@ -1195,7 +1212,7 @@ code {
 .ads-outcome-sheet dt {
   color: #8d4a25;
   font-family: var(--font-body), sans-serif;
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   font-weight: 720;
   letter-spacing: -0.01em;
 }
@@ -1245,13 +1262,13 @@ code {
 .ads-check-list b {
   color: #9e342c;
   font-family: var(--font-body), sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: -0.01em;
 }
 
 .ads-check-list span {
   color: #59433b;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 690;
   line-height: 1.35;
 }
@@ -1282,7 +1299,7 @@ code {
   background: #ece6dc;
   color: #756a5d;
   font-family: var(--font-label), monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -1300,7 +1317,7 @@ code {
 .run-screen-title div > span {
   display: block;
   color: #84796b;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 750;
 }
 
@@ -1316,7 +1333,7 @@ code {
   border-radius: 999px;
   background: #ece5da;
   color: #665b4f;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-style: normal;
   font-weight: 800;
 }
@@ -1341,12 +1358,12 @@ code {
   justify-content: center;
   background: #f3ede3;
   color: #786d60;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
 }
 
 .run-screen-summary b {
   color: #332b23;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
 }
 
 .run-order-list {
@@ -1362,12 +1379,12 @@ code {
   gap: 6px;
   border-bottom: 1px solid #e3ddd3;
   color: #62584d;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   grid-template-columns: 0.7fr 1.25fr 0.85fr 0.45fr;
 }
 
 .run-order strong { color: #2d271f; }
-.run-order small { text-align: right; }
+.run-order small { font-size: inherit; text-align: right; }
 
 .run-order--urgent {
   margin: 0 -4px;
@@ -1381,7 +1398,7 @@ code {
   margin: 10px 0 0;
   padding: 8px 9px;
   font-family: var(--font-label), monospace;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 850;
   letter-spacing: 0.02em;
 }
@@ -1416,7 +1433,7 @@ code {
   border-top: 2px solid #287354;
   background: #edf5eb;
   color: #4c5f50;
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   line-height: 1.3;
 }
 
@@ -1460,7 +1477,7 @@ code {
 
 .ads-viewport-strip small {
   color: #617063;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
 }
 
 .ads-evidence-checks { margin-top: 12px; }
@@ -1474,7 +1491,7 @@ code {
   border: 1px solid #b9cbbc;
   background: #edf6ed;
   color: #45604b;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 680;
 }
 
@@ -1488,7 +1505,7 @@ code {
   margin: 12px 0 0;
   color: #756a5d;
   font-family: var(--font-label), monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   overflow-wrap: anywhere;
 }
 
@@ -1508,7 +1525,7 @@ code {
 .ads-verdict-main span,
 .ads-verdict-main small {
   font-family: var(--font-body), sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 760;
   letter-spacing: -0.01em;
 }
@@ -1535,7 +1552,7 @@ code {
   border-top: 2px solid #287354;
   background: #f1f5ed;
   color: #56665a;
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   font-weight: 680;
 }
 
@@ -1554,7 +1571,7 @@ code {
   box-shadow: 8px 8px 0 var(--machine-deep);
   color: #fff7e8;
   font-family: var(--font-label), monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 850;
   letter-spacing: 0.025em;
   text-align: center;
@@ -1806,7 +1823,7 @@ code {
   padding: 4px 7px 3px;
   border: 1px solid currentColor;
   font-family: var(--font-body), sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 840;
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -1841,7 +1858,7 @@ code {
   padding: 18px 30px 20px;
   color: #725c49;
   font-family: var(--font-label), monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 680;
   letter-spacing: 0.01em;
   line-height: var(--leading-label);
@@ -1889,7 +1906,7 @@ code {
 .release-boundaries li > span {
   color: #ff9254;
   font-family: var(--font-label), monospace;
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   font-weight: 850;
 }
 
@@ -1904,7 +1921,7 @@ code {
 
 .release-boundaries code {
   color: #fff3dc;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   overflow-wrap: anywhere;
 }
 
@@ -1942,7 +1959,7 @@ code {
 }
 
 .release-faq header > p {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   letter-spacing: 0.035em;
 }
 
@@ -2104,8 +2121,8 @@ code {
 
 .site-footer a {
   display: inline-flex;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 48px;
+  min-height: 48px;
   align-items: center;
   color: #f4e8d0;
   text-decoration-color: rgba(244, 232, 208, 0.34);
@@ -2192,7 +2209,7 @@ code {
 
 .footer-meta a {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 48px;
   color: #b9aa92;
 }
 
@@ -2333,8 +2350,8 @@ code {
   .hero-section { padding: 0; }
 
   .hero-workshop {
-    height: 780px;
-    min-height: 780px;
+    height: 788px;
+    min-height: 788px;
     border-radius: 0 0 24px 24px;
     border-right: 0;
     border-left: 0;
@@ -2378,7 +2395,7 @@ code {
 
   .hero-kicker {
     margin-bottom: 20px;
-    font-size: 0.58rem;
+    font-size: 0.75rem;
   }
 
   .hero-copy h1 {
@@ -2413,7 +2430,7 @@ code {
 
   .hero-command-code {
     overflow: hidden;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .hero-command-copy {
@@ -2428,7 +2445,7 @@ code {
   }
 
   .tour-link {
-    min-height: 44px;
+    min-height: 48px;
     margin-left: 48px;
   }
 
@@ -2576,13 +2593,13 @@ code {
 
   .machine-header {
     min-height: 40px;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
   }
 
   .inspection-lamp {
     min-height: 30px;
     padding: 0 8px;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 
   .artifact-cart {
@@ -2601,12 +2618,12 @@ code {
   }
 
   .ads-artifact-label {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 
   .ads-artifact-header code {
     max-width: 50%;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
   }
 
   .ads-artifact-body {
@@ -2623,7 +2640,7 @@ code {
   .ads-artifact-footer {
     min-height: 34px;
     padding: 0 10px;
-    font-size: 0.56rem;
+    font-size: 0.75rem;
   }
 
   .ads-outcome-sheet dl > div {
@@ -2633,9 +2650,9 @@ code {
     grid-template-columns: 72px 1fr;
   }
 
-  .ads-outcome-sheet dt { font-size: 0.58rem; }
-  .ads-outcome-sheet dd { font-size: 0.72rem; }
-  .ads-file-note { margin-top: 12px; font-size: 0.68rem; }
+  .ads-outcome-sheet dt { font-size: 0.75rem; }
+  .ads-outcome-sheet dd { font-size: 0.75rem; }
+  .ads-file-note { margin-top: 12px; font-size: 0.75rem; }
 
   .ads-check-layout {
     gap: 10px;
@@ -2652,18 +2669,18 @@ code {
     padding: 8px;
   }
 
-  .ads-check-list b { font-size: 0.56rem; }
-  .ads-check-list span { font-size: 0.62rem; }
+  .ads-check-list b { font-size: 0.75rem; }
+  .ads-check-list span { font-size: 0.75rem; }
 
   .run-screen-bar {
     min-height: 26px;
-    font-size: 0.56rem;
+    font-size: 0.75rem;
   }
 
   .run-screen-body { padding: 9px; }
-  .run-screen-title div > span { font-size: 0.56rem; }
+  .run-screen-title div > span { font-size: 0.75rem; }
   .run-screen-title strong { font-size: 0.82rem; }
-  .run-screen-title > i { font-size: 0.54rem; }
+  .run-screen-title > i { font-size: 0.75rem; }
 
   .run-screen-summary {
     margin: 8px 0 6px;
@@ -2671,19 +2688,19 @@ code {
 
   .run-screen-summary span {
     min-height: 34px;
-    font-size: 0.54rem;
+    font-size: 0.75rem;
   }
 
   .run-order {
     min-height: 30px;
     gap: 4px;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
     grid-template-columns: 0.7fr 1.25fr 0.85fr 0.45fr;
   }
 
   .run-screen-result {
     margin-top: 8px;
-    font-size: 0.56rem;
+    font-size: 0.75rem;
   }
 
   .ads-repair-strip {
@@ -2694,7 +2711,7 @@ code {
   .ads-repair-strip span {
     min-height: 48px;
     padding: 6px;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
   }
 
   .ads-viewport-strip,
@@ -2708,8 +2725,8 @@ code {
   }
 
   .ads-viewport-strip i { height: 34px; }
-  .ads-viewport-strip b { font-size: 0.72rem; }
-  .ads-viewport-strip small { font-size: 0.54rem; }
+  .ads-viewport-strip b { font-size: 0.75rem; }
+  .ads-viewport-strip small { font-size: 0.75rem; }
 
   .ads-evidence-checks { margin-top: 8px; }
   .ads-evidence-checks span {
@@ -2718,12 +2735,12 @@ code {
     flex-direction: column;
     align-items: flex-start;
     gap: 1px;
-    font-size: 0.55rem;
+    font-size: 0.75rem;
   }
 
-  .ads-evidence-checks b { font-size: 0.72rem; }
+  .ads-evidence-checks b { font-size: 0.75rem; }
   .ads-evidence-path,
-  .ads-verdict-note { margin-top: 9px; font-size: 0.54rem; }
+  .ads-verdict-note { margin-top: 9px; font-size: 0.75rem; }
 
   .ads-verdict-main {
     min-height: 118px;
@@ -2735,7 +2752,7 @@ code {
   .ads-score-row span {
     min-height: 40px;
     padding: 6px;
-    font-size: 0.57rem;
+    font-size: 0.75rem;
   }
 
   .machine-footer { display: none; }

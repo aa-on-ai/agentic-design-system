@@ -152,7 +152,7 @@ export async function judgeFromScreenshots({ slug, variant, prompt, evidence, ou
     `Variant: ${variant}`,
     `Rendered-evidence gates: serious/critical axe violations=${gates.seriousAxeViolations}, ` +
       `horizontal overflow at=[${(gates.horizontalOverflowAt || []).join(', ')}], ` +
-      `touch targets under 44x44=${(gates.touchTargetsUnder44 || []).length}, ` +
+      `touch targets under 48x48=${(gates.touchTargetsUnder48 || gates.touchTargetsUnder44 || []).length}, ` +
       `main-landmark failures=${Array.isArray(gates.landmarkFailures) ? gates.landmarkFailures.length : 'unmeasured'}, ` +
       `live-region failures=${Array.isArray(gates.liveRegionFailures) ? gates.liveRegionFailures.length : 'unmeasured'}, ` +
       `max CLS=${gates.clsAvailable === true ? gates.maxCumulativeLayoutShift : 'unavailable'} ` +

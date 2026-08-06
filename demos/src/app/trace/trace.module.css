@@ -171,7 +171,7 @@
 .runCard dd {
   margin: 0;
   font-family: var(--font-label), monospace;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 760;
 }
 
@@ -274,7 +274,7 @@
 .chainLegend span {
   color: #ff8b43;
   font-family: var(--font-label), monospace;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
 }
 
 .chainLegend strong {
@@ -285,7 +285,7 @@
 .chainLegend small {
   margin-top: 4px;
   color: #bcae96;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   line-height: 1.4;
 }
 
@@ -364,7 +364,7 @@
   border-radius: 50%;
   color: var(--orange-ink);
   font-family: var(--font-label), monospace;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 760;
 }
 
@@ -433,7 +433,7 @@
 .receiptLabel code {
   max-width: 56%;
   color: var(--soft);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0;
   overflow-wrap: anywhere;
@@ -475,7 +475,7 @@
 
 .evidenceReceipt a {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 48px;
   align-items: center;
   gap: 8px;
   color: var(--green);
@@ -575,7 +575,7 @@
 
   .wordmark {
     max-width: 160px;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     line-height: 1.2;
   }
 

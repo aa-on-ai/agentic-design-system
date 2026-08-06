@@ -179,7 +179,7 @@ function buildReport(slug, results) {
         ? `${g.landmarkFailures.length} landmark / ${g.liveRegionFailures.length} live`
         : 'unmeasured';
       const cls = g.clsAvailable === true ? g.maxCumulativeLayoutShift : 'unavailable';
-      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${(g.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states} | ${judge} |`;
+      return `| ${r.name} | ${g.seriousAxeViolations ?? '?'} | ${(g.horizontalOverflowAt || []).join(',') || 'none'} | ${(g.touchTargetsUnder48 || g.touchTargetsUnder44 || []).length} | ${semantics} | ${cls} | ${states} | ${judge} |`;
     }),
     '',
     '## skipped variants (explicit — no silent drops)',

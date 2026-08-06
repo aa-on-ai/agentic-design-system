@@ -15,7 +15,7 @@ const renderedRun = {
     seriousAxeViolations: 0,
     horizontalOverflowAt: 0,
     landmarkFailures: 0,
-    touchTargetsUnder44: 0,
+    touchTargetsUnder48: 0,
     maxCumulativeLayoutShift: 0.01,
   },
   blockers: [],

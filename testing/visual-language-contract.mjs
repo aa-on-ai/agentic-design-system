@@ -27,6 +27,10 @@ const componentFiles = [
   "demos/src/app/trace/002/ProofGallery.tsx",
   "demos/src/app/trace/002/ProofReceipts.tsx",
   "demos/src/app/trace/002/TraceClose.tsx",
+  "demos/src/app/after/canopy/page.tsx",
+  "demos/src/app/after/notion-ai-settings/page.tsx",
+  "demos/src/app/after/pawprint/page.tsx",
+  "demos/src/app/opengraph-image.tsx",
 ];
 const cssFiles = [
   "demos/src/app/globals.css",
@@ -39,6 +43,11 @@ const forbiddenGlyphs = /[→↗↓↑←•·]/u;
 for (const file of componentFiles) {
   const source = await readFile(path.join(root, file), "utf8");
   assert.equal(forbiddenGlyphs.test(source), false, `${file} contains a forbidden arrow or bullet glyph`);
+  assert.equal(
+    /\buppercase\b|textTransform\s*:\s*["']uppercase["']/u.test(source),
+    false,
+    `${file} forces uppercase text`,
+  );
 }
 
 for (const file of cssFiles) {
@@ -89,17 +98,97 @@ try {
   await page.waitForFunction(() => document.querySelectorAll(".hero-media img").length === 1);
   assert.match(await page.locator(".hero-media img").getAttribute("src"), /creative-pipeline-dark/);
 
-  for (const route of ["/trace", "/trace/002", "/mcp"]) {
+  for (const route of [
+    "/",
+    "/trace",
+    "/trace/002",
+    "/mcp",
+    "/after/canopy",
+    "/after/notion-ai-settings",
+    "/after/pawprint",
+  ]) {
     await page.goto(`${url}${route}?theme=light`, { waitUntil: "networkidle" });
-    const facts = await page.locator("main").evaluate((main) => ({
+    const facts = await page.locator("body").evaluate((main) => ({
       text: main.innerText,
       uppercaseTransforms: [...main.querySelectorAll("*")]
         .filter((node) => getComputedStyle(node).textTransform === "uppercase")
         .map((node) => node.textContent?.trim().slice(0, 80)),
+      visibleListMarkers: [...main.querySelectorAll("li")]
+        .filter((node) => {
+          const rect = node.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0 && getComputedStyle(node).listStyleType !== "none";
+        })
+        .map((node) => ({ text: node.textContent?.trim().slice(0, 60), marker: getComputedStyle(node).listStyleType })),
+      generatedArrowOrBullet: [...main.querySelectorAll("*")].some((node) =>
+        ["::before", "::after"].some((pseudo) => /[→↗↓↑←•·]/u.test(getComputedStyle(node, pseudo).content))
+      ),
+      smallText: [...main.querySelectorAll("*")].flatMap((node) => {
+        const style = getComputedStyle(node);
+        const rect = node.getBoundingClientRect();
+        const ownsText = [...node.childNodes].some(
+          (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim(),
+        );
+        const size = Number.parseFloat(style.fontSize);
+        return ownsText && rect.width > 0 && rect.height > 0 && style.visibility !== "hidden" && size < 12
+          ? [{ text: node.textContent?.trim().slice(0, 60), size }]
+          : [];
+      }),
+      undersizedTargets: [...main.querySelectorAll('a[href],button,input:not([type="hidden"]),select,textarea,summary')]
+        .flatMap((node) => {
+          const style = getComputedStyle(node);
+          const rect = node.getBoundingClientRect();
+          if (
+            style.display === "none" ||
+            style.visibility === "hidden" ||
+            node.hasAttribute("disabled") ||
+            (rect.width === 0 && rect.height === 0)
+          ) return [];
+          return rect.width < 48 || rect.height < 48
+            ? [{ label: node.getAttribute("aria-label") || node.textContent?.trim().slice(0, 40), width: rect.width, height: rect.height }]
+            : [];
+        }),
+      deadButtons: [...main.querySelectorAll("button")].flatMap((node) => {
+        const style = getComputedStyle(node);
+        const rect = node.getBoundingClientRect();
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          node.hasAttribute("disabled") ||
+          (rect.width === 0 && rect.height === 0)
+        ) return [];
+        const handledSubmit = node.type === "submit" && node.form?.hasAttribute("data-ads-handled-submit");
+        return typeof node.onclick === "function" || handledSubmit
+          ? []
+          : [node.getAttribute("aria-label") || node.textContent?.trim().slice(0, 60)];
+      }),
     }));
     assert.equal(forbiddenGlyphs.test(facts.text), false, `${route} renders a forbidden arrow or bullet glyph`);
     assert.deepEqual(facts.uppercaseTransforms, [], `${route} renders forced uppercase text`);
+    assert.deepEqual(facts.visibleListMarkers, [], `${route} renders visible list bullets`);
+    assert.equal(facts.generatedArrowOrBullet, false, `${route} renders a generated arrow or bullet glyph`);
+    assert.deepEqual(facts.smallText, [], `${route} renders public text below 12px`);
+    assert.deepEqual(facts.undersizedTargets, [], `${route} renders an interactive target below 48px`);
+    assert.deepEqual(facts.deadButtons, [], `${route} renders an enabled button without behavior`);
   }
+
+  await page.goto(`${url}/after/canopy`, { waitUntil: "networkidle" });
+  assert.equal(
+    await page.getByRole("button", { name: "Open navigation" }).count(),
+    0,
+    "Canopy exposes a dead mobile navigation control",
+  );
+
+  await page.goto(`${url}/after/pawprint`, { waitUntil: "networkidle" });
+  assert.equal(
+    await page.getByRole("button", { name: "Create walk" }).count(),
+    0,
+    "Pawprint exposes a dead Create walk control",
+  );
+  assert.equal(
+    await page.getByRole("button", { name: "Export route sheet" }).count(),
+    0,
+    "Pawprint exposes a dead Export route sheet control",
+  );
 } finally {
   await browser.close();
 }

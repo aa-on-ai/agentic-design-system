@@ -47,7 +47,7 @@ export const TRACE = {
     breakpoints: suite.breakpoints.map(({ name }) => name),
     seriousOrCriticalAxeViolations: 0,
     horizontalOverflow: false,
-    touchTargetsUnder44: 0,
+    touchTargetsUnder48: 0,
     maxCumulativeLayoutShift: 0,
     originalRepairDelta: {
       desktopErrorPct: 0.77,

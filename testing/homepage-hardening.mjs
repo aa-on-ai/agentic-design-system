@@ -15,10 +15,11 @@ const viewports = [
   { name: "desktop", width: 1280, height: 900 },
 ];
 
+const requestedBrowser = process.env.ADS_TEST_BROWSER?.toLowerCase();
 const browserTypes = [
   ["Chromium", chromium],
   ["WebKit", webkit],
-];
+].filter(([name]) => !requestedBrowser || name.toLowerCase() === requestedBrowser);
 
 const failures = [];
 const receipts = [];
@@ -480,4 +481,4 @@ if (failures.length) {
 }
 
 console.log(JSON.stringify(receipts, null, 2));
-console.log("homepage hardening passed: Chromium + WebKit at 390/768/1280, active-theme hero, smooth Ember rail motion, reduced motion, keyboard focus, copy feedback, and theme persistence");
+console.log(`homepage hardening passed: ${browserTypes.map(([name]) => name).join(" + ")} at 390/768/1280, active-theme hero, smooth Ember rail motion, reduced motion, keyboard focus, copy feedback, and theme persistence`);

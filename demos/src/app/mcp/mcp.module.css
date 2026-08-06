@@ -163,7 +163,7 @@
 .sequenceTicket li > span { color: var(--soft); font: 600 0.75rem/1 var(--font-body), sans-serif; }
 .sequenceTicket li div { display: flex; flex-direction: column; gap: 4px; }
 .sequenceTicket li code { color: var(--ink); font-size: 0.8rem; font-weight: 700; }
-.sequenceTicket li small { color: var(--muted); font-size: 0.72rem; }
+.sequenceTicket li small { color: var(--muted); font-size: 0.75rem; }
 .sequenceTicket li > svg { color: var(--green); }
 .sequenceTicket > p {
   display: flex;
@@ -245,7 +245,7 @@
   border: 1px solid var(--line-soft);
   background: color-mix(in srgb, var(--paper-light) 62%, transparent);
   cursor: pointer;
-  font: 650 0.7rem/1.3 var(--font-label), monospace;
+  font: 650 0.75rem/1.3 var(--font-label), monospace;
   list-style: none;
   transition: background-color 150ms ease-out, transform 100ms ease-out;
 }
@@ -293,7 +293,7 @@
 .runShell li > code { color: #f9ecd2; font-size: 0.76rem; font-weight: 700; }
 .runShell li div { display: flex; flex-direction: column; gap: 5px; }
 .runShell li strong { color: #76d4a6; font: 700 0.76rem/1 var(--font-body), sans-serif; }
-.runShell li small { color: #aaa18e; font-size: 0.72rem; }
+.runShell li small { color: #aaa18e; font-size: 0.75rem; }
 .runShell li > svg { color: #76d4a6; }
 .runShell li:nth-child(2) strong,
 .runShell li:nth-child(2) > svg { color: #ff9e61; }
@@ -328,7 +328,7 @@
 .resourcesSection > div > p:last-child { max-width: 500px; margin: 28px 0 0; color: var(--muted); line-height: 1.65; }
 .resourcesSection ul { margin: 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
 .resourcesSection li { display: flex; min-height: 58px; align-items: center; border-bottom: 1px solid var(--line-soft); }
-.resourcesSection code { color: var(--orange-deep); font-size: 0.7rem; overflow-wrap: anywhere; }
+.resourcesSection code { color: var(--orange-deep); font-size: 0.75rem; overflow-wrap: anywhere; }
 
 .close { padding: 112px max(32px, calc((100vw - 1180px) / 2)); background: var(--release-bg); color: var(--release-text); }
 .close .eyebrow { color: #24130c; }

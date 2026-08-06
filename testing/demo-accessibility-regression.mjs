@@ -22,10 +22,11 @@ const beforeRoutes = [
   "/before/pawprint",
 ];
 
+const requestedBrowser = process.env.ADS_TEST_BROWSER?.toLowerCase();
 const browserCases = [
   { name: "Chromium", browserType: chromium },
   { name: "WebKit", browserType: webkit },
-];
+].filter(({ name }) => !requestedBrowser || name.toLowerCase() === requestedBrowser);
 
 const viewports = [
   { name: "mobile", width: 390, height: 844 },
@@ -34,9 +35,14 @@ const viewports = [
 
 const failures = [];
 const receipts = [];
+const transitions = [];
 
 function fail(scope, message) {
   failures.push(`${scope}: ${message}`);
+}
+
+function progress(scope) {
+  if (process.env.ADS_TEST_PROGRESS === "1") console.error(`[demo-accessibility] ${scope}`);
 }
 
 async function auditRenderedState(page, scope) {
@@ -63,6 +69,7 @@ async function auditRenderedState(page, scope) {
       const rect = element.getBoundingClientRect();
       return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
     };
+    const isActiveRegion = (element) => isVisible(element) && !element.closest("[inert]");
 
     const interactive = [
       ...document.querySelectorAll(
@@ -92,6 +99,29 @@ async function auditRenderedState(page, scope) {
       ambiguousNames: interactive.filter((control) =>
         ["loaded", "manage", "reconnect", "retry"].includes(control.label.toLowerCase())
       ),
+      deadButtons: [...document.querySelectorAll("main button")].flatMap((element) => {
+        if (!isVisible(element) || element.hasAttribute("disabled")) return [];
+        const handledSubmit = element.type === "submit" && element.form?.hasAttribute("data-ads-handled-submit");
+        return typeof element.onclick === "function" || handledSubmit
+          ? []
+          : [element.getAttribute("aria-label") || element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80)];
+      }),
+      textBelowFloor: [...document.querySelectorAll("main *")].flatMap((element) => {
+        if (!isVisible(element)) return [];
+        const ownsText = [...element.childNodes].some(
+          (child) => child.nodeType === Node.TEXT_NODE && child.textContent?.trim(),
+        );
+        const size = Number.parseFloat(getComputedStyle(element).fontSize);
+        return ownsText && size < 12
+          ? [{ text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80), size }]
+          : [];
+      }),
+      uppercaseText: [...document.querySelectorAll("main *")]
+        .filter((element) => isVisible(element) && getComputedStyle(element).textTransform === "uppercase")
+        .map((element) => element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80)),
+      forbiddenGlyphText: /[→↗↓↑←•·]/u.test(document.querySelector("main")?.innerText ?? ""),
+      hasLoadingRegion: [...document.querySelectorAll('[role="status"], [aria-live="polite"]')].some(isActiveRegion),
+      hasErrorRegion: [...document.querySelectorAll('[role="alert"], [aria-live="assertive"]')].some(isActiveRegion),
     };
   });
 
@@ -107,7 +137,24 @@ async function auditRenderedState(page, scope) {
   for (const control of rendered.ambiguousNames) {
     fail(scope, `${control.element} "${control.label}" needs more specific microcopy`);
   }
-
+  for (const label of rendered.deadButtons) {
+    fail(scope, `enabled button "${label}" has no behavior`);
+  }
+  for (const text of rendered.textBelowFloor) {
+    fail(scope, `"${text.text}" renders at ${text.size}px (expected >=12px)`);
+  }
+  for (const text of rendered.uppercaseText) {
+    fail(scope, `"${text}" is forced to uppercase`);
+  }
+  if (rendered.forbiddenGlyphText) {
+    fail(scope, "main content contains a forbidden arrow or bullet glyph");
+  }
+  if (scope.endsWith("/loading") && !rendered.hasLoadingRegion) {
+    fail(scope, "loading state has no active status or polite live region");
+  }
+  if (scope.endsWith("/error") && !rendered.hasErrorRegion) {
+    fail(scope, "error state has no active alert or assertive live region");
+  }
   receipts.push({
     scope,
     axeViolations: blockingViolations.map((violation) => ({
@@ -117,6 +164,12 @@ async function auditRenderedState(page, scope) {
     horizontalOverflow: rendered.overflow,
     undersizedTargets: rendered.undersized,
     ambiguousNames: rendered.ambiguousNames,
+    deadButtons: rendered.deadButtons,
+    textBelowFloor: rendered.textBelowFloor,
+    uppercaseText: rendered.uppercaseText,
+    forbiddenGlyphText: rendered.forbiddenGlyphText,
+    hasLoadingRegion: rendered.hasLoadingRegion,
+    hasErrorRegion: rendered.hasErrorRegion,
   });
 }
 
@@ -128,7 +181,9 @@ for (const { name: browserName, browserType } of browserCases) {
         const scope = `${browserName}/${viewport.name}${route}`;
         const context = await browser.newContext({ viewport });
         const page = await context.newPage();
+        page.setDefaultTimeout(10_000);
         try {
+          progress(`${scope}/open`);
           await page.goto(`${baseUrl}${route}`, {
             waitUntil: "domcontentloaded",
             timeout: 30_000,
@@ -141,7 +196,33 @@ for (const { name: browserName, browserType } of browserCases) {
               continue;
             }
             await stateButton.click();
+            if (state !== "Default") {
+              try {
+                await page.waitForFunction(
+                  () => document.querySelectorAll("[data-state-frame]").length === 2,
+                  undefined,
+                  { timeout: 1_000 },
+                );
+                const transition = await page.locator("[data-state-frame]").evaluateAll((frames) => ({
+                  count: frames.length,
+                  durations: frames.map((frame) => Number.parseFloat(getComputedStyle(frame).transitionDuration)),
+                }));
+                await page.waitForTimeout(60);
+                transition.opacities = await page.locator("[data-state-frame]").evaluateAll((frames) =>
+                  frames.map((frame) => Number.parseFloat(getComputedStyle(frame).opacity))
+                );
+                transitions.push({ scope: `${scope}/${state.toLowerCase()}`, ...transition });
+                if (transition.durations.some((duration) => duration < 0.15)) {
+                  fail(`${scope}/${state.toLowerCase()}`, "state change cross-fade is shorter than 150ms");
+                } else if (!transition.opacities.every((opacity) => opacity > 0 && opacity < 1)) {
+                  fail(`${scope}/${state.toLowerCase()}`, "state change does not visibly cross-fade both frames");
+                }
+              } catch {
+                fail(`${scope}/${state.toLowerCase()}`, "state change did not render two transition frames");
+              }
+            }
             await page.waitForTimeout(100);
+            progress(`${scope}/${state.toLowerCase()}`);
             await auditRenderedState(page, `${scope}/${state.toLowerCase()}`);
 
             if (route === "/after/pawprint" && state === "Default") {
@@ -158,6 +239,22 @@ for (const { name: browserName, browserType } of browserCases) {
               }
             }
           }
+
+          if (route === "/after/canopy" && viewport.name === "mobile") {
+            await page.emulateMedia({ reducedMotion: "reduce" });
+            await page.getByRole("button", { name: "Default", exact: true }).click();
+            await page.waitForTimeout(40);
+            const reducedMotionFrames = await page.locator("[data-state-frame]").count();
+            transitions.push({
+              scope: `${scope}/reduced-motion`,
+              count: reducedMotionFrames,
+              durations: [],
+              opacities: [],
+            });
+            if (reducedMotionFrames !== 1) {
+              fail(`${scope}/reduced-motion`, `state change retained ${reducedMotionFrames} frames instead of settling immediately`);
+            }
+          }
         } finally {
           await context.close();
         }
@@ -169,6 +266,7 @@ for (const { name: browserName, browserType } of browserCases) {
     try {
       for (const route of beforeRoutes) {
         const scope = `${browserName}/sandbox${route}`;
+        progress(scope);
         await metadataPage.goto(`${baseUrl}${route}`, {
           waitUntil: "domcontentloaded",
           timeout: 30_000,
@@ -198,8 +296,8 @@ if (!robotsResponse.ok) {
 }
 
 if (failures.length > 0) {
-  console.error(JSON.stringify({ status: "failed", failures, receipts }, null, 2));
+  console.error(JSON.stringify({ status: "failed", failures, receipts, transitions }, null, 2));
   process.exit(1);
 }
 
-console.log(JSON.stringify({ status: "passed", receipts }, null, 2));
+console.log(JSON.stringify({ status: "passed", receipts, transitions }, null, 2));

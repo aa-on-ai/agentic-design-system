@@ -52,11 +52,11 @@ const decisions: Decision[] = [
     id: "02",
     title: "Mobile touch targets",
     decision:
-      "Interactive controls were enlarged until every measured mobile target cleared the 44px gate.",
+      "Interactive controls were enlarged until every measured mobile target cleared the 48px gate.",
     skill: "design-review / mobile",
     skillHash: "e2b379b311",
     rule:
-      "Touch targets are at least 44×44px on iOS or 48×48px on Android, with enough spacing to avoid mis-taps.",
+      "Touch targets are at least 48×48px, with enough spacing to avoid mis-taps.",
     source: "presets/utilitarian-app.md",
     constraint: "Touch targets and responsive behavior handled cleanly.",
     evidence: [

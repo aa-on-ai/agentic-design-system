@@ -132,12 +132,12 @@ async function readComputedFacts(page, selectors) {
       signatureHash = Math.imul(signatureHash, 16777619);
     }
 
-    // Touch-target gate: interactive controls whose RENDERED box is under 44x44 CSS px.
+    // Touch-target gate: interactive controls whose RENDERED box is under 48x48 CSS px.
     // We measure only interactive elements, so a small icon inside a large button is not
     // flagged — the button's own box is what's measured. Opt out an element with
     // data-ads-target-ok when its hit area is legitimately extended (e.g. a ::before
     // pseudo-element) — that's the explicit-exception escape hatch.
-    const TARGET_MIN = 44;
+    const TARGET_MIN = 48;
     const interactiveSel =
       'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
       '[role="button"],[role="link"],[role="checkbox"],[role="radio"],[role="switch"],' +
@@ -416,15 +416,19 @@ async function main() {
     });
   }
   const renderedFonts = [...new Set(evidence.snapshots.map((s) => s.body?.fontFamily).filter(Boolean))];
-  // interactive controls under 44x44 CSS px, with where they were seen (state@breakpoint).
-  const touchTargetsUnder44 = evidence.snapshots.flatMap((s) =>
+  // interactive controls under 48x48 CSS px, with where they were seen (state@breakpoint).
+  const touchTargetsUnder48 = evidence.snapshots.flatMap((s) =>
     (s.smallTouchTargets || []).map((t) => ({
       selector: t.selector,
       size: `${t.width}x${t.height}`,
+      width: t.width,
+      height: t.height,
       state: s.state,
       breakpoint: s.breakpoint,
     })),
   );
+  // Preserve the legacy field for frozen v1.3.1 receipts while new authority uses 48px.
+  const touchTargetsUnder44 = touchTargetsUnder48.filter((target) => target.width < 44 || target.height < 44);
 
   evidence.gates = {
     axeAvailable: evidence.axeAvailable,
@@ -434,6 +438,7 @@ async function main() {
     liveRegionFailures,
     stateRendered,
     renderedFonts,
+    touchTargetsUnder48,
     touchTargetsUnder44,
     clsAvailable: clsUnavailableAt.length === 0,
     clsThreshold: opts.maxCls,
@@ -473,9 +478,9 @@ async function main() {
   console.log(`  states rendered: ${Object.entries(stateRendered).map(([k, v]) => `${k}=${v ? 'yes' : 'NO'}`).join(', ')}`);
   console.log(`  rendered font(s): ${renderedFonts.join(' | ') || 'unknown'}`);
   console.log(
-    `  touch targets < 44x44: ${
-      touchTargetsUnder44.length
-        ? touchTargetsUnder44.map((t) => `${t.selector} ${t.size} (${t.state}@${t.breakpoint})`).join(', ')
+    `  touch targets < 48x48: ${
+      touchTargetsUnder48.length
+        ? touchTargetsUnder48.map((t) => `${t.selector} ${t.size} (${t.state}@${t.breakpoint})`).join(', ')
         : 'none'
     }`,
   );

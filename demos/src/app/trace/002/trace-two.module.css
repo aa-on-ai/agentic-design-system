@@ -245,8 +245,8 @@
 .modeTabs button,
 .inspectorTools button {
   display: inline-flex;
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 48px;
+  min-height: 48px;
   padding: 0 12px;
   align-items: center;
   justify-content: center;
@@ -268,6 +268,14 @@
 .modeTabs button[aria-selected="true"],
 .inspectorTools button[aria-pressed="true"] { border-color: rgba(249,236,210,0.28); background: rgba(249,236,210,0.08); color: var(--paper-light); }
 
+.transitionStage { display: grid; }
+.inspectorFrame {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-in-out;
+}
+.activeFrame { opacity: 1; pointer-events: auto; }
 .comparisonGrid { display: grid; padding: 24px; gap: 18px; grid-template-columns: 1fr 1fr; }
 .singlePanel { grid-template-columns: minmax(0, 1fr); }
 .comparisonPanel { margin: 0; overflow: hidden; border: 1px solid rgba(249,236,210,0.22); background: #102a41; }

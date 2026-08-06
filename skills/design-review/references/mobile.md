@@ -63,7 +63,7 @@ the device-specific surface:
   doesn't jump content.
 - **safe area** — notch and home-indicator insets honored via `env(safe-area-inset-*)`;
   nothing critical (primary action, close button) sits under the status bar or home indicator.
-- **touch targets** — ≥ 44×44 (iOS) / 48×48 (Android) with a visible hit area; enough spacing
+- **touch targets** — at least 48×48 with a visible hit area and enough spacing
   between adjacent targets to avoid mis-taps.
 - **hover-only bugs** — every hover reveal has a tap path; hover styling is guarded by
   `@media (hover: hover) and (pointer: fine)` so a tap doesn't leave a stuck hover state.

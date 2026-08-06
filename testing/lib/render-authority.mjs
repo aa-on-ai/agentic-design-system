@@ -44,7 +44,11 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   const blockingReasons = [];
   const seriousAxe = Number(gates.seriousAxeViolations || 0);
   const overflowAt = Array.isArray(gates.horizontalOverflowAt) ? gates.horizontalOverflowAt : [];
-  const smallTargets = Array.isArray(gates.touchTargetsUnder44) ? gates.touchTargetsUnder44 : [];
+  const smallTargets = Array.isArray(gates.touchTargetsUnder48)
+    ? gates.touchTargetsUnder48
+    : Array.isArray(gates.touchTargetsUnder44)
+      ? gates.touchTargetsUnder44
+      : [];
   const landmarkGateRecorded = Array.isArray(gates.landmarkFailures);
   const landmarkFailures = landmarkGateRecorded ? gates.landmarkFailures : [];
   const liveRegionGateRecorded = Array.isArray(gates.liveRegionFailures);
@@ -59,7 +63,7 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   if (gates.axeAvailable !== true) blockingReasons.push('axe was unavailable during capture');
   if (seriousAxe > 0) blockingReasons.push(`${seriousAxe} serious/critical axe violation(s)`);
   if (overflowAt.length > 0) blockingReasons.push(`horizontal overflow at ${overflowAt.join(', ')}`);
-  if (smallTargets.length > 0) blockingReasons.push(`${smallTargets.length} touch target(s) under 44x44`);
+  if (smallTargets.length > 0) blockingReasons.push(`${smallTargets.length} touch target(s) under 48x48`);
   if (!landmarkGateRecorded) blockingReasons.push('main-landmark gate was not recorded');
   if (landmarkFailures.length > 0) {
     blockingReasons.push(`main landmark missing at ${gateLocations(landmarkFailures)}`);

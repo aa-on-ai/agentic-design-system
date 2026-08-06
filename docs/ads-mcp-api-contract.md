@@ -105,7 +105,7 @@ SwiftUI targets require a startup-configured adapter and preserve a blocked run 
   "gates": {
     "seriousAxeViolations": 0,
     "horizontalOverflowAt": [],
-    "touchTargetsUnder44": [],
+    "touchTargetsUnder48": [],
     "maxCumulativeLayoutShift": 0,
     "stateRendered": {
       "default": true,

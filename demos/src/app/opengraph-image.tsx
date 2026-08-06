@@ -74,7 +74,6 @@ export default function OpenGraphImage() {
                   fontSize: 14,
                   fontWeight: 700,
                   letterSpacing: "0.18em",
-                  textTransform: "uppercase",
                 }}
               >
                 System

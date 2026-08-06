@@ -9,12 +9,14 @@
       header, #content, footer { padding: 24px; }
       [hidden] { display: none !important; }
       #late-banner { height: 420px; background: #f0b44d; }
+      #compact-action { width: 46px; height: 46px; }
     </style>
   </head>
   <body>
     <header><strong>Acme Orders</strong></header>
     <div id="content">
       <h1>Orders</h1>
+      <button id="compact-action" type="button" aria-label="Compact action">Go</button>
       <section id="default" hidden><p>Three orders are ready to review.</p></section>
       <section id="loading" hidden><p>Loading orders…</p></section>
       <section id="empty" hidden><p>No orders yet.</p></section>

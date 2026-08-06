@@ -6,7 +6,7 @@ const metrics = [
   ["Screenshots", `${TRACE.evidence.screenshots} / ${TRACE.evidence.screenshots}`],
   ["Serious axe violations", String(TRACE.evidence.seriousOrCriticalAxeViolations)],
   ["Horizontal overflow", TRACE.evidence.horizontalOverflow ? "Found" : "None"],
-  ["Targets under 44px", String(TRACE.evidence.touchTargetsUnder44)],
+  ["Targets under 48px", String(TRACE.evidence.touchTargetsUnder48)],
   ["Maximum CLS", TRACE.evidence.maxCumulativeLayoutShift.toFixed(5)],
   ["Fresh rerun delta", `${TRACE.evidence.publicRerunPerceptualDeltaPct}%`],
 ] as const;

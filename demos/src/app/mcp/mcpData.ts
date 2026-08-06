@@ -34,7 +34,7 @@ export const MCP_CONTRACT = {
         viewports: ["390x844", "1280x800"],
         seriousAxeViolations: 0,
         horizontalOverflowAt: [],
-        touchTargetsUnder44: [],
+        touchTargetsUnder48: [],
       },
     },
     {

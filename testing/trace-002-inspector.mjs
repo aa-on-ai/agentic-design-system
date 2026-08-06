@@ -10,7 +10,7 @@ const url = process.argv[2] || "http://127.0.0.1:3013/trace/002";
 await mkdir(output, { recursive: true });
 
 const browser = await chromium.launch();
-const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: "reduce" });
+const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: "no-preference" });
 const page = await context.newPage();
 await page.goto(url, { waitUntil: "networkidle", timeout: 20_000 });
 await page.waitForFunction(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0));
@@ -22,7 +22,19 @@ const initial = {
 };
 
 await page.getByRole("tab", { name: "repaired", exact: true }).click();
+await page.waitForFunction(() => document.querySelectorAll("[data-inspector-frame]").length === 2);
+const transition = await inspector.locator('[data-inspector-frame]').evaluateAll((frames) => ({
+  count: frames.length,
+  durations: frames.map((frame) => Number.parseFloat(getComputedStyle(frame).transitionDuration)),
+}));
+await page.waitForTimeout(60);
+transition.opacities = await inspector.locator('[data-inspector-frame]').evaluateAll((frames) =>
+  frames.map((frame) => Number.parseFloat(getComputedStyle(frame).opacity))
+);
+await page.waitForTimeout(240);
+const settledFrames = await inspector.locator('[data-inspector-frame]').count();
 await page.getByRole("button", { name: "mobile", exact: true }).click();
+await page.waitForTimeout(240);
 await page.getByRole("button", { name: "1:1", exact: true }).click();
 const repairedImage = inspector.locator("figure img");
 const repaired = {
@@ -49,10 +61,12 @@ const serious = axe.violations.filter(({ impact }) => impact === "serious" || im
 
 const receipt = {
   engine: "chromium",
-  environment: "1440x1000 production build with reduced motion",
+  environment: "1440x1000 production build with motion enabled",
   url,
   initial,
   repaired,
+  transition,
+  settledFrames,
   fullscreenEntered,
   finalPanels: await inspector.locator("figure").count(),
   horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
@@ -61,6 +75,9 @@ const receipt = {
 receipt.passed = receipt.initial.diffSelected === "true" && receipt.initial.panels === 2 &&
   receipt.repaired.selected === "true" && receipt.repaired.panels === 1 &&
   receipt.repaired.image?.includes("repaired-error-mobile-2x.png") && receipt.repaired.naturalWidth === 780 &&
+  receipt.transition.count === 2 && receipt.transition.durations.every((duration) => duration >= 0.15) &&
+  receipt.transition.opacities.every((opacity) => opacity > 0 && opacity < 1) &&
+  receipt.settledFrames === 1 &&
   receipt.repaired.mobilePressed === "true" && receipt.repaired.zoomPressed === "true" &&
   receipt.fullscreenEntered && receipt.finalPanels === 2 && !receipt.horizontalOverflow &&
   receipt.seriousOrCriticalAxe.length === 0;
@@ -71,4 +88,4 @@ if (!receipt.passed) {
   console.error(JSON.stringify(receipt, null, 2));
   process.exit(1);
 }
-console.log("[trace-002-inspector] diff, viewport, 1:1, full-screen, 2x source, axe, and overflow passed");
+console.log("[trace-002-inspector] diff, viewport, 1:1, full-screen, cross-fade, 2x source, axe, and overflow passed");

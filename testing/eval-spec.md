@@ -15,7 +15,7 @@ A candidate is blocked by any of these:
 - bundle, mount, capture, or evidence failure
 - serious or critical axe violations
 - horizontal overflow at a required breakpoint
-- interactive targets below 44x44 CSS pixels
+- interactive targets below 48x48 CSS pixels
 - a requested state that does not render distinctly from default
 - an unresolved independent screenshot judge (`needs-human`)
 

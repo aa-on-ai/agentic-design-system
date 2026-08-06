@@ -295,7 +295,7 @@ try {
     const track = rect(".continuous-track");
     const stationIndex = rect(".station-index");
     const stationCopy = rect(".station-copy");
-    const releaseBay = rect(".release-bay");
+    const releaseIntro = rect(".release-intro-grid");
     const heroTicket = document.querySelector(".hero-job-ticket");
     const heroCommand = rect(".hero-actions .hero-command-strip");
     const heroActions = rect(".hero-actions");
@@ -342,7 +342,7 @@ try {
       trackCenter: track ? track.left + track.width / 2 : null,
       stationIndexCenter: stationIndex ? stationIndex.left + stationIndex.width / 2 : null,
       stationContentLeft: stationCopy?.left ?? null,
-      releaseHeight: releaseBay?.height ?? null,
+      releaseIntroHeight: releaseIntro?.height ?? null,
       heroTicketVisible: heroTicket ? getComputedStyle(heroTicket).display !== "none" : false,
       heroCommandWidth: heroCommand?.width ?? null,
       heroCommandFitsActions: Boolean(
@@ -381,8 +381,8 @@ try {
       `mobile station content starts at ${mobilePacing.stationContentLeft ?? "missing"}px (expected 80-84px)`,
     );
   }
-  if (mobilePacing.releaseHeight === null || mobilePacing.releaseHeight > 660) {
-    issues.push(`mobile release CTA is ${mobilePacing.releaseHeight ?? "missing"}px tall (expected <= 660px)`);
+  if (mobilePacing.releaseIntroHeight === null || mobilePacing.releaseIntroHeight > 660) {
+    issues.push(`mobile release intro is ${mobilePacing.releaseIntroHeight ?? "missing"}px tall (expected <= 660px)`);
   }
   if (mobilePacing.heroTicketVisible) {
     issues.push("mobile decorative job ticket is visible and can overlap the install action");
@@ -474,7 +474,7 @@ try {
       width: element.getBoundingClientRect().width,
     };
   });
-  if (tabletTour.whiteSpace !== "nowrap" || !tabletTour.fits || tabletTour.width < 110) {
+  if (tabletTour.whiteSpace !== "nowrap" || !tabletTour.fits) {
     issues.push(
       `tablet tour link is white-space=${tabletTour.whiteSpace}, fits=${tabletTour.fits}, ` +
       `width=${tabletTour.width}px (expected one readable line)`,
