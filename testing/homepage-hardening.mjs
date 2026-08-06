@@ -173,13 +173,33 @@ async function installStationStateObserver(page, stage) {
 }
 
 async function readObservedStationState(page, stage, phase) {
-  await page.waitForFunction(
-    ({ targetStage, targetPhase }) => window.__adsStationPhaseLog?.some(
-      (state) => state.station === targetStage && state.phase === targetPhase,
-    ),
-    { targetStage: stage, targetPhase: phase },
-    { timeout: 5_000 },
-  );
+  try {
+    await page.waitForFunction(
+      ({ targetStage, targetPhase }) => window.__adsStationPhaseLog?.some(
+        (state) => state.station === targetStage && state.phase === targetPhase,
+      ),
+      { targetStage: stage, targetPhase: phase },
+      { timeout: 5_000 },
+    );
+  } catch (error) {
+    const diagnostics = await page.evaluate((targetStage) => {
+      const climber = document.querySelector(".assembly-climber");
+      const figure = document.querySelector(".assembly-climber-figure");
+      const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
+      const figureRect = figure?.getBoundingClientRect();
+      const markerRect = marker?.getBoundingClientRect();
+      return {
+        phase: climber?.getAttribute("data-phase"),
+        station: climber?.getAttribute("data-station"),
+        scrollY: window.scrollY,
+        distance: figureRect && markerRect
+          ? Math.abs(markerRect.top + markerRect.height / 2 - (figureRect.top + figureRect.height * 0.52))
+          : null,
+        observed: window.__adsStationPhaseLog ?? [],
+      };
+    }, stage);
+    throw new Error(`station ${stage}/${phase} was not observed: ${JSON.stringify(diagnostics)}`, { cause: error });
+  }
   return page.evaluate(
     ({ targetStage, targetPhase }) => window.__adsStationPhaseLog.find(
       (state) => state.station === targetStage && state.phase === targetPhase,
@@ -193,19 +213,27 @@ async function settleAtStation(page, stage) {
     document.documentElement.style.scrollBehavior = "auto";
   });
   await installStationStateObserver(page, stage);
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    await page.evaluate((targetStage) => {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const aligned = await page.evaluate((targetStage) => {
       const figure = document.querySelector(".assembly-climber-figure");
       const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
-      if (!figure || !marker) return;
+      if (!figure || !marker) return false;
       const figureRect = figure.getBoundingClientRect();
       const markerRect = marker.getBoundingClientRect();
       window.scrollTo(
         0,
         window.scrollY + markerRect.top + markerRect.height / 2 - (figureRect.top + figureRect.height * 0.52),
       );
+      window.dispatchEvent(new Event("scroll"));
+      const nextFigureRect = figure.getBoundingClientRect();
+      const nextMarkerRect = marker.getBoundingClientRect();
+      return Math.abs(
+        nextMarkerRect.top + nextMarkerRect.height / 2 - (nextFigureRect.top + nextFigureRect.height * 0.52),
+      ) <= 2;
     }, stage);
-    await page.waitForTimeout(60);
+    await settleMotionFrame(page);
+    if (aligned) break;
+    await page.waitForTimeout(80);
   }
   const arrival = await readObservedStationState(page, stage, "arriving");
   const peeking = await readObservedStationState(page, stage, "peeking");
