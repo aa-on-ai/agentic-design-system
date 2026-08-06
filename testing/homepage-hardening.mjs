@@ -109,10 +109,90 @@ async function readStationState(page, stage) {
   }, stage);
 }
 
+async function installStationStateObserver(page, stage) {
+  await page.evaluate((targetStage) => {
+    const climber = document.querySelector(".assembly-climber");
+    if (!climber) return;
+
+    const capture = () => {
+      const station = document.querySelector(`.station[data-stage="${targetStage}"]`);
+      const marker = station?.querySelector(".station-index");
+      const markerRect = marker?.getBoundingClientRect();
+      const topAtMarker = markerRect
+        ? document.elementsFromPoint(markerRect.left + markerRect.width / 2, markerRect.top + markerRect.height / 2)[0]
+        : null;
+      const image = climber.querySelector("img");
+      const stopWrap = climber.querySelector(".assembly-climber-stop");
+      return {
+        phase: climber.getAttribute("data-phase"),
+        pose: climber.getAttribute("data-pose"),
+        station: climber.getAttribute("data-station"),
+        reactionCount: climber.getAttribute("data-station-reaction-count"),
+        animationName: stopWrap ? getComputedStyle(stopWrap).animationName : null,
+        imageSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
+        imageCount: climber.querySelectorAll("img").length,
+        activeStations: document.querySelectorAll('.station[data-active="true"]').length,
+        arrivingStations: document.querySelectorAll('.station[data-arrival="true"]').length,
+        imageStayedMounted: image?.dataset.mountProbe === "assembly-ember",
+        climberZ: Number.parseInt(getComputedStyle(climber).zIndex, 10),
+        stationZ: station ? Number.parseInt(getComputedStyle(station).zIndex, 10) : null,
+        markerOwnsTopLayer: topAtMarker instanceof Element && Boolean(topAtMarker.closest(".station")),
+      };
+    };
+
+    window.__adsStationPhaseLog = [];
+    const observed = new Set();
+    const record = () => {
+      const state = capture();
+      if (
+        state.station !== targetStage ||
+        !["arriving", "peeking", "resting"].includes(state.phase ?? "")
+      ) return;
+
+      const key = `${state.reactionCount}:${state.phase}`;
+      if (observed.has(key)) return;
+      requestAnimationFrame(() => {
+        const settledState = capture();
+        if (
+          settledState.station !== targetStage ||
+          settledState.phase !== state.phase ||
+          settledState.reactionCount !== state.reactionCount ||
+          observed.has(key)
+        ) return;
+        observed.add(key);
+        window.__adsStationPhaseLog.push(settledState);
+      });
+    };
+
+    new MutationObserver(record).observe(climber, {
+      attributes: true,
+      attributeFilter: ["data-phase", "data-station", "data-pose"],
+    });
+    record();
+  }, stage);
+}
+
+async function readObservedStationState(page, stage, phase) {
+  await page.waitForFunction(
+    ({ targetStage, targetPhase }) => window.__adsStationPhaseLog?.some(
+      (state) => state.station === targetStage && state.phase === targetPhase,
+    ),
+    { targetStage: stage, targetPhase: phase },
+    { timeout: 5_000 },
+  );
+  return page.evaluate(
+    ({ targetStage, targetPhase }) => window.__adsStationPhaseLog.find(
+      (state) => state.station === targetStage && state.phase === targetPhase,
+    ),
+    { targetStage: stage, targetPhase: phase },
+  );
+}
+
 async function settleAtStation(page, stage) {
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
   });
+  await installStationStateObserver(page, stage);
   for (let attempt = 0; attempt < 3; attempt += 1) {
     await page.evaluate((targetStage) => {
       const figure = document.querySelector(".assembly-climber-figure");
@@ -127,29 +207,9 @@ async function settleAtStation(page, stage) {
     }, stage);
     await page.waitForTimeout(60);
   }
-  await page.waitForFunction(
-    (targetStage) => {
-      const climber = document.querySelector(".assembly-climber");
-      return climber?.getAttribute("data-phase") === "arriving" &&
-        climber.getAttribute("data-station") === targetStage;
-    },
-    stage,
-    { timeout: 3_000 },
-  );
-  const arrival = await readStationState(page, stage);
-
-  await page.waitForFunction(
-    () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "peeking",
-    undefined,
-    { timeout: 3_000 },
-  );
-  const peeking = await readStationState(page, stage);
-  await page.waitForFunction(
-    () => document.querySelector(".assembly-climber")?.getAttribute("data-phase") === "resting",
-    undefined,
-    { timeout: 3_000 },
-  );
-  const resting = await readStationState(page, stage);
+  const arrival = await readObservedStationState(page, stage, "arriving");
+  const peeking = await readObservedStationState(page, stage, "peeking");
+  const resting = await readObservedStationState(page, stage, "resting");
   await page.waitForTimeout(120);
   const persistent = await readStationState(page, stage);
 
