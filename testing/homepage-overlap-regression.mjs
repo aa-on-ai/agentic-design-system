@@ -9,7 +9,7 @@ if (!url) {
   process.exit(2);
 }
 
-const widths = [267, 320, 390, 479, 544, 582, 610, 664, 720, 768, 811, 834, 958, 1040, 1074, 1280, 1622];
+const widths = [267, 320, 390, 479, 544, 582, 610, 664, 720, 768, 811, 834, 958, 1040, 1041, 1074, 1280, 1622];
 const issues = [];
 const requestedBrowser = (process.env.ADS_OVERLAP_BROWSER ?? "chromium").toLowerCase();
 const browserOptions = {
@@ -103,6 +103,26 @@ try {
       const tour = rect(".tour-link");
       const introHeading = rect(".line-intro h2");
       const rail = rect(".continuous-track");
+      const machineHeaderRailConflicts = rail
+        ? [...document.querySelectorAll(".machine-header")].flatMap((header) => {
+            const station = header.closest(".station")?.getAttribute("data-stage") ?? "unknown";
+            return [...header.children].flatMap((element) => {
+              const box = element.getBoundingClientRect();
+              const elementRect = {
+                top: box.top,
+                right: box.right,
+                bottom: box.bottom,
+                left: box.left,
+                width: box.width,
+                height: box.height,
+              };
+
+              return overlap(elementRect, rail)
+                ? [{ station, text: element.textContent?.trim() ?? "", box: elementRect }]
+                : [];
+            });
+          })
+        : [];
 
       return {
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -114,6 +134,7 @@ try {
         tourBox: tour,
         introHeading,
         rail,
+        machineHeaderRailConflicts,
       };
     });
 
@@ -157,6 +178,9 @@ try {
     }
     if (layout.introRailOverlap) {
       fail(width, `“One request” heading occupies the rail lane: ${JSON.stringify({ heading: layout.introHeading, rail: layout.rail })}`);
+    }
+    if (layout.machineHeaderRailConflicts.length > 0) {
+      fail(width, `machine header content occupies the rail lane: ${JSON.stringify(layout.machineHeaderRailConflicts)}`);
     }
 
     if (width <= 720) {

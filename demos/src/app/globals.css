@@ -1043,6 +1043,16 @@ code {
   padding: 0 2px;
 }
 
+@media (min-width: 1041px) {
+  .station--left .machine-header {
+    padding-inline-start: 120px;
+  }
+
+  .station--right .machine-header {
+    padding-inline-end: 120px;
+  }
+}
+
 .inspection-lamp {
   display: inline-flex;
   min-height: 30px;
