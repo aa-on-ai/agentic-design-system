@@ -2554,6 +2554,11 @@ code {
     gap: 10px;
   }
 
+  .brand-lockup-type,
+  .hero-toolbar-github {
+    display: none;
+  }
+
   .brand-lockup-mark {
     width: 40px;
     height: 40px;

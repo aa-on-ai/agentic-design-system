@@ -84,7 +84,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <a
               href="https://github.com/aa-on-ai/agentic-design-system"
               aria-label="Agentic Design System on GitHub"
-              className="hero-pill hero-pill--icon focus-ring focus-visible:outline"
+              className="hero-toolbar-github hero-pill hero-pill--icon focus-ring focus-visible:outline"
             >
               <Github size={18} strokeWidth={2.1} aria-hidden="true" />
             </a>

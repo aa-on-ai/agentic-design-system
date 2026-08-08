@@ -36,7 +36,15 @@ export function SystemNav({
           <span className="ads-system-nav-summary-long">Explore the system</span>
           <span className="ads-system-nav-summary-short">Explore</span>
         </summary>
-        <div>{links}</div>
+        <div>
+          {links}
+          <a
+            href="https://github.com/aa-on-ai/agentic-design-system"
+            className="focus-ring"
+          >
+            GitHub
+          </a>
+        </div>
       </details>
     </nav>
   );
