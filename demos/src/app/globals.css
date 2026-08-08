@@ -229,6 +229,12 @@ code {
   gap: 8px;
 }
 
+.ads-system-nav-anchor {
+  display: block;
+  width: 100%;
+  height: 0;
+}
+
 .ads-system-nav {
   position: sticky;
   z-index: 95;
@@ -360,7 +366,7 @@ code {
   display: none;
 }
 
-.ads-system-nav-menu summary {
+.ads-system-nav-trigger {
   display: inline-flex;
   min-height: 48px;
   padding: 0 13px;
@@ -373,7 +379,7 @@ code {
   cursor: pointer;
   font-size: 0.76rem;
   font-weight: 700;
-  list-style: none;
+  font-family: inherit;
 }
 
 .ads-system-nav-summary-copy {
@@ -394,29 +400,47 @@ code {
   line-height: 1.2;
 }
 
-.ads-system-nav-menu summary::-webkit-details-marker {
-  display: none;
-}
-
 .ads-system-nav-chevron {
   transition: transform 150ms ease-out;
 }
 
-.ads-system-nav-menu[open] .ads-system-nav-chevron {
+.ads-system-nav-trigger[aria-expanded="true"] .ads-system-nav-chevron {
   transform: rotate(180deg);
 }
 
-.ads-system-nav-menu > div {
+.ads-system-nav-layer {
   position: absolute;
+  z-index: 102;
   top: calc(100% + 8px);
   right: 0;
-  display: grid;
   width: 264px;
+  pointer-events: none;
+}
+
+.ads-system-nav-sheet {
+  display: grid;
+  width: 100%;
   padding: 8px;
   border: 1px solid var(--line-soft);
   border-radius: 12px;
   background: var(--panel);
   box-shadow: 0 20px 46px var(--shadow);
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  transform-origin: top right;
+  transition-property: transform, opacity;
+  transition-duration: 180ms, 140ms;
+  transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), ease-out;
+  will-change: transform, opacity;
+}
+
+.ads-system-nav-layer[data-visible="true"] {
+  pointer-events: auto;
+}
+
+.ads-system-nav-layer[data-visible="true"] .ads-system-nav-sheet {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .ads-system-nav-menu a {
@@ -428,7 +452,8 @@ code {
 
 .ads-system-nav-backdrop,
 .ads-system-nav-sheet-heading,
-.ads-system-nav-number {
+.ads-system-nav-number,
+.ads-system-nav-sheet-close {
   display: none;
 }
 
@@ -439,7 +464,7 @@ code {
   align-items: center;
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 18%, var(--page));
-  color: var(--orange-ink);
+  color: var(--text);
   font-size: 0.68rem;
   font-weight: 700;
 }
@@ -2560,6 +2585,10 @@ code {
 }
 
 @media (max-width: 760px) {
+  :root[data-system-menu-open] {
+    overflow: hidden;
+  }
+
   .site-shell-header {
     min-height: 64px;
   }
@@ -2579,7 +2608,7 @@ code {
     display: none;
   }
 
-  .ads-system-nav-menu summary {
+  .ads-system-nav-trigger {
     min-height: 48px;
     padding: 0 12px;
     gap: 12px;
@@ -2587,10 +2616,16 @@ code {
     background: color-mix(in srgb, var(--page) 86%, var(--panel));
   }
 
-  .ads-system-nav-menu > div {
+  .ads-system-nav-layer {
     position: fixed;
-    z-index: 102;
-    top: auto;
+    z-index: 101;
+    inset: 0;
+    width: auto;
+  }
+
+  .ads-system-nav-sheet {
+    position: fixed;
+    z-index: 1;
     right: 0;
     bottom: 0;
     left: 0;
@@ -2604,11 +2639,16 @@ code {
     border-radius: 20px 20px 0 0;
     background: color-mix(in srgb, var(--page) 94%, var(--panel));
     box-shadow: 0 -24px 60px color-mix(in srgb, var(--shadow) 42%, transparent);
+    opacity: 0;
+    transform: translateY(18px);
+    transform-origin: bottom center;
+    transition-duration: 220ms, 160ms;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1), ease-out;
   }
 
   .ads-system-nav-backdrop {
     position: fixed;
-    z-index: 101;
+    z-index: 0;
     inset: 0;
     display: block;
     width: 100%;
@@ -2617,6 +2657,12 @@ code {
     border: 0;
     background: color-mix(in srgb, #071524 52%, transparent);
     cursor: default;
+    opacity: 0;
+    transition: opacity 160ms ease-out;
+  }
+
+  .ads-system-nav-layer[data-visible="true"] .ads-system-nav-backdrop {
+    opacity: 1;
   }
 
   .ads-system-nav-sheet-heading {
@@ -2629,6 +2675,11 @@ code {
     border-bottom: 1px solid var(--line-soft);
   }
 
+  .ads-system-nav-sheet-heading > div {
+    display: grid;
+    gap: 3px;
+  }
+
   .ads-system-nav-sheet-heading strong {
     font-size: 0.92rem;
     letter-spacing: -0.02em;
@@ -2638,6 +2689,19 @@ code {
     color: var(--muted);
     font-size: 0.72rem;
     font-weight: 620;
+  }
+
+  .ads-system-nav-sheet-close {
+    display: inline-flex;
+    width: 48px;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-soft);
+    border-radius: 50%;
+    background: var(--page);
+    color: var(--text);
+    cursor: pointer;
   }
 
   .ads-system-nav-menu a {
@@ -2653,10 +2717,10 @@ code {
   .ads-system-nav-number {
     display: inline-flex;
     min-width: 0;
-    color: var(--soft);
+    color: var(--muted);
     font-family: var(--font-label), monospace;
     font-size: 0.72rem;
-    font-weight: 650;
+    font-weight: 700;
   }
 
   .ads-system-nav-current {

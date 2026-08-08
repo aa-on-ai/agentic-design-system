@@ -1,0 +1,1 @@
+The broad demo accessibility suite still reports an unrelated WebKit-only crossfade miss and amber contrast failure on the `after/notion-ai-settings` error fixture. The chapter-seam repair does not touch that sample route, so this pass keeps the finding visible without broadening scope.

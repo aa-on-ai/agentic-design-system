@@ -38,7 +38,7 @@ try {
         actions: rect(".site-shell-actions"),
         theme: rect('.site-shell-actions button[aria-label*="theme"]'),
         seam: rect(".ads-system-nav"),
-        selector: rect(".ads-system-nav-menu summary"),
+        selector: rect(".ads-system-nav-trigger"),
       };
     });
 
@@ -75,7 +75,7 @@ try {
     }
 
     const selectorText = (
-      await page.locator(".ads-system-nav-menu summary").innerText()
+      await page.locator(".ads-system-nav-trigger").innerText()
     )
       .replace(/\s+/g, " ")
       .trim();
@@ -88,9 +88,15 @@ try {
       );
     }
 
-    await page.locator(".ads-system-nav-menu summary").click();
+    await page.locator(".ads-system-nav-trigger").click();
+    await page.waitForFunction(
+      () =>
+        document
+          .querySelector(".ads-system-nav-layer")
+          ?.getAttribute("data-state") === "open",
+    );
     const sheet = await page
-      .locator(".ads-system-nav-menu > div")
+      .locator(".ads-system-nav-sheet")
       .boundingBox();
     if (
       !sheet ||

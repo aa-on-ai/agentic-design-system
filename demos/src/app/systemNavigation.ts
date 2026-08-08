@@ -9,7 +9,7 @@ export const SYSTEM_DESTINATIONS: Array<{
 }> = [
   {
     id: "system",
-    href: "/#top",
+    href: "/",
     label: "Overview",
     description: "What the system changes",
   },

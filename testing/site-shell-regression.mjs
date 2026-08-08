@@ -151,6 +151,39 @@ for (const [browserName, browserType] of [
         `${browserName}: chapter seam does not become sticky after it is reached`,
       );
 
+    await page
+      .locator(".ads-system-nav-list a", { hasText: "Evidence tools" })
+      .click();
+    await page.waitForURL((url) => url.pathname === "/mcp");
+    await page.locator(".ads-system-nav").waitFor();
+    const crossRouteNav = await page.evaluate(() => {
+      const nav = document.querySelector(".ads-system-nav");
+      const anchor = document.querySelector(".ads-system-nav-anchor");
+      const current = nav?.querySelector("[aria-current='page']");
+      return {
+        top: nav?.getBoundingClientRect().top ?? null,
+        scrollY: window.scrollY,
+        documentTop:
+          anchor instanceof HTMLElement
+            ? anchor.getBoundingClientRect().top + window.scrollY
+            : null,
+        current: current?.textContent?.trim() ?? null,
+      };
+    });
+    if (
+      crossRouteNav.top === null ||
+      Math.abs(crossRouteNav.top) > 2 ||
+      crossRouteNav.documentTop === null ||
+      Math.abs(crossRouteNav.scrollY - crossRouteNav.documentTop) > 2 ||
+      crossRouteNav.current !== "Evidence tools"
+    ) {
+      failures.push(
+        `${browserName}: cross-route navigation loses the chapter seam (${JSON.stringify(crossRouteNav)})`,
+      );
+    }
+
+    await page.goto(baseUrl, { waitUntil: "networkidle" });
+
     const themeButton = page.locator("button[aria-label*='theme']").first();
     if ((await themeButton.count()) !== 1) {
       failures.push(
@@ -259,7 +292,9 @@ for (const [browserName, browserType] of [
     await mobile.goto(new URL("/trace/002", baseUrl).toString(), {
       waitUntil: "networkidle",
     });
-    const summary = mobile.locator(".ads-system-nav-menu summary");
+    const summary = mobile.locator(
+      ".ads-system-nav-trigger, .ads-system-nav-menu > summary",
+    );
     const summaryText = (await summary.innerText()).replace(/\s+/g, " ").trim();
     if (
       !summaryText.includes("Proof case") ||
@@ -270,6 +305,55 @@ for (const [browserName, browserType] of [
       );
     }
     await summary.click();
+    const openingFrame = await mobile.evaluate(() => {
+      const layer =
+        document.querySelector(".ads-system-nav-layer") ??
+        document.querySelector(".ads-system-nav-menu");
+      const sheet =
+        document.querySelector(".ads-system-nav-sheet") ??
+        document.querySelector(".ads-system-nav-menu > div");
+      const backdrop = document.querySelector(".ads-system-nav-backdrop");
+      return {
+        state:
+          layer?.getAttribute("data-state") ??
+          (layer?.hasAttribute("open") ? "open" : null),
+        sheetTransform: sheet ? getComputedStyle(sheet).transform : null,
+        backdropOpacity: backdrop
+          ? getComputedStyle(backdrop).opacity
+          : null,
+      };
+    });
+    if (
+      openingFrame.state !== "opening" ||
+      openingFrame.sheetTransform === "none" ||
+      openingFrame.backdropOpacity === "1"
+    ) {
+      failures.push(
+        `${browserName} mobile: page sheet snaps open instead of entering as one connected layer (${JSON.stringify(openingFrame)})`,
+      );
+    }
+    if (await mobile.locator(".ads-system-nav-layer").count()) {
+      await mobile.waitForFunction(
+        () =>
+          document
+            .querySelector(".ads-system-nav-layer")
+            ?.getAttribute("data-state") === "open",
+      );
+      const openInteraction = await mobile.evaluate(() => ({
+        scrollLocked:
+          document.documentElement.dataset.systemMenuOpen === "true",
+        focusedCurrent:
+          document.activeElement ===
+          document.querySelector(
+            ".ads-system-nav-sheet a[aria-current='page']",
+          ),
+      }));
+      if (!openInteraction.scrollLocked || !openInteraction.focusedCurrent) {
+        failures.push(
+          `${browserName} mobile: open sheet does not lock the page and move focus as one interaction (${JSON.stringify(openInteraction)})`,
+        );
+      }
+    }
     const menuLabels = await mobile
       .locator(".ads-system-nav-menu a")
       .allTextContents();
@@ -279,7 +363,7 @@ for (const [browserName, browserType] of [
       }
     }
     const sheet = await mobile
-      .locator(".ads-system-nav-menu > div")
+      .locator(".ads-system-nav-sheet")
       .boundingBox();
     if (
       !sheet ||
@@ -301,6 +385,74 @@ for (const [browserName, browserType] of [
         `${browserName} mobile: sheet does not explicitly label the current destination`,
       );
     }
+
+    const closeButton = mobile.locator(".ads-system-nav-sheet-close");
+    if (await closeButton.count()) {
+      await closeButton.click();
+    } else {
+      await mobile.locator(".ads-system-nav-backdrop").click({
+        position: { x: 8, y: 8 },
+      });
+    }
+    const closingFrame = await mobile.evaluate(() => ({
+      state:
+        document
+          .querySelector(".ads-system-nav-layer")
+          ?.getAttribute("data-state") ?? null,
+      expanded:
+        document
+          .querySelector(
+            ".ads-system-nav-trigger, .ads-system-nav-menu > summary",
+          )
+          ?.getAttribute("aria-expanded") ?? null,
+    }));
+    if (
+      closingFrame.state !== "closing" ||
+      closingFrame.expanded !== "false"
+    ) {
+      failures.push(
+        `${browserName} mobile: page sheet snaps closed instead of leaving cleanly (${JSON.stringify(closingFrame)})`,
+      );
+    }
+    if (await mobile.locator(".ads-system-nav-layer").count()) {
+      await mobile.waitForFunction(
+        () =>
+          !document.querySelector(".ads-system-nav-layer") &&
+          document.documentElement.dataset.systemMenuOpen !== "true",
+      );
+    }
+    const closedInteraction = await mobile.evaluate(() => ({
+      scrollLocked:
+        document.documentElement.dataset.systemMenuOpen === "true",
+      triggerFocused:
+        document.activeElement ===
+        document.querySelector(".ads-system-nav-trigger"),
+    }));
+    if (closedInteraction.scrollLocked || !closedInteraction.triggerFocused) {
+      failures.push(
+        `${browserName} mobile: close does not restore page control and trigger focus (${JSON.stringify(closedInteraction)})`,
+      );
+    }
+
+    await summary.click();
+    await mobile.waitForFunction(
+      () =>
+        document
+          .querySelector(".ads-system-nav-layer")
+          ?.getAttribute("data-visible") === "true",
+    );
+    await mobile.locator(".ads-system-nav-sheet-close").click();
+    const interruptedState = await mobile
+      .locator(".ads-system-nav-layer")
+      .getAttribute("data-state");
+    if (interruptedState !== "closing") {
+      failures.push(
+        `${browserName} mobile: rapid open-close is not interruptible (${interruptedState ?? "unmounted"})`,
+      );
+    }
+    await mobile.waitForFunction(
+      () => !document.querySelector(".ads-system-nav-layer"),
+    );
     await mobile.close();
   } finally {
     await browser.close();
