@@ -19,7 +19,9 @@ async function settleAtStation(targetPage, stage) {
   await targetPage.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
   });
-  for (let attempt = 0; attempt < 3; attempt += 1) {
+  // Keep converging until sticky positioning takes over instead of assuming
+  // three scroll corrections are always enough at every breakpoint.
+  for (let attempt = 0; attempt < 8; attempt += 1) {
     await targetPage.evaluate((targetStage) => {
       const figure = document.querySelector(".assembly-climber-figure");
       const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);

@@ -3,7 +3,9 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { CheckCircle2, FileCheck2, Github } from "lucide-react";
 import { BrandLockup } from "../BrandLockup";
+import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
+import { SystemNav } from "../SystemNav";
 import { ThemeToggle } from "../ThemeToggle";
 import styles from "./trace.module.css";
 
@@ -130,8 +132,9 @@ export default async function TracePage({ searchParams }: TracePageProps) {
         <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
           <BrandLockup />
         </Link>
+        <SystemNav current="trace" />
         <nav className={styles.headerNav} aria-label="Primary navigation">
-          <Link className={`${styles.headerLink} focus-ring`} href="/#assembly-line">One UI run</Link>
+          <Link className={`${styles.headerLink} focus-ring`} href="/trace/002">See the rendered proof</Link>
           <a
             className="hero-pill hero-pill--icon focus-ring"
             href={repo}
@@ -143,13 +146,19 @@ export default async function TracePage({ searchParams }: TracePageProps) {
         </nav>
       </header>
 
+      <PageRole
+        stage="Review"
+        title="Decision trace"
+        description="This is the provenance view. It connects consequential interface decisions to the governing rules, constraints, and evidence without pretending to be the visual before-and-after case."
+      />
+
       <article>
         <section className={styles.hero} aria-labelledby="trace-title">
           <div className={styles.heroCopy}>
-            <p className={styles.kicker}>Decision provenance / trace 001</p>
+            <p className={styles.kicker}>Decision trace, provenance case 01</p>
             <h1 id="trace-title">A paper trail for<br /><em>interface decisions.</em></h1>
             <p className={styles.lede}>
-              Follow one ADS run from the choice that survived, through the exact rule and product
+              Follow one system run from the choice that survived, through the exact rule and product
               constraint, to the rendered evidence a reviewer can inspect.
             </p>
           </div>
@@ -199,7 +208,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
           <div className={styles.decisionsHeading}>
             <p className={styles.sectionLabel}>The trace</p>
             <h2 id="decisions-title">Three consequential decisions</h2>
-            <p>Enough to audit the result. Not a transcript of every CSS property.</p>
+            <p>Enough to audit the result. Not a transcript of every style property.</p>
           </div>
 
           <ol className={styles.decisionList}>
@@ -273,7 +282,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
         </section>
       </article>
 
-      <SiteFooter topHref="#top" assemblyHref="/#assembly-line" />
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

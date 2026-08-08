@@ -49,9 +49,9 @@ for (const testCase of cases) {
       await page.locator("[data-mcp-tools] > li").evaluateAll((items) => items.map((item) => item.getAttribute("data-tool-name"))),
       ["ads_render", "ads_evaluate", "ads_trace"],
     );
-    assert.equal(await page.locator("details").count(), 3);
+    assert.equal(await page.locator("[data-mcp-tools] details").count(), 3);
 
-    const firstDisclosure = page.locator("details").first();
+    const firstDisclosure = page.locator("[data-mcp-tools] details").first();
     await firstDisclosure.locator("summary").dispatchEvent("click");
     assert.equal(await firstDisclosure.getAttribute("open"), "");
     assert.match(await firstDisclosure.innerText(), /request/i);

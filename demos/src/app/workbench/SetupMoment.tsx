@@ -15,10 +15,10 @@ export function SetupMoment({ session, preset, recommended, onPresetChange }: Se
     <>
       <section className={styles.questionPane} aria-labelledby="starting-point-title">
         <div className={styles.questionInner}>
-          <p className={styles.kicker}>Recommended starting point</p>
+          <p className={styles.kicker}>Route the work</p>
           <h1 id="starting-point-title" tabIndex={-1}>Choose a starting point.</h1>
           <p className={styles.intro}>
-            We recommend marketing and editorial because this project is public-facing. Choose another direction if the primary job is different.
+            Workbench is the optional control layer before execution. It recommends marketing and editorial because this project is public-facing, then lets you review the exact route and handoff. Nothing runs here.
           </p>
 
           <fieldset className={styles.postureChoices}>

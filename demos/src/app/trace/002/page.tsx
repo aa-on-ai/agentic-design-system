@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { BrandLockup } from "../../BrandLockup";
+import { PageRole } from "../../PageRole";
+import { SiteFooter } from "../../SiteFooter";
 import { ProofGallery } from "./ProofGallery";
 import { ProofReceipts } from "./ProofReceipts";
 import { ProofResult } from "./ProofResult";
@@ -12,7 +13,7 @@ import styles from "./trace-two.module.css";
 
 export const metadata: Metadata = {
   title: "Pawprint repair proof | Agentic Design System",
-  description: "See how ADS caught one contradictory action, repaired it, and proved every unrelated Pawprint state stayed untouched.",
+  description: "See how the system caught one contradictory action, repaired it, and proved every unrelated Pawprint state stayed untouched.",
 };
 
 export default function TraceTwoPage() {
@@ -34,6 +35,11 @@ export default function TraceTwoPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <TraceTwoHeader />
+      <PageRole
+        stage="Decide"
+        title="Rendered proof case"
+        description="This is the outcome view. It shows the failed state, exact repair, preserved behavior, and proof packet a human can inspect before accepting the change."
+      />
       <article>
         <TraceTwoHero />
         <ProofGallery />
@@ -42,12 +48,7 @@ export default function TraceTwoPage() {
         <ProofReceipts />
         <TraceClose />
       </article>
-      <footer className={styles.footer}>
-        <a className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
-          <BrandLockup />
-        </a>
-        <span>Pawprint proof case, frozen ADS version 1.3.1 evidence</span>
-      </footer>
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

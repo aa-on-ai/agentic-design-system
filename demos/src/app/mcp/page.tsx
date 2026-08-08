@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { Braces, Check, CircleAlert, Github, Terminal } from "lucide-react";
 import { BrandLockup } from "../BrandLockup";
+import { PageRole } from "../PageRole";
+import { SiteFooter } from "../SiteFooter";
+import { SystemNav } from "../SystemNav";
 import { ThemeToggle } from "../ThemeToggle";
 import { FROZEN_RUN, MCP_CONTRACT } from "./mcpData";
 import styles from "./mcp.module.css";
@@ -12,9 +15,9 @@ type McpPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: "MCP lab | Agentic Design System",
+  title: "Evidence tools | Agentic Design System",
   description:
-    "See the three-tool ADS MCP loop turn a local interface into rendered evidence, an evaluation packet, and verified decision provenance.",
+    "See three optional Model Context Protocol tools turn a local interface into rendered evidence, an evaluation packet, and verified decision provenance.",
 };
 
 function JsonBlock({ value, label }: { value: unknown; label: string }) {
@@ -60,8 +63,9 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
           <BrandLockup />
         </Link>
+        <SystemNav current="mcp" />
         <nav className={styles.headerNav} aria-label="MCP lab navigation">
-          <span className={styles.localStatus}><i aria-hidden="true" />Local stdio, version 0.3.0</span>
+          <span className={styles.localStatus}><i aria-hidden="true" />Evidence tools, version 0.3.0</span>
           <a
             className={`hero-pill focus-ring ${styles.iconLink}`}
             href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp"
@@ -73,22 +77,28 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         </nav>
       </header>
 
+      <PageRole
+        stage="Prove"
+        title="Optional evidence tools"
+        description="The skill pack works without this server. Add it when an agent needs deterministic browser capture, evaluation packets, and inspectable run resources."
+      />
+
       <article>
         <section className={styles.hero} aria-labelledby="mcp-title">
           <div className={styles.heroCopy}>
-            <p className={styles.eyebrow}>MCP lab, one local evidence loop</p>
+            <p className={styles.eyebrow}>One local proof loop</p>
             <h1 id="mcp-title">The design loop,<br /><em>callable.</em></h1>
             <p className={styles.heroLede}>
               Three tools let a coding agent render the interface, check the evidence, and prove
               why consequential decisions exist. The default stays model-free. Add explicit
-              adapters when the work needs visual judgment or SwiftUI evidence.
+              adapters when the work needs visual judgment or native Apple interface evidence.
             </p>
             <div className={styles.heroActions}>
               <a className={`${styles.action} ${styles.primaryAction} focus-ring`} href="#run">
                 Follow a real run
               </a>
               <a className={`${styles.action} ${styles.secondaryAction} focus-ring`} href="/mcp/contract.json">
-                Read the JSON contract <Braces size={17} aria-hidden="true" />
+                Read the tool contract <Braces size={17} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -114,7 +124,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         <section className={styles.boundaryStrip} aria-label="MCP boundaries">
           <div><span>Transport</span><strong>Local stdio</strong></div>
           <div><span>Tools</span><strong>Exactly 3</strong></div>
-          <div><span>Render targets</span><strong>Web + SwiftUI</strong></div>
+          <div><span>Render targets</span><strong>Web + native Apple</strong></div>
           <div><span>Visual verdict</span><strong>Explicit opt-in</strong></div>
         </section>
 
@@ -161,7 +171,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
               <h2 id="run-title">One client. One run.<br /><em>Receipts all the way down.</em></h2>
             </div>
             <p>
-              This packet is generated through the compiled stdio server and a real MCP client.
+              This packet is generated through the compiled standard-input server and a real Model Context Protocol client.
               It is a local verification artifact, not a simulated dashboard feed.
             </p>
           </div>
@@ -196,7 +206,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
             <div>
               <strong><code>needs_human</code> is a feature.</strong>
               <p>
-                Axe, overflow, state coverage, touch targets, and CLS can clear mechanically.
+                Accessibility, overflow, state coverage, touch targets, and layout shift can clear mechanically.
                 The default stops here for human review. A startup-configured judge can return typed
                 scores, findings, and revision prompts only when a call explicitly opts in.
               </p>
@@ -234,12 +244,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         </section>
       </article>
 
-      <footer className={styles.footer}>
-        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="#top" aria-label="Back to top">
-          <BrandLockup />
-        </Link>
-        <span>ads-mcp, local stdio, version 0.3.0</span>
-      </footer>
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

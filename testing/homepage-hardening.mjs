@@ -276,7 +276,13 @@ async function verifyKeyboard(page, scope) {
   await page.waitForTimeout(50);
 
   const controlSelector = '.theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
-  const expectedCount = await page.locator(controlSelector).count();
+  const expectedCount = await page.locator(controlSelector).evaluateAll((controls) => controls.filter((control) => {
+    const style = getComputedStyle(control);
+    const rect = control.getBoundingClientRect();
+    const closedMenu = control.closest("details:not([open])");
+    const availableInClosedMenu = !closedMenu || control.tagName === "SUMMARY";
+    return availableInClosedMenu && style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+  }).length);
   const visited = [];
   for (let index = 0; index < expectedCount; index += 1) {
     await page.keyboard.press("Tab");

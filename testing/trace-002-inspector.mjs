@@ -13,7 +13,9 @@ const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: "no-preference" });
 const page = await context.newPage();
 await page.goto(url, { waitUntil: "networkidle", timeout: 20_000 });
-await page.waitForFunction(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0));
+await page.waitForFunction(() => [...document.images]
+  .filter((image) => image.loading !== "lazy")
+  .every((image) => image.complete && image.naturalWidth > 0));
 
 const inspector = page.locator("#inspect");
 const initial = {
@@ -70,7 +72,12 @@ const receipt = {
   fullscreenEntered,
   finalPanels: await inspector.locator("figure").count(),
   horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
-  seriousOrCriticalAxe: serious.map(({ id, impact, help }) => ({ id, impact, help })),
+  seriousOrCriticalAxe: serious.map(({ id, impact, help, nodes }) => ({
+    id,
+    impact,
+    help,
+    targets: nodes.flatMap((node) => node.target),
+  })),
 };
 receipt.passed = receipt.initial.diffSelected === "true" && receipt.initial.panels === 2 &&
   receipt.repaired.selected === "true" && receipt.repaired.panels === 1 &&

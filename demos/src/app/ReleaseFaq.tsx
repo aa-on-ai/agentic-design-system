@@ -5,22 +5,22 @@ import { useState } from "react";
 
 const questions = [
   {
-    question: "Do I need the MCP server?",
+    question: "Do I need the evidence server?",
     answer:
-      "No. The skill pack works on its own. The local MCP is the rendered-evidence lane: it adds browser capture, evaluation receipts, and decision trace validation.",
+      "No. The skill pack works on its own. The optional Model Context Protocol server is the rendered-evidence lane: it adds browser capture, evaluation receipts, and decision trace validation.",
   },
   {
     question: "What changes in my project?",
     answer:
-      "ADS installs repo-local skill directories, Markdown guidance, templates, and verification scripts. It does not add a hosted service or send project files to an ADS account.",
+      "The system installs repo-local skill directories, Markdown guidance, templates, and verification scripts. It does not add a hosted service or send project files to an external account.",
   },
   {
-    question: "Does ADS decide when the UI ships?",
+    question: "Does the system decide when the interface ships?",
     answer:
-      "No. ADS makes the brief, rendered evidence, deterministic checks, and grader verdict inspectable. A human or the host workflow still owns the shipping decision.",
+      "No. The system makes the brief, rendered evidence, deterministic checks, and grader verdict inspectable. A human or the host workflow still owns the shipping decision.",
   },
   {
-    question: "Will every MCP host behave the same way?",
+    question: "Will every evidence host behave the same way?",
     answer:
       "No. Host configuration and resource recovery differ. Use the acceptance ledger above as the claim boundary, then verify any unlisted host against the same render, evaluate, trace, and recovery contract.",
   },

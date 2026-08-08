@@ -7,6 +7,7 @@ import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseClose } from "./ReleaseClose";
 import { SiteFooter } from "./SiteFooter";
+import { SystemNav } from "./SystemNav";
 import { ThemeToggle } from "./ThemeToggle";
 import { WorkshopRun } from "./WorkshopRun";
 import { SITE_DESCRIPTION, SITE_NAME, SOCIAL_IMAGE_ALT } from "./site";
@@ -78,6 +79,7 @@ export default async function Home({ searchParams }: HomeProps) {
           >
             <BrandLockup />
           </a>
+          <SystemNav current="system" />
           <nav className="hero-toolbar" aria-label="Primary navigation">
             <a
               href="https://github.com/aa-on-ai/agentic-design-system"
@@ -95,10 +97,10 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="hero-scrim" aria-hidden="true" />
 
           <div className="hero-copy">
-            <p className="hero-kicker"><span>Open source</span> repo-local UI skill pack</p>
+            <p className="hero-kicker"><span>Open source</span> repo-local interface skill pack</p>
             <h1 id="hero-title">A design system for agents.<br /><em>Proof for humans.</em></h1>
             <p className="hero-lede">
-              ADS installs skills, templates, and rendered checks into your project. It turns a UI
+              The system installs skills, templates, and rendered checks into your project. It turns an interface
               request into a brief, a browser-tested repair, evidence, and a review verdict before
               your coding agent calls the work done.
             </p>
@@ -109,17 +111,17 @@ export default async function Home({ searchParams }: HomeProps) {
                   className="install-guide-link focus-ring"
                   href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md"
                 >
-                  Codex example, choose your agent and activate ADS
+                  Codex example, choose your agent and activate the system
                 </a>
               </div>
               <a className="tour-link focus-ring" href="#assembly-line">
-                See one UI run
+                Follow the interface repair
               </a>
             </div>
           </div>
 
           <div className="hero-job-ticket" aria-hidden="true">
-            <span>Live run</span><b>Orders / UI review</b><small>Input, evidence, and verdict</small>
+            <span>Example run</span><b>Orders / interface review</b><small>Input, evidence, and verdict</small>
           </div>
           <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>

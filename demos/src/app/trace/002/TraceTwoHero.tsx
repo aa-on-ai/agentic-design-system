@@ -8,7 +8,7 @@ export function TraceTwoHero() {
         <p className={styles.eyebrow}>Pawprint dispatch case</p>
         <h1 id="case-title">A read-only state still had<br /><em>a write action.</em></h1>
         <p className={styles.heroLede}>
-          ADS caught the contradiction, disabled New walk, kept Retry available, and proved every
+          The system caught the contradiction, disabled New walk, kept Retry available, and proved every
           unrelated state stayed untouched.
         </p>
         <div className={styles.heroActions}>

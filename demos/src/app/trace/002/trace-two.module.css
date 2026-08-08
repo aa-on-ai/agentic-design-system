@@ -280,7 +280,7 @@
 .singlePanel { grid-template-columns: minmax(0, 1fr); }
 .comparisonPanel { margin: 0; overflow: hidden; border: 1px solid rgba(249,236,210,0.22); background: #102a41; }
 .comparisonPanel figcaption { display: flex; min-height: 54px; padding: 0 16px; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid rgba(249,236,210,0.18); }
-.comparisonPanel figcaption span { color: #afa78f; font: 620 0.78rem/1.3 var(--font-body), sans-serif; }
+.comparisonPanel figcaption span { color: #d1c7ae; font: 620 0.78rem/1.3 var(--font-body), sans-serif; }
 .comparisonPanel figcaption b { font-size: 0.82rem; }
 
 .shotCrop { position: relative; height: 280px; overflow: auto; background: #f6f2e7; }
@@ -386,6 +386,8 @@
 .footer .wordmark { color: #bcae91; }
 .footer .wordmark :global(.brand-lockup-descriptor) { color: #bcae91; }
 
+.statusShort { display: none; }
+
 .stateShell { width: min(720px, calc(100% - 48px)); min-height: 100vh; margin: 0 auto; padding: 18vh 0 96px; }
 .stateShell h1 { max-width: 680px; margin-top: 22px; font-size: clamp(3.2rem, 7vw, 5.8rem); }
 .stateShell > p:not(.eyebrow) { max-width: 560px; margin: 24px 0 0; color: var(--muted); }
@@ -402,6 +404,8 @@
 @media (max-width: 760px) {
   .header { width: calc(100% - 32px); min-height: 66px; }
   .headerMeta > span:first-child { display: none; }
+  .statusLong { display: none; }
+  .statusShort { display: inline; }
   .hero { width: calc(100% - 32px); padding: 54px 0 68px; gap: 48px; grid-template-columns: 1fr; }
   .caseCopy h1 { font-size: 3rem; }
   .heroLede { margin-top: 23px; font-size: 0.94rem; }

@@ -18,7 +18,7 @@ export const MCP_CONTRACT = {
       verb: "See",
       title: "Render the interface",
       description:
-        "Capture a local URL or root-confined TSX component in a real browser, or call a configured SwiftUI snapshot adapter.",
+        "Capture a local web address or root-confined component in a real browser, or call a configured native Apple snapshot adapter.",
       input: {
         target: { type: "url", url: "http://127.0.0.1:3000/mcp" },
         states: ["default"],
@@ -98,7 +98,7 @@ export const MCP_CONTRACT = {
     judgment:
       "Model-free by default; configured judgment requires startup configuration plus per-call opt-in",
     swiftui:
-      "SwiftUI requires a startup-configured renderer and preserves blocked evidence when unavailable",
+      "Native Apple rendering requires a startup-configured renderer and preserves blocked evidence when unavailable",
     hosting: "Local stdio only; no remote MCP endpoint or hosted control plane",
     browser:
       "Cold startup never downloads Chromium; run ads-mcp setup once before rendered evidence",
@@ -109,7 +109,7 @@ export const MCP_CONTRACT = {
 } as const;
 
 export const FROZEN_RUN = {
-  label: "Local MCP verification",
+  label: "Local evidence verification",
   runId: "run_ms0ubiex_26ad1c244418",
   capturedAt: "2026-07-25",
   client: "@modelcontextprotocol/sdk",
