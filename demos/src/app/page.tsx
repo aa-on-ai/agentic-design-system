@@ -121,7 +121,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
 
           <div className="hero-job-ticket" aria-hidden="true">
-            <span>Live run</span><b>Orders / interface review</b><small>Input, evidence, and verdict</small>
+            <span>Example run</span><b>Orders / interface review</b><small>Input, evidence, and verdict</small>
           </div>
           <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>
