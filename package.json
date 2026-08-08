@@ -14,6 +14,10 @@
     "production-gates:smoke": "node testing/production-gates-smoke.mjs",
     "structured-findings:smoke": "node testing/structured-findings-smoke.mjs",
     "decision-trace:smoke": "node testing/decision-trace-smoke.mjs",
+    "workbench:inspector-smoke": "node testing/workbench-inspector-smoke.mjs",
+    "workbench:validator-smoke": "node testing/workbench-session-validator-smoke.mjs",
+    "workbench:step3-smoke": "node testing/workbench-step3-smoke.mjs",
+    "workbench:step3-step4-browser": "node testing/workbench-step3-step4-browser.mjs",
     "regression:frozen": "node testing/regression/adjacent-actions-v1.3.1/verify.mjs",
     "regression:prepare": "node testing/regression/adjacent-actions-v1.3.1/prepare-run.mjs",
     "regression:gate": "node testing/regression/adjacent-actions-v1.3.1/behavior-change-gate.mjs",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",
+    "ajv": "^8.20.0",
     "esbuild": "^0.28.1",
     "pixelmatch": "^6.0.0",
     "playwright": "^1.49.0",

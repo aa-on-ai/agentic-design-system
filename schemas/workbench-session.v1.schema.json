@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aa-on-ai/agentic-design-system/schemas/workbench-session.v1.schema.json",
+  "title": "ADS Workbench read-only intake session",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "kind", "inspector", "project", "intake"],
+  "properties": {
+    "$schema": { "const": "https://github.com/aa-on-ai/agentic-design-system/schemas/workbench-session.v1.schema.json" },
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "ads.workbench.session" },
+    "inspector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "mode", "sourceFingerprint"],
+      "properties": {
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "mode": { "const": "read-only" },
+        "sourceFingerprint": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "rootLabel"],
+      "properties": {
+        "root": { "type": "string", "minLength": 1 },
+        "rootLabel": { "type": "string", "minLength": 1 }
+      }
+    },
+    "intake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "sources", "claims", "preset", "questions", "notices"],
+      "properties": {
+        "status": { "enum": ["ready", "needs-human", "blocked"] },
+        "sources": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/source" } },
+        "claims": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "description", "audience", "surface"],
+          "properties": {
+            "name": { "$ref": "#/$defs/stringInference" },
+            "description": { "$ref": "#/$defs/stringInference" },
+            "audience": { "$ref": "#/$defs/stringInference" },
+            "surface": { "$ref": "#/$defs/stringInference" }
+          }
+        },
+        "preset": { "$ref": "#/$defs/presetInference" },
+        "questions": { "type": "array", "items": { "$ref": "#/$defs/question" } },
+        "notices": { "type": "array", "items": { "$ref": "#/$defs/notice" } }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "sourcePath": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$" },
+    "sourceKind": {
+      "enum": [
+        "project-identity", "product-doc", "agent-instructions", "design-guidelines",
+        "design-tokens", "component", "screenshot", "prior-decision", "package-manifest"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "contentSha256", "bytes"],
+      "properties": {
+        "path": { "$ref": "#/$defs/sourcePath" },
+        "kind": { "$ref": "#/$defs/sourceKind" },
+        "contentSha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 0, "maximum": 262144 }
+      }
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "$ref": "#/$defs/sourcePath" },
+        "locator": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type"],
+              "properties": { "type": { "const": "file" } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "start", "end"],
+              "properties": {
+                "type": { "const": "lines" },
+                "start": { "type": "integer", "minimum": 1 },
+                "end": { "type": "integer", "minimum": 1 }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "statement", "evidence"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "statement": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceRef" } }
+      }
+    },
+    "evidenceQuality": { "enum": ["direct-declaration", "cross-source", "single-signal"] },
+    "questionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "stringCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "evidenceQuality", "reasons"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1 },
+        "evidenceQuality": { "$ref": "#/$defs/evidenceQuality" },
+        "reasons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reason" } }
+      }
+    },
+    "presetId": { "enum": ["marketing-editorial", "utilitarian-app", "dense-dashboard"] },
+    "presetCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "evidenceQuality", "reasons"],
+      "properties": {
+        "value": { "$ref": "#/$defs/presetId" },
+        "evidenceQuality": { "$ref": "#/$defs/evidenceQuality" },
+        "reasons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reason" } }
+      }
+    },
+    "inferredString": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "evidenceQuality", "reasons"],
+      "properties": {
+        "state": { "const": "inferred" },
+        "value": { "type": "string", "minLength": 1 },
+        "evidenceQuality": { "$ref": "#/$defs/evidenceQuality" },
+        "reasons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reason" } }
+      }
+    },
+    "unknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "reason", "inspectedKinds"],
+      "properties": {
+        "state": { "const": "unknown" },
+        "value": { "type": "null" },
+        "reason": { "type": "string", "minLength": 1 },
+        "inspectedKinds": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/sourceKind" } }
+      }
+    },
+    "conflictedString": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "candidates", "questionId"],
+      "properties": {
+        "state": { "const": "conflicted" },
+        "value": { "type": "null" },
+        "candidates": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/stringCandidate" } },
+        "questionId": { "$ref": "#/$defs/questionId" }
+      }
+    },
+    "stringInference": { "oneOf": [{ "$ref": "#/$defs/inferredString" }, { "$ref": "#/$defs/unknown" }, { "$ref": "#/$defs/conflictedString" }] },
+    "inferredPreset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "evidenceQuality", "reasons"],
+      "properties": {
+        "state": { "const": "inferred" },
+        "value": { "$ref": "#/$defs/presetId" },
+        "evidenceQuality": { "$ref": "#/$defs/evidenceQuality" },
+        "reasons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reason" } }
+      }
+    },
+    "conflictedPreset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "value", "candidates", "questionId"],
+      "properties": {
+        "state": { "const": "conflicted" },
+        "value": { "type": "null" },
+        "candidates": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/presetCandidate" } },
+        "questionId": { "$ref": "#/$defs/questionId" }
+      }
+    },
+    "presetInference": { "oneOf": [{ "$ref": "#/$defs/inferredPreset" }, { "$ref": "#/$defs/unknown" }, { "$ref": "#/$defs/conflictedPreset" }] },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "blocks", "prompt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/questionId" },
+        "blocks": { "enum": ["project-identity", "preset-recommendation"] },
+        "prompt": { "type": "string", "minLength": 1 },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value", "label", "evidence"],
+            "properties": {
+              "value": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "evidence": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceRef" } }
+            }
+          }
+        }
+      }
+    },
+    "notice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": { "enum": ["error", "warning", "info"] },
+        "code": { "enum": ["source-unreadable", "source-too-large", "external-symlink-skipped", "unsupported-format", "identity-parse-failed"] },
+        "path": { "$ref": "#/$defs/sourcePath" },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
