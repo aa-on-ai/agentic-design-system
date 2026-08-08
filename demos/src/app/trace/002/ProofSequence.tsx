@@ -3,9 +3,9 @@ import styles from "./trace-two.module.css";
 const steps = [
   ["01", "Clarify", "Keep dispatch usable when the connection drops."],
   ["02", "Build", "Load Pawprint’s states, actions, and existing interface."],
-  ["03", "Review", "Check every nearby action against the state contract."],
-  ["04", "Prove", "Compare changed captures and preserve the originals."],
-  ["05", "Decide", "Separate grader, frozen run, auditable packet."],
+  ["03", "Prove", "Compare changed captures and preserve the originals."],
+  ["04", "Review", "A separate grader checks every nearby action against the state contract."],
+  ["05", "Decide", "Frozen evidence supports the human verdict."],
 ] as const;
 
 export function ProofSequence() {

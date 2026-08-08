@@ -96,7 +96,7 @@ export function WorkbenchJourney({ session, identityState }: {
         <SystemNav current="workbench" className={styles.systemNav} />
         <span className={styles.surfaceName}>
           <span className={styles.surfaceLong}>Workbench · Optional control layer · Step {step} of 4</span>
-          <span className={styles.surfaceShort}>Workbench · Step {step} of 4</span>
+          <span className={styles.surfaceShort}>Step {step} of 4</span>
         </span>
         <span
           className={styles.setupProgress}

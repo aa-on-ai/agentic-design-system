@@ -1742,7 +1742,8 @@
 
 @media (max-width: 880px) {
   .systemNav {
-    display: none;
+    display: block;
+    margin-left: auto;
   }
 
   .surfaceLong {
@@ -1751,6 +1752,11 @@
 
   .surfaceShort {
     display: inline;
+  }
+
+  .surfaceName {
+    margin-left: 8px;
+    white-space: nowrap;
   }
 
   .surfaceName,
