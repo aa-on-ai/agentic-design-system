@@ -517,7 +517,7 @@ for (const [browserName, browserType] of browserTypes) {
         window.scrollTo(0, 0);
         window.dispatchEvent(new Event("scroll"));
       });
-      await page.waitForFunction(() => document.querySelector(".site-shell-header")?.getAttribute("data-scroll-state") === "visible");
+      await page.waitForFunction(() => Math.abs(document.querySelector(".site-shell-header")?.getBoundingClientRect().top ?? 99) < 2);
       await page.getByRole("button", { name: "Switch to dark theme" }).click();
       await waitForHero(page, "dark");
       await gotoReady(page, `${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`);

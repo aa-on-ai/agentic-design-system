@@ -44,7 +44,7 @@ for (const testCase of cases) {
     process.stderr.write(`[mcp-lab] ${testCase.name}: inspect\n`);
     await page.locator("main[data-mcp-lab]").waitFor({ timeout: 10_000 });
     assert.match(await page.locator("h1").innerText(), /design loop/i);
-    assert.equal(await page.locator(".site-shell-header .ads-system-nav-list [aria-current='page']").innerText(), "Evidence tools");
+    assert.equal(await page.locator(".ads-system-nav-list [aria-current='page']").innerText(), "Evidence tools");
     assert.deepEqual(
       await page.locator("[data-mcp-tools] > li").evaluateAll((items) => items.map((item) => item.getAttribute("data-tool-name"))),
       ["ads_render", "ads_evaluate", "ads_trace"],

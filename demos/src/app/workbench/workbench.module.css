@@ -1,3 +1,8 @@
+.workbenchPage {
+  min-height: calc(100svh - var(--site-shell-offset, 72px));
+  background: var(--workbench-page, var(--page));
+}
+
 .page {
   --workbench-page: #f1e4ca;
   --workbench-deep: #e7d4b3;
@@ -12,7 +17,7 @@
   --workbench-green: #287354;
   display: grid;
   width: 100%;
-  height: calc(100svh - var(--site-shell-offset, 92px));
+  height: calc(100svh - var(--site-shell-offset, 72px) - var(--chapter-nav-height, 76px));
   min-width: 320px;
   min-height: 588px;
   overflow: hidden;

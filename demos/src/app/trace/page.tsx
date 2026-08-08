@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CheckCircle2, FileCheck2 } from "lucide-react";
 import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
+import { SystemNav } from "../SystemNav";
 import styles from "./trace.module.css";
 
 type Decision = {
@@ -48,8 +49,7 @@ const decisions: Decision[] = [
       "Interactive controls were enlarged until every measured mobile target cleared the 48px gate.",
     skill: "design-review / mobile",
     skillHash: "e2b379b311",
-    rule:
-      "Touch targets are at least 48×48px, with enough spacing to avoid mis-taps.",
+    rule: "Touch targets are at least 48×48px, with enough spacing to avoid mis-taps.",
     source: "presets/utilitarian-app.md",
     constraint: "Touch targets and responsive behavior handled cleanly.",
     evidence: [
@@ -109,6 +109,58 @@ export default function TracePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
+      <section
+        className={styles.hero}
+        aria-labelledby="trace-title"
+        data-chapter-hero
+      >
+        <div className={styles.heroCopy}>
+          <p className={styles.kicker}>Decision trace, provenance case 01</p>
+          <h1 id="trace-title">
+            A paper trail for
+            <br />
+            <em>interface decisions.</em>
+          </h1>
+          <p className={styles.lede}>
+            Follow one system run from the choice that survived, through the
+            exact rule and product constraint, to the rendered evidence a
+            reviewer can inspect.
+          </p>
+        </div>
+
+        <aside className={styles.runCard} aria-label="Trace summary">
+          <div className={styles.runCardTop}>
+            <span>Preserved run</span>
+            <span className={styles.reviewedStatus}>
+              <i aria-hidden="true" /> Reviewed
+            </span>
+          </div>
+          <strong>Orders / iter3</strong>
+          <dl>
+            <div>
+              <dt>Decisions</dt>
+              <dd>3</dd>
+            </div>
+            <div>
+              <dt>Evidence gate</dt>
+              <dd>Passed</dd>
+            </div>
+            <div>
+              <dt>Release</dt>
+              <dd>v1.2.0</dd>
+            </div>
+          </dl>
+          <a
+            className={`${styles.rawLink} focus-ring`}
+            href={`${repo}/blob/main/docs/loop-demo/decision-trace.json`}
+          >
+            Open raw trace
+          </a>
+        </aside>
+      </section>
+
+      <SystemNav />
+
       <PageRole
         stage="Review"
         title="Decision trace"
@@ -116,62 +168,60 @@ export default function TracePage() {
       />
 
       <article>
-        <section className={styles.hero} aria-labelledby="trace-title">
-          <div className={styles.heroCopy}>
-            <p className={styles.kicker}>Decision trace, provenance case 01</p>
-            <h1 id="trace-title">A paper trail for<br /><em>interface decisions.</em></h1>
-            <p className={styles.lede}>
-              Follow one system run from the choice that survived, through the exact rule and product
-              constraint, to the rendered evidence a reviewer can inspect.
-            </p>
-          </div>
-
-          <aside className={styles.runCard} aria-label="Trace summary">
-            <div className={styles.runCardTop}>
-              <span>Preserved run</span>
-              <span className={styles.reviewedStatus}><i aria-hidden="true" /> Reviewed</span>
-            </div>
-            <strong>Orders / iter3</strong>
-            <dl>
-              <div><dt>Decisions</dt><dd>3</dd></div>
-              <div><dt>Evidence gate</dt><dd>Passed</dd></div>
-              <div><dt>Release</dt><dd>v1.2.0</dd></div>
-            </dl>
-            <a className={`${styles.rawLink} focus-ring`} href={`${repo}/blob/main/docs/loop-demo/decision-trace.json`}>
-              Open raw trace
-            </a>
-          </aside>
-        </section>
-
         <section className={styles.explainer} aria-labelledby="chain-title">
           <div>
             <p className={styles.sectionLabel}>How to read the trace</p>
             <h2 id="chain-title">Four receipts. One claim.</h2>
           </div>
           <ol className={styles.chainLegend}>
-            <li><span>01</span><strong>Decision</strong><small>What survived</small></li>
-            <li><span>02</span><strong>Rule</strong><small>What governed it</small></li>
-            <li><span>03</span><strong>Constraint</strong><small>What the product required</small></li>
-            <li><span>04</span><strong>Evidence</strong><small>What cleared it</small></li>
+            <li>
+              <span>01</span>
+              <strong>Decision</strong>
+              <small>What survived</small>
+            </li>
+            <li>
+              <span>02</span>
+              <strong>Rule</strong>
+              <small>What governed it</small>
+            </li>
+            <li>
+              <span>03</span>
+              <strong>Constraint</strong>
+              <small>What the product required</small>
+            </li>
+            <li>
+              <span>04</span>
+              <strong>Evidence</strong>
+              <small>What cleared it</small>
+            </li>
           </ol>
         </section>
 
         <aside className={styles.caveat} aria-labelledby="caveat-title">
           <FileCheck2 size={22} aria-hidden="true" />
           <div>
-            <strong id="caveat-title">Historical mapping, labeled honestly</strong>
+            <strong id="caveat-title">
+              Historical mapping, labeled honestly
+            </strong>
             <p>
-              This example maps a preserved June 2026 run using current v1.2.0 rule hashes. Its rows
-              are <b>reviewed</b>, not prospective proof that the original builder loaded those files.
+              This example maps a preserved June 2026 run using current v1.2.0
+              rule hashes. Its rows are <b>reviewed</b>, not prospective proof
+              that the original builder loaded those files.
             </p>
           </div>
         </aside>
 
-        <section className={styles.decisionsSection} aria-labelledby="decisions-title">
+        <section
+          className={styles.decisionsSection}
+          aria-labelledby="decisions-title"
+        >
           <div className={styles.decisionsHeading}>
             <p className={styles.sectionLabel}>The trace</p>
             <h2 id="decisions-title">Three consequential decisions</h2>
-            <p>Enough to audit the result. Not a transcript of every style property.</p>
+            <p>
+              Enough to audit the result. Not a transcript of every style
+              property.
+            </p>
           </div>
 
           <ol className={styles.decisionList}>
@@ -179,7 +229,9 @@ export default function TracePage() {
               <li key={item.id} className={styles.decisionItem}>
                 <article aria-labelledby={`decision-${item.id}`}>
                   <header className={styles.decisionHeader}>
-                    <span className={styles.decisionIndex} aria-hidden="true">{item.id}</span>
+                    <span className={styles.decisionIndex} aria-hidden="true">
+                      {item.id}
+                    </span>
                     <div>
                       <p>Decision</p>
                       <h3 id={`decision-${item.id}`}>{item.title}</h3>
@@ -188,7 +240,10 @@ export default function TracePage() {
                   </header>
 
                   <div className={styles.receiptChain}>
-                    <section className={styles.receipt} aria-labelledby={`rule-${item.id}`}>
+                    <section
+                      className={styles.receipt}
+                      aria-labelledby={`rule-${item.id}`}
+                    >
                       <div className={styles.receiptLabel}>
                         <span>Rule</span>
                         <code>{item.skillHash}</code>
@@ -197,7 +252,10 @@ export default function TracePage() {
                       <blockquote>“{item.rule}”</blockquote>
                     </section>
 
-                    <section className={styles.receipt} aria-labelledby={`constraint-${item.id}`}>
+                    <section
+                      className={styles.receipt}
+                      aria-labelledby={`constraint-${item.id}`}
+                    >
                       <div className={styles.receiptLabel}>
                         <span>Source constraint</span>
                         <code>{item.source}</code>
@@ -206,10 +264,15 @@ export default function TracePage() {
                       <blockquote>“{item.constraint}”</blockquote>
                     </section>
 
-                    <section className={`${styles.receipt} ${styles.evidenceReceipt}`} aria-labelledby={`evidence-${item.id}`}>
+                    <section
+                      className={`${styles.receipt} ${styles.evidenceReceipt}`}
+                      aria-labelledby={`evidence-${item.id}`}
+                    >
                       <div className={styles.receiptLabel}>
                         <span>Evidence</span>
-                        <span className={styles.reviewedStatus}><i aria-hidden="true" /> Reviewed</span>
+                        <span className={styles.reviewedStatus}>
+                          <i aria-hidden="true" /> Reviewed
+                        </span>
                       </div>
                       <h4 id={`evidence-${item.id}`}>Rendered receipts</h4>
                       <ul>
@@ -232,13 +295,26 @@ export default function TracePage() {
 
         <section className={styles.close} aria-labelledby="close-title">
           <p className={styles.sectionLabel}>The standard</p>
-          <h2 id="close-title">Why. Which rule.<br /><em>What proves it.</em></h2>
-          <p>A reviewer should answer all three in under two minutes, without asking the agent to reconstruct its reasoning.</p>
+          <h2 id="close-title">
+            Why. Which rule.
+            <br />
+            <em>What proves it.</em>
+          </h2>
+          <p>
+            A reviewer should answer all three in under two minutes, without
+            asking the agent to reconstruct its reasoning.
+          </p>
           <div className={styles.closeActions}>
-            <a className={`${styles.primaryAction} focus-ring`} href={`${repo}/blob/main/workflows/decision-provenance.md`}>
+            <a
+              className={`${styles.primaryAction} focus-ring`}
+              href={`${repo}/blob/main/workflows/decision-provenance.md`}
+            >
               Read the provenance workflow
             </a>
-            <a className={`${styles.secondaryAction} focus-ring`} href={`${repo}/releases/tag/v1.2.0`}>
+            <a
+              className={`${styles.secondaryAction} focus-ring`}
+              href={`${repo}/releases/tag/v1.2.0`}
+            >
               View the v1.2.0 release
             </a>
           </div>
