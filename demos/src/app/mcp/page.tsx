@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Braces, Check, CircleAlert, Terminal } from "lucide-react";
 import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
-import { SystemNav } from "../SystemNav";
 import { FROZEN_RUN, MCP_CONTRACT } from "./mcpData";
 import styles from "./mcp.module.css";
 
@@ -104,8 +103,6 @@ export default function McpPage() {
           </p>
         </aside>
       </section>
-
-      <SystemNav />
 
       <PageRole
         stage="Prove"

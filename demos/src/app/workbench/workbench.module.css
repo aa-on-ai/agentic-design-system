@@ -1,4 +1,5 @@
 .workbenchPage {
+  padding-top: var(--site-shell-offset, 76px);
   min-height: calc(100svh - var(--site-shell-offset, 72px));
   background: var(--workbench-page, var(--page));
 }

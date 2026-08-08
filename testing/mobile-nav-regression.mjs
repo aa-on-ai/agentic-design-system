@@ -33,34 +33,28 @@ try {
         };
       };
       return {
-        header: rect(".site-shell-header"),
+        legacyHeader: rect(".site-shell-header"),
+        rail: rect(".ads-system-nav"),
         brand: rect(".brand-lockup"),
-        actions: rect(".site-shell-actions"),
-        theme: rect('.site-shell-actions button[aria-label*="theme"]'),
-        seam: rect(".ads-system-nav"),
         selector: rect(".ads-system-nav-trigger"),
       };
     });
 
     const scope = `${width}px`;
     if (
-      !layout.header ||
+      layout.legacyHeader ||
+      !layout.rail ||
       !layout.brand ||
-      !layout.actions ||
-      !layout.theme ||
-      !layout.seam ||
       !layout.selector
     ) {
-      failures.push(`${scope}: missing utility or chapter navigation element`);
+      failures.push(`${scope}: integrated navigation rail is missing or legacy header remains`);
       await page.close();
       continue;
     }
-    if (layout.brand.right + 12 > layout.actions.left)
-      failures.push(`${scope}: utility controls are cramped`);
+    if (layout.brand.right + 8 > layout.selector.left)
+      failures.push(`${scope}: brand and current-page menu are cramped`);
     if (
       layout.brand.height < 48 ||
-      layout.theme.height < 48 ||
-      layout.theme.width < 48 ||
       layout.selector.height < 48
     ) {
       failures.push(
@@ -68,10 +62,10 @@ try {
       );
     }
     if (
-      Math.abs(layout.seam.left) > 1 ||
-      Math.abs(layout.seam.right - width) > 1
+      layout.rail.left < 8 ||
+      layout.rail.right > width - 8
     ) {
-      failures.push(`${scope}: chapter seam is not edge-to-edge`);
+      failures.push(`${scope}: navigation rail does not preserve its hero gutter`);
     }
 
     const selectorText = (
@@ -81,10 +75,10 @@ try {
       .trim();
     if (
       !selectorText.includes("Overview") ||
-      !selectorText.includes("1 of 5")
+      !selectorText.includes("Menu")
     ) {
       failures.push(
-        `${scope}: mobile selector does not expose current page and position`,
+        `${scope}: mobile selector does not expose the current page and Menu affordance`,
       );
     }
 
@@ -115,6 +109,15 @@ try {
     ) {
       failures.push(`${scope}: page sheet does not preserve GitHub access`);
     }
+    const themeInMenu = page.locator(
+      '.ads-system-nav-sheet button[aria-label*="theme"]',
+    );
+    if (
+      (await themeInMenu.count()) !== 1 ||
+      !(await themeInMenu.isVisible())
+    ) {
+      failures.push(`${scope}: page sheet does not preserve theme access`);
+    }
     const currentLink = page.locator(
       '.ads-system-nav-menu a[aria-current="page"]',
     );
@@ -139,5 +142,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "mobile nav regression passed: calm utility header, explicit current-page selector, 48px targets, and bottom-sheet navigation",
+  "mobile nav regression passed: one hero-integrated rail, explicit current-page menu, 48px targets, and bottom-sheet utilities",
 );

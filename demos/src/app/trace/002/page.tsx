@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { PageRole } from "../../PageRole";
 import { SiteFooter } from "../../SiteFooter";
-import { SystemNav } from "../../SystemNav";
 import { ProofGallery } from "./ProofGallery";
 import { ProofReceipts } from "./ProofReceipts";
 import { ProofResult } from "./ProofResult";
@@ -38,7 +37,6 @@ export default function TraceTwoPage() {
       <div data-chapter-hero>
         <TraceTwoHero />
       </div>
-      <SystemNav />
       <PageRole
         stage="Decide"
         title="Rendered proof case"

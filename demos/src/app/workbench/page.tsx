@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { loadWorkbenchSession } from "./loadWorkbenchSession";
-import { SystemNav } from "../SystemNav";
 import { loadProjectIdentityState } from "./projectIdentity.server";
 import { WorkbenchJourney } from "./WorkbenchJourney";
 import styles from "./workbench.module.css";
@@ -21,7 +20,6 @@ export default async function WorkbenchPage() {
       className={styles.workbenchPage}
       aria-label="Agentic Design Workbench"
     >
-      <SystemNav />
       <div className={styles.page} data-workbench-session>
         <WorkbenchJourney session={session} identityState={identityState} />
       </div>

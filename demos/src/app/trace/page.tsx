@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { CheckCircle2, FileCheck2 } from "lucide-react";
 import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
-import { SystemNav } from "../SystemNav";
 import styles from "./trace.module.css";
 
 type Decision = {
@@ -158,8 +157,6 @@ export default function TracePage() {
           </a>
         </aside>
       </section>
-
-      <SystemNav />
 
       <PageRole
         stage="Review"

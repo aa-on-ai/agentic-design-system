@@ -18,7 +18,6 @@ const routes = [
   ["Decision trace", "/trace"],
   ["Proof case", "/trace/002"],
 ];
-const heroRoutes = ["/", "/mcp", "/trace", "/trace/002"];
 const failures = [];
 
 for (const [browserName, browserType] of [
@@ -34,7 +33,6 @@ for (const [browserName, browserType] of [
     await page.goto(baseUrl, { waitUntil: "networkidle" });
 
     const desktopContract = await page.evaluate(() => {
-      const header = document.querySelector(".site-shell-header");
       const hero = document.querySelector(".hero-section");
       const nav = document.querySelector(".ads-system-nav");
       const current = nav?.querySelector(
@@ -44,80 +42,80 @@ for (const [browserName, browserType] of [
         ".ads-system-nav-list a:not([aria-current='page'])",
       );
       if (
-        !(header instanceof HTMLElement) ||
         !(hero instanceof HTMLElement) ||
         !(nav instanceof HTMLElement)
       )
         return null;
-      const headerBounds = header.getBoundingClientRect();
       const heroBounds = hero.getBoundingClientRect();
       const navBounds = nav.getBoundingClientRect();
+      const currentStyle = current ? getComputedStyle(current) : null;
       return {
-        headerPosition: getComputedStyle(header).position,
-        headerNavs: header.querySelectorAll(
-          "nav[aria-label='Agentic Design System']",
-        ).length,
+        legacyHeaders: document.querySelectorAll(".site-shell-header").length,
         navs: document.querySelectorAll(
           "nav[aria-label='Agentic Design System']",
         ).length,
         navTop: navBounds.top,
+        navBottom: navBounds.bottom,
+        navLeft: navBounds.left,
+        navRight: navBounds.right,
         navWidth: navBounds.width,
+        heroTop: heroBounds.top,
         heroBottom: heroBounds.bottom,
-        headerBottom: headerBounds.bottom,
-        currentIndicatorHeight: current
-          ? parseFloat(getComputedStyle(current, "::after").height)
-          : 0,
-        currentIndicatorOpacity: current
-          ? parseFloat(getComputedStyle(current, "::after").opacity)
-          : 0,
+        currentBackground: currentStyle?.backgroundColor ?? null,
+        currentRadius: currentStyle?.borderRadius ?? null,
         otherCursor: other ? getComputedStyle(other).cursor : null,
+        brandInside: nav.querySelector(".brand-lockup") !== null,
+        githubInside: nav.querySelector('a[href*="github.com"]') !== null,
+        themeInside: nav.querySelector('button[aria-label*="theme"]') !== null,
       };
     });
 
     if (!desktopContract) {
       failures.push(`${browserName}: chapter seam could not be measured`);
     } else {
-      if (
-        desktopContract.headerPosition === "fixed" ||
-        desktopContract.headerPosition === "sticky"
-      ) {
-        failures.push(
-          `${browserName}: utility header still follows the user as permanent chrome`,
-        );
-      }
-      if (desktopContract.headerNavs !== 0) {
-        failures.push(
-          `${browserName}: system navigation still lives inside the top header`,
-        );
-      }
+      if (desktopContract.legacyHeaders !== 0)
+        failures.push(`${browserName}: legacy utility header still renders`);
       if (desktopContract.navs !== 1) {
         failures.push(
-          `${browserName}: expected one chapter seam, found ${desktopContract.navs}`,
+          `${browserName}: expected one integrated navigation rail, found ${desktopContract.navs}`,
         );
       }
       if (
-        desktopContract.navTop < desktopContract.heroBottom - 2 ||
-        desktopContract.navTop < desktopContract.headerBottom
+        desktopContract.navTop < desktopContract.heroTop ||
+        desktopContract.navBottom >= desktopContract.heroBottom
       ) {
         failures.push(
-          `${browserName}: chapter navigation does not enter after the hero`,
+          `${browserName}: navigation rail is not composed inside the hero`,
         );
       }
-      if (Math.abs(desktopContract.navWidth - 2048) > 1) {
-        failures.push(`${browserName}: chapter seam is not edge-to-edge`);
+      if (
+        desktopContract.navLeft < 12 ||
+        desktopContract.navRight > 2036 ||
+        desktopContract.navWidth > 1800
+      ) {
+        failures.push(`${browserName}: navigation rail does not respect the hero gutter`);
       }
       if (
-        desktopContract.currentIndicatorHeight < 3 ||
-        desktopContract.currentIndicatorOpacity < 0.9
+        !desktopContract.currentBackground ||
+        desktopContract.currentBackground === "rgba(0, 0, 0, 0)" ||
+        desktopContract.currentBackground === "transparent" ||
+        desktopContract.currentRadius === "0px"
       ) {
         failures.push(
-          `${browserName}: current destination lacks a persistent orange rule`,
+          `${browserName}: current destination lacks a persistent filled state`,
         );
       }
       if (desktopContract.otherCursor !== "pointer") {
         failures.push(
           `${browserName}: other destinations do not read as clickable`,
         );
+      }
+      if (
+        !desktopContract.brandInside ||
+        !desktopContract.githubInside ||
+        !desktopContract.themeInside
+      ) {
+        failures.push(`${browserName}: the rail does not contain brand, navigation, GitHub, and theme`);
       }
     }
 
@@ -129,26 +127,31 @@ for (const [browserName, browserType] of [
       JSON.stringify(routes.map(([label]) => label))
     ) {
       failures.push(
-        `${browserName}: chapter destinations are incomplete or reordered`,
+        `${browserName}: rail destinations are incomplete or reordered`,
       );
     }
 
-    const navDocumentTop = await page
-      .locator(".ads-system-nav")
-      .evaluate(
-        (element) => element.getBoundingClientRect().top + window.scrollY,
-      );
-    await page.evaluate((top) => {
+    await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = "auto";
-      window.scrollTo(0, top + 320);
-    }, navDocumentTop);
-    await page.waitForTimeout(160);
+      window.scrollTo(0, 720);
+    });
+    await page.waitForTimeout(220);
+    const hiddenState = await page
+      .locator(".ads-system-nav")
+      .getAttribute("data-scroll-state");
+    if (hiddenState !== "hidden") {
+      failures.push(
+        `${browserName}: navigation rail does not clear the reading path while scrolling down`,
+      );
+    }
+    await page.evaluate(() => window.scrollTo(0, 560));
+    await page.waitForTimeout(220);
     const stickyTop = await page
       .locator(".ads-system-nav")
       .evaluate((element) => element.getBoundingClientRect().top);
-    if (Math.abs(stickyTop) > 2)
+    if (stickyTop < 8 || stickyTop > 18)
       failures.push(
-        `${browserName}: chapter seam does not become sticky after it is reached`,
+        `${browserName}: the same navigation rail does not remain sticky after scrolling`,
       );
 
     await page
@@ -158,23 +161,18 @@ for (const [browserName, browserType] of [
     await page.locator(".ads-system-nav").waitFor();
     const crossRouteNav = await page.evaluate(() => {
       const nav = document.querySelector(".ads-system-nav");
-      const anchor = document.querySelector(".ads-system-nav-anchor");
       const current = nav?.querySelector("[aria-current='page']");
       return {
         top: nav?.getBoundingClientRect().top ?? null,
         scrollY: window.scrollY,
-        documentTop:
-          anchor instanceof HTMLElement
-            ? anchor.getBoundingClientRect().top + window.scrollY
-            : null,
         current: current?.textContent?.trim() ?? null,
       };
     });
     if (
       crossRouteNav.top === null ||
-      Math.abs(crossRouteNav.top) > 2 ||
-      crossRouteNav.documentTop === null ||
-      Math.abs(crossRouteNav.scrollY - crossRouteNav.documentTop) > 2 ||
+      crossRouteNav.top < 8 ||
+      crossRouteNav.top > 26 ||
+      crossRouteNav.scrollY !== 0 ||
       crossRouteNav.current !== "Evidence tools"
     ) {
       failures.push(
@@ -187,7 +185,7 @@ for (const [browserName, browserType] of [
     const themeButton = page.locator("button[aria-label*='theme']").first();
     if ((await themeButton.count()) !== 1) {
       failures.push(
-        `${browserName}: theme control is missing from the utility header`,
+          `${browserName}: theme control is missing from the integrated rail`,
       );
     } else {
       const initialTheme = await page
@@ -254,13 +252,8 @@ for (const [browserName, browserType] of [
       await page.goto(new URL(path, baseUrl).toString(), {
         waitUntil: "networkidle",
       });
-      const routeContract = await page.evaluate((expectsHero) => {
+      const routeContract = await page.evaluate(() => {
         const nav = document.querySelector(".ads-system-nav");
-        const hero = document.querySelector(
-          ".hero-section, article > section:first-child, [data-chapter-hero]",
-        );
-        const navTop = nav?.getBoundingClientRect().top ?? -1;
-        const heroBottom = hero?.getBoundingClientRect().bottom ?? -1;
         return {
           navs: document.querySelectorAll(
             "nav[aria-label='Agentic Design System']",
@@ -268,18 +261,14 @@ for (const [browserName, browserType] of [
           current: nav
             ?.querySelector("[aria-current='page']")
             ?.textContent?.trim(),
-          followsHero: expectsHero
-            ? heroBottom > 0 && navTop >= heroBottom - 2
-            : true,
         };
-      }, heroRoutes.includes(path));
+      });
       if (
         routeContract.navs !== 1 ||
-        routeContract.current !== label ||
-        !routeContract.followsHero
+        routeContract.current !== label
       ) {
         failures.push(
-          `${browserName} ${path}: chapter navigation model or placement is inconsistent`,
+          `${browserName} ${path}: integrated navigation model or selected state is inconsistent`,
         );
       }
     }
@@ -296,12 +285,14 @@ for (const [browserName, browserType] of [
       ".ads-system-nav-trigger, .ads-system-nav-menu > summary",
     );
     const summaryText = (await summary.innerText()).replace(/\s+/g, " ").trim();
+    const summaryLabel = await summary.getAttribute("aria-label");
     if (
       !summaryText.includes("Proof case") ||
-      !summaryText.includes("5 of 5")
+      !summaryText.includes("Menu") ||
+      !summaryLabel?.includes("5 of 5")
     ) {
       failures.push(
-        `${browserName} mobile: selector does not name the current page and position`,
+        `${browserName} mobile: selector does not expose Menu, current page, and accessible position`,
       );
     }
     await summary.click();
@@ -465,5 +456,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "site shell regression passed: quiet utility header, hero-earned chapter seam, clear current page, mobile bottom sheet, synchronized theme, and no Workbench interstitial",
+  "site shell regression passed: one hero-integrated rail, filled current page, sticky continuity, mobile bottom sheet, synchronized theme, and no Workbench interstitial",
 );

@@ -4,7 +4,6 @@ import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseClose } from "./ReleaseClose";
 import { SiteFooter } from "./SiteFooter";
-import { SystemNav } from "./SystemNav";
 import { WorkshopRun } from "./WorkshopRun";
 import { SITE_DESCRIPTION, SITE_NAME, SOCIAL_IMAGE_ALT } from "./site";
 
@@ -104,8 +103,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <SystemNav />
 
       <WorkshopRun />
 

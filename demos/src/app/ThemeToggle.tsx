@@ -27,7 +27,17 @@ export function ThemeToggle({ initialTheme }: { initialTheme: Theme }) {
     const frame = window.requestAnimationFrame(() => {
       setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
     });
-    return () => window.cancelAnimationFrame(frame);
+    const observer = new MutationObserver(() => {
+      setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, []);
 
   const revealGeometry = () => {
