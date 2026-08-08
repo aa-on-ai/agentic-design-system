@@ -7,7 +7,6 @@ import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseClose } from "./ReleaseClose";
 import { SiteFooter } from "./SiteFooter";
-import { SystemMap } from "./SystemMap";
 import { SystemNav } from "./SystemNav";
 import { ThemeToggle } from "./ThemeToggle";
 import { WorkshopRun } from "./WorkshopRun";
@@ -116,7 +115,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 </a>
               </div>
               <a className="tour-link focus-ring" href="#assembly-line">
-                See how the system works
+                Follow the interface repair
               </a>
             </div>
           </div>
@@ -127,8 +126,6 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="hero-track-mouth" aria-hidden="true"><i /><i /></div>
         </div>
       </section>
-
-      <SystemMap />
 
       <WorkshopRun />
 

@@ -82,9 +82,9 @@ export function WorkshopRun() {
       <div className="continuous-track" aria-hidden="true"><span /></div>
       <AssemblyLineClimber />
       <div className="line-intro">
-        <p>One interface run / 01–05</p>
-        <h2>One request.<br />Five inspectable artifacts.</h2>
-        <span>The concrete run moves through clarify, build, prove, and review. The human verdict remains outside the automation.</span>
+        <p>Interface run / orders-4821</p>
+        <h2>A delayed order is buried.<br />The agent has to surface it.</h2>
+        <span>Follow the request from a testable brief to the repaired screen, its evidence, and a separate verdict. A human still decides whether the work is done.</span>
       </div>
       {stations.map((station) => <Station key={station.number} {...station} />)}
       <div className="track-end" aria-hidden="true"><span>End of run</span></div>

@@ -19,10 +19,8 @@ async function settleAtStation(targetPage, stage) {
   await targetPage.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
   });
-  // The system map now precedes the workshop, so the first station can begin
-  // several viewports below the initial absolute climber position. Keep
-  // converging until sticky positioning takes over instead of assuming three
-  // scroll corrections are always enough.
+  // Keep converging until sticky positioning takes over instead of assuming
+  // three scroll corrections are always enough at every breakpoint.
   for (let attempt = 0; attempt < 8; attempt += 1) {
     await targetPage.evaluate((targetStage) => {
       const figure = document.querySelector(".assembly-climber-figure");

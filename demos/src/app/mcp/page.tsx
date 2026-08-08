@@ -244,7 +244,7 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         </section>
       </article>
 
-      <SiteFooter topHref="#top" assemblyHref="/#assembly-line" />
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

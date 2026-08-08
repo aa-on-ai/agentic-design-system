@@ -3,7 +3,7 @@ import Link from "next/link";
 export type SystemDestination = "system" | "workbench" | "mcp" | "trace" | "proof";
 
 const destinations: Array<{ id: SystemDestination; href: string; label: string }> = [
-  { id: "system", href: "/#system-map", label: "System" },
+  { id: "system", href: "/#top", label: "Overview" },
   { id: "workbench", href: "/workbench", label: "Workbench" },
   { id: "mcp", href: "/mcp", label: "Evidence tools" },
   { id: "trace", href: "/trace", label: "Decision trace" },

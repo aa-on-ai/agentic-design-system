@@ -4,12 +4,10 @@ import { FooterEmber } from "./FooterEmber";
 
 type SiteFooterProps = {
   topHref?: string;
-  assemblyHref?: string;
 };
 
 export function SiteFooter({
   topHref = "#top",
-  assemblyHref = "#assembly-line",
 }: SiteFooterProps = {}) {
   return (
     <footer className="site-footer">
@@ -28,7 +26,7 @@ export function SiteFooter({
       <nav className="footer-links" aria-label="Footer navigation">
         <div>
           <span>Explore</span>
-          <Link className="focus-ring" href="/#system-map">System map</Link>
+          <Link className="focus-ring" href="/#top">Overview</Link>
           <Link className="focus-ring" href="/workbench">Workbench</Link>
           <Link className="focus-ring" href="/mcp">Evidence tools</Link>
         </div>
@@ -42,7 +40,7 @@ export function SiteFooter({
           <span>Project</span>
           <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system#readme">Documentation</a>
           <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/LICENSE">Open source license</a>
-          <Link className="focus-ring" href={assemblyHref}>One interface run</Link>
+          <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/releases">Releases</a>
         </div>
       </nav>
 

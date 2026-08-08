@@ -48,7 +48,7 @@ export default function TraceTwoPage() {
         <ProofReceipts />
         <TraceClose />
       </article>
-      <SiteFooter topHref="#top" assemblyHref="/#assembly-line" />
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

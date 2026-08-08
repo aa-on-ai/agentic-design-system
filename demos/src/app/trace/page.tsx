@@ -282,7 +282,7 @@ export default async function TracePage({ searchParams }: TracePageProps) {
         </section>
       </article>
 
-      <SiteFooter topHref="#top" assemblyHref="/#assembly-line" />
+      <SiteFooter topHref="#top" />
     </main>
   );
 }

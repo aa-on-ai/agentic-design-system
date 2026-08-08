@@ -16,7 +16,7 @@ export function PageRole({
         <strong>{title}</strong>
       </div>
       <p>{description}</p>
-      <Link className="focus-ring" href="/#system-map">See the full system</Link>
+      <Link className="focus-ring" href="/#assembly-line">See an interface run</Link>
     </aside>
   );
 }
