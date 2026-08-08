@@ -19,7 +19,7 @@ const hostAcceptance = [
     tone: "untested",
     status: "Untested",
     hosts: "Cursor",
-    detail: "No public compatibility claim yet. Cursor IDE Agent mode remains outside the accepted matrix.",
+    detail: "No public compatibility claim yet. Cursor agent mode remains outside the accepted matrix.",
   },
 ];
 
@@ -36,10 +36,10 @@ export function ReleaseClose() {
       <div className="release-shell">
         <div className="release-intro-grid">
           <div className="release-copy">
-            <p>Repo-local / MIT licensed</p>
+            <p>Repo-local / permissive license</p>
             <h2 id="release-title">Put the review loop<br />in the repo.</h2>
             <span>
-              The skill pack installs into five release-tested agent targets. The optional local MCP
+              The skill pack installs into five release-tested agent targets. The optional local evidence server
               adds rendered evidence, evaluation, and provenance where the host supports it.
             </span>
           </div>
@@ -55,7 +55,10 @@ export function ReleaseClose() {
                 <Github size={18} aria-hidden="true" /> Choose your agent
               </a>
               <a className="release-github focus-ring" href="/mcp">
-                Inspect the local MCP
+                Inspect the optional evidence tools
+              </a>
+              <a className="release-github focus-ring" href="/workbench">
+                Open the optional Workbench
               </a>
             </div>
           </div>
@@ -65,7 +68,7 @@ export function ReleaseClose() {
           <section className="release-ledger" aria-labelledby="host-ledger-title">
             <header>
               <div>
-                <p>Local MCP, version 0.3.0</p>
+                <p>Local evidence server, version 0.3.0</p>
                 <h3 id="host-ledger-title">Host acceptance, without the hand-waving.</h3>
               </div>
               <span>3 verified / 1 limited / 1 untested</span>
@@ -98,7 +101,7 @@ export function ReleaseClose() {
               ))}
             </ol>
             <a className="focus-ring" href="https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/ads-mcp-api-contract.md">
-              Read the MCP contract
+              Read the evidence-tool contract
             </a>
           </aside>
         </div>

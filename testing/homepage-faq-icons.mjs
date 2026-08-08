@@ -44,7 +44,7 @@ for (const [browserName, browserType] of browserTypes) {
     };
   });
 
-  if (controls.actionCount !== 5 || controls.actionIcons !== 1) {
+  if (controls.actionCount !== 6 || controls.actionIcons !== 1) {
     failures.push(`${browserName}: homepage actions expose ${controls.actionIcons} icons across ${controls.actionCount} links (expected one GitHub mark and no decorative arrows)`);
   }
   if (controls.rawActionSymbols !== 0) {
@@ -57,7 +57,7 @@ for (const [browserName, browserType] of browserTypes) {
     failures.push(`${browserName}: FAQ timing is ${controls.duration} ${controls.timing}`);
   }
 
-  const trigger = page.getByRole("button", { name: "Do I need the MCP server?" });
+  const trigger = page.getByRole("button", { name: "Do I need the evidence server?" });
   const panel = page.locator("#release-faq-panel-0");
   const icon = trigger.locator(".release-faq-icon");
   const closedHeight = await panel.evaluate((node) => node.getBoundingClientRect().height);
@@ -115,7 +115,7 @@ if (screenshotDir) {
     const context = await screenshotBrowser.newContext({ viewport });
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "networkidle" });
-    await page.getByRole("button", { name: "Do I need the MCP server?" }).click();
+    await page.getByRole("button", { name: "Do I need the evidence server?" }).click();
     await page.waitForTimeout(240);
     await page.locator(".release-faq").screenshot({ path: join(screenshotDir, `faq-${viewport.name}.png`) });
     await page.locator(".release-actions").screenshot({ path: join(screenshotDir, `actions-${viewport.name}.png`) });

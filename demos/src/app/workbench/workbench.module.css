@@ -62,8 +62,12 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--workbench-line-soft);
-  grid-column: 1;
+  grid-column: 1 / 3;
   grid-row: 1;
+}
+
+.systemNav {
+  margin-left: auto;
 }
 
 .brand {
@@ -102,8 +106,12 @@
 
 .surfaceName {
   color: var(--workbench-muted);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 680;
+}
+
+.surfaceShort {
+  display: none;
 }
 
 .setupProgress {
@@ -323,7 +331,7 @@
 .impactNote strong,
 .localReviewNote strong {
   color: var(--workbench-ink);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 740;
 }
 
@@ -339,7 +347,7 @@
     radial-gradient(circle at 76% 12%, rgb(201 69 24 / 8%), transparent 18rem),
     var(--workbench-deep);
   grid-column: 2;
-  grid-row: 1 / 4;
+  grid-row: 2 / 4;
 }
 
 .previewWrap {
@@ -360,13 +368,13 @@
 .previewHeader p {
   margin-bottom: 0;
   color: var(--workbench-orange-ink);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 740;
 }
 
 .previewHeader span {
   color: var(--workbench-muted);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 650;
   text-align: right;
 }
@@ -764,7 +772,7 @@
 
 .jobOptionCopy small {
   color: var(--workbench-muted);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   line-height: 1.38;
 }
 
@@ -908,7 +916,7 @@
 .routePath code {
   overflow-wrap: anywhere;
   color: var(--workbench-ink);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   line-height: 1.45;
 }
 
@@ -1680,5 +1688,130 @@
   .backAction,
   .primaryAction {
     transition-duration: 0.01ms;
+  }
+}
+
+/* Site-wide audit readability repair ----------------------------------- */
+
+.kicker,
+.surfaceName,
+.impactNote strong,
+.localReviewNote strong,
+.previewHeader p,
+.previewHeader span,
+.identityFields dt,
+.principles > span,
+.diffHeader span,
+.diffHeader > strong,
+.routePath span,
+.routeColumns h3,
+.handoffSummary dt,
+.handoffSheet > header span {
+  font-size: 0.76rem;
+}
+
+.recommended,
+.projectMark,
+.sheetTitle span,
+.sheetFoot,
+.sheetFoot strong,
+.identityDiff code,
+.routeEmpty small,
+.routeColumns li,
+.routeBoundary,
+.routeReviewCheck small,
+.copyStatus,
+.handoffSheet code {
+  font-size: 0.75rem;
+}
+
+.optionNote,
+.impactNote,
+.localReviewNote,
+.jobOptionCopy small,
+.taskField strong,
+.handoffBoundary p {
+  font-size: 0.8rem;
+}
+
+.taskField small,
+.routeReviewCheck strong,
+.handoffBoundary strong {
+  font-size: 0.76rem;
+}
+
+@media (max-width: 880px) {
+  .systemNav {
+    display: none;
+  }
+
+  .surfaceLong {
+    display: none;
+  }
+
+  .surfaceShort {
+    display: inline;
+  }
+
+  .surfaceName,
+  .kicker,
+  .recommended,
+  .previewHeader p,
+  .previewHeader span,
+  .projectMark,
+  .sheetTitle span,
+  .identityFields dt,
+  .principles > span,
+  .diffHeader span,
+  .diffHeader > strong,
+  .routeSheetHeader > span,
+  .routeEmpty > span,
+  .handoffSheet > header span,
+  .routePath span,
+  .routeColumns h3,
+  .routeReviewCheck small,
+  .handoffSummary dt,
+  .handoffSheet code {
+    font-size: 0.75rem;
+  }
+
+  .intro,
+  .optionTitle strong,
+  .optionNote,
+  .impactNote,
+  .localReviewNote,
+  .postureSummary,
+  .identityFields dd,
+  .principles li,
+  .reviewCheck small,
+  .reviewSuccess,
+  .diffIntro,
+  .diffFoot,
+  .diffUnavailable,
+  .identityDiff code,
+  .jobOptionCopy small,
+  .taskField strong,
+  .taskField small,
+  .taskField textarea,
+  .routeEmpty p,
+  .routeSheetHeader p,
+  .routeEmpty strong,
+  .routeEmpty small,
+  .routePath code,
+  .routeColumns li,
+  .routeBoundary,
+  .routeReviewCheck strong,
+  .handoffSummary dd,
+  .handoffBoundary strong,
+  .handoffBoundary p,
+  .copyStatus {
+    font-size: 0.78rem;
+  }
+
+  .reviewCheck strong,
+  .jobOptionCopy strong,
+  .backAction,
+  .primaryAction {
+    font-size: 0.82rem;
   }
 }

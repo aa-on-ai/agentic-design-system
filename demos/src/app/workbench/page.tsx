@@ -5,8 +5,8 @@ import { WorkbenchJourney } from "./WorkbenchJourney";
 import styles from "./workbench.module.css";
 
 export const metadata: Metadata = {
-  title: "Project setup | Agentic Design Workbench",
-  description: "Choose a project posture, review its identity, and approve the exact agent handoff.",
+  title: "Workbench | Agentic Design System",
+  description: "Use the optional ADS control layer to clarify project identity, route one design job, and approve the exact agent handoff.",
   robots: { index: false, follow: false },
 };
 

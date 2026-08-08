@@ -7,7 +7,7 @@ const metrics = [
   ["Serious axe violations", String(TRACE.evidence.seriousOrCriticalAxeViolations)],
   ["Horizontal overflow", TRACE.evidence.horizontalOverflow ? "Found" : "None"],
   ["Targets under 48px", String(TRACE.evidence.touchTargetsUnder48)],
-  ["Maximum CLS", TRACE.evidence.maxCumulativeLayoutShift.toFixed(5)],
+  ["Maximum layout shift", TRACE.evidence.maxCumulativeLayoutShift.toFixed(5)],
   ["Fresh rerun delta", `${TRACE.evidence.publicRerunPerceptualDeltaPct}%`],
 ] as const;
 
@@ -15,7 +15,7 @@ const receipts = [
   ["Outcome contract", TRACE.receipts.outcome],
   ["Builder report", TRACE.receipts.builderReport],
   ["Independent grader report", TRACE.receipts.graderReport],
-  ["Rendered evidence JSON", TRACE.receipts.evidence],
+  ["Rendered evidence data", TRACE.receipts.evidence],
   ["Frozen suite contract", TRACE.receipts.frozenContract],
   ["Fresh rerun packet", TRACE.receipts.rerunPacket],
 ] as const;

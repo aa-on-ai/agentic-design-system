@@ -109,7 +109,7 @@ export function AdsRunArtifact({ stage }: { stage: ArtifactStage }) {
         {stage === "release" && <VerdictArtifact />}
       </div>
       <footer className="ads-artifact-footer">
-        <span>ADS run / orders-4821</span>
+        <span>System run / orders-4821</span>
         <span>{meta.number} of 05</span>
       </footer>
     </article>

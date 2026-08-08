@@ -24,7 +24,9 @@ page.on("console", (message) => {
 });
 
 await page.goto(url, { waitUntil: "networkidle", timeout: 20_000 });
-await page.waitForFunction(() => [...document.images].every((image) => image.complete && image.naturalWidth > 0));
+await page.waitForFunction(() => [...document.images]
+  .filter((image) => image.loading !== "lazy")
+  .every((image) => image.complete && image.naturalWidth > 0));
 await page.screenshot({ path: path.join(output, "iphone-13-top-2x.png") });
 
 await page.getByRole("button", { name: "mobile", exact: true }).click();
@@ -32,7 +34,7 @@ await page.getByRole("button", { name: "1:1", exact: true }).click();
 await page.getByRole("tab", { name: "baseline", exact: true }).click();
 await page.locator("#inspect").screenshot({ path: path.join(output, "iphone-13-inspector-baseline-2x.png") });
 
-const packet = page.locator("details");
+const packet = page.locator('details[class*="packetDetails"]');
 await packet.locator("summary").click();
 await packet.scrollIntoViewIfNeeded();
 await packet.screenshot({ path: path.join(output, "iphone-13-packet-open-2x.png") });
@@ -42,7 +44,8 @@ const serious = axe.violations.filter(({ impact }) => impact === "serious" || im
 const facts = await page.evaluate(() => {
   const targets = [...document.querySelectorAll("a, button, summary")].filter((element) => {
     const style = getComputedStyle(element);
-    return style.display !== "none" && style.visibility !== "hidden";
+    const rect = element.getBoundingClientRect();
+    return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
   });
   const undersized = targets.flatMap((element) => {
     const rect = element.getBoundingClientRect();
@@ -58,7 +61,7 @@ const facts = await page.evaluate(() => {
     mobilePressed: document.querySelector('button[aria-pressed="true"]')?.textContent?.trim().toLowerCase() === "mobile",
     baselineSelected: document.querySelector('[role="tab"][aria-selected="true"]')?.textContent?.trim().toLowerCase() === "baseline",
     zoomPressed: document.querySelector('button[aria-label="1:1"]')?.getAttribute("aria-pressed") === "true",
-    packetOpen: document.querySelector("details")?.hasAttribute("open") === true,
+    packetOpen: document.querySelector('details[class*="packetDetails"]')?.hasAttribute("open") === true,
     visiblePanels: document.querySelectorAll("#inspect figure").length,
     images: [...document.images].map((image) => ({ alt: image.alt, complete: image.complete, naturalWidth: image.naturalWidth })),
     undersized,
