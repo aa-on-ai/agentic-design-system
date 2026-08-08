@@ -33,17 +33,17 @@ try {
       };
 
       return {
-        header: rect(".site-header"),
+        header: rect(".site-shell-header"),
         brand: rect(".brand-lockup"),
         menu: rect(".ads-system-nav-menu summary"),
-        toolbar: rect(".hero-toolbar"),
-        github: rect('.hero-toolbar a[aria-label*="GitHub"]'),
-        theme: rect('.hero-toolbar button[aria-label*="theme"]'),
+        actions: rect(".site-shell-actions"),
+        github: rect('.site-shell-actions a[aria-label*="GitHub"]'),
+        theme: rect('.site-shell-actions button[aria-label*="theme"]'),
       };
     });
 
     const scope = `${width}px`;
-    if (!layout.header || !layout.brand || !layout.menu || !layout.toolbar || !layout.theme) {
+    if (!layout.header || !layout.brand || !layout.menu || !layout.actions || !layout.theme) {
       failures.push(`${scope}: missing mobile navigation element`);
       await page.close();
       continue;
@@ -52,11 +52,11 @@ try {
     if (layout.brand.right + 12 > layout.menu.left) {
       failures.push(`${scope}: brand and Explore control have less than 12px breathing room`);
     }
-    if (layout.menu.right + 12 > layout.toolbar.left) {
+    if (layout.menu.right + 12 > layout.actions.left) {
       failures.push(`${scope}: Explore and theme controls have less than 12px breathing room`);
     }
-    if (layout.header.left < 16 || layout.header.right > width - 16) {
-      failures.push(`${scope}: header escapes the 16px mobile gutter`);
+    if (layout.header.left < 12 || layout.header.right > width - 12) {
+      failures.push(`${scope}: header escapes the 12px mobile gutter`);
     }
     if (layout.brand.height < 48 || layout.brand.width < 48 || layout.menu.height < 48 || layout.theme.height < 48 || layout.theme.width < 48) {
       failures.push(`${scope}: mobile controls fall below the 48px touch target`);

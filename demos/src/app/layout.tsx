@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Script from "next/script";
 import { DM_Sans, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
+import { SiteShell } from "./SiteShell";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 const bodyFont = DM_Sans({
@@ -44,17 +44,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const storedTheme = cookieStore.get("ads-theme")?.value;
-  const initialTheme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
-
   return (
-    <html lang="en" data-theme={initialTheme} suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <Script id="ads-theme-init" strategy="beforeInteractive">
           {`(() => {
@@ -85,7 +81,7 @@ export default async function RootLayout({
       <body
         className={`${bodyFont.variable} ${labelFont.variable} ${displayFont.variable} antialiased`}
       >
-        {children}
+        <SiteShell initialTheme="light">{children}</SiteShell>
       </body>
     </html>
   );

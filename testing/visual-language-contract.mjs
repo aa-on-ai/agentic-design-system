@@ -86,17 +86,20 @@ try {
   assert.equal(forbiddenGlyphs.test(homepage.visibleText), false, "homepage renders a forbidden arrow or bullet glyph");
 
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
-  await page.waitForFunction(() => document.querySelector(".hero-image--pending.is-revealing"));
-  const revealStart = await page.locator(".hero-image--pending").evaluate((node) => ({
-    clipPath: getComputedStyle(node).clipPath,
-    duration: Number.parseFloat(getComputedStyle(node).transitionDuration),
+  await page.waitForFunction(() => document.documentElement.dataset.theme === "dark");
+  const reveal = await page.evaluate(() => ({
+    transition: document.documentElement.dataset.themeTransition,
+    imageCount: document.querySelectorAll(".hero-media img").length,
+    activeImageOpacity: getComputedStyle(document.querySelector('.hero-image[data-theme-image="dark"]')).opacity,
+    pendingImageCount: document.querySelectorAll(".hero-image--pending").length,
+    pageTransitionDuration: getComputedStyle(document.querySelector(".theme-page")).transitionDuration,
   }));
-  await page.waitForTimeout(180);
-  const revealMid = await page.locator(".hero-image--pending").evaluate((node) => getComputedStyle(node).clipPath);
-  assert.ok(revealStart.duration >= 0.6, `theme image reveal lasts only ${revealStart.duration}s`);
-  assert.notEqual(revealStart.clipPath, revealMid, "theme image reveal did not animate");
-  await page.waitForFunction(() => document.querySelectorAll(".hero-media img").length === 1);
-  assert.match(await page.locator(".hero-media img").getAttribute("src"), /creative-pipeline-dark/);
+  assert.equal(reveal.transition, "radial", "theme change does not use the connected radial transition");
+  assert.equal(reveal.imageCount, 2, "both theme images are not ready before the transition");
+  assert.equal(reveal.activeImageOpacity, "1", "dark hero image does not change with the page");
+  assert.equal(reveal.pendingImageCount, 0, "hero image still owns a delayed reveal");
+  assert.equal(reveal.pageTransitionDuration, "0s", "page background is running a second theme timeline");
+  await page.waitForFunction(() => !document.documentElement.dataset.themeTransition);
 
   for (const route of [
     "/",

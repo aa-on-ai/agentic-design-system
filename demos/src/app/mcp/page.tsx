@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Link from "next/link";
-import { Braces, Check, CircleAlert, Github, Terminal } from "lucide-react";
-import { BrandLockup } from "../BrandLockup";
+import { Braces, Check, CircleAlert, Terminal } from "lucide-react";
 import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
-import { SystemNav } from "../SystemNav";
-import { ThemeToggle } from "../ThemeToggle";
 import { FROZEN_RUN, MCP_CONTRACT } from "./mcpData";
 import styles from "./mcp.module.css";
-
-type McpPageProps = {
-  searchParams: Promise<{ theme?: string | string[] }>;
-};
 
 export const metadata: Metadata = {
   title: "Evidence tools | Agentic Design System",
@@ -29,17 +21,7 @@ function JsonBlock({ value, label }: { value: unknown; label: string }) {
   );
 }
 
-export default async function McpPage({ searchParams }: McpPageProps) {
-  const params = await searchParams;
-  const cookieStore = await cookies();
-  const requestedTheme = Array.isArray(params.theme) ? params.theme[0] : params.theme;
-  const storedTheme = cookieStore.get("ads-theme")?.value;
-  const initialTheme = requestedTheme === "light" || requestedTheme === "dark"
-    ? requestedTheme
-    : storedTheme === "light" || storedTheme === "dark"
-      ? storedTheme
-      : "light";
-
+export default function McpPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -58,24 +40,6 @@ export default async function McpPage({ searchParams }: McpPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-
-      <header className={styles.header}>
-        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <BrandLockup />
-        </Link>
-        <SystemNav current="mcp" />
-        <nav className={styles.headerNav} aria-label="MCP lab navigation">
-          <span className={styles.localStatus}><i aria-hidden="true" />Evidence tools, version 0.3.0</span>
-          <a
-            className={`hero-pill focus-ring ${styles.iconLink}`}
-            href="https://github.com/aa-on-ai/agentic-design-system/tree/main/packages/ads-mcp"
-            aria-label="View ads-mcp source on GitHub"
-          >
-            <Github size={18} aria-hidden="true" />
-          </a>
-          <ThemeToggle initialTheme={initialTheme} />
-        </nav>
-      </header>
 
       <PageRole
         stage="Prove"

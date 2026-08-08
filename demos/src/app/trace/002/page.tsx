@@ -7,7 +7,6 @@ import { ProofResult } from "./ProofResult";
 import { ProofSequence } from "./ProofSequence";
 import { TRACE } from "./traceData";
 import { TraceClose } from "./TraceClose";
-import { TraceTwoHeader } from "./TraceTwoHeader";
 import { TraceTwoHero } from "./TraceTwoHero";
 import styles from "./trace-two.module.css";
 
@@ -34,7 +33,6 @@ export default function TraceTwoPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <TraceTwoHeader />
       <PageRole
         stage="Decide"
         title="Rendered proof case"

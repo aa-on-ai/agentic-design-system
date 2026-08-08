@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export const dynamic = "force-dynamic";
-
 export default async function WorkbenchPage() {
   const session = await loadWorkbenchSession();
   const identityState = await loadProjectIdentityState(session);

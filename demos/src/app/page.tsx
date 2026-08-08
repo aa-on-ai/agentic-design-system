@@ -1,20 +1,11 @@
-import { Github } from "lucide-react";
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { BrandLockup } from "./BrandLockup";
 import { HomepageReady } from "./HomepageReady";
 import { HeroMedia } from "./HeroMedia";
 import { InstallCommand } from "./InstallCommand";
 import { ReleaseClose } from "./ReleaseClose";
 import { SiteFooter } from "./SiteFooter";
-import { SystemNav } from "./SystemNav";
-import { ThemeToggle } from "./ThemeToggle";
 import { WorkshopRun } from "./WorkshopRun";
 import { SITE_DESCRIPTION, SITE_NAME, SOCIAL_IMAGE_ALT } from "./site";
-
-type HomeProps = {
-  searchParams: Promise<{ theme?: string | string[] }>;
-};
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -51,17 +42,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Home({ searchParams }: HomeProps) {
-  const params = await searchParams;
-  const cookieStore = await cookies();
-  const requestedTheme = Array.isArray(params.theme) ? params.theme[0] : params.theme;
-  const storedTheme = cookieStore.get("ads-theme")?.value;
-  const initialTheme = requestedTheme === "light" || requestedTheme === "dark"
-    ? requestedTheme
-    : storedTheme === "light" || storedTheme === "dark"
-      ? storedTheme
-      : "light";
-
+export default function Home() {
   return (
     <main className="theme-page sm:min-h-screen" data-ads-homepage data-page-ready="pending">
       <HomepageReady />
@@ -71,29 +52,8 @@ export default async function Home({ searchParams }: HomeProps) {
       </p>
 
       <section className="hero-section" aria-labelledby="hero-title">
-        <header className="site-header">
-          <a
-            className="brand-lockup focus-ring"
-            href="#top"
-            aria-label="Agentic Design System home"
-          >
-            <BrandLockup />
-          </a>
-          <SystemNav current="system" />
-          <nav className="hero-toolbar" aria-label="Primary navigation">
-            <a
-              href="https://github.com/aa-on-ai/agentic-design-system"
-              aria-label="Agentic Design System on GitHub"
-              className="hero-toolbar-github hero-pill hero-pill--icon focus-ring focus-visible:outline"
-            >
-              <Github size={18} strokeWidth={2.1} aria-hidden="true" />
-            </a>
-            <ThemeToggle initialTheme={initialTheme} />
-          </nav>
-        </header>
-
         <div className="hero-workshop" id="top">
-          <HeroMedia initialTheme={initialTheme} />
+          <HeroMedia />
           <div className="hero-scrim" aria-hidden="true" />
 
           <div className="hero-copy">

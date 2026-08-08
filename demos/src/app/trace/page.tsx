@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import Link from "next/link";
-import { CheckCircle2, FileCheck2, Github } from "lucide-react";
-import { BrandLockup } from "../BrandLockup";
+import { CheckCircle2, FileCheck2 } from "lucide-react";
 import { PageRole } from "../PageRole";
 import { SiteFooter } from "../SiteFooter";
-import { SystemNav } from "../SystemNav";
-import { ThemeToggle } from "../ThemeToggle";
 import styles from "./trace.module.css";
-
-type TracePageProps = {
-  searchParams: Promise<{ theme?: string | string[] }>;
-};
 
 type Decision = {
   id: string;
@@ -101,17 +92,7 @@ export const metadata: Metadata = {
     "Follow an ADS interface decision from the governing skill and source constraint to the rendered evidence that cleared it.",
 };
 
-export default async function TracePage({ searchParams }: TracePageProps) {
-  const params = await searchParams;
-  const cookieStore = await cookies();
-  const requestedTheme = Array.isArray(params.theme) ? params.theme[0] : params.theme;
-  const storedTheme = cookieStore.get("ads-theme")?.value;
-  const initialTheme = requestedTheme === "light" || requestedTheme === "dark"
-    ? requestedTheme
-    : storedTheme === "light" || storedTheme === "dark"
-      ? storedTheme
-      : "light";
-
+export default function TracePage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -127,24 +108,6 @@ export default async function TracePage({ searchParams }: TracePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-
-      <header className={styles.header}>
-        <Link className={`brand-lockup focus-ring ${styles.wordmark}`} href="/" aria-label="Agentic Design System home">
-          <BrandLockup />
-        </Link>
-        <SystemNav current="trace" />
-        <nav className={styles.headerNav} aria-label="Primary navigation">
-          <Link className={`${styles.headerLink} focus-ring`} href="/trace/002">See the rendered proof</Link>
-          <a
-            className="hero-pill hero-pill--icon focus-ring"
-            href={repo}
-            aria-label="Agentic Design System on GitHub"
-          >
-            <Github size={18} strokeWidth={2.1} aria-hidden="true" />
-          </a>
-          <ThemeToggle initialTheme={initialTheme} />
-        </nav>
-      </header>
 
       <PageRole
         stage="Review"
