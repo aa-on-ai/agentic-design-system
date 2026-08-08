@@ -2477,8 +2477,9 @@ code {
   }
 
   .track-end {
+    width: 96px;
     margin-right: 0;
-    margin-left: -14px;
+    margin-left: 0;
   }
 
   .line-intro {
@@ -2550,7 +2551,9 @@ code {
   }
 
   .brand-lockup {
+    min-width: 48px;
     max-width: none;
+    justify-content: center;
     gap: 10px;
   }
 
@@ -2680,7 +2683,7 @@ code {
 
   .hero-track-mouth,
   .continuous-track {
-    left: 32px;
+    left: 36px;
     width: 52px;
     border-right: 1px solid color-mix(in srgb, var(--rail) 45%, transparent);
     border-left: 1px solid color-mix(in srgb, var(--rail) 45%, transparent);
@@ -2706,7 +2709,7 @@ code {
 
   .assembly-climber-figure {
     top: -57px;
-    left: 32px;
+    left: 36px;
     width: 88px;
   }
 
@@ -2732,7 +2735,7 @@ code {
 
   .station-index {
     top: 96px;
-    left: 32px;
+    left: 36px;
     width: 58px;
     height: 58px;
     border-width: 6px;
@@ -2951,11 +2954,16 @@ code {
   .cart-wheel { bottom: -26px; width: 25px; height: 25px; border-width: 5px; }
 
   .track-end {
-    width: 124px;
+    width: 80px;
     height: 112px;
     margin-top: -112px;
     margin-right: 0;
-    margin-left: -30px;
+    margin-left: 4px;
+  }
+
+  .track-end span {
+    max-width: 56px;
+    line-height: 1.25;
   }
 
   .release-bay {

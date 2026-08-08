@@ -1,0 +1,1 @@
+The broad homepage overlap suite still reports pre-existing tablet footer-link clipping at 768–958px. It is unrelated to the mobile nav and terminal-sign repair, so this branch leaves it unchanged for a separate bounded fix.

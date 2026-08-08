@@ -58,7 +58,7 @@ try {
     if (layout.header.left < 16 || layout.header.right > width - 16) {
       failures.push(`${scope}: header escapes the 16px mobile gutter`);
     }
-    if (layout.menu.height < 48 || layout.theme.height < 48 || layout.theme.width < 48) {
+    if (layout.brand.height < 48 || layout.brand.width < 48 || layout.menu.height < 48 || layout.theme.height < 48 || layout.theme.width < 48) {
       failures.push(`${scope}: mobile controls fall below the 48px touch target`);
     }
     if (layout.github?.visible) {

@@ -305,10 +305,12 @@ try {
       const trackRect = track.getBoundingClientRect();
       const signRect = sign.getBoundingClientRect();
       const releaseRect = releaseStation.getBoundingClientRect();
+      const trackCenter = (trackRect.left + trackRect.right) / 2;
       return {
         missing: false,
         states: [...states],
-        trackCenterDelta: Math.abs((trackRect.left + trackRect.right) / 2 - (signRect.left + signRect.right) / 2),
+        trackCenterDelta: Math.abs(trackCenter - (signRect.left + signRect.right) / 2),
+        trackCenterWithinSign: trackCenter >= signRect.left && trackCenter <= signRect.right,
         runwayBeforeSign: signRect.top - releaseRect.bottom,
         trackPastSign: trackRect.bottom - signRect.bottom,
         bestOcclusion,
@@ -325,7 +327,9 @@ try {
 
     if (terminalExit.missing) fail(width, "missing End of run, ladder, or Ember terminal-exit target");
     else {
-      if (terminalExit.trackCenterDelta > 1) {
+      if (width <= 720 && !terminalExit.trackCenterWithinSign) {
+        fail(width, "End of run sign disconnects from the ladder path");
+      } else if (width > 720 && terminalExit.trackCenterDelta > 1) {
         fail(width, `End of run sign leaves the ladder centerline by ${terminalExit.trackCenterDelta.toFixed(1)}px`);
       }
       if (width > 1040 && terminalExit.runwayBeforeSign < 104) {
