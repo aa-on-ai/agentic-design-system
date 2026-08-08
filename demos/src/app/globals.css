@@ -194,51 +194,54 @@ code {
 .site-shell-header {
   position: fixed;
   z-index: 100;
-  top: max(14px, env(safe-area-inset-top));
-  left: 50%;
-  display: flex;
-  width: min(1280px, calc(100% - 32px));
-  min-height: 64px;
-  padding: 7px 8px 7px 10px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border: 1px solid color-mix(in srgb, var(--line) 36%, transparent);
-  border-radius: 20px;
-  background: color-mix(in srgb, var(--page) 94%, transparent);
-  box-shadow: 0 14px 38px color-mix(in srgb, var(--shadow) 68%, transparent), inset 0 1px rgba(255, 255, 255, 0.26);
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 72px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 28%, transparent);
+  border-radius: 0;
+  background: var(--page);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--shadow) 28%, transparent);
   color: var(--text);
-  transform: translate3d(-50%, 0, 0);
-  backdrop-filter: blur(18px) saturate(110%);
+  transform: translate3d(0, 0, 0);
   transition-property: transform, background-color, border-color, box-shadow;
   transition-duration: 180ms, 420ms, 420ms, 180ms;
   transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1), ease-in-out, ease-in-out, ease-out;
   will-change: transform;
 }
 
+.site-shell-header-inner {
+  display: grid;
+  width: min(1800px, 100%);
+  min-height: 72px;
+  margin: 0 auto;
+  padding: 0 24px;
+  align-items: center;
+  gap: 24px;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+}
+
 .site-shell-header[data-scroll-state="hidden"] {
-  transform: translate3d(-50%, calc(-100% - 28px), 0);
+  transform: translate3d(0, -100%, 0);
 }
 
 .site-shell-header:has(:focus-visible),
 .site-shell-header:has(details[open]) {
-  transform: translate3d(-50%, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .site-shell-content {
-  --site-shell-offset: 92px;
+  --site-shell-offset: 72px;
   min-height: 100vh;
   padding-top: var(--site-shell-offset);
-}
-
-.site-shell-content[data-overlay="true"] {
-  padding-top: 0;
 }
 
 .site-shell-actions {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
+  justify-self: end;
   gap: 8px;
 }
 
@@ -256,12 +259,14 @@ code {
 
 .ads-system-nav-list a,
 .ads-system-nav-menu a {
+  position: relative;
   display: inline-flex;
   min-height: 48px;
   padding: 0 11px;
   align-items: center;
   border-radius: 999px;
   color: var(--muted);
+  cursor: pointer;
   font-size: 0.76rem;
   font-weight: 680;
   letter-spacing: -0.012em;
@@ -271,12 +276,46 @@ code {
   transition-timing-function: ease-out;
 }
 
+.ads-system-nav-list a::after {
+  position: absolute;
+  right: 11px;
+  bottom: 3px;
+  left: 11px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.45);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
 .ads-system-nav-list a:hover,
-.ads-system-nav-menu a:hover,
-.ads-system-nav-list a[aria-current="page"],
-.ads-system-nav-menu a[aria-current="page"] {
-  background: color-mix(in srgb, var(--page) 78%, transparent);
+.ads-system-nav-menu a:hover {
+  background: color-mix(in srgb, var(--accent) 9%, var(--page));
   color: var(--orange-ink);
+}
+
+.ads-system-nav-list a:hover::after {
+  opacity: 0.52;
+  transform: scaleX(1);
+}
+
+.ads-system-nav-list a[aria-current="page"] {
+  color: var(--text);
+  font-weight: 760;
+}
+
+.ads-system-nav-list a[aria-current="page"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.ads-system-nav-menu a[aria-current="page"] {
+  background: color-mix(in srgb, var(--accent) 15%, var(--panel));
+  box-shadow: inset 3px 0 var(--accent);
+  color: #402d1e;
+  font-weight: 760;
 }
 
 .ads-system-nav-list a:active,
@@ -293,9 +332,10 @@ code {
   min-height: 48px;
   padding: 0 13px;
   align-items: center;
+  gap: 8px;
   border: 1px solid var(--line-soft);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--page) 90%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--page) 92%, var(--panel));
   color: var(--text);
   cursor: pointer;
   font-size: 0.76rem;
@@ -303,12 +343,16 @@ code {
   list-style: none;
 }
 
-.ads-system-nav-summary-short {
+.ads-system-nav-menu summary::-webkit-details-marker {
   display: none;
 }
 
-.ads-system-nav-menu summary::-webkit-details-marker {
-  display: none;
+.ads-system-nav-chevron {
+  transition: transform 150ms ease-out;
+}
+
+.ads-system-nav-menu[open] .ads-system-nav-chevron {
+  transform: rotate(180deg);
 }
 
 .ads-system-nav-menu > div {
@@ -316,7 +360,7 @@ code {
   top: calc(100% + 8px);
   right: 0;
   display: grid;
-  width: 210px;
+  width: 264px;
   padding: 8px;
   border: 1px solid var(--line-soft);
   border-radius: 12px;
@@ -325,8 +369,22 @@ code {
 }
 
 .ads-system-nav-menu a {
+  justify-content: space-between;
+  gap: 16px;
   border-radius: 7px;
   color: #685744;
+}
+
+.ads-system-nav-current {
+  display: inline-flex;
+  min-height: 24px;
+  padding: 0 8px;
+  align-items: center;
+  border-radius: 999px;
+  background: #fff2d8;
+  color: #704019;
+  font-size: 0.68rem;
+  font-weight: 700;
 }
 
 .ads-page-role {
@@ -2432,36 +2490,43 @@ code {
     display: block;
   }
 
+  .site-shell-header-inner {
+    padding: 0 16px;
+    gap: 16px;
+  }
 }
 
 @media (max-width: 760px) {
   .site-shell-header {
-    top: max(10px, env(safe-area-inset-top));
-    width: calc(100% - 24px);
     min-height: 64px;
-    padding: 7px;
-    gap: 8px;
-    border-radius: 18px;
+  }
+
+  .site-shell-header-inner {
+    min-height: 64px;
+    padding: 0 12px;
+    gap: 12px;
+    grid-template-columns: minmax(48px, 1fr) auto auto;
   }
 
   .site-shell-content {
-    --site-shell-offset: 84px;
+    --site-shell-offset: 64px;
   }
 
   .site-shell-github {
     display: none;
   }
 
-  .ads-system-nav-summary-long {
-    display: none;
-  }
-
-  .ads-system-nav-summary-short {
-    display: inline;
-  }
   .ads-system-nav-menu summary {
     min-height: 48px;
     padding: 0 12px;
+  }
+
+  .ads-system-nav-menu > div {
+    position: fixed;
+    top: 72px;
+    right: 12px;
+    left: 12px;
+    width: auto;
   }
 
   .ads-page-role {

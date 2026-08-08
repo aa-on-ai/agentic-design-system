@@ -56,22 +56,24 @@ export function SiteShell({ children, initialTheme }: { children: ReactNode; ini
   return (
     <>
       <header ref={headerRef} className="site-shell-header" data-scroll-state={scrollState}>
-        <Link className="brand-lockup focus-ring" href="/#top" aria-label="Agentic Design System home">
-          <BrandLockup />
-        </Link>
-        <SystemNav />
-        <nav className="site-shell-actions" aria-label="Project links and appearance">
-          <a
-            href="https://github.com/aa-on-ai/agentic-design-system"
-            aria-label="Agentic Design System on GitHub"
-            className="site-shell-github hero-pill hero-pill--icon focus-ring"
-          >
-            <Github size={18} strokeWidth={2.1} aria-hidden="true" />
-          </a>
-          <ThemeToggle initialTheme={initialTheme} />
-        </nav>
+        <div className="site-shell-header-inner">
+          <Link className="brand-lockup focus-ring" href="/#top" aria-label="Agentic Design System home">
+            <BrandLockup />
+          </Link>
+          <SystemNav />
+          <nav className="site-shell-actions" aria-label="Project links and appearance">
+            <a
+              href="https://github.com/aa-on-ai/agentic-design-system"
+              aria-label="Agentic Design System on GitHub"
+              className="site-shell-github hero-pill hero-pill--icon focus-ring"
+            >
+              <Github size={18} strokeWidth={2.1} aria-hidden="true" />
+            </a>
+            <ThemeToggle initialTheme={initialTheme} />
+          </nav>
+        </div>
       </header>
-      <div className="site-shell-content" data-overlay={pathname === "/" ? "true" : "false"}>
+      <div className="site-shell-content">
         {children}
       </div>
     </>

@@ -22,11 +22,55 @@ for (const [browserName, browserType] of [["Chromium", chromium], ["WebKit", web
   const browser = await browserType.launch({ headless: true });
 
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const page = await browser.newPage({ viewport: { width: 2048, height: 1054 } });
     await page.goto(baseUrl, { waitUntil: "networkidle" });
 
     const shellCount = await page.locator(".site-shell-header").count();
     if (shellCount !== 1) failures.push(`${browserName}: expected one shared site shell, found ${shellCount}`);
+
+    const desktopChrome = await page.evaluate(() => {
+      const header = document.querySelector(".site-shell-header");
+      const content = document.querySelector(".site-shell-content");
+      const current = document.querySelector(".ads-system-nav-list [aria-current='page']");
+      const other = document.querySelector(".ads-system-nav-list a:not([aria-current='page'])");
+      if (!(header instanceof HTMLElement) || !(content instanceof HTMLElement)) return null;
+      const bounds = header.getBoundingClientRect();
+      return {
+        left: bounds.left,
+        right: bounds.right,
+        top: bounds.top,
+        width: bounds.width,
+        radius: getComputedStyle(header).borderRadius,
+        contentPaddingTop: parseFloat(getComputedStyle(content).paddingTop),
+        currentIndicatorHeight: current
+          ? parseFloat(getComputedStyle(current, "::after").height)
+          : 0,
+        currentIndicatorOpacity: current
+          ? parseFloat(getComputedStyle(current, "::after").opacity)
+          : 0,
+        otherCursor: other ? getComputedStyle(other).cursor : null,
+      };
+    });
+
+    if (!desktopChrome) {
+      failures.push(`${browserName}: site chrome could not be measured`);
+    } else {
+      if (Math.abs(desktopChrome.left) > 1 || Math.abs(desktopChrome.right - 2048) > 1 || Math.abs(desktopChrome.width - 2048) > 1) {
+        failures.push(`${browserName}: desktop header is still a floating inset island instead of edge-docked site chrome`);
+      }
+      if (Math.abs(desktopChrome.top) > 1 || desktopChrome.radius !== "0px") {
+        failures.push(`${browserName}: desktop header still reads as a floating rounded panel`);
+      }
+      if (desktopChrome.contentPaddingTop < 64) {
+        failures.push(`${browserName}: page content still sits underneath the fixed navigation`);
+      }
+      if (desktopChrome.currentIndicatorHeight < 2 || desktopChrome.currentIndicatorOpacity < 0.9) {
+        failures.push(`${browserName}: current desktop destination lacks an unmistakable persistent indicator`);
+      }
+      if (desktopChrome.otherCursor !== "pointer") {
+        failures.push(`${browserName}: non-current desktop destinations do not read as clickable`);
+      }
+    }
 
     const desktopLabels = await page.locator(".site-shell-header .ads-system-nav-list a").allTextContents();
     if (JSON.stringify(desktopLabels) !== JSON.stringify(routes.map(([label]) => label))) {
@@ -133,13 +177,21 @@ for (const [browserName, browserType] of [["Chromium", chromium], ["WebKit", web
       failures.push(`${browserName} mobile: shared site shell is missing`);
     } else {
       const bounds = await mobileShell.boundingBox();
-      if (!bounds || bounds.x < 12 || bounds.x + bounds.width > 378) {
-        failures.push(`${browserName} mobile: shell escapes the 12px viewport gutter`);
+      if (!bounds || Math.abs(bounds.x) > 1 || Math.abs(bounds.width - 390) > 1) {
+        failures.push(`${browserName} mobile: site chrome is not edge-docked to the viewport`);
       }
+      const menuLabel = (await mobile.locator(".ads-system-nav-menu summary").innerText()).trim();
+      if (menuLabel !== "Menu") failures.push(`${browserName} mobile: navigation trigger is not explicitly labeled Menu`);
       await mobile.locator(".ads-system-nav-menu summary").click();
       const menuLabels = await mobile.locator(".ads-system-nav-menu a").allTextContents();
       for (const [label] of routes) {
-        if (!menuLabels.includes(label)) failures.push(`${browserName} mobile: Explore menu is missing ${label}`);
+        if (!menuLabels.some((menuLabel) => menuLabel.trim().startsWith(label))) {
+          failures.push(`${browserName} mobile: Menu is missing ${label}`);
+        }
+      }
+      const currentMobileLink = mobile.locator(".ads-system-nav-menu a[aria-current='page']");
+      if (await currentMobileLink.count() !== 1 || !((await currentMobileLink.innerText()).includes("Current"))) {
+        failures.push(`${browserName} mobile: open menu does not clearly label the current destination`);
       }
     }
     await mobile.close();
@@ -153,4 +205,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("site shell regression passed: one persistent navigation, synchronized theme reveal, and no Workbench interstitial");
+console.log("site shell regression passed: edge-docked navigation, explicit current state, synchronized theme reveal, and no Workbench interstitial");

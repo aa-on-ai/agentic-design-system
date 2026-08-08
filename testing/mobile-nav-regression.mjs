@@ -50,13 +50,13 @@ try {
     }
 
     if (layout.brand.right + 12 > layout.menu.left) {
-      failures.push(`${scope}: brand and Explore control have less than 12px breathing room`);
+      failures.push(`${scope}: brand and Menu control have less than 12px breathing room`);
     }
     if (layout.menu.right + 12 > layout.actions.left) {
-      failures.push(`${scope}: Explore and theme controls have less than 12px breathing room`);
+      failures.push(`${scope}: Menu and theme controls have less than 12px breathing room`);
     }
-    if (layout.header.left < 12 || layout.header.right > width - 12) {
-      failures.push(`${scope}: header escapes the 12px mobile gutter`);
+    if (Math.abs(layout.header.left) > 1 || Math.abs(layout.header.right - width) > 1) {
+      failures.push(`${scope}: header is not edge-docked to the mobile viewport`);
     }
     if (layout.brand.height < 48 || layout.brand.width < 48 || layout.menu.height < 48 || layout.theme.height < 48 || layout.theme.width < 48) {
       failures.push(`${scope}: mobile controls fall below the 48px touch target`);
@@ -65,10 +65,19 @@ try {
       failures.push(`${scope}: standalone GitHub control still crowds the mobile header`);
     }
 
+    const menuLabel = (await page.locator(".ads-system-nav-menu summary").innerText()).trim();
+    if (menuLabel !== "Menu") {
+      failures.push(`${scope}: mobile navigation trigger is not explicitly labeled Menu`);
+    }
+
     await page.locator(".ads-system-nav-menu summary").click();
     const githubInMenu = page.locator('.ads-system-nav-menu a[href*="github.com"]');
     if (await githubInMenu.count() !== 1 || !await githubInMenu.isVisible()) {
-      failures.push(`${scope}: Explore menu does not preserve GitHub access`);
+      failures.push(`${scope}: Menu does not preserve GitHub access`);
+    }
+    const currentLink = page.locator('.ads-system-nav-menu a[aria-current="page"]');
+    if (await currentLink.count() !== 1 || !((await currentLink.innerText()).includes("Current"))) {
+      failures.push(`${scope}: Menu does not visibly identify the current destination`);
     }
 
     await page.close();
@@ -82,4 +91,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("mobile nav regression passed: calm spacing, 48px targets, and GitHub preserved in Explore");
+console.log("mobile nav regression passed: edge-docked chrome, explicit Menu, calm spacing, 48px targets, and current destination");

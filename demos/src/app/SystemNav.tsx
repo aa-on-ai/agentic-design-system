@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, Menu as MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -31,27 +32,35 @@ export function SystemNav() {
     menuRef.current?.removeAttribute("open");
   }, [pathname]);
 
-  const links = destinations.map((destination) => (
-    <Link
-      key={destination.id}
-      href={destination.href}
-      aria-current={current === destination.id ? "page" : undefined}
-      className="focus-ring"
-    >
-      {destination.label}
-    </Link>
-  ));
+  const renderLinks = (showCurrentLabel = false) => destinations.map((destination) => {
+    const isCurrent = current === destination.id;
+
+    return (
+      <Link
+        key={destination.id}
+        href={destination.href}
+        aria-current={isCurrent ? "page" : undefined}
+        className="focus-ring"
+      >
+        <span>{destination.label}</span>
+        {showCurrentLabel && isCurrent && (
+          <span className="ads-system-nav-current">Current</span>
+        )}
+      </Link>
+    );
+  });
 
   return (
     <nav className="ads-system-nav" aria-label="Agentic Design System">
-      <div className="ads-system-nav-list">{links}</div>
+      <div className="ads-system-nav-list">{renderLinks()}</div>
       <details ref={menuRef} className="ads-system-nav-menu">
-        <summary aria-label="Explore the system" className="focus-ring">
-          <span className="ads-system-nav-summary-long">Explore the system</span>
-          <span className="ads-system-nav-summary-short">Explore</span>
+        <summary className="focus-ring">
+          <MenuIcon size={18} strokeWidth={2.1} aria-hidden="true" />
+          <span>Menu</span>
+          <ChevronDown className="ads-system-nav-chevron" size={16} strokeWidth={2.1} aria-hidden="true" />
         </summary>
         <div>
-          {links}
+          {renderLinks(true)}
           <a
             href="https://github.com/aa-on-ai/agentic-design-system"
             className="focus-ring"
