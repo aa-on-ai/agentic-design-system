@@ -205,11 +205,11 @@ code {
   z-index: 95;
   top: 12px;
   display: block;
-  width: min(1752px, calc(100% - 48px));
+  width: min(1800px, calc(100% - 24px));
   min-height: 64px;
   margin: 12px auto -76px;
   border: 1px solid rgba(249, 236, 210, 0.2);
-  border-radius: 16px;
+  border-radius: 28px 28px 16px 16px;
   background: #071524;
   box-shadow: 0 14px 36px rgba(7, 21, 36, 0.24);
   color: #f9ecd2;
@@ -2598,7 +2598,7 @@ code {
 
   .ads-system-nav {
     width: calc(100% - 24px);
-    border-radius: 14px;
+    border-radius: 28px 28px 16px 16px;
   }
 
   .ads-system-nav-inner {
@@ -2809,6 +2809,14 @@ code {
 
 }
 
+@media (min-width: 1700px) {
+  .hero-copy,
+  .hero-copy h1 {
+    width: min(1000px, 56vw);
+    max-width: 1000px;
+  }
+}
+
 @media (max-width: 1040px) {
   .hero-copy {
     width: min(660px, 66vw);
@@ -2926,6 +2934,10 @@ code {
 }
 
 @media (max-width: 720px) {
+  .ads-system-nav {
+    border-radius: 14px;
+  }
+
   .hero-section { padding: 0; }
 
   .hero-workshop {

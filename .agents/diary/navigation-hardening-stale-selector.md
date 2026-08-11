@@ -1,0 +1,1 @@
+The broad homepage hardening harness still targets the removed `.site-shell-header`, so its theme-persistence wait times out after the single-rail navigation refactor. Its keyboard selector also excludes the current `.ads-system-nav`; updating that older harness is separate from the edge-alignment repair, which is covered by the current site-shell and new geometry regressions.
