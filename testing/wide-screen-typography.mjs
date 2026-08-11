@@ -11,9 +11,9 @@ if (!baseUrl) {
   process.exit(2);
 }
 
-const viewports = [1440, 1512, 1728, 1920];
+const viewports = [1412, 1440, 1512, 1728, 1920];
 const routeCases = [
-  { path: "/trace", selector: "#trace-title", maxLines: 3 },
+  { path: "/trace", selector: "#trace-title", maxLines: 2 },
   { path: "/workbench", selector: "#starting-point-title", maxLines: 1 },
   { path: "/mcp", selector: "#mcp-title", maxLines: 2 },
   { path: "/trace/002", selector: "#result-title", maxLines: 4 },
