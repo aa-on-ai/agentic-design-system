@@ -36,7 +36,7 @@ export function SystemNav({
     close,
     toggle,
   } = useSystemNavMenu();
-  const railHidden = useRailVisibility(expanded, pathname);
+  const railScrollState = useRailVisibility(expanded, pathname);
 
   const handleDestinationClick = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -53,7 +53,7 @@ export function SystemNav({
       id="system-navigation"
       className="ads-system-nav"
       aria-label="Agentic Design System"
-      data-scroll-state={railHidden ? "hidden" : "visible"}
+      data-scroll-state={railScrollState}
     >
       <div className="ads-system-nav-inner">
         <Link

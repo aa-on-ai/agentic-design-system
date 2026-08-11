@@ -205,9 +205,9 @@ code {
 }
 
 .ads-system-nav {
-  position: sticky;
+  position: relative;
   z-index: 95;
-  top: 12px;
+  top: auto;
   display: block;
   width: min(1800px, calc(100% - 24px));
   min-height: 64px;
@@ -217,14 +217,27 @@ code {
   background: var(--page-deep);
   box-shadow: 0 14px 36px color-mix(in srgb, var(--shadow) 72%, transparent);
   color: var(--text);
-  transition-property: top, box-shadow;
+  transition-property: box-shadow;
   transition-duration: 180ms;
   transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.ads-system-nav[data-scroll-state="hidden"],
+.ads-system-nav[data-scroll-state="visible"] {
+  position: fixed;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  transition-property: top, box-shadow;
 }
 
 .ads-system-nav[data-scroll-state="hidden"] {
   pointer-events: none;
   top: -76px;
+}
+
+.ads-system-nav[data-scroll-state="visible"] {
+  top: 12px;
 }
 
 .ads-system-nav-inner {

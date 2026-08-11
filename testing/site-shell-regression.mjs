@@ -131,8 +131,43 @@ for (const [browserName, browserType] of [
       );
     }
 
+    const initialRail = await page.locator(".ads-system-nav").evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return {
+        state: element.getAttribute("data-scroll-state"),
+        position: style.position,
+        top: bounds.top,
+      };
+    });
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, 48);
+    });
+    await page.waitForTimeout(40);
+    const staticRail = await page.locator(".ads-system-nav").evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      return {
+        state: element.getAttribute("data-scroll-state"),
+        position: style.position,
+        top: bounds.top,
+        transitionProperty: style.transitionProperty,
+      };
+    });
+    if (
+      initialRail.state !== "static" ||
+      initialRail.position !== "relative" ||
+      staticRail.state !== "static" ||
+      staticRail.position !== "relative" ||
+      Math.abs(staticRail.top - (initialRail.top - 48)) > 2 ||
+      staticRail.transitionProperty.includes("top")
+    ) {
+      failures.push(
+        `${browserName}: navigation rail does not scroll away naturally from its static page-top position (${JSON.stringify({ initialRail, staticRail })})`,
+      );
+    }
+    await page.evaluate(() => {
       window.scrollTo(0, 720);
     });
     await page.waitForTimeout(220);
@@ -144,15 +179,71 @@ for (const [browserName, browserType] of [
         `${browserName}: navigation rail does not clear the reading path while scrolling down`,
       );
     }
-    await page.evaluate(() => window.scrollTo(0, 560));
-    await page.waitForTimeout(220);
-    const stickyTop = await page
-      .locator(".ads-system-nav")
-      .evaluate((element) => element.getBoundingClientRect().top);
-    if (stickyTop < 8 || stickyTop > 18)
+    for (const scrollY of [716, 712, 708]) {
+      await page.evaluate((nextY) => window.scrollTo(0, nextY), scrollY);
+      await page.waitForTimeout(24);
+    }
+    await page.waitForTimeout(180);
+    const revealedRail = await page.locator(".ads-system-nav").evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        state: element.getAttribute("data-scroll-state"),
+        position: style.position,
+        top: element.getBoundingClientRect().top,
+        transitionProperty: style.transitionProperty,
+        transitionDuration: style.transitionDuration,
+        transitionTimingFunction: style.transitionTimingFunction,
+      };
+    });
+    if (
+      revealedRail.state !== "visible" ||
+      revealedRail.position !== "fixed" ||
+      revealedRail.top < 8 ||
+      revealedRail.top > 18 ||
+      !revealedRail.transitionProperty.includes("top") ||
+      !revealedRail.transitionDuration.includes("0.18s") ||
+      !revealedRail.transitionTimingFunction.includes(
+        "cubic-bezier(0.215, 0.61, 0.355, 1)",
+      )
+    )
       failures.push(
-        `${browserName}: the same navigation rail does not remain sticky after scrolling`,
+        `${browserName}: navigation rail does not ease back into a fixed reading position after scrolling up (${JSON.stringify(revealedRail)})`,
       );
+
+    await page.evaluate(() => window.scrollTo(0, 720));
+    await page.waitForTimeout(220);
+    const rehiddenRail = await page.locator(".ads-system-nav").evaluate((element) => ({
+      state: element.getAttribute("data-scroll-state"),
+      position: getComputedStyle(element).position,
+      top: element.getBoundingClientRect().top,
+    }));
+    if (
+      rehiddenRail.state !== "hidden" ||
+      rehiddenRail.position !== "fixed" ||
+      rehiddenRail.top > -60
+    ) {
+      failures.push(
+        `${browserName}: revealed navigation rail does not ease away again on downward scroll (${JSON.stringify(rehiddenRail)})`,
+      );
+    }
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(220);
+    const returnedRail = await page.locator(".ads-system-nav").evaluate((element) => ({
+      state: element.getAttribute("data-scroll-state"),
+      position: getComputedStyle(element).position,
+      top: element.getBoundingClientRect().top,
+    }));
+    if (
+      returnedRail.state !== "static" ||
+      returnedRail.position !== "relative" ||
+      returnedRail.top < 8 ||
+      returnedRail.top > 18
+    ) {
+      failures.push(
+        `${browserName}: navigation rail does not settle back into its static page-top position (${JSON.stringify(returnedRail)})`,
+      );
+    }
 
     await page
       .locator(".ads-system-nav-list a", { hasText: "Evidence tools" })
@@ -456,5 +547,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "site shell regression passed: one hero-integrated rail, filled current page, sticky continuity, mobile bottom sheet, synchronized theme, and no Workbench interstitial",
+  "site shell regression passed: one hero-integrated rail, static page-top placement, directional reveal, mobile bottom sheet, synchronized theme, and no Workbench interstitial",
 );
