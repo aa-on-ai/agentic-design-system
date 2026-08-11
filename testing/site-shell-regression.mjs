@@ -161,7 +161,7 @@ for (const [browserName, browserType] of [
       staticRail.state !== "static" ||
       staticRail.position !== "relative" ||
       Math.abs(staticRail.top - (initialRail.top - 48)) > 2 ||
-      staticRail.transitionProperty.includes("top")
+      staticRail.transitionProperty.includes("transform")
     ) {
       failures.push(
         `${browserName}: navigation rail does not scroll away naturally from its static page-top position (${JSON.stringify({ initialRail, staticRail })})`,
@@ -171,12 +171,20 @@ for (const [browserName, browserType] of [
       window.scrollTo(0, 720);
     });
     await page.waitForTimeout(220);
-    const hiddenState = await page
-      .locator(".ads-system-nav")
-      .getAttribute("data-scroll-state");
-    if (hiddenState !== "hidden") {
+    const dormantRail = await page.locator(".ads-system-nav").evaluate((element) => ({
+      state: element.getAttribute("data-scroll-state"),
+      position: getComputedStyle(element).position,
+      top: element.getBoundingClientRect().top,
+      transitionProperty: getComputedStyle(element).transitionProperty,
+    }));
+    if (
+      dormantRail.state !== "dormant" ||
+      dormantRail.position !== "fixed" ||
+      dormantRail.top > -60 ||
+      dormantRail.transitionProperty.includes("transform")
+    ) {
       failures.push(
-        `${browserName}: navigation rail does not clear the reading path while scrolling down`,
+        `${browserName}: navigation rail does not clear the reading path without animating its initial exit (${JSON.stringify(dormantRail)})`,
       );
     }
     for (const scrollY of [716, 712, 708]) {
@@ -200,7 +208,7 @@ for (const [browserName, browserType] of [
       revealedRail.position !== "fixed" ||
       revealedRail.top < 8 ||
       revealedRail.top > 18 ||
-      !revealedRail.transitionProperty.includes("top") ||
+      !revealedRail.transitionProperty.includes("transform") ||
       !revealedRail.transitionDuration.includes("0.18s") ||
       !revealedRail.transitionTimingFunction.includes(
         "cubic-bezier(0.215, 0.61, 0.355, 1)",

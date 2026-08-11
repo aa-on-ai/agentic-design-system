@@ -222,22 +222,45 @@ code {
   transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
+.ads-system-nav[data-scroll-state="dormant"],
 .ads-system-nav[data-scroll-state="hidden"],
-.ads-system-nav[data-scroll-state="visible"] {
+.ads-system-nav[data-scroll-state="visible"],
+.ads-system-nav[data-scroll-state="menu"] {
   position: fixed;
   right: 0;
   left: 0;
+  top: 12px;
   margin: 0 auto;
-  transition-property: top, box-shadow;
 }
 
+.ads-system-nav[data-scroll-state="dormant"],
+.ads-system-nav[data-scroll-state="hidden"],
+.ads-system-nav[data-scroll-state="visible"] {
+  will-change: transform;
+}
+
+.ads-system-nav[data-scroll-state="dormant"],
 .ads-system-nav[data-scroll-state="hidden"] {
   pointer-events: none;
-  top: -76px;
+  transform: translateY(-88px);
+}
+
+.ads-system-nav[data-scroll-state="dormant"] {
+  transition-property: box-shadow;
+}
+
+.ads-system-nav[data-scroll-state="hidden"],
+.ads-system-nav[data-scroll-state="visible"] {
+  transition-property: transform, box-shadow;
 }
 
 .ads-system-nav[data-scroll-state="visible"] {
-  top: 12px;
+  transform: translateY(0);
+}
+
+.ads-system-nav[data-scroll-state="menu"] {
+  transform: none;
+  transition-property: box-shadow;
 }
 
 .ads-system-nav-inner {
@@ -3556,6 +3579,11 @@ code {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .ads-system-nav[data-scroll-state="hidden"],
+  .ads-system-nav[data-scroll-state="visible"] {
+    transition-property: box-shadow;
   }
 
   .assembly-climber {

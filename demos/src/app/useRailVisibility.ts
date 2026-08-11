@@ -6,7 +6,12 @@ const MIN_SCROLL_DELTA = 12;
 const FLOATING_ACTIVATION_Y = 96;
 const PAGE_TOP_THRESHOLD = 1;
 
-export type RailScrollState = "static" | "hidden" | "visible";
+export type RailScrollState =
+  | "static"
+  | "dormant"
+  | "hidden"
+  | "visible"
+  | "menu";
 
 export function useRailVisibility(menuExpanded: boolean, pathname: string) {
   const [railState, setRailState] = useState<RailScrollState>("static");
@@ -52,7 +57,7 @@ export function useRailVisibility(menuExpanded: boolean, pathname: string) {
         nextDirection > 0
       ) {
         accumulatedDelta = 0;
-        commitRailState("hidden");
+        commitRailState("dormant");
         return;
       }
 
@@ -60,7 +65,11 @@ export function useRailVisibility(menuExpanded: boolean, pathname: string) {
       accumulatedDelta = 0;
 
       if (nextDirection < 0) commitRailState("visible");
-      else if (railStateRef.current !== "static") commitRailState("hidden");
+      else if (
+        railStateRef.current === "visible" ||
+        railStateRef.current === "hidden"
+      )
+        commitRailState("hidden");
     };
 
     const onScroll = () => {
@@ -71,7 +80,7 @@ export function useRailVisibility(menuExpanded: boolean, pathname: string) {
       frame = null;
       previousY = Math.max(0, window.scrollY);
       commitRailState(
-        previousY > FLOATING_ACTIVATION_Y ? "hidden" : "static",
+        previousY > FLOATING_ACTIVATION_Y ? "dormant" : "static",
       );
     });
 
@@ -82,5 +91,5 @@ export function useRailVisibility(menuExpanded: boolean, pathname: string) {
     };
   }, [pathname]);
 
-  return menuExpanded ? "visible" : railState;
+  return menuExpanded ? "menu" : railState;
 }
