@@ -200,6 +200,10 @@ code {
   min-height: 100vh;
 }
 
+.site-shell-content > main:not([data-ads-homepage]) {
+  margin-top: 32px;
+}
+
 .ads-system-nav {
   position: sticky;
   z-index: 95;
@@ -208,11 +212,11 @@ code {
   width: min(1800px, calc(100% - 24px));
   min-height: 64px;
   margin: 12px auto -76px;
-  border: 1px solid rgba(249, 236, 210, 0.2);
+  border: 1px solid var(--line-soft);
   border-radius: 28px 28px 16px 16px;
-  background: #071524;
-  box-shadow: 0 14px 36px rgba(7, 21, 36, 0.24);
-  color: #f9ecd2;
+  background: var(--page-deep);
+  box-shadow: 0 14px 36px color-mix(in srgb, var(--shadow) 72%, transparent);
+  color: var(--text);
   transition-property: top, box-shadow;
   transition-duration: 180ms;
   transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -233,7 +237,7 @@ code {
 }
 
 .ads-system-nav .brand-lockup {
-  color: #fff7e8;
+  color: var(--text);
 }
 
 .ads-system-nav .brand-lockup-mark {
@@ -247,7 +251,7 @@ code {
 }
 
 .ads-system-nav .brand-lockup-descriptor {
-  color: #b9aa92;
+  color: var(--muted);
   font-size: 0.88rem;
 }
 
@@ -265,7 +269,7 @@ code {
   padding: 0 13px;
   align-items: center;
   border-radius: 999px;
-  color: #cbbb9f;
+  color: var(--muted);
   cursor: pointer;
   font-size: 0.76rem;
   font-weight: 690;
@@ -277,13 +281,13 @@ code {
 }
 
 .ads-system-nav-list a:hover {
-  background: rgba(249, 236, 210, 0.08);
-  color: #fff7e8;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  color: var(--text);
 }
 
 .ads-system-nav-list a[aria-current="page"] {
-  background: #e85d26;
-  color: #071524;
+  background: var(--release-bg);
+  color: var(--release-text);
   font-weight: 760;
 }
 
@@ -306,11 +310,11 @@ code {
   min-height: 48px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(249, 236, 210, 0.18);
+  border: 1px solid var(--line-soft);
   border-radius: 50%;
-  background: rgba(249, 236, 210, 0.05);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
   box-shadow: none;
-  color: #f9ecd2;
+  color: var(--text);
   cursor: pointer;
   text-decoration: none;
   backdrop-filter: none;
@@ -321,8 +325,8 @@ code {
 
 .ads-system-nav-icon:hover,
 .ads-system-nav .theme-toggle:hover {
-  border-color: rgba(249, 236, 210, 0.38);
-  background: rgba(249, 236, 210, 0.1);
+  border-color: color-mix(in srgb, var(--line) 38%, transparent);
+  background: color-mix(in srgb, var(--text) 10%, transparent);
   transform: none;
 }
 
@@ -337,10 +341,10 @@ code {
   padding: 0 12px 0 14px;
   align-items: center;
   gap: 14px;
-  border: 1px solid rgba(249, 236, 210, 0.2);
+  border: 1px solid var(--line-soft);
   border-radius: 12px;
-  background: rgba(249, 236, 210, 0.06);
-  color: #fff7e8;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  color: var(--text);
   cursor: pointer;
   font-family: inherit;
 }
@@ -358,7 +362,7 @@ code {
 }
 
 .ads-system-nav-summary-copy small {
-  color: #b9aa92;
+  color: color-mix(in srgb, var(--text) 72%, var(--page-deep));
   font-size: 0.68rem;
   font-weight: 650;
   line-height: 1.2;
@@ -714,10 +718,10 @@ code {
 
 .hero-copy {
   position: absolute;
-  top: 50%;
+  top: 96px;
   left: clamp(28px, 5vw, 88px);
   width: min(660px, 54vw);
-  transform: translateY(-45%);
+  transform: none;
 }
 
 .hero-kicker {
@@ -2810,6 +2814,10 @@ code {
 }
 
 @media (min-width: 1700px) {
+  .hero-workshop {
+    min-height: 768px;
+  }
+
   .hero-copy,
   .hero-copy h1 {
     width: min(1000px, 56vw);
@@ -2941,8 +2949,8 @@ code {
   .hero-section { padding: 0; }
 
   .hero-workshop {
-    height: 788px;
-    min-height: 788px;
+    height: 800px;
+    min-height: 800px;
     border-radius: 0 0 24px 24px;
     border-right: 0;
     border-left: 0;
@@ -2979,7 +2987,7 @@ code {
   }
 
   .hero-copy {
-    top: 96px;
+    top: 108px;
     right: 20px;
     left: 20px;
     width: auto;

@@ -293,7 +293,7 @@ async function verifyKeyboard(page, scope) {
   });
   await page.waitForTimeout(50);
 
-  const controlSelector = '.site-shell-header a[href], .site-shell-header button:not([disabled]), .site-shell-header summary, .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
+  const controlSelector = '.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
   const expectedCount = await page.locator(controlSelector).evaluateAll((controls) => controls.filter((control) => {
     const style = getComputedStyle(control);
     const rect = control.getBoundingClientRect();
@@ -308,7 +308,7 @@ async function verifyKeyboard(page, scope) {
     const focused = await page.evaluate(() => {
       const element = document.activeElement;
       if (!(element instanceof HTMLElement)) return null;
-      const controls = [...document.querySelectorAll('.site-shell-header a[href], .site-shell-header button:not([disabled]), .site-shell-header summary, .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
+      const controls = [...document.querySelectorAll('.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
       return {
@@ -517,8 +517,30 @@ for (const [browserName, browserType] of browserTypes) {
         window.scrollTo(0, 0);
         window.dispatchEvent(new Event("scroll"));
       });
-      await page.waitForFunction(() => Math.abs(document.querySelector(".site-shell-header")?.getBoundingClientRect().top ?? 99) < 2);
-      await page.getByRole("button", { name: "Switch to dark theme" }).click();
+      await page.waitForFunction(() => {
+        const nav = document.querySelector(".ads-system-nav");
+        return nav instanceof HTMLElement &&
+          Math.abs(nav.getBoundingClientRect().top - 12) < 2;
+      });
+      let themeToggle = page.getByRole("button", {
+        name: "Switch to dark theme",
+      });
+      if (
+        (await themeToggle.count()) === 0 ||
+        !(await themeToggle.first().isVisible())
+      ) {
+        await page.locator(".ads-system-nav-trigger").click();
+        await page.waitForFunction(
+          () =>
+            document
+              .querySelector(".ads-system-nav-layer")
+              ?.getAttribute("data-state") === "open",
+        );
+        themeToggle = page.getByRole("button", {
+          name: "Switch to dark theme",
+        });
+      }
+      await themeToggle.click();
       await waitForHero(page, "dark");
       await gotoReady(page, `${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`);
       await waitForHero(page, "dark");

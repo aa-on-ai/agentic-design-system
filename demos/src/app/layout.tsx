@@ -50,10 +50,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <Script id="ads-theme-init" strategy="beforeInteractive">
-          {`(() => {
+        <script
+          id="ads-theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
             try {
               const params = new URLSearchParams(window.location.search);
               const paramTheme = params.get('theme');
@@ -65,11 +67,14 @@ export default function RootLayout({
                 ? paramTheme
                 : cookieTheme === 'light' || cookieTheme === 'dark'
                   ? cookieTheme
-                  : 'light';
+                  : window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light';
               document.documentElement.dataset.theme = theme;
             } catch (_) {}
-          })();`}
-        </Script>
+          })();`,
+          }}
+        />
         {process.env.NODE_ENV === "development" && (
           <Script
             src="//unpkg.com/react-grab/dist/index.global.js"
