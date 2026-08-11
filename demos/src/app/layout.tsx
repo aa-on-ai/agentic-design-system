@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import Script from "next/script";
 import { DM_Sans, IBM_Plex_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
+import { SiteShell } from "./SiteShell";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 const bodyFont = DM_Sans({
@@ -44,20 +44,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const storedTheme = cookieStore.get("ads-theme")?.value;
-  const initialTheme = storedTheme === "light" || storedTheme === "dark" ? storedTheme : "light";
-
   return (
-    <html lang="en" data-theme={initialTheme} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <Script id="ads-theme-init" strategy="beforeInteractive">
-          {`(() => {
+        <script
+          id="ads-theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `(() => {
             try {
               const params = new URLSearchParams(window.location.search);
               const paramTheme = params.get('theme');
@@ -69,11 +67,14 @@ export default async function RootLayout({
                 ? paramTheme
                 : cookieTheme === 'light' || cookieTheme === 'dark'
                   ? cookieTheme
-                  : 'light';
+                  : window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light';
               document.documentElement.dataset.theme = theme;
             } catch (_) {}
-          })();`}
-        </Script>
+          })();`,
+          }}
+        />
         {process.env.NODE_ENV === "development" && (
           <Script
             src="//unpkg.com/react-grab/dist/index.global.js"
@@ -85,7 +86,7 @@ export default async function RootLayout({
       <body
         className={`${bodyFont.variable} ${labelFont.variable} ${displayFont.variable} antialiased`}
       >
-        {children}
+        <SiteShell initialTheme="light">{children}</SiteShell>
       </body>
     </html>
   );

@@ -44,7 +44,7 @@ for (const testCase of cases) {
     process.stderr.write(`[mcp-lab] ${testCase.name}: inspect\n`);
     await page.locator("main[data-mcp-lab]").waitFor({ timeout: 10_000 });
     assert.match(await page.locator("h1").innerText(), /design loop/i);
-    assert.match(await page.locator("main[data-mcp-lab] > header").textContent(), /version 0\.3\.0/i);
+    assert.equal(await page.locator(".ads-system-nav-list [aria-current='page']").innerText(), "Evidence tools");
     assert.deepEqual(
       await page.locator("[data-mcp-tools] > li").evaluateAll((items) => items.map((item) => item.getAttribute("data-tool-name"))),
       ["ads_render", "ads_evaluate", "ads_trace"],
@@ -64,6 +64,7 @@ for (const testCase of cases) {
       // reach DOMContentLoaded before hydration on a cold edge response, so wait for that boundary.
       await page.waitForTimeout(750);
       await themeButton.click();
+      await page.waitForFunction(() => document.documentElement.dataset.theme === "dark");
       assert.equal(await page.locator("html").getAttribute("data-theme"), "dark");
       themeToggle = "light -> dark";
     }

@@ -14,7 +14,6 @@
   --red: #b53f35;
   --navy: #071524;
   min-height: 100vh;
-  overflow: clip;
   background: var(--paper);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -40,6 +39,44 @@
 .page p { text-wrap: pretty; }
 .page a { color: inherit; }
 .page button { font: inherit; }
+
+:global(:root[data-theme="dark"]) .page {
+  --paper: #071524;
+  --paper-deep: #0c2136;
+  --paper-light: #f4e7cd;
+  --ink: #f9ecd2;
+  --text: #f9ecd2;
+  --muted: #c5b595;
+  --soft: #9e8f75;
+  --line: #f3d6a6;
+  --line-soft: rgba(242, 213, 167, 0.22);
+  --orange: #e46b32;
+  --orange-deep: #ffd4ab;
+  --green: #5dc08d;
+  --red: #ff766c;
+}
+
+:global(:root[data-theme="dark"]) .findingTicket,
+:global(:root[data-theme="dark"]) .resultBoard,
+:global(:root[data-theme="dark"]) .receiptLinks a {
+  --ink: #1c1711;
+  --muted: #685744;
+  --soft: #8a7459;
+  --line: #3f3325;
+  --line-soft: rgba(63, 51, 37, 0.22);
+  --orange-deep: #a93612;
+  --red: #b53f35;
+  color: var(--ink);
+}
+
+:global(:root[data-theme="dark"]) .primaryAction {
+  background: var(--paper-light);
+  color: #1c1711 !important;
+}
+
+:global(:root[data-theme="dark"]) .secondaryAction {
+  color: #1c1711;
+}
 
 .eyebrow {
   margin: 0 0 14px;

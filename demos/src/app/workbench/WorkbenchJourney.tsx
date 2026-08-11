@@ -12,7 +12,6 @@ import type { IntentId, PresetId } from "./workbenchFixture";
 import { buildAgentHandoff, routeWorkbenchIntent } from "./workbenchRouting";
 import { inferredValue, type WorkbenchSession } from "./workbenchSession";
 import styles from "./workbench.module.css";
-import { SystemNav } from "../SystemNav";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -88,14 +87,10 @@ export function WorkbenchJourney({ session, identityState }: {
 
   return (
     <>
-      <header className={styles.brandBar}>
-        <Link className={styles.brand} href="/" aria-label="Agentic Design System home">
-          <span className={styles.brandMark} aria-hidden="true" />
-          <span className={styles.brandName}>Agentic Design System</span>
-        </Link>
-        <SystemNav current="workbench" className={styles.systemNav} />
+      <header className={styles.contextBar}>
         <span className={styles.surfaceName}>
-          <span className={styles.surfaceLong}>Workbench · Optional control layer · Step {step} of 4</span>
+          <strong>Workbench</strong>
+          <span className={styles.surfaceLong}>Optional control layer · Step {step} of 4</span>
           <span className={styles.surfaceShort}>Step {step} of 4</span>
         </span>
         <span

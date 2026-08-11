@@ -68,11 +68,29 @@ async function installObservers(page) {
 }
 
 async function waitForHero(page, theme) {
-  await page.waitForFunction((expectedTheme) => {
-    const images = [...document.querySelectorAll(".hero-media img")];
-    return images.length === 1 && images[0].complete && images[0].naturalWidth > 0 &&
-      images[0].currentSrc.includes(`creative-pipeline-${expectedTheme}`);
-  }, theme);
+  try {
+    await page.waitForFunction((expectedTheme) => {
+      const images = [...document.querySelectorAll(".hero-media img")];
+      const activeImage = document.querySelector(`.hero-media img[data-theme-image="${expectedTheme}"]`);
+      return images.length === 2 && images.every((image) => image.complete && image.naturalWidth > 0) &&
+        activeImage instanceof HTMLImageElement &&
+        activeImage.currentSrc.includes(`creative-pipeline-${expectedTheme}`) &&
+        Number.parseFloat(getComputedStyle(activeImage).opacity) > 0;
+    }, theme, { timeout: 10_000 });
+  } catch (error) {
+    const state = await page.evaluate(() => ({
+      theme: document.documentElement.dataset.theme,
+      transition: document.documentElement.dataset.themeTransition,
+      images: [...document.querySelectorAll(".hero-media img")].map((image) => ({
+        theme: image.dataset.themeImage,
+        complete: image.complete,
+        naturalWidth: image.naturalWidth,
+        src: image.currentSrc,
+        opacity: getComputedStyle(image).opacity,
+      })),
+    }));
+    throw new Error(`hero ${theme} did not settle: ${JSON.stringify(state)}`, { cause: error });
+  }
 }
 
 async function gotoReady(page, target) {
@@ -275,7 +293,7 @@ async function verifyKeyboard(page, scope) {
   });
   await page.waitForTimeout(50);
 
-  const controlSelector = '.theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
+  const controlSelector = '.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
   const expectedCount = await page.locator(controlSelector).evaluateAll((controls) => controls.filter((control) => {
     const style = getComputedStyle(control);
     const rect = control.getBoundingClientRect();
@@ -290,7 +308,7 @@ async function verifyKeyboard(page, scope) {
     const focused = await page.evaluate(() => {
       const element = document.activeElement;
       if (!(element instanceof HTMLElement)) return null;
-      const controls = [...document.querySelectorAll('.theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
+      const controls = [...document.querySelectorAll('.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
       return {
@@ -381,10 +399,18 @@ for (const [browserName, browserType] of browserTypes) {
       if (initial.theme !== "light" || initial.firstFrameTheme !== "light") {
         fail(scope, `first theme is ${initial.firstFrameTheme}/${initial.theme}, expected light/light`);
       }
-      if (initial.heroResources.length !== 1 || !initial.heroResources[0].includes("creative-pipeline-light")) {
-        fail(scope, `first load requested ${initial.heroResources.join(" | ") || "no hero"}`);
+      if (
+        initial.heroResources.length !== 2 ||
+        !initial.heroResources.some((resource) => resource.includes("creative-pipeline-light")) ||
+        !initial.heroResources.some((resource) => resource.includes("creative-pipeline-dark"))
+      ) {
+        fail(scope, `first load did not predecode both heroes: ${initial.heroResources.join(" | ") || "no hero"}`);
       }
-      if (initial.heroImages.length !== 1 || !initial.heroImages[0].includes("creative-pipeline-light")) {
+      if (
+        initial.heroImages.length !== 2 ||
+        !initial.heroImages.some((resource) => resource.includes("creative-pipeline-light")) ||
+        !initial.heroImages.some((resource) => resource.includes("creative-pipeline-dark"))
+      ) {
         fail(scope, `rendered heroes are ${initial.heroImages.join(" | ") || "missing"}`);
       }
 
@@ -486,7 +512,35 @@ for (const [browserName, browserType] of browserTypes) {
 
       const keyboardOrder = browserName === "Chromium" ? await verifyKeyboard(page, scope) : [];
 
-      await page.getByRole("button", { name: "Switch to dark theme" }).click();
+      await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = "auto";
+        window.scrollTo(0, 0);
+        window.dispatchEvent(new Event("scroll"));
+      });
+      await page.waitForFunction(() => {
+        const nav = document.querySelector(".ads-system-nav");
+        return nav instanceof HTMLElement &&
+          Math.abs(nav.getBoundingClientRect().top - 12) < 2;
+      });
+      let themeToggle = page.getByRole("button", {
+        name: "Switch to dark theme",
+      });
+      if (
+        (await themeToggle.count()) === 0 ||
+        !(await themeToggle.first().isVisible())
+      ) {
+        await page.locator(".ads-system-nav-trigger").click();
+        await page.waitForFunction(
+          () =>
+            document
+              .querySelector(".ads-system-nav-layer")
+              ?.getAttribute("data-state") === "open",
+        );
+        themeToggle = page.getByRole("button", {
+          name: "Switch to dark theme",
+        });
+      }
+      await themeToggle.click();
       await waitForHero(page, "dark");
       await gotoReady(page, `${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`);
       await waitForHero(page, "dark");
@@ -494,8 +548,12 @@ for (const [browserName, browserType] of browserTypes) {
       if (persisted.theme !== "dark" || persisted.firstFrameTheme !== "dark") {
         fail(scope, `persisted theme is ${persisted.firstFrameTheme}/${persisted.theme}, expected dark/dark`);
       }
-      if (persisted.heroResources.length !== 1 || !persisted.heroResources[0].includes("creative-pipeline-dark")) {
-        fail(scope, `persisted first load requested ${persisted.heroResources.join(" | ") || "no hero"}`);
+      if (
+        persisted.heroResources.length !== 2 ||
+        !persisted.heroResources.some((resource) => resource.includes("creative-pipeline-light")) ||
+        !persisted.heroResources.some((resource) => resource.includes("creative-pipeline-dark"))
+      ) {
+        fail(scope, `persisted first load did not predecode both heroes: ${persisted.heroResources.join(" | ") || "no hero"}`);
       }
 
       const copyButton = page.getByRole("button", { name: "Copy Codex install command" }).first();

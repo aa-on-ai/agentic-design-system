@@ -7,13 +7,13 @@ import { ProofResult } from "./ProofResult";
 import { ProofSequence } from "./ProofSequence";
 import { TRACE } from "./traceData";
 import { TraceClose } from "./TraceClose";
-import { TraceTwoHeader } from "./TraceTwoHeader";
 import { TraceTwoHero } from "./TraceTwoHero";
 import styles from "./trace-two.module.css";
 
 export const metadata: Metadata = {
   title: "Pawprint repair proof | Agentic Design System",
-  description: "See how the system caught one contradictory action, repaired it, and proved every unrelated Pawprint state stayed untouched.",
+  description:
+    "See how the system caught one contradictory action, repaired it, and proved every unrelated Pawprint state stayed untouched.",
 };
 
 export default function TraceTwoPage() {
@@ -34,14 +34,15 @@ export default function TraceTwoPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <TraceTwoHeader />
+      <div data-chapter-hero>
+        <TraceTwoHero />
+      </div>
       <PageRole
         stage="Decide"
         title="Rendered proof case"
         description="This is the outcome view. It shows the failed state, exact repair, preserved behavior, and proof packet a human can inspect before accepting the change."
       />
       <article>
-        <TraceTwoHero />
         <ProofGallery />
         <ProofSequence />
         <ProofResult />
