@@ -2,7 +2,7 @@
 
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
@@ -153,35 +153,53 @@ assert.match(utilityFontCheck.stdout, /valid utility default/i);
 
 console.log("[visual-foundation-v2] conventional utility font preflight passed without a warning exit");
 
-async function rgOutput(args) {
-  try {
-    return (await execFileAsync("rg", args, { cwd: root })).stdout;
-  } catch (error) {
-    if (error.code === 1) return "";
-    throw error;
+async function textFiles(target) {
+  const targetPath = path.join(root, target);
+  const entries = await readdir(targetPath, { withFileTypes: true }).catch(() => null);
+  if (!entries) return [target];
+
+  const files = [];
+  for (const entry of entries.sort((left, right) => left.name.localeCompare(right.name))) {
+    const relativePath = path.join(target, entry.name);
+    if (entry.isDirectory()) files.push(...(await textFiles(relativePath)));
+    else if (entry.isFile()) files.push(relativePath);
   }
+  return files;
+}
+
+async function searchOutput(pattern, targets) {
+  const matcher = new RegExp(pattern);
+  const files = (await Promise.all(targets.map((target) => textFiles(target)))).flat();
+  const matches = [];
+
+  for (const file of files) {
+    const lines = (await readFile(path.join(root, file), "utf8")).split("\n");
+    lines.forEach((line, index) => {
+      if (matcher.test(line)) matches.push(`${file}:${index + 1}:${line}`);
+    });
+  }
+
+  return matches.length > 0 ? `${matches.join("\n")}\n` : "";
 }
 
 assert.equal(
-  await rgOutput(["-n", "Aaron|memory/channels|channel memory|delighted him", "skills", "templates"]),
+  await searchOutput("Aaron|memory/channels|channel memory|delighted him", ["skills", "templates"]),
   "",
   "public skill content must not assume a maintainer, home memory layout, or user gender",
 );
 assert.equal(
-  await rgOutput([
-    "-n",
+  await searchOutput(
     "SIGNAL_STRONG|ANALYSER_ACTIVE|PROTOCOL: ACTIVE|ORBIT: STABLE|COMMS: OPEN|INITIALIZING|LOADING EVIDENCE|ENTERING LAB",
-    "skills/world-build/SKILL.md",
-  ]),
+    ["skills/world-build/SKILL.md"],
+  ),
   "",
   "creative guidance must not recommend authored all-caps interface copy",
 );
 assert.equal(
-  await rgOutput([
-    "-n",
+  await searchOutput(
     "(?:node|python3) skills/(?:agentic-design-system|design-review)",
-    "skills/agentic-design-system",
-  ]),
+    ["skills/agentic-design-system"],
+  ),
   "",
   "installed commands must not assume the OpenClaw skills root",
 );
