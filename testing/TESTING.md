@@ -76,6 +76,8 @@ the smoke test installs from the local repo into a temporary project and verifie
 - the `design-variations` browser scaffold is installed under its `assets/` directory
 - all 5 runtime templates are bundled: outcome, project identity, reference intake, grader report, and run report
 - bundled templates and all 7 workflow runbooks match their canonical top-level copies
+- the visual foundation contract, routing contract, schemas, and three starter presets are bundled
+- the path-portable capture wrapper, decision trace, and three source checks execute from the clean install
 - the deterministic decision-trace script is present and byte-identical in the installed orchestrator
 - the structured-findings reference is present and byte-identical in the installed orchestrator
 
@@ -84,7 +86,7 @@ the installer does not generate or replace `AGENTS.md`. project instructions rem
 success ends with:
 
 ```text
-install smoke passed: 10 skills, 3 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
+install smoke passed: 10 skills, contracts, routing, presets, executable consumer commands, 5 bundled templates, and 7 workflow runbooks
 ```
 
 to exercise the public github shorthand instead of the current checkout:
@@ -112,12 +114,20 @@ the matrix creates separate clean projects and explicitly installs to:
 - OpenClaw: `skills/`
 - Hermes (`hermes-agent`): `.hermes/skills/`
 
-every target must contain all 10 skills, all 3 skill assets, 5 bundled templates, 7 bundled
-workflow runbooks, and `skills-lock.json`. success ends with:
+every target must contain all 10 skills, the contracts, routing, schemas, presets, executable
+consumer commands, 5 bundled templates, 7 bundled workflow runbooks, portable instructional
+references, and `skills-lock.json`. The reference smoke rejects literal `skills/...` paths in
+installed guidance, rejects repo-only fixture paths, and resolves every `<skills-root>/...` target
+inside each installer root.
+success ends with:
 
 ```text
-install matrix passed: 5 agents x 10 skills, with assets, templates, workflow runbooks, and lockfiles verified
+install matrix passed: 5 agents x 10 skills, with contracts, routing, presets, executable consumer commands, portable instructional references, templates, workflow runbooks, and lockfiles verified
 ```
+
+The GitHub release-gate workflow also starts the production demo and runs Pawprint direct hash-state
+coverage in Chromium and WebKit. This keeps the route-level state contract inside the release gate
+without making the package-only `npm run release:check` install or build the demo application.
 
 exercise the public source with:
 

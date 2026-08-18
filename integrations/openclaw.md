@@ -27,4 +27,5 @@ The final owner still verifies screenshots and test receipts before reporting co
 ```bash
 npx skills list --agent openclaw --json
 test -f skills/agentic-design-system/SKILL.md
+node skills/agentic-design-system/scripts/run-capture.mjs --check
 ```

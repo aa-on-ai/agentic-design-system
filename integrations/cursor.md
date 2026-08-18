@@ -30,4 +30,8 @@ Use the agentic-design-system skill for this UI task. Define the outcome, read t
 ```bash
 npx skills list --agent cursor --json
 test -f .agents/skills/agentic-design-system/SKILL.md
+node .agents/skills/agentic-design-system/scripts/run-capture.mjs --check
 ```
+
+Run capture through that wrapper so the command resolves the sibling design-review skill. Use a
+fresh Agent session as critic when the builder must not self-clear.

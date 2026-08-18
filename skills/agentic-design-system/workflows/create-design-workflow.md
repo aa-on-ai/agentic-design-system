@@ -4,16 +4,17 @@
 it routes you into the right ADS profile or workflow based on intent, so you don't have to read
 the whole repo first.
 
-If you are a cold agent: read `AGENTS.md` and `routing/ROUTING.md` (repo-root paths) once, then
-use the table below. ROUTING.md is the decision logic; the files in this directory are runnable
-wrappers around it.
+If you are a cold agent, start from the directory containing the installed orchestrator
+`SKILL.md`. Read `contracts/visual-foundation.v2.json`, `routing/ROUTING.md`, and the matching file
+under `presets/`, then use the table below. Repo clones expose the same files at the repository
+root; installed agents receive bundled copies beside this runbook.
 
 ## Route by intent
 
 | You want to… | Go to | Profile it runs |
 |---|---|---|
-| Build a new page / component | `workflows/new-page-component.mjs` — runnable route → build → capture → independent-grade → structured findings → revise (Claude Code Workflow tool). Optional dynamic Route phase; gates on responsive breakpoints **and** touch-target size; runs against a live `devUrl` **or** a self-contained `artifactPath` (no dev server). Or `routing/ROUTING.md` → **Core chain** + **Outcome + Grader loop** by hand | core pack + capture + grader |
-| Explore options before choosing a direction | `skills/design-variations/SKILL.md` → build one disposable browser artifact → choose or blend → promote only the winner | divergence before core pack |
+| Build a new page / component | `routing/ROUTING.md` → lock utility or expressive profile → **Core chain** + **Outcome + Grader loop** by hand. Repo clones using the Claude Code Workflow tool may instead run the repo-only `workflows/new-page-component.mjs`. | locked profile + core pack + capture + grader |
+| Explore options before choosing a direction | `<skills-root>/design-variations/SKILL.md` → build one disposable browser artifact → choose or blend → promote only the winner | divergence before core pack |
 | Review existing UI before merge | [`adversarial-design-review.md`](./adversarial-design-review.md) | separate-context critique |
 | Review a mobile / responsive / app / PWA screen | [`mobile-review.md`](./mobile-review.md) | two-pass mobile review |
 | Add or review motion / animation | `routing/ROUTING.md` → **motion vocabulary pass**; deep work → `web-animation-design` | motion vocabulary |
@@ -50,7 +51,9 @@ Every workflow in this directory is decision-shaped and answers the same seven q
 
 - the verification scripts — `capture.mjs`, the three source checks, and the lightweight decision-trace script
 - the reference docs — `references/mobile.md`, `references/motion.md`, `references/structured-findings.md`, etc.
-- bundled copies of these runbooks at `skills/agentic-design-system/workflows/` (kept byte-identical to the top-level `workflows/` by the install smoke's drift guard)
+- bundled copies of these runbooks at `<skills-root>/agentic-design-system/workflows/` (kept byte-identical to the top-level `workflows/` by the install smoke's drift guard)
+- the visual foundation contract, routing contract, and three starter presets under the installed orchestrator
+- `scripts/run-capture.mjs`, which resolves the sibling design-review skill from any supported install root
 
 A full repo clone additionally has top-level `workflows/`, `testing/`, and `ci/`. One exception: `workflows/new-page-component.mjs` is a
 **Claude Code Workflow-tool** script — it needs that runtime — so treat it as repo /

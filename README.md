@@ -151,9 +151,18 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --out evidence/<task>
 ```
 
+Those commands are repo-root paths for a clone. Installed agents run the same capture through the
+orchestrator's `scripts/run-capture.mjs` wrapper. The exact path for every supported installer is
+in [`integrations/`](./integrations/), and the install matrix executes each one.
+
 The rendered gate blocks serious axe violations, overflow, missing main landmarks,
 loading/error states without the corresponding live-region semantics, CLS above `0.1`,
 undersized touch targets, and requested states that did not actually render.
+
+Evidence format 2 also records the visual foundation contract's rounded one-edge borders,
+one-edge shadow candidates, forced uppercase, typography outliers, symbol-only controls,
+status-dot candidates, divider count, colons, and em dashes. Those new measurements are
+report-only while fixture precision is established.
 
 After a finding-driven repair, ADS also sweeps adjacent actions before a grader can return
 `satisfied`. Status and instructional copy must agree with every visible nearby primary,

@@ -10,6 +10,7 @@ the artifact emitted by a separate grader pass. the builder should not self-clea
 - **artifact:** route, file path, screenshot set, or preview URL
 - **builder:** model / lane
 - **grader:** model / lane
+- **visual foundation profile:** `utility` / `expressive` with eligibility reason
 - **iteration:** current / max
 - **timestamp:** ISO 8601
 - **verdict:** `satisfied` / `needs_revision` / `max_iterations` / `failed`
@@ -20,12 +21,12 @@ one paragraph. be direct. say whether the artifact clears the outcome, not wheth
 
 ## rubric scores
 
-| criterion | weight | score | verdict | note |
+| criterion | utility / expressive weight | score | verdict | note |
 |---|---:|---:|---|---|
-| Design Quality | 35% |  | pass / fail |  |
-| Originality | 30% |  | pass / fail |  |
-| Craft | 20% |  | pass / fail |  |
-| Functionality | 15% |  | pass / fail |  |
+| Functionality | 35% / 15% |  | pass / fail |  |
+| Design Quality | 30% / 35% |  | pass / fail |  |
+| Craft | 25% / 20% |  | pass / fail |  |
+| Originality | 10% / 30% |  | pass / fail |  |
 | Intent alignment | pass/fail |  | pass / fail | accomplish/notice/feel are visible in the artifact and support each other |
 | Required states covered | pass/fail/n/a |  | pass / fail / n/a | loading, empty, error, focus, and mobile states are covered or explicitly not applicable |
 | Accessibility | pass/fail |  | pass / fail |  |
@@ -49,6 +50,8 @@ found no minor or material issues.
 
 ## hard stops reviewed
 
+- the selected profile was locked before generation and meets its eligibility rule
+- every confirmed visual-foundation `never` rule is resolved
 - vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
 - adjacent-action consistency: status and instructional copy agree with every visible nearby
   primary, secondary, toolbar, and inline action in each state and breakpoint; a contradictory

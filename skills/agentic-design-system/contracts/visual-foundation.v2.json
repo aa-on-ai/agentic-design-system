@@ -1,0 +1,180 @@
+{
+  "$schema": "../schemas/visual-foundation-contract.schema.json",
+  "id": "ads-visual-foundation-v2",
+  "version": 2,
+  "evidenceFormat": 2,
+  "profiles": [
+    {
+      "id": "utility",
+      "eligibility": [
+        "product interface",
+        "admin or operations surface",
+        "settings",
+        "workflow",
+        "internal tool"
+      ],
+      "defaultFonts": [
+        "existing product family",
+        "system sans",
+        "conventional general-purpose family"
+      ],
+      "weights": {
+        "functionality": 35,
+        "designQuality": 30,
+        "craft": 25,
+        "originality": 10
+      },
+      "originalityMeaning": "Product-specific decisions without generic software tropes. Conventional fonts are valid when they serve the product."
+    },
+    {
+      "id": "expressive",
+      "eligibility": [
+        "marketing",
+        "editorial",
+        "landing page",
+        "launch",
+        "brand expression named in the outcome"
+      ],
+      "defaultFonts": [
+        "existing brand family",
+        "brief-approved expressive family",
+        "conventional fallback"
+      ],
+      "weights": {
+        "designQuality": 35,
+        "originality": 30,
+        "craft": 20,
+        "functionality": 15
+      },
+      "originalityMeaning": "A brief-supported point of view that remains usable and coherent."
+    }
+  ],
+  "typography": {
+    "utilityDefault": "conventional-general-purpose",
+    "expressiveRequiresBrief": true,
+    "letterSpacing": "Use the product type scale or the font default. Report custom tracking for review and reject decorative tracking without a named role.",
+    "lineHeight": "Use conventional readable ratios from the product type scale. Report extreme ratios for review and reject arbitrary values without a named role."
+  },
+  "iconography": {
+    "preferenceOrder": [
+      "existing-coherent-project-family",
+      "licensed-nucleo",
+      "one-open-family"
+    ],
+    "mixFamilies": false,
+    "textSymbols": "Use a real icon when the control has an icon equivalent. Keep a readable label or accessible name."
+  },
+  "status": {
+    "dots": "never",
+    "readableLabel": true,
+    "iconRequirement": "Add an icon when it materially improves scanning or comprehension. Do not require one beside every status label.",
+    "colorRole": "Color may reinforce status but cannot be the only signal."
+  },
+  "rules": [
+    {
+      "id": "rounded-single-edge-border",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "For every visible element with any corner radius, compare computed width, style, and color on all four border edges. Report exactly one active edge.",
+      "allowed": [
+        "complete perimeter",
+        "single-edge divider on an element with zero corner radius"
+      ]
+    },
+    {
+      "id": "one-edge-shadow-spoof",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "For rounded elements, report inset or zero-blur shadows that create one horizontal or vertical edge.",
+      "allowed": [
+        "soft elevation shadows with visible blur",
+        "complete focus rings"
+      ]
+    },
+    {
+      "id": "forced-uppercase",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "Inspect rendered text-transform and source styling.",
+      "allowed": []
+    },
+    {
+      "id": "authored-all-caps",
+      "policy": "never",
+      "automaticEnforcement": "human-review",
+      "measurement": "Review visible authored strings for all-caps words and sentences.",
+      "allowed": [
+        "literal external identifiers or regulated codes that would become inaccurate if changed"
+      ]
+    },
+    {
+      "id": "em-dash-copy",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "Inspect rendered interface copy for the em dash character.",
+      "allowed": [
+        "verbatim external data when changing it would be inaccurate"
+      ]
+    },
+    {
+      "id": "unconventional-typography",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "Record custom letter spacing and extreme computed line-height ratios with the owning element and text sample.",
+      "allowed": [
+        "declared product type tokens",
+        "brief-approved expressive typography"
+      ]
+    },
+    {
+      "id": "text-symbol-control",
+      "policy": "avoid",
+      "automaticEnforcement": "report-only",
+      "measurement": "Report interactive controls whose visible content is only punctuation or a symbol and which contain no icon asset.",
+      "allowed": [
+        "literal mathematical input",
+        "domain notation with no conventional icon"
+      ]
+    },
+    {
+      "id": "status-dot",
+      "policy": "never",
+      "automaticEnforcement": "report-only",
+      "measurement": "Report small circular filled elements with no readable text when they appear beside status language.",
+      "allowed": []
+    },
+    {
+      "id": "status-readable-without-color",
+      "policy": "never",
+      "automaticEnforcement": "human-review",
+      "measurement": "Confirm every status remains understandable when color is removed.",
+      "allowed": [
+        "readable text label",
+        "readable text label plus a coherent icon"
+      ]
+    },
+    {
+      "id": "colon-copy",
+      "policy": "avoid",
+      "automaticEnforcement": "report-only",
+      "measurement": "Report visible interface text containing a colon after excluding literal times, links, code, protocols, and verbatim data.",
+      "allowed": [
+        "time",
+        "link or protocol",
+        "code or structured data",
+        "verbatim external data"
+      ]
+    },
+    {
+      "id": "divider-density",
+      "policy": "avoid",
+      "automaticEnforcement": "report-only",
+      "measurement": "Record the number and locations of visible one-edge dividers. Independent review decides whether whitespace and grouping would be clearer.",
+      "allowed": [
+        "table structure",
+        "clear section boundary",
+        "platform-native separation"
+      ]
+    }
+  ]
+}

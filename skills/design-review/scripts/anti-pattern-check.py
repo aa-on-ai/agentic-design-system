@@ -29,14 +29,14 @@ CHECKS = [
     {
         "name": "Inter font default",
         "pattern": r"""font-family.*Inter|'Inter'|"Inter"|fontFamily.*Inter""",
-        "severity": "warning",
-        "message": "Inter font detected — agents default to this. pick a distinctive font that matches the product."
+        "severity": "info",
+        "message": "Conventional font detected. This is a valid utility default when it matches the product; expressive surfaces require an explicit brief."
     },
     {
         "name": "Arial/Roboto/system font",
         "pattern": r"""font-family.*(?:Arial|Roboto|Helvetica|system-ui)|'(?:Arial|Roboto)'|"(?:Arial|Roboto)"|fontFamily.*(?:Arial|Roboto)""",
-        "severity": "warning",
-        "message": "Generic font detected. choose something intentional."
+        "severity": "info",
+        "message": "Conventional font detected. This is a valid utility default when it matches the product; expressive surfaces require an explicit brief."
     },
     # Color defaults
     {

@@ -29,7 +29,7 @@ jobs:
           REGRESSION_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: npm run regression:gate -- --base "$REGRESSION_BASE_SHA"
       - run: npm run build --prefix demos
-      - name: Verify the homepage in Chromium and WebKit
+      - name: Verify public demos in Chromium and WebKit
         run: |
           npm --prefix demos run start -- --hostname 127.0.0.1 --port 3000 > "$RUNNER_TEMP/ads-demo.log" 2>&1 &
           demo_pid=$!
@@ -49,6 +49,8 @@ jobs:
             exit 1
           fi
 
+          npm run pawprint:states -- http://127.0.0.1:3000
+          ADS_BROWSER=webkit npm run pawprint:states -- http://127.0.0.1:3000
           npm run homepage:hardening -- http://127.0.0.1:3000
           npm run homepage:mobile-nav -- http://127.0.0.1:3000
           npm run homepage:blend -- http://127.0.0.1:3000

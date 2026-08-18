@@ -2,6 +2,9 @@
 
 Use this for substantial UI runs when a reviewer needs to know why consequential elements exist, which exact rule governed them, and what evidence cleared them. Skip it for copy-only changes, tiny mechanical fixes, and routine polish unless provenance is explicitly required.
 
+Path terms below are install-root neutral. `<orchestrator-skill>` is the directory containing the
+installed agentic-design-system skill and `<skills-root>` is its parent directory.
+
 ## Performance contract
 
 Provenance adds two deterministic local commands and no extra agent, model, browser, or network calls:
@@ -16,10 +19,10 @@ Do not trace every CSS property or repeat capture inside the revision loop. Reco
 Record files already loaded as `--observed`. Record selected files that were not actually loaded as `--declared`; they remain honest context but cannot support a verified causal claim.
 
 ```bash
-node skills/agentic-design-system/scripts/decision-trace.mjs capture \
+node <orchestrator-skill>/scripts/decision-trace.mjs capture \
   --out evidence/<slug>/skill-manifest.json \
-  --observed skills/agentic-design-system/SKILL.md \
-  --observed skills/design-review/SKILL.md \
+  --observed <orchestrator-skill>/SKILL.md \
+  --observed <skills-root>/design-review/SKILL.md \
   --source DESIGN.md \
   --budget-ms 250
 ```
@@ -70,7 +73,7 @@ Use `draft`, `reviewed`, `verified`, or `rejected`. A `verified` row must point 
 ## 4. Verify once and enrich the run report
 
 ```bash
-node skills/agentic-design-system/scripts/decision-trace.mjs verify \
+node <orchestrator-skill>/scripts/decision-trace.mjs verify \
   --manifest evidence/<slug>/skill-manifest.json \
   --trace evidence/<slug>/decision-trace.json \
   --validation evidence/<slug>/decision-trace-validation.json \

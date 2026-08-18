@@ -1,6 +1,8 @@
 ## Design system
 
-This project uses the [Agentic Design System](https://github.com/aa-on-ai/agentic-design-system). Read `routing/ROUTING.md` for the full decision tree. Summary:
+This project uses the [Agentic Design System](https://github.com/aa-on-ai/agentic-design-system).
+Read `routing/ROUTING.md` in a repo clone or the bundled `routing/ROUTING.md` beside the installed
+orchestrator skill. Lock the utility or expressive profile before generation.
 
 ### Project Knowledge Intake
 
@@ -46,9 +48,10 @@ For substantial UI work, define intent/outcome before building and grade the res
 ### Verification (run before presenting)
 
 ```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs <running-route-url> --states default,loading,empty,error --out evidence/<slug>
 ```
 
 Fix warnings before presenting. Screenshot the rendered result when possible. For reference-led work, compare the screenshot against the Reference Intake Contract and report any unresolved drift.

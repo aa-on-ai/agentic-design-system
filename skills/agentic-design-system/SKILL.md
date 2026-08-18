@@ -18,51 +18,49 @@ you have a design system installed. this skill orchestrates it. read this BEFORE
 if you just want to *use* ADS, start at `workflows/create-design-workflow.md` — it routes a task
 to the right profile or workflow by intent. each runbook is decision-shaped (when to use, read
 first, run, evidence, output, blocked when, stop when). these ship with this skill at
-`skills/agentic-design-system/workflows/` so installed agents have them, not just repo clones;
+`<skills-root>/agentic-design-system/workflows/` so installed agents have them, not just repo clones;
 the canonical copies live at the repo root `workflows/` and the two are kept in sync by the
 install smoke's drift guard.
 
-> **Installed, not cloned? Read this.** Paths in ADS docs are written **repo-root-relative**
-> (`workflows/...`, `routing/ROUTING.md`, `templates/...`, `skills/design-review/scripts/...`).
-> If you installed ADS as skills rather than cloning the repo, resolve them from the directory
-> containing this `SKILL.md`; that location is portable even when agents use different install
-> roots. From this file:
+> **Installed, not cloned? Read this.** Resolve shared files from the directory containing this
+> `SKILL.md`; that location is portable even when agents use different install roots. From this
+> file:
 > - `workflows/create-design-workflow.md` → `./workflows/create-design-workflow.md`
-> - `skills/design-review/scripts/capture.mjs` → `../design-review/scripts/capture.mjs`
-> - `skills/design-review/references/mobile.md` → `../design-review/references/mobile.md`
+> - portable capture command → `node ./scripts/run-capture.mjs <url> ...`
+> - `<skills-root>/design-review/references/mobile.md` resolves from every supported installer root
 > - `templates/run-report-template.md` → `./templates/run-report-template.md`
 > - `templates/project-identity-template.md` → `./templates/project-identity-template.md`
 > - `templates/reference-intake-contract.md` → `./templates/reference-intake-contract.md`
->
-> `routing/ROUTING.md` and the top-level `README`/`AGENTS` are repo-only; the runbooks above
-> stand alone without them.
+> - visual foundation contract → `./contracts/visual-foundation.v2.json`
+> - routing contract → `./routing/ROUTING.md`
+> - starter presets → `./presets/`
 
 ## How it works
 
 the system installs a routing skill plus focused helper skills. you don't need to read them all — this file tells you which ones to read for your current task.
 
 ### core pack (read these for ALL visual work)
-- `skills/design-review/SKILL.md` — quality gate, reference files, verification scripts
-- `skills/ux-baseline-check/SKILL.md` — loading, empty, error states
-- `skills/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
+- `<skills-root>/design-review/SKILL.md` — quality gate, reference files, verification scripts
+- `<skills-root>/ux-baseline-check/SKILL.md` — loading, empty, error states
+- `<skills-root>/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
 
 ### creative pack (read ONLY when triggered)
-- `skills/visual-reference-calibration/SKILL.md` — BEFORE coding when Aaron provides a screenshot, CodePen, website, or other artifact as a desired visual target, or says “make it feel like this.” A screenshot used only to point at a defect is review evidence, not a reference target. Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
-- `skills/design-variations/SKILL.md` — BEFORE production implementation when the user asks for options, variations, concepts, mockups, or help choosing a direction. Build one disposable browser artifact, let the human choose or blend, then promote only the winner.
-- `skills/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
-- `skills/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
-- `skills/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
+- `<skills-root>/visual-reference-calibration/SKILL.md` — BEFORE coding when the user provides a screenshot, CodePen, website, or other artifact as a desired visual target, or says “make it feel like this.” A screenshot used only to point at a defect is review evidence, not a reference target. Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
+- `<skills-root>/design-variations/SKILL.md` — BEFORE production implementation when the user asks for options, variations, concepts, mockups, or help choosing a direction. Build one disposable browser artifact, let the human choose or blend, then promote only the winner.
+- `<skills-root>/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
+- `<skills-root>/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
+- `<skills-root>/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
 
 ### agent-friendly (read for production sites)
-- `skills/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
+- `<skills-root>/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
 
 ### project knowledge intake (optional; run when context needs alignment)
 default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it. installed copies live under this skill's `templates/` directory.
 
 ### reference intake gate (optional; run before reference-led visual work)
-if the user provides a visual reference/screenshot/site/CodePen as a desired target, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `skills/visual-reference-calibration/SKILL.md` before generating UI. screenshots used only to identify a bug or region of concern stay in the normal review path.
+if the user provides a visual reference/screenshot/site/CodePen as a desired target, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `<skills-root>/visual-reference-calibration/SKILL.md` before generating UI. screenshots used only to identify a bug or region of concern stay in the normal review path.
 
-use `templates/reference-intake-contract.md`; installed copies live under this skill's `templates/` directory. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when Aaron already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
+use `templates/reference-intake-contract.md`; installed copies live under this skill's `templates/` directory. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when the user already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
 
 ### outcome + grader loop (optional; run for substantial UI work)
 for non-trivial UI, define the user-facing intent and outcome before building, then grade the artifact in a separate context when possible.
@@ -128,18 +126,36 @@ is this visual or frontend work?
 
 if the default aesthetic is appropriate for the product, don't fight it. make it excellent, not different. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. core pack makes defaults excellent. creative pack makes them different. only add creative when different is what the product actually needs.
 
+## Visual foundation profile
+
+lock the profile before generation. read `contracts/visual-foundation.v2.json`; installed copies
+live under this skill's `contracts/` directory.
+
+- **utility** — product interfaces, admin and operations surfaces, settings, workflows, and
+  internal tools. use the existing product family, a system sans, or another conventional
+  general-purpose family by default. weights are Functionality 35, Design Quality 30, Craft 25,
+  and Originality 10.
+- **expressive** — marketing, editorial, landing, launch, and brief-approved brand expression.
+  weights are Design Quality 35, Originality 30, Craft 20, and Functionality 15.
+
+the expressive profile requires an eligible surface or an explicit outcome. agents cannot promote
+utility work into expressive mode because it feels visually plain. utility Originality means
+product-specific decisions without generic software tropes; it does not mean decorative novelty.
+
+the visual foundation contract also governs rendered anti-agent evidence. confirmed violations of
+its `never` rules block presentation. report-only measurements remain review candidates until their
+fixture precision is proven.
+
 ## Design rubric (grade yourself before presenting)
 
-score your output on these 4 criteria before announcing. inspired by Anthropic's multi-agent harness research — separating generation from evaluation produces dramatically better work.
+score your output on the same four criteria using the locked profile's weights.
 
-| Criteria | Weight | What it means | Failing looks like |
-|----------|--------|--------------|-------------------|
-| **Design Quality** | 35% | Does it feel like a coherent whole? Colors, typography, layout, spacing combine into a distinct mood and identity. | Components feel disconnected. No visual theme. "Collection of parts" energy. |
-| **Originality** | 30% | Evidence of custom decisions? Or is this template layouts, library defaults, and AI-generated patterns? A human designer should recognize deliberate creative choices. | Purple gradients over white cards. Unmodified shadcn. Zinc-800 everywhere. Stock hero sections. |
-| **Craft** | 20% | Technical execution: typography hierarchy, spacing consistency, color harmony, contrast ratios. Competence check. | Broken fundamentals. Inconsistent spacing. Missing hover states. Bad contrast. |
-| **Functionality** | 15% | Can users understand what it does, find primary actions, complete tasks without guessing? | Unclear CTAs. Hidden navigation. Confusing state transitions. |
-
-**Design Quality and Originality are weighted highest.** models already score well on Craft and Functionality by default. the gap is always in making something that feels intentional and distinctive vs. generic.
+| Criteria | Utility | Expressive | What it means |
+|----------|---------|------------|---------------|
+| **Functionality** | 35% | 15% | Users understand the state, primary task, actions, and recovery path. |
+| **Design Quality** | 30% | 35% | Hierarchy, layout, color, spacing, and type form a coherent whole. |
+| **Craft** | 25% | 20% | Typography, spacing, contrast, interaction states, and responsive behavior are competent. |
+| **Originality** | 10% | 30% | Decisions fit the product and avoid generic agent tropes; expressive work also needs a brief-supported point of view. |
 
 ### scoring guide
 - **8-10:** ship it. would impress a human designer.
@@ -147,7 +163,9 @@ score your output on these 4 criteria before announcing. inspired by Anthropic's
 - **4-5:** generic AI slop. needs a creative pivot, not polish.
 - **1-3:** broken fundamentals. rebuild.
 
-**if you score yourself below 6 on Design Quality or Originality, don't present. iterate.**
+**below 6 on Functionality or Design Quality blocks either profile. below 6 on Originality blocks
+the expressive profile; utility work uses the contract and independent review to reject generic
+tropes without forcing novelty.**
 
 ## Iteration philosophy
 
@@ -161,19 +179,24 @@ more iterations with structured feedback produce breakthroughs. Anthropic's harn
 
 ## Verification (run before presenting)
 
-after ingest/interview (if needed), building, and scoring yourself on the rubric, run these source pre-flight scripts:
+after ingest/interview (if needed), building, and scoring yourself on the rubric, run these source pre-flight scripts. replace `<skills-root>` with the directory containing the installed skill folders:
 
 ```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs <running-route-url> --states default,loading,empty,error --out evidence/<slug>
 ```
 
-investigate their warnings before presenting work. these are advisory source heuristics: they catch obvious defaults and missing source signals, but can both miss rendered defects and pass comments that merely contain the right words. when screenshot verification is in scope, gate the verdict on `skills/design-review/scripts/capture.mjs`, rendered screenshots, overflow, main/live-region semantics, CLS, computed fonts, touch targets, and axe results.
+investigate source warnings before presenting work. source heuristics are advisory and gameable.
+rendered evidence is authoritative for established gates. evidence format 2 additionally records
+rounded one-edge borders, one-edge shadow candidates, forced uppercase, typography outliers,
+symbol-only controls, status-dot candidates, divider count, colons, and em dashes. those new fields
+remain report-only in this release.
 
 ## What the reference files cover
 
-when you read `skills/design-review/SKILL.md`, it points to reference files in `skills/design-review/references/`. you don't need to read all of them — only load what's relevant:
+when you read `<skills-root>/design-review/SKILL.md`, it points to reference files in `<skills-root>/design-review/references/`. you don't need to read all of them — only load what's relevant:
 
 - `anti-patterns.md` — what NOT to do (always worth reading)
 - `layout.md` — composition and grid-breaking (read for new pages)

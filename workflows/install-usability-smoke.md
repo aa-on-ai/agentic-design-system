@@ -3,6 +3,9 @@
 Verify ADS actually installs into a clean project and the bundled pieces are present — before
 publishing skill changes or telling someone "just install it."
 
+Path terms below are install-root neutral. `<orchestrator-skill>` is the directory containing the
+installed agentic-design-system skill and `<skills-root>` is its parent directory.
+
 ## When to use
 
 After changing skills, templates, or the install path; before a release; or when a user reports
@@ -26,16 +29,17 @@ testing/install-matrix.sh
 Success ends with both:
 
 ```text
-install smoke passed: 10 skills, 3 skill assets, 5 bundled templates, and 7 workflow runbooks (all in sync)
-install matrix passed: 5 agents x 10 skills, with assets, templates, workflow runbooks, and lockfiles verified
+install smoke passed: 10 skills, contracts, routing, presets, executable consumer commands, 5 bundled templates, and 7 workflow runbooks
+install matrix passed: 5 agents x 10 skills, with contracts, routing, presets, executable consumer commands, templates, workflow runbooks, and lockfiles verified
 ```
 
 Then confirm the verification scripts a consumer would run actually execute:
 
 ```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <any-sample.tsx>
-python3 skills/design-review/scripts/state-check.py <any-sample.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <any-sample.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <any-sample.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <any-sample.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <any-sample.tsx>
+node <orchestrator-skill>/scripts/run-capture.mjs --check
 ```
 
 ## Evidence required

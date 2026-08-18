@@ -11,6 +11,28 @@ description: >
 ## Core Pack — Always Active
 This is a core skill. Apply it on ALL visual and frontend work, no exceptions. You do not need permission or a specific trigger to use this.
 
+## Visual foundation contract
+
+Read `../agentic-design-system/contracts/visual-foundation.v2.json` before build or review.
+Confirmed `never` rules block presentation.
+
+- Never put a border on only one edge of a rounded rectangle. A complete perimeter remains valid.
+- Never recreate that one-edge treatment with a zero-blur or inset shadow.
+- Never force uppercase styling. Authored interface copy uses sentence case or title case, with a
+  narrow exception for literal external identifiers that would become inaccurate if changed.
+- Never use em dashes in interface copy.
+- Never use static or animated status dots. Status remains readable without color; add an icon only
+  when it materially improves scanning or comprehension.
+- Use a real icon when a control has an icon equivalent. Preserve one coherent project family;
+  otherwise use licensed Nucleo or one open family, never a mix.
+- Utility work starts with the product font, a system sans, or another conventional general-purpose
+  family. Expressive typography requires an eligible surface or an explicit outcome.
+- Custom letter spacing and line height come from a declared type role, not decorative improvisation.
+- Avoid colons in interface copy when a normal phrase works. Literal time, links, code, protocols,
+  structured data, and verbatim external data remain valid.
+- Use whitespace and grouping before adding dividers. Divider density stays an independent review
+  judgment rather than a brittle automatic gate.
+
 ## When to Use
 - Before presenting ANY visual or UX work.
 - Treat this as a quality gate, not optional polish.
@@ -33,11 +55,12 @@ This is a core skill. Apply it on ALL visual and frontend work, no exceptions. Y
   - Vercel dashboard — spacing, typography, dark mode discipline
 
 ### 3. Check design memory
-- If your environment keeps design memory (prior decisions, rejected patterns), read it before building. In this system's home setup that lives at `memory/channels/{channel-name}.md`; installed elsewhere, look for the project's own decision log or `DESIGN.md` history. Skip if no such file exists.
-- If memory says Aaron rejected a pattern, don't repeat it.
-- If a project brain file is linked from channel memory, read that too.
+- If the project keeps prior design decisions or rejected patterns, read its `DESIGN.md`, guidelines,
+  or decision log before building. Skip this step when no project-owned record exists.
+- If memory says the user rejected a pattern, don't repeat it.
+- Follow any project-owned source linked from that record.
 
-## Aaron's Core Principles
+## Core principles
 - Restraint IS the design.
 - Spacing is the #1 tell.
 - Typography hierarchy > color for information architecture.
@@ -55,7 +78,7 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - `references/spacing.md` — spacing system, rhythm, grouping, layout density
 - `references/motion.md` — timing, easing, reduced motion, interactive feel, named motion vocabulary
 - `references/mobile.md` — mobile review profile: design-judgment vs platform-defect passes, decision forks, severity tiers
-- `references/anti-patterns.md` — patterns Aaron will clock instantly and reject
+- `references/anti-patterns.md` — common agent patterns to reject
 
 ### For sub-agents
 - Read the relevant reference files based on what you're building.
@@ -67,7 +90,7 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - If in doubt, at minimum read spacing + anti-patterns.
 
 ## Pre-Flight Checklist
-Run this EVERY TIME before presenting work to Aaron.
+Run this every time before presenting work.
 
 ### Step 1: Visual verification
 - [ ] Take a screenshot of the rendered result.
@@ -85,20 +108,21 @@ Run this EVERY TIME before presenting work to Aaron.
 ### Step 3: Honesty check
 - [ ] Is it actually done?
 - [ ] Does it meet the brief, not an adjacent brief?
-- [ ] Would you be proud to show this to Aaron cold?
+- [ ] Would this hold up in a cold review?
 
 ### Step 4: Run source pre-flight scripts
-if you have access to the scripts directory, run these advisory checks before presenting:
+if you have access to the scripts directory, run these advisory checks before presenting. replace
+`<skills-root>` with the directory containing the installed skill folders:
 
 ```bash
 # check for common agent anti-patterns
-python3 skills/design-review/scripts/anti-pattern-check.py <your-file.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <your-file.tsx>
 
 # verify loading, empty, and error states exist
-python3 skills/design-review/scripts/state-check.py <your-file.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <your-file.tsx>
 
 # check semantic HTML, aria labels, alt text, heading hierarchy
-python3 skills/design-review/scripts/accessibility-check.py <your-file.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <your-file.tsx>
 ```
 
 investigate the warnings before presenting. these checks grep source and are intentionally cheap and gameable; a comment containing “loading, empty, error” can satisfy the state check without rendering any state. they advise, but they do not clear the work.
@@ -106,11 +130,14 @@ investigate the warnings before presenting. these checks grep source and are int
 when visual verification is in scope, run the authoritative rendered capture:
 
 ```bash
-node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs "<running-route-url>" \
   --states default,loading,empty,error --out evidence/<slug>
 ```
 
-gate the verdict on the rendered screenshots, axe results, horizontal overflow, main-landmark and state-aware live-region failures, CLS, computed fonts, touch-target sizes, and whether each required state actually appeared. fix serious rendered violations before presenting, or name the exact remaining gap.
+gate the verdict on the established rendered fields. evidence format 2 also records rounded one-edge
+borders, one-edge shadow candidates, forced uppercase, typography outliers, symbol-only controls,
+status-dot candidates, divider count, colons, and em dashes. those new measurements remain
+report-only until their fixture precision is proven.
 
 for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 
@@ -121,7 +148,7 @@ for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your 
 - Link to live/deployed version if applicable
 
 ## Updating This Skill
-- After Aaron gives design feedback, capture it.
+- After the user gives design feedback, capture it.
 - Add redirects to `references/anti-patterns.md` or the relevant reference file.
-- Add project-specific decisions to channel memory.
+- Add project-specific decisions to `DESIGN.md`, guidelines, or the project decision log.
 - Goal: don't get the same design feedback twice.

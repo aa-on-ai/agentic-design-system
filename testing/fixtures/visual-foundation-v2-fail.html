@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Visual foundation evidence fixture</title>
+    <style>
+      body { font-family: system-ui, sans-serif; }
+      .single-edge { border-bottom: 1px solid rgb(20 20 20); border-radius: 12px; padding: 16px; }
+      .shadow-edge { border-radius: 12px; box-shadow: inset 0 -1px 0 rgb(20 20 20); padding: 16px; }
+      .forced-uppercase { text-transform: uppercase; }
+      .odd-type { font-size: 16px; letter-spacing: 4px; line-height: 14px; }
+      .status-row { display: flex; align-items: center; gap: 8px; }
+      .status-dot { width: 10px; height: 10px; border-radius: 999px; background: rgb(15 150 80); }
+      .divider { border-bottom: 1px solid rgb(220 220 220); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 class="forced-uppercase">Operations board</h1>
+      <section class="single-edge">Selected route</section>
+      <section class="shadow-edge">Shadow selected route</section>
+      <p class="odd-type">Unconventional typography</p>
+      <button type="button" aria-label="Add item">+</button>
+      <div class="status-row"><span class="status-dot" aria-hidden="true"></span><span>On time</span></div>
+      <p class="divider">Owner: Elena</p>
+      <p>Delayed — retry soon</p>
+    </main>
+  </body>
+</html>

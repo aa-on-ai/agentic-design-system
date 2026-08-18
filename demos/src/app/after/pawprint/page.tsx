@@ -1,9 +1,20 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Dog, PawPrint, Star } from "lucide-react";
 import { StateCrossfade } from "../StateCrossfade";
 
 type ViewState = "loaded" | "loading" | "empty" | "error";
+
+function viewStateFromHash(hash: string): ViewState {
+  const requested = new URLSearchParams(hash.replace(/^#/, "")).get("state");
+  if (requested === "loading" || requested === "empty" || requested === "error") return requested;
+  return "loaded";
+}
+
+function hashStateFor(viewState: ViewState) {
+  return viewState === "loaded" ? "default" : viewState;
+}
 
 type WalkStatus = "Scheduled" | "In progress" | "Completed" | "Needs coverage";
 type WalkerStatus = "On route" | "Available" | "Break" | "Offline";
@@ -95,9 +106,9 @@ const walks: Walk[] = [
 const walkerRoster: Walker[] = [
   { name: "Nina Lopez", zone: "North Brooklyn", nextStart: "12:30 PM", status: "On route", rating: "4.9" },
   { name: "Jordan Kim", zone: "Greenpoint", nextStart: "10:15 AM", status: "Available", rating: "4.8" },
-  { name: "Taylor Reed", zone: "South Brooklyn", nextStart: "—", status: "Break", rating: "4.7" },
+  { name: "Taylor Reed", zone: "South Brooklyn", nextStart: "No upcoming walk", status: "Break", rating: "4.7" },
   { name: "Priya Shah", zone: "Downtown", nextStart: "1:10 PM", status: "Available", rating: "5.0" },
-  { name: "Alex Moreno", zone: "Williamsburg", nextStart: "—", status: "Offline", rating: "4.6" }
+  { name: "Alex Moreno", zone: "Williamsburg", nextStart: "No upcoming walk", status: "Offline", rating: "4.6" }
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -271,6 +282,19 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 export default function PawprintAdminDashboard() {
   const [viewState, setViewState] = useState<ViewState>("loaded");
 
+  useEffect(() => {
+    const syncFromHash = () => setViewState(viewStateFromHash(window.location.hash));
+    syncFromHash();
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
+
+  const selectViewState = (state: ViewState) => {
+    setViewState(state);
+    const nextHash = `#state=${hashStateFor(state)}`;
+    if (window.location.hash !== nextHash) window.location.hash = nextHash;
+  };
+
   const summary = useMemo(() => {
     const total = walks.length;
     const inProgress = walks.filter((w) => w.status === "In progress").length;
@@ -287,7 +311,7 @@ export default function PawprintAdminDashboard() {
     ) : viewState === "empty" ? (
       <EmptyState />
     ) : viewState === "error" ? (
-      <ErrorState onRetry={() => setViewState("loading")} />
+      <ErrorState onRetry={() => selectViewState("loading")} />
     ) : (
       <div className="space-y-6 lg:space-y-8">
         <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-[1.2fr_0.8fr_0.8fr]">
@@ -338,9 +362,7 @@ export default function PawprintAdminDashboard() {
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-lg">
-                          🐾
-                        </div>
+                        <PawPrint className="h-5 w-5 shrink-0 text-amber-700" aria-hidden="true" />
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-neutral-950">{walk.dog}</p>
                           <p className="truncate text-sm text-neutral-500">
@@ -429,7 +451,6 @@ export default function PawprintAdminDashboard() {
                         South Brooklyn, 11:00 AM start. Existing walker called out before first route check-in.
                       </p>
                     </div>
-                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-rose-500" aria-hidden="true" />
                   </div>
                   <p className="mt-4 border-l-2 border-rose-300 pl-3 text-sm font-medium leading-6 text-rose-800">
                     Reassignment is unavailable in this static preview.
@@ -465,8 +486,10 @@ export default function PawprintAdminDashboard() {
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <p className="hidden text-sm text-neutral-500 sm:block">
-                        ★ <span className="[font-variant-numeric:tabular-nums]">{walker.rating}</span>
+                      <p className="hidden items-center gap-1.5 text-sm text-neutral-500 sm:flex">
+                        <Star className="h-4 w-4" aria-hidden="true" />
+                        <span className="sr-only">Rating</span>
+                        <span className="[font-variant-numeric:tabular-nums]">{walker.rating}</span>
                       </p>
                       <WalkerStatusBadge status={walker.status} />
                     </div>
@@ -480,16 +503,14 @@ export default function PawprintAdminDashboard() {
     );
 
   return (
-    <main className="min-h-screen bg-[#f7f4ef] text-neutral-900 antialiased">
+    <main className="min-h-screen bg-[#f7f4ef] pt-4 text-neutral-900 antialiased lg:pt-0">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         <div className="rounded-[32px] bg-[#fcfbf8] p-4 shadow-[0_1px_2px_rgba(16,24,40,0.04),0_20px_60px_rgba(16,24,40,0.08)] outline outline-1 outline-black/5 sm:p-6 lg:p-8">
           <header className="border-b border-neutral-200 pb-6">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-950 text-xl text-white shadow-sm">
-                    🐕
-                  </div>
+                  <Dog className="h-8 w-8 shrink-0 text-neutral-900" aria-hidden="true" />
                   <div>
                     <p className="text-sm font-medium text-neutral-500">Pawprint admin</p>
                     <h1
@@ -523,7 +544,7 @@ export default function PawprintAdminDashboard() {
                 {(["loaded", "loading", "empty", "error"] as ViewState[]).map((state) => (
                   <button
                     key={state}
-                    onClick={() => setViewState(state)}
+                    onClick={() => selectViewState(state)}
                     aria-pressed={viewState === state}
                     className={cn(
                       "inline-flex min-h-12 items-center justify-center rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2",
