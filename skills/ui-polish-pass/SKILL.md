@@ -34,6 +34,8 @@ The screen works. Now make it feel right. This is the difference between functio
 - [ ] One clear headline — the page has exactly one thing that reads as the primary heading
 - [ ] Three levels max — heading, subheading, body. If you need more, the IA is probably wrong
 - [ ] Weight before size — try bold before bigger. Try softer opacity before smaller
+- [ ] Conventional utility type — preserve the product family or use a conventional general-purpose family unless the outcome explicitly earns expressive type
+- [ ] Natural casing and rhythm — no forced uppercase, arbitrary tracking, or unconventional line height outside the type system
 - [ ] No orphan labels — labels without content, headers without their section
 - [ ] Consistent text styles — same content type uses the same style everywhere
 
@@ -58,6 +60,8 @@ The screen works. Now make it feel right. This is the difference between functio
 - [ ] Cursor changes — pointer on clickable, not-allowed on disabled, grab on draggable
 - [ ] Focus visible — tab through the page, always know where you are
 - [ ] No dead zones — click targets are generous, not tiny islands of text
+- [ ] Whole-state selection — rounded controls never use a border on only one edge or a one-edge shadow spoof
+- [ ] Readable status — no static or animated status dots; status remains clear without color
 
 ### Pass 6: Micro-Details
 - [ ] **Tabular numbers** — any dynamically updating number uses `font-variant-numeric: tabular-nums` to prevent layout shift (counters, prices, stats, timers)
@@ -66,6 +70,7 @@ The screen works. Now make it feel right. This is the difference between functio
 - [ ] **Concentric border radius** — nested rounded elements have outer radius = inner radius + padding (see alignment.md)
 - [ ] **Image outlines** — images on light backgrounds get a subtle `outline: 1px solid rgba(0,0,0,0.06)` for consistent depth
 - [ ] **Icon animations** — icons that change state (open/close, play/pause) cross-fade with opacity + scale, not hard swap
+- [ ] **Coherent icons** — preserve the existing icon family; otherwise use licensed Nucleo or one open family, never mixed, and do not substitute text symbols
 - [ ] **Scale on press** — buttons use `scale(0.97)` on active state for tactile feedback, 100ms transition
 - [ ] **No `transition: all`** — always specify exact properties (`transition-property: transform, opacity`)
 
@@ -77,7 +82,7 @@ The screen works. Now make it feel right. This is the difference between functio
 - [ ] Final distill pass — what can you remove and make better at the same time?
 
 ## When NOT to Polish
-- Prototypes Aaron hasn't aligned on yet
+- Prototypes the user hasn't aligned on yet
 - Throwaway experiments or spikes
 - Internal tools where speed matters more than beauty
 

@@ -56,6 +56,11 @@ The result should contain these ten skills:
 For a direct filesystem check, confirm `agentic-design-system/SKILL.md` exists under the agent's
 skill directory listed above.
 
+The installed orchestrator also contains the visual foundation contract, routing contract, three
+starter presets, and a path-portable capture wrapper. Use the exact verification command in the
+matching file under [`integrations/`](../integrations/). The release matrix executes those commands
+for all five installer targets.
+
 ## Activate ADS
 
 For a single task, tell the agent:

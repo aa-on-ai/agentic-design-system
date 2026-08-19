@@ -55,7 +55,7 @@ Name one emotion. Not "impressed" — that's a reaction. An emotion:
 - Tension (something is happening here)
 - Warmth (I feel welcomed into someone's world)
 
-Write these three answers down. Share with Aaron. Get alignment. THEN build.
+Write these three answers down. Share with the user. Get alignment. THEN build.
 
 ---
 
@@ -123,9 +123,9 @@ Persistent UI that reinforces the world. Small, monospace, low opacity.
 ```
 
 These should be thematic:
-- Detective world: "CAM_04 [REC]", "SIGNAL_STRONG", "ANALYSER_ACTIVE"
-- Lab world: "SAMPLE_ID: 0042", "TEMP: 21.3°C", "PROTOCOL: ACTIVE"
-- Space world: "LAT: 34.0195 N", "ORBIT: STABLE", "COMMS: OPEN"
+- Detective world: "Camera 04 recording", "Signal strong", "Analyzer active"
+- Lab world: "Sample 0042", "Temperature 21.3 °C", "Protocol active"
+- Space world: "Latitude 34.0195 N", "Orbit stable", "Comms open"
 
 ### Layer 3: Custom Cursor
 Replace the default cursor. Even a simple dot + trailing ring transforms the feel.
@@ -234,7 +234,7 @@ The first 2-3 seconds set the entire mood. Never skip this.
 ### Minimum Viable Loader
 1. Full-screen curtain in the world's dominant color
 2. One animated element (progress bar, counter, spinner — thematic)
-3. One line of thematic text ("INITIALIZING...", "LOADING EVIDENCE...", "ENTERING LAB...")
+3. One line of thematic text ("Initializing...", "Loading evidence...", "Entering lab...")
 4. Curtain splits/fades to reveal the site
 
 ### Advanced Loader (for portfolio/showcase sites)
@@ -261,7 +261,7 @@ This pattern works because it's interactive (not just scrolling), it treats each
 
 ## Pre-Flight Checklist
 
-Before presenting a world-build to Aaron:
+Before presenting a world-build to the user:
 
 ### World Check
 - [ ] Creative brief exists (world, metaphor, emotion)
@@ -308,7 +308,7 @@ Before presenting a world-build to Aaron:
 - **void.st** — minimal but atmospheric, particle systems
 
 ## Updating This Skill
-After builds where Aaron gives feedback on atmosphere, depth, or immersion:
+After builds where the user gives feedback on atmosphere, depth, or immersion:
 - What created the right feeling → add to recipes
 - What fell flat → add to anti-patterns
 - New reference sites → add to the list

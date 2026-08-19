@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aa-on-ai/agentic-design-system/schemas/visual-foundation-contract.schema.json",
+  "title": "Agentic Design System visual foundation contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "evidenceFormat",
+    "profiles",
+    "typography",
+    "iconography",
+    "status",
+    "rules"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "id": { "const": "ads-visual-foundation-v2" },
+    "version": { "type": "integer", "const": 2 },
+    "evidenceFormat": { "type": "integer", "const": 2 },
+    "profiles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "eligibility", "defaultFonts", "weights", "originalityMeaning"],
+        "properties": {
+          "id": { "enum": ["utility", "expressive"] },
+          "eligibility": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "defaultFonts": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "weights": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["designQuality", "originality", "craft", "functionality"],
+            "properties": {
+              "designQuality": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "originality": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "craft": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "functionality": { "type": "integer", "minimum": 0, "maximum": 100 }
+            }
+          },
+          "originalityMeaning": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["utilityDefault", "expressiveRequiresBrief", "letterSpacing", "lineHeight"],
+      "properties": {
+        "utilityDefault": { "const": "conventional-general-purpose" },
+        "expressiveRequiresBrief": { "type": "boolean", "const": true },
+        "letterSpacing": { "type": "string", "minLength": 1 },
+        "lineHeight": { "type": "string", "minLength": 1 }
+      }
+    },
+    "iconography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preferenceOrder", "mixFamilies", "textSymbols"],
+      "properties": {
+        "preferenceOrder": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "existing-coherent-project-family" },
+            { "const": "licensed-nucleo" },
+            { "const": "one-open-family" }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "mixFamilies": { "type": "boolean", "const": false },
+        "textSymbols": { "type": "string", "minLength": 1 }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dots", "readableLabel", "iconRequirement", "colorRole"],
+      "properties": {
+        "dots": { "const": "never" },
+        "readableLabel": { "type": "boolean", "const": true },
+        "iconRequirement": { "type": "string", "minLength": 1 },
+        "colorRole": { "type": "string", "minLength": 1 }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "policy", "automaticEnforcement", "measurement", "allowed"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "policy": { "enum": ["never", "avoid", "prefer"] },
+          "automaticEnforcement": { "enum": ["blocker", "report-only", "human-review"] },
+          "measurement": { "type": "string", "minLength": 1 },
+          "allowed": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

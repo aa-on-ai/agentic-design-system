@@ -1,0 +1,490 @@
+{
+  "evidenceFormat": 2,
+  "url": "file:///Users/moltbot/clawd/.tmp/ads-foundation-20260818/testing/regression/adjacent-actions-v1.3.1/runs/2026-08-18-foundation-v2/museum-loans/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 860,
+      "renderedTextSample": "Harbor Museum Approve transfer Download condition report Outgoing loan A fragile object moving with a complete chain of care The cedar mask leaves Harbor Museum tomorrow. One surface note needs acknowledgment before the courier handoff. Object 1987.42.3 Carved cedar transformatio",
+      "renderSignature": "844b130b",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 5,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 875,
+      "renderedTextSample": "Harbor Museum Loan registrar Approve transfer Download condition report Outgoing loan A fragile object moving with a complete chain of care The cedar mask leaves Harbor Museum tomorrow. One surface note needs acknowledgment before the courier handoff. Object 1987.42.3 Carved ceda",
+      "renderSignature": "054e733e",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 5,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 208,
+      "renderedTextSample": "Harbor Museum Approve transfer Download condition report Outgoing loan Preparing the current loan record Custody milestones and condition notes are being loaded. Loading custody milestones and condition notes",
+      "renderSignature": "bec9d7d3",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 223,
+      "renderedTextSample": "Harbor Museum Loan registrar Approve transfer Download condition report Outgoing loan Preparing the current loan record Custody milestones and condition notes are being loaded. Loading custody milestones and condition notes",
+      "renderSignature": "f765b834",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 321,
+      "renderedTextSample": "Harbor Museum Approve transfer Download condition report Outgoing loan No object is moving today There are no outgoing loans in preparation. Approved requests will appear here when work begins. No outgoing loans are active Approved loan records will appear here when an object ent",
+      "renderSignature": "7196d05a",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 336,
+      "renderedTextSample": "Harbor Museum Loan registrar Approve transfer Download condition report Outgoing loan No object is moving today There are no outgoing loans in preparation. Approved requests will appear here when work begins. No outgoing loans are active Approved loan records will appear here whe",
+      "renderSignature": "e8590197",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 354,
+      "renderedTextSample": "Harbor Museum Approve transfer Download condition report Outgoing loan A fragile object awaiting authorized approval The loan record remains readable, but this account cannot approve the transfer. Approval permission is missing You can still inspect and download the signed condit",
+      "renderSignature": "8efeb175",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "Georgia, \"Times New Roman\", serif",
+        "color": "rgb(45, 43, 42)",
+        "backgroundColor": "rgb(242, 238, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 369,
+      "renderedTextSample": "Harbor Museum Loan registrar Approve transfer Download condition report Outgoing loan A fragile object awaiting authorized approval The loan record remains readable, but this account cannot approve the transfer. Approval permission is missing You can still inspect and download th",
+      "renderSignature": "5623c374",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "Georgia, \"Times New Roman\", serif"
+    ],
+    "touchTargetsUnder48": [],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

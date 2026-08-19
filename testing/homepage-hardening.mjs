@@ -580,13 +580,23 @@ for (const [browserName, browserType] of browserTypes) {
       await page.locator(".footer-ember-image img").evaluate((node) => {
         node.dataset.mountProbe = "footer-ember";
       });
+      await page.locator(".footer-ember-image").evaluate((node) => {
+        window.__adsFooterAnimationName = null;
+        node.addEventListener("animationstart", (event) => {
+          if (event.target === node) window.__adsFooterAnimationName = event.animationName;
+        }, { once: true });
+      });
       await page.getByRole("button", { name: "Make Ember bounce" }).click();
-      await settleMotionFrame(page);
+      await page.waitForFunction(
+        () => window.__adsFooterAnimationName === "ember-peek-pop",
+        undefined,
+        { timeout: 2_000 },
+      ).catch(() => undefined);
       const footerBounce = await page.locator(".footer-ember-image").evaluate((node) => {
         const image = node.querySelector("img");
         const style = getComputedStyle(node);
         return {
-          animationName: style.animationName,
+          animationName: window.__adsFooterAnimationName ?? style.animationName,
           imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
           imageStayedMounted: image?.dataset.mountProbe === "footer-ember",
           opacity: Number.parseFloat(style.opacity),

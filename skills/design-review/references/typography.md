@@ -15,7 +15,10 @@
 ## Pairing
 - Start with one family and multiple weights before reaching for a second font.
 - Add a second typeface only when you need real contrast: editorial vs utilitarian, display vs body.
-- Avoid defaulting to Inter unless the product truly wants invisible utility.
+- Utility interfaces default to the existing product family, a system sans, or another conventional
+  general-purpose family. Invisible utility is a valid design decision.
+- Expressive typography requires an eligible marketing, editorial, landing, launch, or
+  brief-approved surface.
 - Similar-but-different font pairings look accidental.
 
 ## Patterns Agents Miss
@@ -26,7 +29,9 @@
 - Use `text-wrap: balance` on headings and short text blocks to distribute text evenly across lines and prevent orphaned words. Use `text-wrap: pretty` for body copy where balance is too aggressive.
 
 ## Avoid
-- Inter/system font autopilot.
+- Rejecting a conventional font merely to appear designed.
+- Forced uppercase styling.
+- Tracking or line-height values that do not belong to a declared type role.
 - 14/15/16/18-style muddy scales.
 - Decorative display fonts in body copy.
 - Fake hierarchy created only with color changes.

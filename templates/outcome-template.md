@@ -11,6 +11,7 @@ define this before the agent starts building. outcome is the work contract: what
 - **artifact:** route, component, file path, screenshot set, or prototype URL
 - **owner agent:** builder model / lane
 - **grader agent:** separate model / lane, if available
+- **visual foundation profile:** `utility` / `expressive` with eligibility reason
 - **created:** ISO 8601
 - **max iterations:** 2 for fixes, 3 for normal UI, 5 for creative/reference-heavy work
 - **status:** `defined` / `building` / `grading` / `needs_revision` / `satisfied` / `max_iterations` / `failed`
@@ -45,22 +46,24 @@ example:
 
 ## rubric
 
-score 1-10 unless a criterion is pass/fail.
+lock the profile before generation using `contracts/visual-foundation.v2.json`. score 1-10 unless
+a criterion is pass/fail.
 
-| criterion | weight | pass condition |
-|---|---:|---|
-| Design Quality | 35% | coherent visual system; hierarchy, layout, color, and spacing feel intentional |
-| Originality | 30% | avoids obvious AI defaults; shows product-specific choices |
-| Craft | 20% | spacing, typography, contrast, hover/focus, responsive behavior are competent |
-| Functionality | 15% | primary task and state transitions are understandable |
-| State coverage | pass/fail | loading, empty, and error states exist or are explicitly not applicable |
-| Accessibility | pass/fail | semantic structure, focus paths, labels, alt text, and contrast clear the scripts/review |
-| Evidence | pass/fail | report, screenshots/preview, and verification commands are present |
+| criterion | utility | expressive | pass condition |
+|---|---:|---:|---|
+| Functionality | 35% | 15% | primary task and state transitions are understandable |
+| Design Quality | 30% | 35% | coherent visual system; hierarchy, layout, color, and spacing feel intentional |
+| Craft | 25% | 20% | spacing, typography, contrast, hover/focus, responsive behavior are competent |
+| Originality | 10% | 30% | avoids obvious AI defaults and shows product-specific choices; expressive work also has a brief-supported point of view |
+| State coverage | pass/fail | pass/fail | loading, empty, and error states exist or are explicitly not applicable |
+| Accessibility | pass/fail | pass/fail | semantic structure, focus paths, labels, alt text, and contrast clear the scripts/review |
+| Evidence | pass/fail | pass/fail | report, screenshots/preview, and verification commands are present |
 
 ## hard stops
 
-- Design Quality below 6 -> `needs_revision`
+- Functionality or Design Quality below 6 -> `needs_revision`
 - Originality below 6 on creative or marketing work -> `needs_revision` or `pivot`
+- any confirmed visual-foundation `never` rule -> `needs_revision`
 - missing required state with no stated reason -> `needs_revision`
 - accessibility warning left unresolved -> `needs_revision` unless human accepts it
 - vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
@@ -83,7 +86,8 @@ the grader must be a separate context from the builder when possible. the grader
 3. relevant `DESIGN.md` or project identity
 4. verification output
 
-the grader does not rewrite code. it returns `templates/grader-report-template.md` or the bundled installed-skill copy at `skills/agentic-design-system/templates/grader-report-template.md`.
+the grader does not rewrite code. it returns `templates/grader-report-template.md` in a repo clone
+or `<orchestrator-skill>/templates/grader-report-template.md` from an installed pack.
 
 ## event log
 

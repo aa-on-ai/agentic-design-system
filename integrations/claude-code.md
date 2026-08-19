@@ -30,4 +30,5 @@ Creative and reference skills remain opt-in. The orchestrator decides which gate
 ```bash
 npx skills list --agent claude-code --json
 test -f .claude/skills/agentic-design-system/SKILL.md
+node .claude/skills/agentic-design-system/scripts/run-capture.mjs --check
 ```

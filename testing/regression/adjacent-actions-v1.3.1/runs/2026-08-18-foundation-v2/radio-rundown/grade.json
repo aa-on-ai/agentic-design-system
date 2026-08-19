@@ -1,0 +1,18 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 8.6,
+    "originality": 8.5,
+    "craft": 8.7,
+    "functionality": 8.8
+  },
+  "weightedScore": 8.62,
+  "priorFindingClosure": {
+    "id": "radio-foundation-v2-001",
+    "status": "closed",
+    "evidence": "The repaired empty summaries say no segments are scheduled and Move segment is visibly disabled at both breakpoints; Add a segment and Call host remain available."
+  },
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}

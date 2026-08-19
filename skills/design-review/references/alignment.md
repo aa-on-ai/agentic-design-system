@@ -183,6 +183,13 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
 
 layer 2-3 shadows at different offsets and opacities for natural depth. reserve solid borders for interactive states (focus rings, selected items) where the hard edge communicates state, not decoration.
 
+## Rounded border integrity
+
+A rounded rectangle may use no border or a complete perimeter. Never use a border on only one edge
+of a rounded rectangle for selection, emphasis, or decoration. Do not recreate the same look with
+an inset or zero-blur one-edge shadow. Use fill, a complete perimeter, weight, an icon, or another
+whole-state treatment instead.
+
 ## The Meta-Rule
 
 if you're ever unsure about spacing or alignment, zoom out to 50% and look at the page as a shape. does it look like a composed rectangle with clear structure? or does it look like a collection of stuff thrown onto a canvas?

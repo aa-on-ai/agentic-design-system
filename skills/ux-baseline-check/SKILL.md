@@ -65,7 +65,7 @@ Before any page or component is "done", verify each applicable state exists:
 
 Run this checklist AFTER the feature works but BEFORE design review. For each missing state, either:
 1. **Implement it** (preferred)
-2. **Document it as a known gap** and tell Aaron explicitly
+2. **Document it as a known gap** and tell the user explicitly
 
 Never silently skip a state. If it's intentionally deferred, say so.
 

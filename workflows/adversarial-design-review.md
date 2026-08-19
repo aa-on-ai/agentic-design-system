@@ -3,6 +3,9 @@
 Review finished UI from a context that **did not build it**, whose job is to find the strongest
 reasons it is *not* done — the ADS separation-of-generation-and-evaluation thesis, made runnable.
 
+Path terms below are install-root neutral. `<orchestrator-skill>` is the directory containing the
+installed agentic-design-system skill and `<skills-root>` is its parent directory.
+
 ## When to use
 
 Before merging or shipping notable UI; when a build "feels fine" and you want a skeptic; whenever
@@ -10,9 +13,9 @@ the builder would otherwise self-clear its own quality.
 
 ## Read first
 
-- `skills/design-review/SKILL.md` (the quality gate + pre-flight checklist)
-- `skills/agentic-design-system/SKILL.md` → the 4-criteria rubric (Design Quality, Originality, Craft, Functionality)
-- `skills/agentic-design-system/references/structured-findings.md` → diagnostic categories, severity, and evidence schema
+- `<skills-root>/design-review/SKILL.md` (the quality gate + pre-flight checklist)
+- `<orchestrator-skill>/SKILL.md` → the profile-locked 4-criteria rubric
+- `<orchestrator-skill>/references/structured-findings.md` → diagnostic categories, severity, and evidence schema
 - [`templates/grader-report-template.md`](../templates/grader-report-template.md) (the verdict shape)
 - the task's outcome artifact ([`templates/outcome-template.md`](../templates/outcome-template.md)), if one exists
 
@@ -21,7 +24,7 @@ the builder would otherwise self-clear its own quality.
 1. **Capture the artifact** so the critic judges pixels, not source:
 
    ```bash
-   node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+   node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
      --states default,empty,loading,error --out evidence/<slug>
    ```
 
@@ -41,9 +44,9 @@ the builder would otherwise self-clear its own quality.
 5. **Back judgment with objective checks** on changed files so taste and defects stay separable:
 
 ```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 ```
 
 ## Evidence required

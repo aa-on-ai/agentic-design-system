@@ -30,4 +30,5 @@ For direction exploration, ask Codex to use `design-variations` before changing 
 ```bash
 npx skills list --agent codex --json
 test -f .agents/skills/agentic-design-system/SKILL.md
+node .agents/skills/agentic-design-system/scripts/run-capture.mjs --check
 ```

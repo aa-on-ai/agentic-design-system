@@ -1,0 +1,490 @@
+{
+  "evidenceFormat": 2,
+  "url": "file:///Users/moltbot/clawd/.tmp/ads-foundation-20260818/testing/regression/adjacent-actions-v1.3.1/runs/2026-08-18-foundation-v2/greenhouse-irrigation/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 797,
+      "renderedTextSample": "North house Adjust schedule Call grower Morning cycle Water where the crop needs it The next run starts in 24 minutes. Bay three is drying faster than its neighboring pepper rows. Outside conditions 27° and rising Vent screens open, light wind Next run at 6.40 am Bay three pepper",
+      "renderSignature": "55726512",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 813,
+      "renderedTextSample": "North house Irrigation desk Adjust schedule Call grower Morning cycle Water where the crop needs it The next run starts in 24 minutes. Bay three is drying faster than its neighboring pepper rows. Outside conditions 27° and rising Vent screens open, light wind Next run at 6.40 am ",
+      "renderSignature": "982b3ce9",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 269,
+      "renderedTextSample": "North house Adjust schedule Call grower Morning cycle Water where the crop needs it The latest moisture readings and valve state are being collected. Outside conditions 27° and rising Vent screens open, light wind Collecting the latest moisture readings and valve state",
+      "renderSignature": "7b37e3ab",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 285,
+      "renderedTextSample": "North house Irrigation desk Adjust schedule Call grower Morning cycle Water where the crop needs it The latest moisture readings and valve state are being collected. Outside conditions 27° and rising Vent screens open, light wind Collecting the latest moisture readings and valve ",
+      "renderSignature": "238d44ec",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 361,
+      "renderedTextSample": "North house Adjust schedule Call grower Morning cycle Water where the crop needs it All zones are resting within range. No watering run is planned. Outside conditions 27° and rising Vent screens open, light wind No runs are planned All zones are within their resting range. The ne",
+      "renderSignature": "5c4816f6",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 377,
+      "renderedTextSample": "North house Irrigation desk Adjust schedule Call grower Morning cycle Water where the crop needs it All zones are resting within range. No watering run is planned. Outside conditions 27° and rising Vent screens open, light wind No runs are planned All zones are within their resti",
+      "renderSignature": "4a9c0d65",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 390,
+      "renderedTextSample": "North house Adjust schedule Call grower Morning cycle Water where the crop needs it Safe mode is active while live moisture readings and schedule changes are unavailable. Outside conditions 27° and rising Vent screens open, light wind Telemetry is offline Safe mode keeps the last",
+      "renderSignature": "ffba7b37",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(37, 55, 41)",
+        "backgroundColor": "rgb(241, 241, 231)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 406,
+      "renderedTextSample": "North house Irrigation desk Adjust schedule Call grower Morning cycle Water where the crop needs it Safe mode is active while live moisture readings and schedule changes are unavailable. Outside conditions 27° and rising Vent screens open, light wind Telemetry is offline Safe mod",
+      "renderSignature": "0e969d24",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 0,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder48": [],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Visual foundation clean fixture</title>
+    <style>
+      body { font-family: system-ui, sans-serif; line-height: 1.5; }
+      .panel { border: 1px solid rgb(220 220 220); border-radius: 12px; padding: 16px; }
+      .status { font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Operations board</h1>
+      <section class="panel">Selected route</section>
+      <button type="button" aria-label="Add item">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" />
+        </svg>
+      </button>
+      <p class="status">On time</p>
+    </main>
+  </body>
+</html>

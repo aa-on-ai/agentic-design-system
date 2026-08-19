@@ -3,6 +3,9 @@
 Review a mobile / responsive / app / PWA screen as **two independent passes** so opinions
 never get mistaken for defects.
 
+Path terms below are install-root neutral. `<orchestrator-skill>` is the directory containing the
+installed agentic-design-system skill and `<skills-root>` is its parent directory.
+
 ## When to use
 
 The task is mobile/responsive review, or names: mobile, responsive, app, PWA, iOS, Android,
@@ -10,9 +13,9 @@ safe area, notch, thumb zone/reach, touch targets, gesture, or "check this on a 
 
 ## Read first
 
-- `routing/ROUTING.md` → **Mobile + motion review** (the routing rule)
-- `skills/design-review/references/mobile.md` (depth: lenses, decision forks, severity tiers) — if present in your install
-- `skills/design-review/references/responsive.md` (cross-width layout checklist)
+- `<orchestrator-skill>/routing/ROUTING.md` → **Mobile + motion review**
+- `<skills-root>/design-review/references/mobile.md` (depth: lenses, decision forks, severity tiers)
+- `<skills-root>/design-review/references/responsive.md` (cross-width layout checklist)
 
 If `mobile.md` is not in your install, the two-pass shape below is enough to run.
 
@@ -30,16 +33,16 @@ the signal. Do not pick silently.
 **Pass B — platform verification (objective defects).** On changed files, run the cheap checks:
 
 ```bash
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/state-check.py <file.tsx>
+python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
 ```
 
 Then capture the rendered route at mobile breakpoints — this is the **authoritative** platform
 evidence (axe on the live DOM; measured overflow, semantics, and CLS), not an eyeball pass:
 
 ```bash
-node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
   --states default,empty,loading,error --breakpoints 390x844,768x1024 --out evidence/<slug>
 ```
 
@@ -62,7 +65,7 @@ Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defect
 Then eyeball the screenshots for what the gates don't measure: safe-area insets, hover-only
 traps, PWA manifest/offline. `capture.mjs` ships with the design-review skill,
 so installed agents have it. If capture reports Playwright missing, run
-`node skills/design-review/scripts/setup-capture.mjs` once (from your project root) to install it,
+`node <skills-root>/design-review/scripts/setup-capture.mjs` once from the project root to install it,
 then re-run capture. If you genuinely can't install, fall back to a manual 375px screenshot and
 **say capture was unavailable** — don't silently skip the rendered pass.
 

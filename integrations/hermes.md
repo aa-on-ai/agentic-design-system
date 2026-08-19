@@ -28,4 +28,5 @@ Use the agentic-design-system skill for this UI task. Define the outcome, read t
 ```bash
 npx skills list --agent hermes-agent --json
 test -f .hermes/skills/agentic-design-system/SKILL.md
+node .hermes/skills/agentic-design-system/scripts/run-capture.mjs --check
 ```

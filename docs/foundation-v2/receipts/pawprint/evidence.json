@@ -1,0 +1,490 @@
+{
+  "evidenceFormat": 2,
+  "url": "http://127.0.0.1:3118/after/pawprint",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 2006,
+      "renderedTextSample": "Overview Menu Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Service level 98.2% Updated 4 min ago Rain watch this afternoon Default L",
+      "renderSignature": "74820ecf",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 3,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 2032,
+      "renderedTextSample": "Agentic Design System Overview Workbench Evidence tools Decision trace Proof case Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Servi",
+      "renderSignature": "25eb3499",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 3,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 331,
+      "renderedTextSample": "Overview Menu Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Service level 98.2% Updated 4 min ago Rain watch this afternoon Default L",
+      "renderSignature": "a473bc71",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 399,
+      "renderedTextSample": "Agentic Design System Overview Workbench Evidence tools Decision trace Proof case Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Servi",
+      "renderSignature": "90485d4c",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 524,
+      "renderedTextSample": "Overview Menu Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Service level 98.2% Updated 4 min ago Rain watch this afternoon Default L",
+      "renderSignature": "d579a6ad",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": false,
+      "renderedTextLength": 592,
+      "renderedTextSample": "Agentic Design System Overview Workbench Evidence tools Decision trace Proof case Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Servi",
+      "renderSignature": "f5cd3966",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": true,
+      "renderedTextLength": 529,
+      "renderedTextSample": "Overview Menu Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Service level 98.2% Updated 4 min ago Rain watch this afternoon Default L",
+      "renderSignature": "dd9e3e11",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "\"DM Sans\", \"DM Sans Fallback\", sans-serif",
+        "color": "rgb(28, 23, 17)",
+        "backgroundColor": "rgb(241, 228, 202)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": true,
+        "header": true,
+        "footer": false
+      },
+      "statusRegion": false,
+      "alertRegion": true,
+      "renderedTextLength": 597,
+      "renderedTextSample": "Agentic Design System Overview Workbench Evidence tools Decision trace Proof case Pawprint admin Daily dispatch dashboard Monitor today’s walks, spot coverage issues before they snowball, and keep owners updated without bouncing between schedules, messages, and route notes. Servi",
+      "renderSignature": "d7bd8b80",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": []
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "\"DM Sans\", \"DM Sans Fallback\", sans-serif"
+    ],
+    "touchTargetsUnder48": [],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": []
+  }
+}

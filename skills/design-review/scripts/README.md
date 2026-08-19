@@ -28,11 +28,11 @@ be satisfied by a comment.
 
 ```bash
 # one-time setup (installs playwright + @axe-core/playwright + chromium, then verifies):
-node skills/design-review/scripts/setup-capture.mjs
-# verify only, no install:  node skills/design-review/scripts/setup-capture.mjs --check
+node <skills-root>/design-review/scripts/setup-capture.mjs
+# verify only, no install:  node <skills-root>/design-review/scripts/setup-capture.mjs --check
 
 # capture a running route:
-node capture.mjs "http://localhost:3000/orders" \
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs "http://localhost:3000/orders" \
   --states default,loading,empty,error \
   --out evidence/orders
 ```
@@ -46,7 +46,10 @@ Run `setup-capture.mjs` from your project root so the deps land in a `node_modul
 
 Output (`evidence/orders/`):
 - `evidence.json` — structured facts + a `gates` block (axe, overflow, main landmark,
-  state-aware live regions, CLS, state-render, touch targets, fonts)
+  state-aware live regions, CLS, state-render, touch targets, fonts). Evidence format 2 also
+  includes report-only visual-foundation measurements for rounded one-edge borders, one-edge
+  shadows, forced uppercase, typography outliers, symbol-only controls, status dots, divider
+  count, colons, and em dashes.
 - `<state>-<WxH>.png` — one screenshot per state per breakpoint
 
 States are toggled via the URL hash (`#state=<name>`); the route must expose them.
@@ -59,9 +62,9 @@ by `state@breakpoint` and records the visual delta:
 
 ```bash
 # capture both revisions with the SAME states and breakpoints:
-node capture.mjs "<baseline-url>"  --states default,empty --out evidence/orders-baseline
-node capture.mjs "<candidate-url>" --states default,empty --out evidence/orders-candidate
-node compare.mjs evidence/orders-baseline evidence/orders-candidate
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs "<baseline-url>"  --states default,empty --out evidence/orders-baseline
+node <skills-root>/agentic-design-system/scripts/run-capture.mjs "<candidate-url>" --states default,empty --out evidence/orders-candidate
+node <skills-root>/design-review/scripts/compare.mjs evidence/orders-baseline evidence/orders-candidate
 ```
 
 Output (`evidence/orders-candidate/comparison/`):
@@ -90,16 +93,10 @@ always say which mode produced the numbers.
 
 Smoke test (no browser, no network): `node testing/compare-smoke.mjs`.
 
-### Smoke test (no dev server, no network)
+### Repository-only smoke test
 
-```bash
-cd ../../../../testing/fixtures
-node ../../skills/design-review/scripts/capture.mjs \
-  "file://$(pwd)/states-demo.html" \
-  --states default,loading,empty,error --out ./evidence/states-demo
-# expect: 2 serious axe violations (the deliberate missing-alt img), all 4 states rendered,
-# main/live-region gates clear, and CLS within 0.1.
-```
+Repo clones can run `npm run capture-evidence:v2` from the repository root. The fixture and npm
+script are release infrastructure and are intentionally not part of an installed skill pack.
 
 ## The rule
 

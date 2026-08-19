@@ -42,6 +42,16 @@ runbooks=(
   decision-provenance.md
 )
 
+bundled_presets=(
+  utilitarian-app.md
+  utilitarian-app.json
+  dense-dashboard.md
+  dense-dashboard.json
+  marketing-editorial.md
+  marketing-editorial.json
+  README.md
+)
+
 agent_specs=(
   "claude-code|.claude/skills"
   "codex|.agents/skills"
@@ -107,6 +117,52 @@ for spec in "${agent_specs[@]}"; do
     echo "missing installed structured-findings reference for $agent" >&2
     exit 1
   fi
+
+  visual_contract="$project/$install_root/agentic-design-system/contracts/visual-foundation.v2.json"
+  if [[ ! -f "$visual_contract" ]]; then
+    echo "missing installed visual-foundation contract for $agent" >&2
+    exit 1
+  fi
+  if ! diff -q "$ROOT/contracts/visual-foundation.v2.json" "$visual_contract" >/dev/null; then
+    echo "installed visual-foundation contract drift for $agent" >&2
+    exit 1
+  fi
+
+  routing="$project/$install_root/agentic-design-system/routing/ROUTING.md"
+  if [[ ! -f "$routing" ]]; then
+    echo "missing installed routing contract for $agent" >&2
+    exit 1
+  fi
+  if ! diff -q "$ROOT/routing/ROUTING.md" "$routing" >/dev/null; then
+    echo "installed routing contract drift for $agent" >&2
+    exit 1
+  fi
+
+  for schema in preset.schema.json visual-foundation-contract.schema.json; do
+    installed="$project/$install_root/agentic-design-system/schemas/$schema"
+    canonical="$ROOT/schemas/$schema"
+    if [[ ! -f "$installed" ]]; then
+      echo "missing bundled schema for $agent: $schema" >&2
+      exit 1
+    fi
+    if ! diff -q "$canonical" "$installed" >/dev/null; then
+      echo "bundled schema drift for $agent: $schema" >&2
+      exit 1
+    fi
+  done
+
+  for preset in "${bundled_presets[@]}"; do
+    installed="$project/$install_root/agentic-design-system/presets/$preset"
+    canonical="$ROOT/presets/$preset"
+    if [[ ! -f "$installed" ]]; then
+      echo "missing bundled preset for $agent: $preset" >&2
+      exit 1
+    fi
+    if ! diff -q "$canonical" "$installed" >/dev/null; then
+      echo "bundled preset drift for $agent: $preset" >&2
+      exit 1
+    fi
+  done
   if ! diff -q "$ROOT/skills/agentic-design-system/references/structured-findings.md" "$structured_findings_reference" >/dev/null; then
     echo "installed structured-findings reference drift for $agent" >&2
     exit 1
@@ -138,6 +194,34 @@ for spec in "${agent_specs[@]}"; do
     fi
   done
 
+  capture_runner="$project/$install_root/agentic-design-system/scripts/run-capture.mjs"
+  if ! node "$capture_runner" --check >"$sandbox/capture-check.log" 2>&1; then
+    echo "installed capture command failed for $agent" >&2
+    sed -n '1,120p' "$sandbox/capture-check.log" >&2
+    exit 1
+  fi
+
+  if ! node "$trace_script" --help >"$sandbox/trace-help.log" 2>&1; then
+    echo "installed decision-trace command failed for $agent" >&2
+    sed -n '1,120p' "$sandbox/trace-help.log" >&2
+    exit 1
+  fi
+
+  sample="$project/ads-consumer-sample.tsx"
+  printf '%s\n' \
+    'export function Sample({ state }: { state: string }) {' \
+    '  return <main className="sm:p-4"><h1>Orders</h1><section>{state === "loading" ? "Loading" : state === "empty" ? "No orders yet" : state === "error" ? "Error, try again" : "Ready"}</section><button className="focus-visible:ring-2">Retry</button></main>;' \
+    '}' >"$sample"
+  for source_check in anti-pattern-check.py state-check.py accessibility-check.py; do
+    if ! python3 "$project/$install_root/design-review/scripts/$source_check" "$sample" >"$sandbox/$source_check.log" 2>&1; then
+      echo "installed source command failed for $agent: $source_check" >&2
+      sed -n '1,160p' "$sandbox/$source_check.log" >&2
+      exit 1
+    fi
+  done
+
+  node "$ROOT/testing/installed-reference-smoke.mjs" "$project/$install_root"
+
   if [[ ! -f "$project/skills-lock.json" ]]; then
     echo "missing skills-lock.json for $agent" >&2
     exit 1
@@ -146,4 +230,4 @@ for spec in "${agent_specs[@]}"; do
   echo "install passed: $agent -> $install_root"
 done
 
-echo "install matrix passed: ${#agent_specs[@]} agents x ${#expected[@]} skills, with assets, templates, workflow runbooks, and lockfiles verified"
+echo "install matrix passed: ${#agent_specs[@]} agents x ${#expected[@]} skills, with contracts, routing, presets, executable consumer commands, portable instructional references, templates, workflow runbooks, and lockfiles verified"

@@ -63,6 +63,62 @@ if [[ ! -f "$structured_findings_reference" ]]; then
   echo "missing installed skill asset: agentic-design-system/references/structured-findings.md" >&2
   exit 1
 fi
+
+visual_contract="$TMP_DIR/.agents/skills/agentic-design-system/contracts/visual-foundation.v2.json"
+if [[ ! -f "$visual_contract" ]]; then
+  echo "missing installed visual-foundation contract" >&2
+  exit 1
+fi
+if ! diff -q "$ROOT/contracts/visual-foundation.v2.json" "$visual_contract" >/dev/null; then
+  echo "installed visual-foundation contract drift" >&2
+  exit 1
+fi
+
+routing="$TMP_DIR/.agents/skills/agentic-design-system/routing/ROUTING.md"
+if [[ ! -f "$routing" ]]; then
+  echo "missing installed routing contract" >&2
+  exit 1
+fi
+if ! diff -q "$ROOT/routing/ROUTING.md" "$routing" >/dev/null; then
+  echo "installed routing contract drift" >&2
+  exit 1
+fi
+
+for schema in preset.schema.json visual-foundation-contract.schema.json; do
+  installed="$TMP_DIR/.agents/skills/agentic-design-system/schemas/$schema"
+  canonical="$ROOT/schemas/$schema"
+  if [[ ! -f "$installed" ]]; then
+    echo "missing bundled schema: $schema" >&2
+    exit 1
+  fi
+  if ! diff -q "$canonical" "$installed" >/dev/null; then
+    echo "bundled schema drift: $schema" >&2
+    exit 1
+  fi
+done
+
+bundled_presets=(
+  utilitarian-app.md
+  utilitarian-app.json
+  dense-dashboard.md
+  dense-dashboard.json
+  marketing-editorial.md
+  marketing-editorial.json
+  README.md
+)
+
+for preset in "${bundled_presets[@]}"; do
+  installed="$TMP_DIR/.agents/skills/agentic-design-system/presets/$preset"
+  canonical="$ROOT/presets/$preset"
+  if [[ ! -f "$installed" ]]; then
+    echo "missing bundled preset: $preset" >&2
+    exit 1
+  fi
+  if ! diff -q "$canonical" "$installed" >/dev/null; then
+    echo "bundled preset drift: $preset" >&2
+    exit 1
+  fi
+done
 if ! diff -q "$ROOT/skills/agentic-design-system/references/structured-findings.md" "$structured_findings_reference" >/dev/null; then
   echo "installed skill asset drift: skills/agentic-design-system/references/structured-findings.md" >&2
   exit 1
@@ -119,4 +175,17 @@ for runbook in "${runbooks[@]}"; do
   fi
 done
 
-echo "install smoke passed: ${#expected[@]} skills, 3 skill assets, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks (all in sync)"
+capture_runner="$TMP_DIR/.agents/skills/agentic-design-system/scripts/run-capture.mjs"
+node "$capture_runner" --check
+node "$trace_script" --help >/dev/null
+
+sample="$TMP_DIR/ads-consumer-sample.tsx"
+printf '%s\n' \
+  'export function Sample({ state }: { state: string }) {' \
+  '  return <main className="sm:p-4"><h1>Orders</h1><section>{state === "loading" ? "Loading" : state === "empty" ? "No orders yet" : state === "error" ? "Error, try again" : "Ready"}</section><button className="focus-visible:ring-2">Retry</button></main>;' \
+  '}' >"$sample"
+python3 "$TMP_DIR/.agents/skills/design-review/scripts/anti-pattern-check.py" "$sample" >/dev/null
+python3 "$TMP_DIR/.agents/skills/design-review/scripts/state-check.py" "$sample" >/dev/null
+python3 "$TMP_DIR/.agents/skills/design-review/scripts/accessibility-check.py" "$sample" >/dev/null
+
+echo "install smoke passed: ${#expected[@]} skills, contracts, routing, presets, executable consumer commands, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks"

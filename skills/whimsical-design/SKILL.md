@@ -27,7 +27,7 @@ This skill is part of the creative pack. Do NOT apply it by default on every vis
 If in doubt, skip this skill. Core skills (design-review, ux-baseline-check, ui-polish-pass) are always safe. This one requires judgment about whether "push past safe" is actually what the product needs.
 
 ## When It Applies
-Design-review catches quality problems. This skill pushes toward delight. Use alongside `skills/design-review/SKILL.md` when the triggers above are met.
+Design-review catches quality problems. This skill pushes toward delight. Use alongside `<skills-root>/design-review/SKILL.md` when the triggers above are met.
 
 ## The Bar
 Would someone screenshot this and send it to a friend? Would it make them smile? If no, push further.
@@ -198,9 +198,9 @@ Type carries personality before anyone reads a word.
 - [ ] **Performance** — are animations GPU-accelerated? Are textures optimized?
 
 ## Updating This Skill
-After design reviews where Aaron gives feedback on visual personality, tone, or craft:
-- What delighted him → add to Principles or References
+After design reviews where the user gives feedback on visual personality, tone, or craft:
+- What delighted the user → add to Principles or References
 - What felt flat → add to Anti-Patterns
-- Specific decisions (texture style, color choice, animation timing) → project channel memory
+- Specific decisions (texture style, color choice, animation timing) → `DESIGN.md` or the project decision log
 
 The goal: every build should feel more "us" than the last.

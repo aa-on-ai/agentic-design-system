@@ -89,6 +89,18 @@ try {
           .querySelector(".ads-system-nav-layer")
           ?.getAttribute("data-state") === "open",
     );
+    await page.waitForFunction(
+      ({ viewportWidth, viewportHeight }) => {
+        const element = document.querySelector(".ads-system-nav-sheet");
+        if (!(element instanceof HTMLElement)) return false;
+        const box = element.getBoundingClientRect();
+        return Math.abs(box.left) <= 1 &&
+          Math.abs(box.width - viewportWidth) <= 2 &&
+          Math.abs(box.bottom - viewportHeight) <= 2;
+      },
+      { viewportWidth: width, viewportHeight: 844 },
+      { timeout: 2_000 },
+    ).catch(() => undefined);
     const sheet = await page
       .locator(".ads-system-nav-sheet")
       .boundingBox();
@@ -98,7 +110,7 @@ try {
       Math.abs(sheet.width - width) > 2 ||
       Math.abs(sheet.y + sheet.height - 844) > 2
     ) {
-      failures.push(`${scope}: system pages do not open as a bottom sheet`);
+      failures.push(`${scope}: system pages do not open as a bottom sheet (${JSON.stringify(sheet)})`);
     }
     const githubInMenu = page.locator(
       '.ads-system-nav-menu a[href*="github.com"]',
