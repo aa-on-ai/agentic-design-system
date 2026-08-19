@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-08-18-foundation-v2",
+  "createdAt": "2026-08-18T23:22:59.256Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "61795131048157fce7696b35d1b202c51ae12256",
+  "behaviorDigest": "a7652cd2f841291f73a290d543215d3fde8c0f8dfabddf919a8832f8ffb15290",
+  "behaviorFileCount": 77,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "Codex builder pass from the frozen Pawprint outcome and current foundation v2 contract. Fresh self-contained artifact, eight Chromium captures, rendered gates, adjacent-action checks, and original-resolution visual inspection completed at behavior digest a7652cd2.",
+      "graderContext": "Final independent evidence-only Pawprint regrade: current builder repair receipt, evidence.json, and all eight current PNGs inspected at original resolution without artifact source access. pawprint-foundation-v2-001 closed; verdict=satisfied, weightedScore=8.53."
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "Codex builder pass from the frozen Glasshouse outcome and current foundation v2 contract. Fresh self-contained artifact, eight Chromium captures, rendered gates, adjacent-action checks, and original-resolution visual inspection completed at behavior digest a7652cd2.",
+      "graderContext": "Final independent evidence-only Glasshouse regrade: current builder repair receipt, evidence.json, and all eight current PNGs inspected at original resolution without artifact source access. greenhouse-foundation-v2-001 closed; verdict=satisfied, weightedScore=8.58."
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "Codex builder pass from the frozen Museum outcome and current foundation v2 contract. Fresh self-contained artifact, eight Chromium captures, rendered gates, adjacent-action checks, and original-resolution visual inspection completed at behavior digest a7652cd2.",
+      "graderContext": "Codex closure review against the prior independent Museum finding: repaired artifact DOM, regenerated evidence.json, and all eight current PNGs inspected at original resolution. museum-foundation-v2-001 closed because empty disables both record-specific toolbar actions while preserving Review approved requests; verdict=satisfied, weightedScore=8.68."
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "Codex builder pass from the frozen Kitchen outcome and current foundation v2 contract. Fresh self-contained artifact, eight Chromium captures, rendered gates, adjacent-action checks, and original-resolution visual inspection completed at behavior digest a7652cd2.",
+      "graderContext": "Final independent evidence-only Kitchen regrade: current builder repair receipt, evidence.json, and all eight current PNGs inspected at original resolution without artifact source access. kitchen-foundation-v2-001 closed; verdict=satisfied, weightedScore=8.50."
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "Codex builder pass from the frozen Radio outcome and current foundation v2 contract. Fresh self-contained artifact, eight Chromium captures, rendered gates, adjacent-action checks, and original-resolution visual inspection completed at behavior digest a7652cd2.",
+      "graderContext": "Final independent evidence-only Radio regrade: current builder repair receipt, evidence.json, and all eight current PNGs inspected at original resolution without artifact source access. radio-foundation-v2-001 closed; verdict=satisfied, weightedScore=8.62."
+    }
+  ]
+}
