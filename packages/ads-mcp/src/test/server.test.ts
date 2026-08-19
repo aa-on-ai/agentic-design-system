@@ -188,9 +188,15 @@ async function runCompiledStdioSequence(era: 'legacy' | 'modern'): Promise<void>
     });
   });
   const cli = fileURLToPath(new URL('../cli.js', import.meta.url));
+  const browserEnvironment: Record<string, string> = {};
+  for (const key of ['PLAYWRIGHT_BROWSERS_PATH', 'PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH']) {
+    const value = process.env[key];
+    if (value) browserEnvironment[key] = value;
+  }
   const transport = new StdioClientTransport({
     command: process.execPath,
     args: [cli, '--root', root],
+    env: browserEnvironment,
     stderr: 'pipe',
   });
   const client = new Client({ name: 'ads-stdio-test-client', version: '1.0.0' });
@@ -231,8 +237,13 @@ async function runCompiledStdioSequence(era: 'legacy' | 'modern'): Promise<void>
         },
       },
     });
-    const rendered = renderResult.structuredContent as { runId: string; status: string; artifacts: { evidence: string } };
-    assert.equal(rendered.status, 'complete');
+    const rendered = renderResult.structuredContent as {
+      runId: string;
+      status: string;
+      blockers: string[];
+      artifacts: { evidence: string };
+    };
+    assert.equal(rendered.status, 'complete', rendered.blockers.join('; '));
     const evaluateResult = await client.callTool({
       name: 'ads_evaluate',
       arguments: {
