@@ -195,6 +195,10 @@ for spec in "${agent_specs[@]}"; do
   done
 
   capture_runner="$project/$install_root/agentic-design-system/scripts/run-capture.mjs"
+  if [[ ! -f "$capture_runner" ]]; then
+    echo "missing installed skill asset for $agent: agentic-design-system/scripts/run-capture.mjs" >&2
+    exit 1
+  fi
   if ! node "$capture_runner" --check >"$sandbox/capture-check.log" 2>&1; then
     echo "installed capture command failed for $agent" >&2
     sed -n '1,120p' "$sandbox/capture-check.log" >&2
@@ -204,6 +208,28 @@ for spec in "${agent_specs[@]}"; do
   if ! node "$trace_script" --help >"$sandbox/trace-help.log" 2>&1; then
     echo "installed decision-trace command failed for $agent" >&2
     sed -n '1,120p' "$sandbox/trace-help.log" >&2
+    exit 1
+  fi
+
+  setup_capture_script="$project/$install_root/design-review/scripts/setup-capture.mjs"
+  if [[ ! -f "$setup_capture_script" ]]; then
+    echo "missing installed skill asset for $agent: design-review/scripts/setup-capture.mjs" >&2
+    exit 1
+  fi
+  if ! node --check "$setup_capture_script" >"$sandbox/setup-capture-check.log" 2>&1; then
+    echo "installed setup-capture syntax check failed for $agent" >&2
+    sed -n '1,120p' "$sandbox/setup-capture-check.log" >&2
+    exit 1
+  fi
+
+  compare_script="$project/$install_root/design-review/scripts/compare.mjs"
+  if [[ ! -f "$compare_script" ]]; then
+    echo "missing installed skill asset for $agent: design-review/scripts/compare.mjs" >&2
+    exit 1
+  fi
+  if ! node --check "$compare_script" >"$sandbox/compare-check.log" 2>&1; then
+    echo "installed compare syntax check failed for $agent" >&2
+    sed -n '1,120p' "$sandbox/compare-check.log" >&2
     exit 1
   fi
 
