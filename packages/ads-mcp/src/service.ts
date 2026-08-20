@@ -153,6 +153,12 @@ function webRenderBlockers(gates: Record<string, unknown>, states: string[], max
   if (Number(gates.maxCumulativeLayoutShift || 0) > maxCls || arrayLength(gates.clsFailures) > 0) {
     blockers.push(`cumulative layout shift exceeds ${maxCls}`);
   }
+  const modalInteractions = gates.modalInteractions;
+  if (!modalInteractions || typeof modalInteractions !== 'object') {
+    blockers.push('modal interaction receipt is unavailable');
+  } else if ((modalInteractions as Record<string, unknown>).passed !== true) {
+    blockers.push('modal interaction receipt failed');
+  }
   blockers.push(...stateBlockers(gates, states));
   return blockers;
 }

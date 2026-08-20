@@ -28,6 +28,10 @@ the builder would otherwise self-clear its own quality.
      --states default,empty,loading,error --out evidence/<slug>
    ```
 
+   Read both `evidence/<slug>/evidence.json` and
+   `evidence/<slug>/modal-interaction-receipt.json`. If any declared dialog is `failed` or
+   `not_verified`, or the receipt is missing, the review cannot return `satisfied`.
+
 2. **Open a separate critic context** — a fresh subagent or session that did not write the code.
    Give it the outcome + the captured screenshots (`evidence/<slug>/*.png`) and the `evidence.json`
    gates, not the builder's commentary.
@@ -57,6 +61,8 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 
 - The `capture.mjs` screenshots + `evidence.json` the critic actually judged (axe, overflow,
   main/live-region semantics, CLS, state, and touch-target gates included).
+- `modal-interaction-receipt.json`; when dialogs are declared it must deterministically verify
+  initial focus, Tab/Shift+Tab containment, Escape dismissal, focus return, and inert background.
 - The three checks' output.
 - Each critic finding tied to a rubric row, state, breakpoint, exact screenshot, and concrete
   target or normalized screenshot region — no free-floating "feels off."
@@ -76,6 +82,7 @@ finding id if not satisfied, plus the complete coverage ledger.
 - No outcome is defined — you cannot judge against nothing. Write the outcome first (one pass of
   `templates/outcome-template.md`), then review.
 - The artifact can't be rendered/screenshotted, so the critic would be judging source only — say so.
+- A required modal interaction receipt is missing, `failed`, or `not_verified`.
 
 ## Stop when
 

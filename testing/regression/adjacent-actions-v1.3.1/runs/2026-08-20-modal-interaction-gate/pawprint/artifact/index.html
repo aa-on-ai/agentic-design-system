@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pawprint dispatch</title>
+  <style>
+    :root { color-scheme: light; --ink:#18332d; --muted:#5e6f69; --paper:#f6f2e9; --surface:#fffdf8; --line:#d8d2c6; --green:#1e624f; --green-soft:#e1eee8; --amber:#8b5519; --amber-soft:#f6e7cc; --danger:#9b3a32; --danger-soft:#f7e2de; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:320px; background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:16px; line-height:1.5; }
+    button,a { font:inherit; }
+    button:focus-visible,a:focus-visible { outline:3px solid #2e79b7; outline-offset:3px; }
+    .shell { width:min(1160px,100%); margin:0 auto; padding:28px clamp(18px,4vw,52px) 56px; }
+    .masthead { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:32px; }
+    .brand { display:flex; align-items:center; gap:12px; min-width:0; }
+    .mark { width:46px; height:46px; display:grid; place-items:center; border-radius:14px; background:var(--green); color:white; flex:0 0 auto; }
+    .mark svg,.button svg,.contact svg,.retry svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .brand strong { display:block; font-size:20px; line-height:1.2; }
+    .brand span { display:block; color:var(--muted); font-size:14px; }
+    .header-actions { display:flex; align-items:center; gap:10px; }
+    .button,.contact,.retry { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:0 17px; border:1px solid var(--green); border-radius:12px; background:var(--green); color:white; font-weight:650; text-decoration:none; cursor:pointer; }
+    .button:disabled { border-color:#c8c3b9; background:#e5e1d8; color:#77746e; cursor:not-allowed; }
+    .eyebrow { margin:0 0 7px; color:var(--green); font-size:14px; font-weight:700; }
+    h1 { margin:0; max-width:760px; font-size:clamp(30px,5vw,52px); line-height:1.15; font-weight:760; }
+    .lede { max-width:700px; margin:16px 0 0; color:var(--muted); font-size:18px; }
+    .state { display:none; }
+    [data-ui-state="default"] .state-default,[data-ui-state="loading"] .state-loading,[data-ui-state="empty"] .state-empty,[data-ui-state="error"] .state-error { display:block; }
+    .hero { margin-top:30px; padding:clamp(22px,4vw,38px); border:1px solid var(--line); border-radius:22px; background:var(--surface); box-shadow:0 18px 46px rgba(54,45,29,.07); }
+    .hero-row { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(240px,.7fr); gap:30px; align-items:start; }
+    .next { padding-right:30px; border-right:1px solid var(--line); }
+    .label { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:650; }
+    h2 { margin:0; font-size:clamp(22px,3vw,32px); line-height:1.2; }
+    .detail { margin:11px 0 20px; color:var(--muted); }
+    .contact { border-color:var(--ink); background:transparent; color:var(--ink); }
+    .timing { display:grid; gap:18px; }
+    .timing strong { display:block; font-size:24px; line-height:1.25; }
+    .timing span { color:var(--muted); }
+    .section-title { display:flex; justify-content:space-between; align-items:end; gap:18px; margin:36px 0 14px; }
+    .section-title h2 { font-size:22px; }
+    .section-title p { margin:0; color:var(--muted); }
+    .walks { display:grid; gap:12px; }
+    .walk { display:grid; grid-template-columns:88px minmax(0,1.2fr) minmax(180px,.8fr) auto; gap:18px; align-items:center; padding:18px 20px; border:1px solid var(--line); border-radius:16px; background:rgba(255,253,248,.72); }
+    .time { font-weight:760; font-variant-numeric:tabular-nums; }
+    .walk strong,.walk span { display:block; }
+    .walk span { color:var(--muted); font-size:14px; }
+    .status { display:inline-flex; align-items:center; gap:7px; min-height:34px; padding:5px 10px; border-radius:9px; background:var(--green-soft); color:var(--green); font-size:14px; font-weight:700; white-space:nowrap; }
+    .status svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; }
+    .status.warn { background:var(--amber-soft); color:var(--amber); }
+    .state-panel { margin-top:30px; min-height:330px; display:grid; place-items:center; padding:36px 24px; border:1px solid var(--line); border-radius:22px; background:var(--surface); text-align:center; }
+    .state-panel .icon { width:58px; height:58px; display:grid; place-items:center; margin:0 auto 18px; border-radius:18px; background:var(--green-soft); color:var(--green); }
+    .state-panel .icon svg { width:28px; height:28px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .state-panel p { max-width:530px; margin:10px auto 0; color:var(--muted); }
+    .state-panel .button { margin-top:22px; }
+    .state-error .state-panel { border-color:#d7a49e; background:#fff9f7; }
+    .state-error .icon { background:var(--danger-soft); color:var(--danger); }
+    .error-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:22px; }
+    .retry { background:var(--danger); border-color:var(--danger); }
+    .skeleton { width:min(560px,100%); display:grid; gap:14px; }
+    .bar { height:18px; border-radius:8px; background:linear-gradient(90deg,#ebe6dc,#f6f2e9,#ebe6dc); background-size:200% 100%; animation:shift 1.4s linear infinite; }
+    .bar:nth-child(2) { width:72%; }
+    .bar:nth-child(3) { width:88%; }
+    @keyframes shift { to { background-position:-200% 0; } }
+    @media (prefers-reduced-motion:reduce) { .bar { animation:none; } }
+    @media (max-width:720px) {
+      .shell { padding-top:20px; }
+      .masthead { align-items:flex-start; margin-bottom:26px; }
+      .brand span { display:none; }
+      .button .desktop-label { display:none; }
+      .button { min-width:48px; padding:0 13px; }
+      .hero-row { grid-template-columns:1fr; }
+      .next { padding:0 0 24px; border-right:0; border-bottom:1px solid var(--line); }
+      .walk { grid-template-columns:70px minmax(0,1fr); }
+      .walk .route { grid-column:2; }
+      .walk .status { grid-column:2; justify-self:start; }
+      .section-title { align-items:start; flex-direction:column; gap:4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" data-ui-state="default" id="app">
+    <header class="masthead">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.2 11.2c-1.4-1-3.1.2-3.2 1.8-.1 1.4 1.1 2.2 2.4 2.1m8.4-3.9c1.4-1 3.1.2 3.2 1.8.1 1.4-1.1 2.2-2.4 2.1M9 8.2c-.2-1.6.8-3 2.1-3.2 1.3-.1 2.1 1.1 1.8 2.6m-4 9.6c0-2.3 1.4-4.2 3.1-4.2s3.1 1.9 3.1 4.2c0 1.2-1.2 1.8-3.1 1.8s-3.1-.6-3.1-1.8Z"/></svg></div>
+        <div><strong>Pawprint</strong><span>Dispatch desk</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="button" data-action="new-walk" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span class="desktop-label">New walk</span></button>
+      </div>
+    </header>
+    <main>
+      <p class="eyebrow">Saturday service</p>
+      <h1>Every walk, handoff, and risk in one place</h1>
+      <p class="lede" id="state-summary">Four walks remain. Jamal needs a key handoff before Milo can leave for his late-morning route.</p>
+
+      <section class="state state-default" aria-label="Current dispatch board">
+        <div class="hero">
+          <div class="hero-row">
+            <div class="next">
+              <p class="label">Next action in 18 minutes</p>
+              <h2>Confirm Milo’s key handoff with Jamal</h2>
+              <p class="detail">Jamal is running 12 minutes late. The entry note requires an in-person handoff before the 11:20 walk.</p>
+              <a class="contact" href="tel:+15550104"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3l1.4 4-2 1.5a15 15 0 0 0 5.1 5.1l1.5-2 4 1.4v3c0 1.1-.9 2-2 2C10.8 19 5 13.2 5 6c0-1.1.9-2 2-2Z"/></svg>Call Jamal</a>
+            </div>
+            <div class="timing">
+              <div><p class="label">Coverage</p><strong>Three walkers ready</strong><span>One delayed arrival</span></div>
+              <div><p class="label">Last sync</p><strong>10:42 am</strong><span>All route notes current</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="section-title"><div><p class="label">Walk schedule</p><h2>What is moving next</h2></div><p>Four remaining, two complete</p></div>
+        <div class="walks">
+          <article class="walk"><div class="time">11:20</div><div><strong>Milo</strong><span>Jamal Ortiz</span></div><div class="route"><strong>Oakwood loop</strong><span>45 minutes, key handoff</span></div><div class="status warn"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 18 17H2L10 3Zm0 5v4m0 2.5v.5"/></svg>Needs handoff</div></article>
+          <article class="walk"><div class="time">12:10</div><div><strong>Pepper and June</strong><span>Sana Patel</span></div><div class="route"><strong>Canal path</strong><span>60 minutes, paired walk</span></div><div class="status"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>Ready</div></article>
+          <article class="walk"><div class="time">13:30</div><div><strong>Archie</strong><span>Leah Kim</span></div><div class="route"><strong>Rose Avenue</strong><span>30 minutes, medication note</span></div><div class="status"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>Ready</div></article>
+        </div>
+      </section>
+
+      <section class="state state-loading" aria-label="Updating dispatch board">
+        <div class="state-panel" role="status" aria-live="polite" aria-busy="true">
+          <div class="skeleton" aria-hidden="true"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+          <p>Updating routes and walker locations</p>
+        </div>
+      </section>
+
+      <section class="state state-empty" aria-label="No walks scheduled">
+        <div class="state-panel" role="status" aria-live="polite">
+          <div><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div><h2>No walks scheduled yet</h2><p>Start the route board with the first booking. Walker coverage and dispatch risks will appear here.</p><button class="button" type="button">Add the first walk</button></div>
+        </div>
+      </section>
+
+      <section class="state state-error" aria-label="Dispatch connection unavailable">
+        <div class="state-panel" role="alert" aria-live="assertive">
+          <div><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8v5m0 3h.01M5.4 20h13.2c1.5 0 2.4-1.6 1.6-2.9L13.6 5.7a1.9 1.9 0 0 0-3.2 0L3.8 17.1C3 18.4 3.9 20 5.4 20Z"/></svg></div><h2>Schedule updates are unavailable</h2><p>The latest saved route board is still readable. Retry the connection before creating or changing a walk.</p><div class="error-actions"><button class="retry" data-action="retry" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 8a8 8 0 1 0 1 6M19 4v4h-4"/></svg>Retry</button></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const app = document.querySelector('#app');
+    const action = document.querySelector('[data-action="new-walk"]');
+    const summary = document.querySelector('#state-summary');
+    const allowed = new Set(['default','loading','empty','error']);
+    function render() {
+      const requested = new URLSearchParams(location.hash.slice(1)).get('state') || 'default';
+      const state = allowed.has(requested) ? requested : 'default';
+      app.dataset.uiState = state;
+      action.disabled = state === 'error';
+      action.setAttribute('aria-label', state === 'error' ? 'New walk' : 'New walk');
+      summary.textContent = {
+        default: 'Four walks remain. Jamal needs a key handoff before Milo can leave for his late-morning route.',
+        loading: 'The current route board is being refreshed with the latest walker locations.',
+        empty: 'The route board is clear. Add the first booking when today’s service is ready to begin.',
+        error: 'The latest saved route board remains readable while schedule updates are unavailable.'
+      }[state];
+    }
+    addEventListener('hashchange', render);
+    render();
+  </script>
+</body>
+</html>

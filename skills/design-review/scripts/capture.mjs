@@ -443,27 +443,27 @@ async function inspectModalContract(page) {
       'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
       '[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
     const dialogs = [...document.querySelectorAll('[aria-modal="true"]')];
-    const visible = dialogs.filter(isVisible);
-    const activeIndex = visible.findIndex((dialog) => dialog.contains(document.activeElement));
 
     return {
       declaredCount: dialogs.length,
-      declaredIds: dialogs.flatMap((dialog) => dialog.id ? [dialog.id] : []),
-      visibleCount: visible.length,
-      activeIndex,
-      surfaces: visible.map((dialog, index) => {
+      dialogs: dialogs.map((dialog, index) => {
+        const visible = isVisible(dialog);
         const outsideFocusable = [...document.querySelectorAll(focusableSelector)].filter((element) => {
           if (dialog.contains(element) || !isVisible(element)) return false;
           if (element.matches(':disabled') || element.closest('[inert],[aria-hidden="true"]')) return false;
           return true;
         });
         const trigger = dialog.id
-          ? document.querySelector(`[aria-controls="${CSS.escape(dialog.id)}"]`)
+          ? document.querySelector(
+            `:is(button,a[href],input:not([type="hidden"]),[role="button"])` +
+            `[aria-controls="${CSS.escape(dialog.id)}"]:not([disabled]):not([aria-disabled="true"])`,
+          )
           : null;
         return {
-          index,
+          key: dialog.id || `dialog-${index + 1}`,
           id: dialog.id || null,
           role: dialog.getAttribute('role'),
+          visible,
           initialFocusInside: dialog.contains(document.activeElement),
           focusableCount: [...dialog.querySelectorAll(focusableSelector)].filter(isVisible).length,
           backgroundFocusable: outsideFocusable.slice(0, 12).map((element) =>
@@ -476,132 +476,187 @@ async function inspectModalContract(page) {
     };
   });
 
-  let inventory = await readInventory();
-  let openedByGenericTrigger = false;
-  if (inventory.visibleCount === 0) {
-    const triggers = page.locator('button[aria-controls]:visible:not([disabled])');
-    const declaredIds = new Set(inventory.declaredIds);
-    const triggerCount = Math.min(await triggers.count(), 12);
-    for (let index = 0; index < triggerCount; index += 1) {
-      const trigger = triggers.nth(index);
-      const controlledId = await trigger.getAttribute('aria-controls');
-      if (!controlledId || !declaredIds.has(controlledId)) continue;
-      const clicked = await trigger.click({ timeout: 1000 }).then(() => true).catch(() => false);
-      if (!clicked) continue;
-      await page.waitForTimeout(30);
-      inventory = await readInventory();
-      if (inventory.visibleCount > 0) {
-        openedByGenericTrigger = true;
-        break;
-      }
-    }
-  }
-
-  if (inventory.visibleCount === 0) {
+  const initialInventory = await readInventory();
+  if (initialInventory.declaredCount === 0) {
     return {
-      status: inventory.declaredCount ? 'not_verified' : 'not_present',
-      declaredCount: inventory.declaredCount,
+      status: 'not_present',
+      declaredCount: 0,
+      declaredIds: [],
       visibleCount: 0,
-      reason: inventory.declaredCount
-        ? 'aria-modal surfaces exist but none were reachable in the captured state'
-        : 'no aria-modal surface was present in the captured state',
+      reason: 'no aria-modal surface was present in the captured state',
       surfaces: [],
-      openedByGenericTrigger,
+      openedByGenericTrigger: false,
     };
   }
 
-  if (inventory.activeIndex < 0 || inventory.visibleCount > 1) {
+  const initiallyVisible = initialInventory.dialogs.filter((dialog) => dialog.visible);
+  if (initiallyVisible.length > 1) {
     return {
       status: 'not_verified',
-      declaredCount: inventory.declaredCount,
-      visibleCount: inventory.visibleCount,
-      reason: inventory.visibleCount > 1
-        ? 'multiple modal surfaces were visible; a unique active modal could not be established'
-        : 'a modal was visible but focus was not inside it',
-      surfaces: inventory.surfaces,
-      openedByGenericTrigger,
+      declaredCount: initialInventory.declaredCount,
+      declaredIds: initialInventory.dialogs.flatMap((dialog) => dialog.id ? [dialog.id] : []),
+      visibleCount: initiallyVisible.length,
+      reason: 'multiple modal surfaces were visible; a unique active modal could not be established',
+      surfaces: initiallyVisible.map((dialog) => ({
+        ...dialog,
+        status: 'not_verified',
+        reason: 'multiple modal surfaces were visible at the same time',
+      })),
+      openedByGenericTrigger: false,
     };
   }
 
-  const active = inventory.surfaces[inventory.activeIndex];
-  const focusBoundary = async (direction) => {
-    const prepared = await page.evaluate(({ index, direction: step }) => {
-      const visible = [...document.querySelectorAll('[aria-modal="true"]')].filter((element) => {
-        const style = getComputedStyle(element);
-        const rect = element.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+  const results = [];
+  let openedByGenericTrigger = false;
+  for (const declared of initialInventory.dialogs) {
+    let openedByDeterministicTrigger = false;
+    if (!declared.id) {
+      results.push({
+        ...declared,
+        status: 'not_verified',
+        reason: 'aria-modal surface has no id, so a deterministic trigger cannot be resolved',
       });
-      const modal = visible[index];
-      if (!modal) return false;
-      const selectors =
-        'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
-        '[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
-      const focusable = [...modal.querySelectorAll(selectors)].filter((element) => {
-        const style = getComputedStyle(element);
-        const rect = element.getBoundingClientRect();
-        return !element.matches(':disabled') && rect.width > 0 && rect.height > 0 &&
-          style.visibility !== 'hidden' && style.display !== 'none';
+      continue;
+    }
+    if (initialInventory.dialogs.filter((dialog) => dialog.id === declared.id).length > 1) {
+      results.push({
+        ...declared,
+        status: 'not_verified',
+        reason: 'aria-modal surface id is duplicated, so a deterministic dialog target cannot be resolved',
       });
-      const target = step === 'forward' ? focusable.at(-1) : focusable[0];
-      target?.focus();
-      return Boolean(target && modal.contains(document.activeElement));
-    }, { index: inventory.activeIndex, direction });
-    if (!prepared) return false;
-    await page.keyboard.press(direction === 'forward' ? 'Tab' : 'Shift+Tab');
-    return page.evaluate((index) => {
-      const visible = [...document.querySelectorAll('[aria-modal="true"]')].filter((element) => {
-        const style = getComputedStyle(element);
-        const rect = element.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
-      });
-      return Boolean(visible[index]?.contains(document.activeElement));
-    }, inventory.activeIndex);
-  };
+      continue;
+    }
 
-  const forwardContained = await focusBoundary('forward');
-  const backwardContained = await focusBoundary('backward');
-  await page.keyboard.press('Escape');
-  await page.waitForTimeout(20);
-  const afterEscape = await page.evaluate(({ id, triggerSelector }) => {
-    const modal = id ? document.getElementById(id) : document.querySelector('[aria-modal="true"]');
-    const style = modal ? getComputedStyle(modal) : null;
-    const rect = modal?.getBoundingClientRect();
-    const stillVisible = Boolean(modal && rect && rect.width > 0 && rect.height > 0 &&
-      style.visibility !== 'hidden' && style.display !== 'none');
-    const trigger = triggerSelector ? document.querySelector(triggerSelector) : null;
-    return {
-      dismissed: !stillVisible,
-      focusReturned: trigger ? document.activeElement === trigger : null,
+    let inventory = await readInventory();
+    let active = inventory.dialogs.find((dialog) => dialog.id === declared.id);
+    if (!active) {
+      results.push({
+        ...declared,
+        status: 'not_verified',
+        reason: 'declared aria-modal surface disappeared before interaction checks completed',
+      });
+      continue;
+    }
+
+    if (!active.visible) {
+      const triggers = page.locator(
+        `:is(button,a[href],input:not([type="hidden"]),[role="button"])` +
+        `[aria-controls=${JSON.stringify(declared.id)}]:visible:not([disabled]):not([aria-disabled="true"])`,
+      );
+      const triggerCount = await triggers.count();
+      if (triggerCount === 0) {
+        results.push({
+          ...active,
+          status: 'not_verified',
+          reason: 'aria-modal surface was hidden and no visible enabled aria-controls trigger could reach it',
+        });
+        continue;
+      }
+      const clicked = await triggers.first().click({ timeout: 1000 }).then(() => true).catch(() => false);
+      if (!clicked) {
+        results.push({
+          ...active,
+          status: 'not_verified',
+          reason: 'the deterministic aria-controls trigger could not be activated',
+        });
+        continue;
+      }
+      openedByGenericTrigger = true;
+      openedByDeterministicTrigger = true;
+      await page.waitForTimeout(30);
+      inventory = await readInventory();
+      active = inventory.dialogs.find((dialog) => dialog.id === declared.id);
+    }
+
+    const visibleDialogs = inventory.dialogs.filter((dialog) => dialog.visible);
+    if (!active?.visible || visibleDialogs.length !== 1) {
+      results.push({
+        ...(active || declared),
+        status: 'not_verified',
+        reason: !active?.visible
+          ? 'the deterministic aria-controls trigger did not reveal its declared dialog'
+          : 'activating the dialog left multiple modal surfaces visible',
+      });
+      continue;
+    }
+
+    const focusBoundary = async (direction) => {
+      const prepared = await page.evaluate(({ id, direction: step }) => {
+        const modal = document.getElementById(id);
+        if (!modal) return false;
+        const selectors =
+          'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
+          '[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
+        const focusable = [...modal.querySelectorAll(selectors)].filter((element) => {
+          const style = getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          return !element.matches(':disabled') && rect.width > 0 && rect.height > 0 &&
+            style.visibility !== 'hidden' && style.display !== 'none';
+        });
+        const target = step === 'forward' ? focusable.at(-1) : focusable[0];
+        target?.focus();
+        return Boolean(target && modal.contains(document.activeElement));
+      }, { id: declared.id, direction });
+      if (!prepared) return false;
+      await page.keyboard.press(direction === 'forward' ? 'Tab' : 'Shift+Tab');
+      return page.evaluate((id) => Boolean(document.getElementById(id)?.contains(document.activeElement)), declared.id);
     };
-  }, { id: active.id, triggerSelector: active.triggerSelector });
 
-  const checks = {
-    initialFocus: active.initialFocusInside ? 'passed' : 'failed',
-    tabContainment: forwardContained && backwardContained ? 'passed' : 'failed',
-    escapeDismissal: afterEscape.dismissed ? 'passed' : 'failed',
-    focusReturn: afterEscape.focusReturned === null
-      ? 'not_verified'
-      : afterEscape.focusReturned ? 'passed' : 'failed',
-    backgroundInert: active.backgroundFocusable.length === 0 ? 'passed' : 'failed',
-  };
-  const values = Object.values(checks);
-  const status = values.includes('failed')
-    ? 'failed'
-    : values.includes('not_verified') ? 'not_verified' : 'verified';
+    const forwardContained = await focusBoundary('forward');
+    const backwardContained = await focusBoundary('backward');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(20);
+    const afterEscape = await page.evaluate(({ id, triggerSelector }) => {
+      const modal = document.getElementById(id);
+      const style = modal ? getComputedStyle(modal) : null;
+      const rect = modal?.getBoundingClientRect();
+      const stillVisible = Boolean(modal && rect && rect.width > 0 && rect.height > 0 &&
+        style.visibility !== 'hidden' && style.display !== 'none');
+      const trigger = triggerSelector ? document.querySelector(triggerSelector) : null;
+      return {
+        dismissed: !stillVisible,
+        focusReturned: trigger ? document.activeElement === trigger : null,
+      };
+    }, { id: active.id, triggerSelector: active.triggerSelector });
 
-  return {
-    status,
-    declaredCount: inventory.declaredCount,
-    visibleCount: inventory.visibleCount,
-    openedByGenericTrigger,
-    surfaces: [{
+    const checks = {
+      initialFocus: active.initialFocusInside ? 'passed' : 'failed',
+      tabContainment: forwardContained && backwardContained ? 'passed' : 'failed',
+      escapeDismissal: afterEscape.dismissed ? 'passed' : 'failed',
+      focusReturn: afterEscape.focusReturned === null
+        ? 'not_verified'
+        : afterEscape.focusReturned ? 'passed' : 'failed',
+      backgroundInert: active.backgroundFocusable.length === 0 ? 'passed' : 'failed',
+    };
+    const values = Object.values(checks);
+    const status = values.includes('failed')
+      ? 'failed'
+      : values.includes('not_verified') ? 'not_verified' : 'verified';
+
+    results.push({
       ...active,
+      status,
       checks,
       forwardContained,
       backwardContained,
       dismissedByEscape: afterEscape.dismissed,
       focusReturned: afterEscape.focusReturned,
-    }],
+      openedByDeterministicTrigger,
+    });
+  }
+
+  const statuses = results.map((surface) => surface.status);
+  const status = statuses.includes('failed')
+    ? 'failed'
+    : statuses.includes('not_verified') ? 'not_verified' : 'verified';
+
+  return {
+    status,
+    declaredCount: initialInventory.declaredCount,
+    declaredIds: initialInventory.dialogs.flatMap((dialog) => dialog.id ? [dialog.id] : []),
+    visibleCount: initiallyVisible.length,
+    openedByGenericTrigger,
+    surfaces: results,
   };
 }
 
@@ -768,7 +823,8 @@ async function main() {
           axe,
           ...facts,
           interactionDiagnostics: {
-            enforcement: 'report-only',
+            enforcement: 'modal-blocking',
+            hoverEnforcement: 'report-only',
             modalContract,
             ungatedHoverMotion,
           },
@@ -857,6 +913,52 @@ async function main() {
     (count, snapshot) => count + (snapshot.interactionDiagnostics?.ungatedHoverMotion?.length || 0),
     0,
   );
+  const modalInteractionChecks = evidence.snapshots.flatMap((snapshot) => {
+    const contract = snapshot.interactionDiagnostics?.modalContract;
+    if (!contract || contract.status === 'not_present') return [];
+    if (Array.isArray(contract.surfaces) && contract.surfaces.length > 0) {
+      return contract.surfaces.map((surface) => ({
+        state: snapshot.state,
+        breakpoint: snapshot.breakpoint,
+        dialogId: surface.id,
+        dialogKey: surface.key,
+        status: surface.status || contract.status,
+        reason: surface.reason || contract.reason || null,
+        checks: surface.checks || null,
+        openedByDeterministicTrigger: surface.openedByDeterministicTrigger === true,
+      }));
+    }
+    return [{
+      state: snapshot.state,
+      breakpoint: snapshot.breakpoint,
+      dialogId: null,
+      dialogKey: null,
+      status: contract.status || 'not_verified',
+      reason: contract.reason || 'modal interaction could not be verified',
+      checks: null,
+      openedByDeterministicTrigger: contract.openedByGenericTrigger === true,
+    }];
+  });
+  const modalInteractionFailures = modalInteractionChecks.filter((check) => check.status !== 'verified');
+  const requiredDialogs = [...new Set(evidence.snapshots.flatMap((snapshot) => {
+    const contract = snapshot.interactionDiagnostics?.modalContract;
+    return [
+      ...(contract?.declaredIds || []),
+      ...(contract?.surfaces || []).map((surface) => surface.id || surface.key),
+    ].filter(Boolean);
+  }))];
+  const modalInteractionReceipt = {
+    schemaVersion: 1,
+    kind: 'ads.modal-interaction-receipt',
+    sourceEvidence: 'evidence.json',
+    url: evidence.url,
+    required: modalInteractionChecks.length > 0,
+    requiredDialogs,
+    breakpoints: evidence.breakpoints,
+    checks: modalInteractionChecks,
+    failures: modalInteractionFailures,
+    passed: modalInteractionFailures.length === 0,
+  };
 
   evidence.gates = {
     axeAvailable: evidence.axeAvailable,
@@ -874,7 +976,20 @@ async function main() {
     cumulativeLayoutShiftAt,
     clsUnavailableAt,
     clsFailures,
+    modalInteractions: {
+      receiptPath: 'modal-interaction-receipt.json',
+      required: modalInteractionReceipt.required,
+      passed: modalInteractionReceipt.passed,
+      requiredDialogs,
+      failures: modalInteractionFailures,
+    },
   };
+
+  await fs.writeFile(
+    path.join(outDir, 'modal-interaction-receipt.json'),
+    `${JSON.stringify(modalInteractionReceipt, null, 2)}\n`,
+    'utf8',
+  );
 
   await fs.writeFile(
     path.join(outDir, 'evidence.json'),
@@ -913,7 +1028,9 @@ async function main() {
     }`,
   );
   console.log(
-    `  modal contract (report-only): ${modalContractStatuses.map(({ state, breakpoint, status }) => `${state}@${breakpoint}=${status}`).join(', ')}`,
+    `  modal interaction receipt (${modalInteractionReceipt.required ? 'required' : 'not required'}): ` +
+      `${modalInteractionReceipt.passed ? 'pass' : `FAIL(${modalInteractionFailures.length})`} ` +
+      `[${modalContractStatuses.map(({ state, breakpoint, status }) => `${state}@${breakpoint}=${status}`).join(', ')}]`,
   );
   console.log(`  ungated hover motion candidates (report-only): ${ungatedHoverMotionCount}`);
 }

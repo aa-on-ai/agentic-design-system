@@ -1,0 +1,18 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 8.5,
+    "originality": 8.5,
+    "craft": 8.7,
+    "functionality": 8.8
+  },
+  "weightedScore": 8.58,
+  "priorFindingClosure": {
+    "id": "greenhouse-foundation-v2-001",
+    "status": "closed",
+    "evidence": "Both repaired empty captures state that all zones are resting and no run is planned; the former imminent-run and drying-bay claims are absent."
+  },
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}

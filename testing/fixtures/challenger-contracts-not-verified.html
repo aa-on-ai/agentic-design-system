@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Challenger contract unverified fixture</title>
+    <style>
+      body { font-family: system-ui, sans-serif; }
+      .modal { background: white; border: 1px solid #ddd; padding: 24px; position: fixed; inset: 20% 25%; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Review queue</h1>
+      <button id="open" type="button">Open review</button>
+    </main>
+    <section id="review-dialog" class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+      <h2 id="dialog-title">Review details</h2>
+      <button id="first" type="button">First action</button>
+    </section>
+    <script>
+      document.querySelector('#open').addEventListener('click', () => {
+        document.querySelector('#review-dialog').hidden = false;
+        document.querySelector('#first').focus();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kitchen service pass</title>
+    <style>
+      :root {
+        --ink: #262927;
+      --muted: #59625b;
+        --paper: #efeee9;
+        --surface: #fbfaf6;
+        --line: #cfcec7;
+        --herb: #3f6756;
+        --herb-soft: #e1ebe5;
+        --heat: #a9522d;
+        --heat-soft: #f3e1d7;
+        --danger: #963b34;
+        --danger-soft: #f4dfdc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid #2c73aa;
+        outline-offset: 3px;
+      }
+      .shell {
+        width: min(1180px, 100%);
+        margin: auto;
+        padding: 24px clamp(18px, 4vw, 52px) 56px;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 36px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .mark {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 13px;
+        background: var(--ink);
+        color: white;
+      }
+      .mark svg,
+      .button svg,
+      .signal svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .brand strong,
+      .brand span {
+        display: block;
+      }
+      .brand strong {
+        font-size: 19px;
+        line-height: 1.2;
+      }
+      .brand span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .button {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 16px;
+        border: 1px solid var(--heat);
+        border-radius: 11px;
+        background: var(--heat);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .button.secondary {
+        border-color: #70756f;
+        background: transparent;
+        color: var(--ink);
+      }
+      .button:disabled {
+        background: #deded8;
+        border-color: #c6c6c0;
+        color: #777a76;
+        cursor: not-allowed;
+      }
+      .heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .eyebrow {
+        margin: 0 0 7px;
+        color: var(--heat);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.15;
+      }
+      .clock {
+        text-align: right;
+      }
+      .clock strong,
+      .clock span {
+        display: block;
+      }
+      .clock strong {
+        font-size: 28px;
+        font-variant-numeric: tabular-nums;
+      }
+      .clock span {
+        color: var(--muted);
+      }
+      .state {
+        display: none;
+      }
+      [data-ui-state="default"] .state-default,
+      [data-ui-state="loading"] .state-loading,
+      [data-ui-state="empty"] .state-empty,
+      [data-ui-state="error"] .state-error {
+        display: block;
+      }
+      .next {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.55fr);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--surface);
+        box-shadow: 0 18px 42px rgba(47, 43, 34, 0.07);
+      }
+      .next-main,
+      .next-side {
+        padding: clamp(22px, 4vw, 36px);
+      }
+      .next-side {
+        border-left: 1px solid var(--line);
+        background: #f7f3ed;
+      }
+      .next h2 {
+        margin: 0;
+        font-size: clamp(25px, 3.5vw, 36px);
+        line-height: 1.16;
+      }
+      .next p {
+        color: var(--muted);
+      }
+      .course {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .signal {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 38px;
+        padding: 6px 11px;
+        border-radius: 9px;
+        background: var(--herb-soft);
+        color: var(--herb);
+        font-weight: 700;
+      }
+      .signal.hold {
+        background: var(--heat-soft);
+        color: #7b3d21;
+      }
+      .tickets-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin: 34px 0 13px;
+      }
+      .tickets-head h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .tickets-head p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .tickets {
+        display: grid;
+        gap: 12px;
+      }
+      .ticket {
+        display: grid;
+        grid-template-columns: 84px minmax(150px, 0.8fr) minmax(
+            0,
+            1.2fr
+          ) minmax(150px, 0.7fr);
+        align-items: center;
+        gap: 18px;
+        padding: 18px 20px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(251, 250, 246, 0.75);
+      }
+      .ticket .table {
+        font-size: 20px;
+        font-weight: 780;
+      }
+      .ticket strong,
+      .ticket span {
+        display: block;
+      }
+      .ticket span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .state-panel {
+        margin-top: 28px;
+        min-height: 360px;
+        display: grid;
+        place-items: center;
+        padding: 38px 22px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--surface);
+        text-align: center;
+      }
+      .state-panel .icon {
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 18px;
+        border-radius: 18px;
+        background: var(--herb-soft);
+        color: var(--herb);
+      }
+      .state-panel .icon svg {
+        width: 30px;
+        height: 30px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+      }
+      .state-panel h2 {
+        margin: 0;
+        font-size: 28px;
+      }
+      .state-panel p {
+        max-width: 540px;
+        margin: 10px auto 0;
+        color: var(--muted);
+      }
+      .state-panel .button {
+        margin-top: 22px;
+      }
+      .state-error .state-panel {
+        border-color: #d4a19a;
+        background: #fff9f7;
+      }
+      .state-error .icon {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+      .loading {
+        width: min(570px, 100%);
+        display: grid;
+        gap: 14px;
+      }
+      .loading i {
+        height: 18px;
+        border-radius: 7px;
+        background: linear-gradient(90deg, #e3e2dc, #f6f5ef, #e3e2dc);
+        background-size: 200% 100%;
+        animation: move 1.4s linear infinite;
+      }
+      .loading i:nth-child(2) {
+        width: 70%;
+      }
+      .loading i:nth-child(3) {
+        width: 88%;
+      }
+      @keyframes move {
+        to {
+          background-position: -200% 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading i {
+          animation: none;
+        }
+      }
+      @media (max-width: 740px) {
+        .top {
+          align-items: flex-start;
+        }
+        .brand span {
+          display: none;
+        }
+        .heading {
+          align-items: start;
+          flex-direction: column;
+        }
+        .clock {
+          text-align: left;
+        }
+        .next {
+          grid-template-columns: 1fr;
+        }
+        .next-side {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+        .ticket {
+          grid-template-columns: 64px minmax(0, 1fr);
+        }
+        .ticket .dish,
+        .ticket .signal {
+          grid-column: 2;
+        }
+        .tickets-head {
+          align-items: start;
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell" id="app" data-ui-state="default">
+      <header class="top">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 4v16M18 4v16M6 8h12M6 16h12M10 8v8m4-8v8" />
+            </svg>
+          </div>
+          <div><strong>Juniper service</strong><span>Kitchen pass</span></div>
+        </div>
+        <div class="actions">
+          <button class="button" data-restricted type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m8 5 9 7-9 7V5Z" /></svg
+            ><span>Fire next course</span></button
+          ><a class="button secondary" href="tel:+15550127"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 4h3l1.4 4-2 1.5a15 15 0 0 0 5.1 5.1l1.5-2 4 1.4v3c0 1.1-.9 2-2 2C10.8 19 5 13.2 5 6c0-1.1.9-2 2-2Z"
+              /></svg
+            ><span>Call station</span></a
+          >
+        </div>
+      </header>
+      <main>
+        <div class="heading">
+          <div>
+            <p class="eyebrow">Dinner service</p>
+            <h1>Keep every table moving together</h1>
+          </div>
+          <div class="clock">
+            <strong id="service-clock">7.18 pm</strong
+            ><span id="service-summary">Twenty-six guests seated</span>
+          </div>
+        </div>
+        <section class="state state-default" aria-label="Live kitchen pass">
+          <article class="next">
+            <div class="next-main">
+              <p class="eyebrow">Next course in four minutes</p>
+              <h2>Table twelve, smoked trout</h2>
+              <p>
+                The fish station is ready. Hold until the dining room clears two
+                plates from the opening course.
+              </p>
+              <div class="course">
+                <span class="signal"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m5 12 4 4L19 6" /></svg
+                  >Fish ready</span
+                ><span class="signal"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m5 12 4 4L19 6" /></svg
+                  >Sauce ready</span
+                ><span class="signal hold"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 5v14m8-14v14" /></svg
+                  >Dining room hold</span
+                >
+              </div>
+            </div>
+            <aside class="next-side">
+              <p class="eyebrow">Active hold</p>
+              <h2>Table six needs six more minutes</h2>
+              <p>
+                A guest stepped away. Keep the celeriac warm and wait for Luis
+                to release the table.
+              </p>
+            </aside>
+          </article>
+          <div class="tickets-head">
+            <div>
+              <p class="eyebrow">Course sequence</p>
+              <h2>Three tables in motion</h2>
+            </div>
+            <p>Sorted by service decision</p>
+          </div>
+          <div class="tickets">
+            <article class="ticket">
+              <div class="table">T12</div>
+              <div><strong>Course two</strong><span>Four guests</span></div>
+              <div class="dish">
+                <strong>Smoked trout, sorrel</strong
+                ><span>Fire window in four minutes</span>
+              </div>
+              <div class="signal">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" /></svg
+                >Ready
+              </div>
+            </article>
+            <article class="ticket">
+              <div class="table">T6</div>
+              <div><strong>Course three</strong><span>Two guests</span></div>
+              <div class="dish">
+                <strong>Celeriac, black garlic</strong
+                ><span>Guest away from table</span>
+              </div>
+              <div class="signal hold">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14m8-14v14" /></svg
+                >Hold
+              </div>
+            </article>
+            <article class="ticket">
+              <div class="table">T9</div>
+              <div><strong>Course one</strong><span>Six guests</span></div>
+              <div class="dish">
+                <strong>Tomato broth, basil oil</strong
+                ><span>Plating at garde manger</span>
+              </div>
+              <div class="signal">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" /></svg
+                >On pace
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="state state-loading" aria-label="Loading order feed">
+          <div
+            class="state-panel"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div class="loading" aria-hidden="true"><i></i><i></i><i></i></div>
+            <p>Syncing table pacing and station readiness</p>
+          </div>
+        </section>
+        <section class="state state-empty" aria-label="No open tickets">
+          <div class="state-panel" role="status" aria-live="polite">
+            <div>
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 7h14v12H5zM8 7V5h8v2" />
+                </svg>
+              </div>
+              <h2>No tickets are open</h2>
+              <p>
+                The pass is clear. New table courses will appear as the dining
+                room sends them.
+              </p>
+              <button class="button" type="button">Review reservations</button>
+            </div>
+          </div>
+        </section>
+        <section class="state state-error" aria-label="Order feed offline">
+          <div class="state-panel" role="alert" aria-live="assertive">
+            <div>
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 8v5m0 3h.01M5 20h14L12 4 5 20Z" />
+                </svg>
+              </div>
+              <h2>The order feed is offline</h2>
+              <p>
+                Do not fire another course from this screen. Call the station to
+                coordinate from printed tickets until the feed returns.
+              </p>
+              <button class="button secondary" type="button">Retry feed</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      const app = document.querySelector("#app"),
+        restricted = document.querySelector("[data-restricted]"),
+        clock = document.querySelector("#service-clock"),
+        summary = document.querySelector("#service-summary"),
+        states = new Set(["default", "loading", "empty", "error"]);
+      function render() {
+        const requested =
+            new URLSearchParams(location.hash.slice(1)).get("state") ||
+            "default",
+          state = states.has(requested) ? requested : "default";
+        app.dataset.uiState = state;
+        restricted.disabled = state !== "default";
+        clock.textContent = {
+          default: "7.18 pm",
+          loading: "Syncing",
+          empty: "Pass clear",
+          error: "Feed offline",
+        }[state];
+        summary.textContent = {
+          default: "Twenty-six guests seated",
+          loading: "Checking open tickets",
+          empty: "No open tickets",
+          error: "Printed tickets remain in use",
+        }[state];
+      }
+      addEventListener("hashchange", render);
+      render();
+    </script>
+  </body>
+</html>

@@ -46,10 +46,13 @@ Run `setup-capture.mjs` from your project root so the deps land in a `node_modul
 
 Output (`evidence/orders/`):
 - `evidence.json` — structured facts + a `gates` block (axe, overflow, main landmark,
-  state-aware live regions, CLS, state-render, touch targets, fonts). Evidence format 2 also
+  state-aware live regions, CLS, state-render, touch targets, fonts, and a modal-interaction
+  receipt summary). Evidence format 2 also
   includes report-only visual-foundation measurements for rounded one-edge borders, one-edge
   shadows, forced uppercase, typography outliers, symbol-only controls, status dots, divider
   count, colons, and em dashes.
+- `modal-interaction-receipt.json` — deterministic per-state/per-breakpoint dialog checks. A
+  declared dialog that is `failed` or `not_verified`, or a missing receipt, blocks completion.
 - `<state>-<WxH>.png` — one screenshot per state per breakpoint
 
 States are toggled via the URL hash (`#state=<name>`); the route must expose them.

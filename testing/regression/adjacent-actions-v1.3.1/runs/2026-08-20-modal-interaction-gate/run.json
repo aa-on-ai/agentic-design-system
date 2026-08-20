@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-08-20-modal-interaction-gate",
+  "createdAt": "2026-08-20T18:47:11.737Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "696b911b7f69d9aa73d56debf0fd8c34497a1628",
+  "behaviorDigest": "de30428396591c8911934331e58b8e080ac04c50bbbc9f278f0cd742de37d5b1",
+  "behaviorFileCount": 77,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "Fresh Chromium recapture from modal-interaction behavior digest de304283. All eight state and breakpoint captures passed rendered gates, emitted a deterministic modal receipt with required=false because this fixture declares no dialogs, and matched the prior accepted Pawprint packet 8/8 under strict pixel comparison.",
+      "graderContext": "The prior independent Pawprint grade was retained only after the fresh strict comparison was identical, the new modal receipt was checked, and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "Fresh Chromium recapture from modal-interaction behavior digest de304283. All eight state and breakpoint captures passed rendered gates, emitted a deterministic modal receipt with required=false because this fixture declares no dialogs, and matched the prior accepted Glasshouse packet 8/8 under strict pixel comparison.",
+      "graderContext": "The prior independent Glasshouse grade was retained only after the fresh strict comparison was identical, the new modal receipt was checked, and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "Fresh Chromium recapture from modal-interaction behavior digest de304283. All eight state and breakpoint captures passed rendered gates, emitted a deterministic modal receipt with required=false because this fixture declares no dialogs, and matched the prior accepted Museum packet 8/8 under strict pixel comparison.",
+      "graderContext": "The prior independent Museum grade was retained only after the fresh strict comparison was identical, the new modal receipt was checked, and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "Fresh Chromium recapture from modal-interaction behavior digest de304283. All eight state and breakpoint captures passed rendered gates, emitted a deterministic modal receipt with required=false because this fixture declares no dialogs, and matched the prior accepted Kitchen packet 8/8 under strict pixel comparison.",
+      "graderContext": "The prior independent Kitchen grade was retained only after the fresh strict comparison was identical, the new modal receipt was checked, and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "Fresh Chromium recapture from modal-interaction behavior digest de304283. All eight state and breakpoint captures passed rendered gates, emitted a deterministic modal receipt with required=false because this fixture declares no dialogs, and matched the prior accepted Radio packet 8/8 under strict pixel comparison.",
+      "graderContext": "The prior independent Radio grade was retained only after the fresh strict comparison was identical, the new modal receipt was checked, and the candidate verifier re-executed the native default and error action contract."
+    }
+  ]
+}

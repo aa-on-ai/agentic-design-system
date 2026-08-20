@@ -41,6 +41,12 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
       clsAvailable: true,
       clsFailures: [],
       maxCumulativeLayoutShift: 0,
+      modalInteractions: {
+        receiptPath: 'modal-interaction-receipt.json',
+        required: false,
+        passed: true,
+        failures: [],
+      },
     },
   })}\n`);
 };

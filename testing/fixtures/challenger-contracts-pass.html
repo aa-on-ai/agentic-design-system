@@ -17,6 +17,7 @@
     <main inert>
       <h1>Review queue</h1>
       <button id="open" type="button" aria-controls="review-dialog">Open review</button>
+      <button id="open-secondary" type="button" aria-controls="secondary-dialog">Open secondary review</button>
       <article class="card">Pointer-gated hover motion</article>
       <a class="link" href="#review-dialog">Static hover color</a>
     </main>
@@ -25,29 +26,45 @@
       <button id="first" type="button">First action</button>
       <button id="last" type="button">Last action</button>
     </section>
+    <section id="secondary-dialog" class="modal" role="dialog" aria-modal="true" aria-labelledby="secondary-title" hidden>
+      <h2 id="secondary-title">Secondary review</h2>
+      <button id="secondary-first" type="button">First secondary action</button>
+      <button id="secondary-last" type="button">Last secondary action</button>
+    </section>
     <script>
       const dialog = document.querySelector('#review-dialog');
       const trigger = document.querySelector('#open');
-      const focusable = [...dialog.querySelectorAll('button')];
-      dialog.addEventListener('keydown', (event) => {
-        if (event.key === 'Tab') {
-          const first = focusable[0];
-          const last = focusable.at(-1);
-          if (event.shiftKey && document.activeElement === first) {
-            event.preventDefault();
-            last.focus();
-          } else if (!event.shiftKey && document.activeElement === last) {
-            event.preventDefault();
-            first.focus();
+      const secondaryDialog = document.querySelector('#secondary-dialog');
+      const secondaryTrigger = document.querySelector('#open-secondary');
+      const installModal = (surface, opener) => {
+        const focusable = [...surface.querySelectorAll('button')];
+        opener.addEventListener('click', () => {
+          surface.hidden = false;
+          document.querySelector('main').inert = true;
+          focusable[0].focus();
+        });
+        surface.addEventListener('keydown', (event) => {
+          if (event.key === 'Tab') {
+            const first = focusable[0];
+            const last = focusable.at(-1);
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
           }
-        }
-        if (event.key === 'Escape') {
-          dialog.hidden = true;
-          document.querySelector('main').inert = false;
-          trigger.focus();
-        }
-      });
-      focusable[0].focus();
+          if (event.key === 'Escape') {
+            surface.hidden = true;
+            document.querySelector('main').inert = false;
+            opener.focus();
+          }
+        });
+      };
+      installModal(dialog, trigger);
+      installModal(secondaryDialog, secondaryTrigger);
+      dialog.querySelector('button').focus();
     </script>
   </body>
 </html>

@@ -97,7 +97,8 @@ Run this every time before presenting work.
 - [ ] Check the target viewport, not an arbitrary devtools width.
 - [ ] Exercise reachable modal surfaces. Verify initial focus, Tab and Shift+Tab containment,
   Escape dismissal, focus return, and inert background content. If the capture cannot open the
-  modal without site-specific instructions, record `not verified` rather than passing it.
+  modal through a visible enabled `aria-controls` trigger, record `not verified`. A `failed` or
+  `not verified` required dialog blocks completion.
 
 ### Step 2: Design audit
 - [ ] Spacing check — enough breathing room? Default to more.
@@ -143,9 +144,13 @@ borders, one-edge shadow candidates, forced uppercase, typography outliers, symb
 status-dot candidates, divider count, colons, and em dashes. those new measurements remain
 report-only until their fixture precision is proven.
 
-the rendered capture also reports visible `aria-modal` contract results and motion-bearing `:hover`
-rules that lack `(hover: hover) and (pointer: fine)`. these interaction diagnostics are report-only
-during calibration. a missing or unreachable modal is `not verified`, not a pass.
+the rendered capture writes `modal-interaction-receipt.json` and mirrors its summary at
+`evidence.json#gates.modalInteractions`. every declared `aria-modal="true"` surface must be
+reachable through a deterministic visible enabled `aria-controls` trigger and pass initial-focus,
+Tab/Shift+Tab containment, Escape dismissal, focus-return, and inert-background checks. `failed`,
+`not_verified`, or a missing receipt blocks completion. captures with no declared dialogs record
+`required=false` and pass this gate. motion-bearing `:hover` rules that lack
+`(hover: hover) and (pointer: fine)` remain report-only during calibration.
 
 for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 

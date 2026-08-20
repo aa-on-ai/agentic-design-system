@@ -56,6 +56,9 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   const clsGateRecorded = Array.isArray(gates.clsFailures);
   const clsFailures = clsGateRecorded ? gates.clsFailures : [];
   const clsUnavailableAt = Array.isArray(gates.clsUnavailableAt) ? gates.clsUnavailableAt : [];
+  const modalGateRecorded = !!gates.modalInteractions && typeof gates.modalInteractions === 'object';
+  const modalInteractions = modalGateRecorded ? gates.modalInteractions : null;
+  const modalFailures = Array.isArray(modalInteractions?.failures) ? modalInteractions.failures : [];
   const renderedStates = gates.stateRendered || {};
   const missingStates = requiredStates.filter((state) => renderedStates[state] !== true);
   const screenshots = Array.isArray(receipt.judge?.screenshotsSent) ? receipt.judge.screenshotsSent : [];
@@ -81,6 +84,12 @@ export function assessRenderedVariant(receipt, { requiredStates = ['default'] } 
   if (clsFailures.length > 0) {
     blockingReasons.push(
       `CLS exceeded ${gates.clsThreshold ?? 0.1} at ${gateLocations(clsFailures)}`,
+    );
+  }
+  if (!modalGateRecorded) blockingReasons.push('modal-interaction gate was not recorded');
+  if (modalGateRecorded && modalInteractions.passed !== true) {
+    blockingReasons.push(
+      `modal interaction receipt failed${modalFailures.length ? ` at ${gateLocations(modalFailures)}` : ''}`,
     );
   }
   if (missingStates.length > 0) blockingReasons.push(`states not distinctly rendered: ${missingStates.join(', ')}`);

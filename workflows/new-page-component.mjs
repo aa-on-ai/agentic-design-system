@@ -79,6 +79,7 @@ const CAPTURE_SCHEMA = {
     'clsThreshold',
     'maxCumulativeLayoutShift',
     'clsFailures',
+    'modalInteractions',
     'screenshots',
     'renderedFonts',
   ],
@@ -120,6 +121,17 @@ const CAPTURE_SCHEMA = {
       type: 'array',
       description: 'state/breakpoint samples whose CLS exceeded clsThreshold',
       items: { type: 'object' },
+    },
+    modalInteractions: {
+      type: 'object',
+      description: 'deterministic modal interaction receipt summary from evidence.json',
+      required: ['receiptPath', 'required', 'passed', 'failures'],
+      properties: {
+        receiptPath: { type: 'string' },
+        required: { type: 'boolean' },
+        passed: { type: 'boolean' },
+        failures: { type: 'array', items: { type: 'object' } },
+      },
     },
   },
 };
@@ -206,6 +218,7 @@ while (iteration < MAX_ITERS) {
   const landmarkFailures = capture.landmarkFailures || [];
   const liveRegionFailures = capture.liveRegionFailures || [];
   const clsFailures = capture.clsFailures || [];
+  const modalInteractions = capture.modalInteractions;
   const smallTargetSummary = [...new Set(smallTargets.map((t) => `${t.selector} (${t.size})`))].slice(0, 8).join(', ');
   const hardGate = {
     axe: capture.seriousAxeViolations === 0,
@@ -215,6 +228,7 @@ while (iteration < MAX_ITERS) {
     states: missingStates.length === 0,
     touchTargets: smallTargets.length === 0,
     cls: capture.clsAvailable === true && clsFailures.length === 0,
+    modalInteractions: modalInteractions?.passed === true,
   };
   const gatePass = Object.values(hardGate).every(Boolean);
   log(
@@ -224,7 +238,8 @@ while (iteration < MAX_ITERS) {
       `liveRegions=${hardGate.liveRegions ? 'pass' : `FAIL(${liveRegionFailures.length})`}, ` +
       `states=${hardGate.states ? 'pass' : `FAIL(missing ${missingStates.join(',')})`}, ` +
       `touchTargets=${hardGate.touchTargets ? 'pass' : `FAIL(${smallTargets.length}: ${smallTargetSummary})`}, ` +
-      `cls=${hardGate.cls ? `pass(${capture.maxCumulativeLayoutShift})` : `FAIL(max=${capture.maxCumulativeLayoutShift}, unavailable=${!capture.clsAvailable}, samples=${clsFailures.length})`}`,
+      `cls=${hardGate.cls ? `pass(${capture.maxCumulativeLayoutShift})` : `FAIL(max=${capture.maxCumulativeLayoutShift}, unavailable=${!capture.clsAvailable}, samples=${clsFailures.length})`}, ` +
+      `modalInteractions=${hardGate.modalInteractions ? 'pass' : `FAIL(${modalInteractions?.failures?.length || 0})`}`,
   );
 
   // --- Independent grader: a SEPARATE agent that judges the SCREENSHOTS, not source ---
@@ -240,11 +255,13 @@ while (iteration < MAX_ITERS) {
       `(axe serious=${capture.seriousAxeViolations}, overflow=[${capture.horizontalOverflowAt.join(',')}], missing states=[${missingStates.join(',')}], ` +
       `touch targets <48px=${smallTargets.length}${smallTargets.length ? ` [${smallTargetSummary}]` : ''}, ` +
       `landmark failures=${landmarkFailures.length}, live-region failures=${liveRegionFailures.length}, ` +
-      `max CLS=${capture.maxCumulativeLayoutShift}/${capture.clsThreshold}, CLS failures=${clsFailures.length}).\n\n` +
+      `max CLS=${capture.maxCumulativeLayoutShift}/${capture.clsThreshold}, CLS failures=${clsFailures.length}, ` +
+      `modal interaction receipt=${modalInteractions?.passed === true ? 'pass' : 'FAIL'}, ` +
+      `modal failures=${modalInteractions?.failures?.length || 0}).\n\n` +
       `Rule: if the deterministic gate FAILED, you cannot return "satisfied". If touch targets failed, the nextRevisionPrompt MUST ` +
       `instruct enlarging the listed interactive controls (links, buttons, inputs, selects) to a minimum 48x48px target at mobile ` +
       `(e.g. padding or min-height/min-width), without breaking layout. ` +
-      `If landmark, live-region, or CLS gates failed, the nextRevisionPrompt MUST cite the failing state/breakpoint and required repair. ` +
+      `If landmark, live-region, CLS, or modal-interaction gates failed, the nextRevisionPrompt MUST cite the failing state/breakpoint and required repair. ` +
       `Prefer needs_revision over failed while the failing gates are mechanically fixable (touch-target sizing, semantics, CLS, axe issues, overflow) ` +
       `and revise iterations remain — reserve "failed" for a genuinely wrong direction, not a fixable defect. ` +
       `If Design Quality or Originality < 6, ` +
@@ -305,6 +322,7 @@ const report = await agent(
       clsThreshold: h.capture.clsThreshold,
       maxCumulativeLayoutShift: h.capture.maxCumulativeLayoutShift,
       clsFailures: h.capture.clsFailures,
+      modalInteractions: h.capture.modalInteractions,
       renderedFonts: h.capture.renderedFonts,
       graderVerdict: h.grade.verdict,
       scores: h.grade.scores,
