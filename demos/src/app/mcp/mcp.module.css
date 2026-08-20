@@ -88,7 +88,7 @@
   letter-spacing: -0.01em;
 }
 
-.hero h1 { max-width: 720px; font-size: clamp(4.4rem, 7.2vw, 6.8rem); }
+.hero h1 { max-width: 720px; font-size: clamp(4.4rem, 7.2vw, 5.6rem); }
 
 .heroLede {
   max-width: 650px;

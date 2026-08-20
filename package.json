@@ -31,6 +31,7 @@
     "homepage:mobile-terminal": "node testing/mobile-terminal-sign-regression.mjs",
     "homepage:site-shell": "node testing/site-shell-regression.mjs",
     "homepage:site-shell-alignment": "node testing/site-shell-alignment-regression.mjs",
+    "typography:wide": "node testing/wide-screen-typography.mjs",
     "homepage:blend": "node testing/homepage-section-blend-regression.mjs",
     "homepage:runtime": "node testing/homepage-runtime.mjs",
     "homepage:faq-icons": "node testing/homepage-faq-icons.mjs",
