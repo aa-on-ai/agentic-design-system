@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "ads.modal-interaction-receipt",
+  "sourceEvidence": "evidence.json",
+  "url": "file:///Users/moltbot/clawd/.worktrees/ads-modal-completion-gate/testing/regression/adjacent-actions-v1.3.1/runs/2026-08-20-modal-interaction-gate/pawprint/artifact/index.html",
+  "required": false,
+  "requiredDialogs": [],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "checks": [],
+  "failures": [],
+  "passed": true
+}

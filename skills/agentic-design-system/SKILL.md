@@ -188,8 +188,11 @@ rounded one-edge borders, one-edge shadow candidates, forced uppercase, typograp
 symbol-only controls, status-dot candidates, divider count, colons, and em dashes. those new fields
 remain report-only in this release.
 
-the rendered capture also reports modal-contract results and motion-bearing hover rules without
-fine-pointer capability gates. these interaction diagnostics remain report-only during calibration.
+the rendered capture writes a deterministic `modal-interaction-receipt.json`. when dialogs are
+declared, every dialog must be reachable through a visible enabled `aria-controls` trigger and
+pass focus, containment, Escape, focus-return, and inert-background checks. `failed`,
+`not_verified`, or a missing receipt blocks `satisfied`. motion-bearing hover rules without
+fine-pointer capability gates remain report-only during calibration.
 
 ## What the reference files cover
 

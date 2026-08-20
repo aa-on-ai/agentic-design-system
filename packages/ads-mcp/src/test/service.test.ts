@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -40,8 +40,27 @@ const fakeCapture: CaptureRunner = async ({ states, viewports, outDir, url }) =>
       clsAvailable: true,
       clsFailures: [],
       maxCumulativeLayoutShift: 0,
+      modalInteractions: {
+        receiptPath: 'modal-interaction-receipt.json',
+        required: false,
+        passed: true,
+        failures: [],
+      },
     },
   }, null, 2)}\n`);
+};
+
+const unverifiedModalCapture: CaptureRunner = async (input) => {
+  await fakeCapture(input);
+  const evidencePath = path.join(input.outDir, 'evidence.json');
+  const evidence = JSON.parse(await readFile(evidencePath, 'utf8'));
+  evidence.gates.modalInteractions = {
+    receiptPath: 'modal-interaction-receipt.json',
+    required: true,
+    passed: false,
+    failures: [{ state: 'default', breakpoint: '390x844', status: 'not_verified' }],
+  };
+  await writeFile(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
 };
 
 async function fixture(timeoutMs = 2_000) {
@@ -136,6 +155,18 @@ test('full render, evaluate, trace, and resource sequence preserves receipts', a
   const screenshot = await service.readResource(rendered.artifacts.screenshots[0]!);
   assert.equal(screenshot.mimeType, 'image/png');
   assert.equal(screenshot.bytes.toString('utf8'), 'fake-png');
+});
+
+test('not_verified modal evidence blocks a web render from completing', async () => {
+  const { config } = await fixture();
+  const service = await AdsService.create(config, { captureRunner: unverifiedModalCapture });
+  const rendered = await service.render({
+    target: { type: 'url', url: 'http://127.0.0.1:3000/orders' },
+    states: ['default'],
+    viewports: [{ width: 390, height: 844 }],
+  });
+  assert.equal(rendered.status, 'blocked');
+  assert.ok(rendered.blockers.some((blocker) => blocker.includes('modal interaction receipt failed')));
 });
 
 test('trace rejects changed or uncaptured files and invented excerpts', async () => {

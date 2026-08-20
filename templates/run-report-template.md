@@ -67,6 +67,7 @@ produced content.
 | loading/error live regions | (none / state@WxH missing) | fail if loading lacks status/live or error lacks alert/assertive live semantics |
 | max CLS | (value / threshold) | fail if unavailable or above 0.1 by default |
 | states rendered | loading=?, empty=?, error=? | fail if any required state did not render |
+| modal interaction receipt | (path, required=?, passed=?) | fail if missing, failed, or not verified when a dialog is declared |
 | rendered font(s) | (computed font-family) | flag if a known agent default (Inter) actually renders |
 | screenshots | (paths) | required for verdict |
 

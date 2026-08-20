@@ -36,7 +36,7 @@ async function captureFixture(name, outDir) {
 function receiptFor(evidence) {
   return {
     skipped: false,
-    gates: evidence.gates,
+    gates: structuredClone(evidence.gates),
     judge: {
       judged: true,
       scores: { hierarchy: 8, spacing: 8, copy: 8, productFit: 8, screenshotWorthy: 8 },
@@ -75,6 +75,9 @@ async function main() {
     ok('invalid CLS thresholds are rejected before capture', invalidThresholdExit === 2, `exit=${invalidThresholdExit}`);
     ok('a complete production-gate receipt passes rendered authority',
       assessRenderedVariant(receiptFor(passEvidence), { requiredStates: STATES }).status === 'pass');
+    ok('no-dialog captures include a passing deterministic modal receipt',
+      passGates.modalInteractions?.required === false && passGates.modalInteractions?.passed === true,
+      JSON.stringify(passGates.modalInteractions));
 
     const failEvidence = await captureFixture('production-gates-fail.html', path.join(tempDir, 'fail'));
     const failGates = failEvidence.gates;
@@ -103,11 +106,25 @@ async function main() {
     delete unmeasured.gates.liveRegionFailures;
     delete unmeasured.gates.clsFailures;
     delete unmeasured.gates.clsAvailable;
+    delete unmeasured.gates.modalInteractions;
     const unmeasuredAssessment = assessRenderedVariant(unmeasured, { requiredStates: STATES });
     ok('missing production measurements cannot silently pass',
       unmeasuredAssessment.status === 'blocked' &&
       unmeasuredAssessment.blockingReasons.some((reason) => /gate was not recorded/.test(reason)),
       JSON.stringify(unmeasuredAssessment));
+
+    const unverifiedModal = receiptFor(passEvidence);
+    unverifiedModal.gates.modalInteractions = {
+      receiptPath: 'modal-interaction-receipt.json',
+      required: true,
+      passed: false,
+      failures: [{ state: 'default', breakpoint: '390x844', status: 'not_verified' }],
+    };
+    const unverifiedModalAssessment = assessRenderedVariant(unverifiedModal, { requiredStates: STATES });
+    ok('not_verified modal evidence blocks rendered authority',
+      unverifiedModalAssessment.status === 'blocked' &&
+      unverifiedModalAssessment.blockingReasons.some((reason) => /modal interaction receipt failed/.test(reason)),
+      JSON.stringify(unverifiedModalAssessment));
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }

@@ -105,7 +105,7 @@ list judgment calls the grader cannot resolve. if none, write `none`.
 | accessibility-check.py | pass / fail / not run |  |
 | build/typecheck | pass / fail / not run |  |
 | screenshots / preview | pass / fail / not available |  |
-| modal contract | pass / fail / not verified / n/a | initial focus, Tab/Shift+Tab containment, Escape, focus return, inert background |
+| modal interaction receipt | pass / fail / not verified / n/a | receipt path; initial focus, Tab/Shift+Tab containment, Escape, focus return, inert background. fail/not verified blocks satisfied |
 | pointer-gated hover motion | pass / fail / not reviewed / n/a | motion-bearing hover rules use fine-pointer capability gates |
 | motion retrigger | pass / fail / not reviewed / n/a | second trigger inside the animation window retargets or deliberately debounces |
 
