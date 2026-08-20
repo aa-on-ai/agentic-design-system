@@ -9,6 +9,7 @@ testing/install-smoke.sh
 testing/install-matrix.sh
 npm run visual-foundation:v2
 npm run capture-evidence:v2
+npm run challenger-contracts:smoke
 npm run compare:smoke
 npm run render-eval:smoke
 npm run eval-loop:render-smoke
@@ -17,4 +18,4 @@ npm run structured-findings:smoke
 npm run decision-trace:smoke
 npm run regression:smoke
 
-echo "release gate passed: metadata, install distribution, visual foundation v2, comparison, render authority, production evidence, structured findings, eval-loop authority, decision provenance, and frozen adjacent-action regression"
+echo "release gate passed: metadata, install distribution, visual foundation v2, challenger interaction contracts, comparison, render authority, production evidence, structured findings, eval-loop authority, decision provenance, and frozen adjacent-action regression"

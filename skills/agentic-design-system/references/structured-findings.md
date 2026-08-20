@@ -26,6 +26,19 @@ Source: https://x.com/contralabs_ai/status/2078202668711895356
 
 `region` is optional and normalized from 0 to 1. All other fields are required for substantial screenshot review.
 
+## Coverage ledger
+
+Every substantial review also accounts for all eight diagnostic categories. Return one row per
+category with `status` set to `clear`, `finding`, or `not_reviewed`, plus non-empty evidence.
+
+- `clear` means the category was reviewed and no finding remains.
+- `finding` means one or more structured findings use that category.
+- `not_reviewed` means the supplied screenshot, motion recording, source, or runtime evidence could
+  not support a judgment. State what evidence was missing.
+
+Do not require a minimum finding count. Coverage accounting exposes blind spots without rewarding
+reviewers for manufacturing criticism.
+
 ## Adjacent-action consistency check
 
 A repair is not complete when the named target alone looks fixed. Before the builder hands back a

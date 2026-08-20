@@ -16,6 +16,18 @@
 - CSS transitions are interruptible — they retarget to the latest state mid-animation. Use for interactive state changes (hover, open/close, toggles).
 - CSS keyframe animations are NOT interruptible — they run on a fixed timeline. Use for staged sequences that run once (entrance animations, loading loops).
 - If a user can change their intent mid-interaction (opening then quickly closing a dropdown), the animation MUST be interruptible. Non-interruptible animations on interactive elements make the UI feel broken.
+- Test interactive motion twice inside its animation window. The second trigger must retarget from
+  the current visual state or use a deliberate, documented debounce. A snap back to the authored
+  start frame is a failure. Record the trigger timing and a short motion capture; when the trigger
+  cannot be exercised, mark interruptibility `not verified`.
+
+## Pointer capability
+
+- Put motion-bearing `:hover` styles behind `(hover: hover) and (pointer: fine)` so coarse-pointer
+  taps do not leave transformed or animated hover states behind.
+- Put tap and press feedback in `:active`; do not depend on hover emulation for touch feedback.
+- This rule applies to hover motion. Static hover color or underline changes remain a separate
+  interaction judgment.
 
 ## Enter vs Exit
 - Enter animations can be expressive: combine opacity, translateY, and blur. Break content into chunks and stagger them (title, then description, then buttons) rather than animating one big block.
@@ -68,4 +80,6 @@ The full lexicon (springs, scroll-driven, perf terms) lives at <https://animatio
 **Evidence for motion** = name the pattern, record its timing/easing values, and confirm a
 `prefers-reduced-motion` fallback exists (a gate, not a nicety). When the motion is load-bearing
 (it carries state or causality), attach a short capture or the CSS/Framer Motion snippet — a
-still screenshot can't prove motion. For implementation depth, defer to `web-animation-design`.
+still screenshot can't prove motion. Retrigger interactive motion inside its animation window and
+record whether it retargets, deliberately debounces, or snaps. For implementation depth, defer to
+`web-animation-design`.

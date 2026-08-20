@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Challenger contract failing fixture</title>
+    <style>
+      body { font-family: system-ui, sans-serif; }
+      .card { padding: 16px; transition: transform 160ms ease; }
+      .card:hover { transform: translateY(-2px); }
+      .modal { background: white; border: 1px solid #ddd; padding: 24px; position: fixed; inset: 20% 25%; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Review queue</h1>
+      <button id="open" type="button" aria-controls="review-dialog">Open review</button>
+      <article class="card">Motion-bearing hover without pointer gating</article>
+    </main>
+    <section id="review-dialog" class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title" hidden>
+      <h2 id="dialog-title">Review details</h2>
+      <button id="first" type="button">First action</button>
+      <button id="last" type="button">Last action</button>
+    </section>
+    <script>
+      document.querySelector('#open').addEventListener('click', () => {
+        document.querySelector('#review-dialog').hidden = false;
+        document.querySelector('#first').focus();
+      });
+    </script>
+  </body>
+</html>

@@ -347,6 +347,57 @@ async function readComputedFacts(page, selectors) {
         return [{ selector: cssPath(el), text: text.slice(0, 40) }];
       });
 
+    const ungatedHoverMotion = [];
+    const visitRules = (rules, mediaQueries = []) => {
+      for (const rule of [...rules]) {
+        const nextMediaQueries = rule.media?.mediaText
+          ? [...mediaQueries, rule.media.mediaText]
+          : mediaQueries;
+        if (rule.selectorText?.includes(':hover')) {
+          const style = rule.style;
+          const directMotionProperties = [
+            'transform',
+            'translate',
+            'scale',
+            'rotate',
+            'animation',
+            'animation-name',
+          ].flatMap((property) => {
+            const value = style?.getPropertyValue(property)?.trim();
+            return value && value !== 'none' ? [{ property, value }] : [];
+          });
+          const transitionProperties = ['transition', 'transition-property'].flatMap((property) => {
+            const value = style?.getPropertyValue(property)?.trim();
+            return value && /\b(?:all|transform|translate|scale|rotate|opacity)\b/i.test(value)
+              ? [{ property, value }]
+              : [];
+          });
+          const properties = [...directMotionProperties, ...transitionProperties];
+          const mediaContext = nextMediaQueries.join(' and ');
+          const completePointerGate =
+            /\(\s*hover\s*:\s*hover\s*\)/i.test(mediaContext) &&
+            /\(\s*pointer\s*:\s*fine\s*\)/i.test(mediaContext);
+          if (properties.length && !completePointerGate) {
+            ungatedHoverMotion.push({
+              selector: rule.selectorText,
+              properties,
+              mediaQueries: nextMediaQueries,
+              missingGate: '(hover: hover) and (pointer: fine)',
+            });
+          }
+        }
+        if (rule.cssRules) visitRules(rule.cssRules, nextMediaQueries);
+      }
+    };
+    for (const sheet of document.styleSheets) {
+      try {
+        visitRules(sheet.cssRules || []);
+      } catch {
+        // Cross-origin stylesheets are opaque to CSSOM. The review remains report-only and
+        // should use source evidence for those sheets rather than pretending they were clear.
+      }
+    }
+
     return {
       smallTouchTargets,
       body: styleOf(body),
@@ -376,8 +427,178 @@ async function readComputedFacts(page, selectors) {
         colonTextCandidates,
         emDashTextCandidates,
       },
+      ungatedHoverMotion,
     };
   }, selectors);
+}
+
+async function inspectModalContract(page) {
+  const readInventory = () => page.evaluate(() => {
+    const isVisible = (element) => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+    };
+    const focusableSelector =
+      'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
+      '[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
+    const dialogs = [...document.querySelectorAll('[aria-modal="true"]')];
+    const visible = dialogs.filter(isVisible);
+    const activeIndex = visible.findIndex((dialog) => dialog.contains(document.activeElement));
+
+    return {
+      declaredCount: dialogs.length,
+      visibleCount: visible.length,
+      activeIndex,
+      surfaces: visible.map((dialog, index) => {
+        const outsideFocusable = [...document.querySelectorAll(focusableSelector)].filter((element) => {
+          if (dialog.contains(element) || !isVisible(element)) return false;
+          if (element.matches(':disabled') || element.closest('[inert],[aria-hidden="true"]')) return false;
+          return true;
+        });
+        const trigger = dialog.id
+          ? document.querySelector(`[aria-controls="${CSS.escape(dialog.id)}"]`)
+          : null;
+        return {
+          index,
+          id: dialog.id || null,
+          role: dialog.getAttribute('role'),
+          initialFocusInside: dialog.contains(document.activeElement),
+          focusableCount: [...dialog.querySelectorAll(focusableSelector)].filter(isVisible).length,
+          backgroundFocusable: outsideFocusable.slice(0, 12).map((element) =>
+            element.id ? `#${CSS.escape(element.id)}` : element.tagName.toLowerCase()),
+          triggerSelector: trigger
+            ? (trigger.id ? `#${CSS.escape(trigger.id)}` : `[aria-controls="${CSS.escape(dialog.id)}"]`)
+            : null,
+        };
+      }),
+    };
+  });
+
+  let inventory = await readInventory();
+  let openedByGenericTrigger = false;
+  if (inventory.visibleCount === 0) {
+    const triggers = page.locator('button[aria-controls]:visible:not([disabled])');
+    const triggerCount = Math.min(await triggers.count(), 12);
+    for (let index = 0; index < triggerCount; index += 1) {
+      const trigger = triggers.nth(index);
+      const clicked = await trigger.click({ timeout: 1000 }).then(() => true).catch(() => false);
+      if (!clicked) continue;
+      await page.waitForTimeout(30);
+      inventory = await readInventory();
+      if (inventory.visibleCount > 0) {
+        openedByGenericTrigger = true;
+        break;
+      }
+    }
+  }
+
+  if (inventory.visibleCount === 0) {
+    return {
+      status: inventory.declaredCount ? 'not_verified' : 'not_present',
+      declaredCount: inventory.declaredCount,
+      visibleCount: 0,
+      reason: inventory.declaredCount
+        ? 'aria-modal surfaces exist but none were reachable in the captured state'
+        : 'no aria-modal surface was present in the captured state',
+      surfaces: [],
+      openedByGenericTrigger,
+    };
+  }
+
+  if (inventory.activeIndex < 0 || inventory.visibleCount > 1) {
+    return {
+      status: 'not_verified',
+      declaredCount: inventory.declaredCount,
+      visibleCount: inventory.visibleCount,
+      reason: inventory.visibleCount > 1
+        ? 'multiple modal surfaces were visible; a unique active modal could not be established'
+        : 'a modal was visible but focus was not inside it',
+      surfaces: inventory.surfaces,
+      openedByGenericTrigger,
+    };
+  }
+
+  const active = inventory.surfaces[inventory.activeIndex];
+  const focusBoundary = async (direction) => {
+    const prepared = await page.evaluate(({ index, direction: step }) => {
+      const visible = [...document.querySelectorAll('[aria-modal="true"]')].filter((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+      });
+      const modal = visible[index];
+      if (!modal) return false;
+      const selectors =
+        'a[href],button,input:not([type="hidden"]),select,textarea,summary,' +
+        '[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
+      const focusable = [...modal.querySelectorAll(selectors)].filter((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return !element.matches(':disabled') && rect.width > 0 && rect.height > 0 &&
+          style.visibility !== 'hidden' && style.display !== 'none';
+      });
+      const target = step === 'forward' ? focusable.at(-1) : focusable[0];
+      target?.focus();
+      return Boolean(target && modal.contains(document.activeElement));
+    }, { index: inventory.activeIndex, direction });
+    if (!prepared) return false;
+    await page.keyboard.press(direction === 'forward' ? 'Tab' : 'Shift+Tab');
+    return page.evaluate((index) => {
+      const visible = [...document.querySelectorAll('[aria-modal="true"]')].filter((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+      });
+      return Boolean(visible[index]?.contains(document.activeElement));
+    }, inventory.activeIndex);
+  };
+
+  const forwardContained = await focusBoundary('forward');
+  const backwardContained = await focusBoundary('backward');
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(20);
+  const afterEscape = await page.evaluate(({ id, triggerSelector }) => {
+    const modal = id ? document.getElementById(id) : document.querySelector('[aria-modal="true"]');
+    const style = modal ? getComputedStyle(modal) : null;
+    const rect = modal?.getBoundingClientRect();
+    const stillVisible = Boolean(modal && rect && rect.width > 0 && rect.height > 0 &&
+      style.visibility !== 'hidden' && style.display !== 'none');
+    const trigger = triggerSelector ? document.querySelector(triggerSelector) : null;
+    return {
+      dismissed: !stillVisible,
+      focusReturned: trigger ? document.activeElement === trigger : null,
+    };
+  }, { id: active.id, triggerSelector: active.triggerSelector });
+
+  const checks = {
+    initialFocus: active.initialFocusInside ? 'passed' : 'failed',
+    tabContainment: forwardContained && backwardContained ? 'passed' : 'failed',
+    escapeDismissal: afterEscape.dismissed ? 'passed' : 'failed',
+    focusReturn: afterEscape.focusReturned === null
+      ? 'not_verified'
+      : afterEscape.focusReturned ? 'passed' : 'failed',
+    backgroundInert: active.backgroundFocusable.length === 0 ? 'passed' : 'failed',
+  };
+  const values = Object.values(checks);
+  const status = values.includes('failed')
+    ? 'failed'
+    : values.includes('not_verified') ? 'not_verified' : 'verified';
+
+  return {
+    status,
+    declaredCount: inventory.declaredCount,
+    visibleCount: inventory.visibleCount,
+    openedByGenericTrigger,
+    surfaces: [{
+      ...active,
+      checks,
+      forwardContained,
+      backwardContained,
+      dismissedByEscape: afterEscape.dismissed,
+      focusReturned: afterEscape.focusReturned,
+    }],
+  };
 }
 
 // Install before navigation so layout shifts from the first rendered frame onward are
@@ -525,7 +746,9 @@ async function main() {
           }
         }
 
-        const facts = await readComputedFacts(page, opts.selectors);
+        const computedFacts = await readComputedFacts(page, opts.selectors);
+        const { ungatedHoverMotion, ...facts } = computedFacts;
+        const modalContract = await inspectModalContract(page);
 
         // overflow check: does content exceed the viewport horizontally?
         const overflow = await page.evaluate(
@@ -540,6 +763,11 @@ async function main() {
           cumulativeLayoutShift: layoutShift,
           axe,
           ...facts,
+          interactionDiagnostics: {
+            enforcement: 'report-only',
+            modalContract,
+            ungatedHoverMotion,
+          },
         });
 
         await context.close();
@@ -616,6 +844,15 @@ async function main() {
   );
   // Preserve the legacy field for frozen v1.3.1 receipts while new authority uses 48px.
   const touchTargetsUnder44 = touchTargetsUnder48.filter((target) => target.width < 44 || target.height < 44);
+  const modalContractStatuses = evidence.snapshots.map((snapshot) => ({
+    state: snapshot.state,
+    breakpoint: snapshot.breakpoint,
+    status: snapshot.interactionDiagnostics?.modalContract?.status || 'not_verified',
+  }));
+  const ungatedHoverMotionCount = evidence.snapshots.reduce(
+    (count, snapshot) => count + (snapshot.interactionDiagnostics?.ungatedHoverMotion?.length || 0),
+    0,
+  );
 
   evidence.gates = {
     axeAvailable: evidence.axeAvailable,
@@ -671,6 +908,10 @@ async function main() {
         : 'none'
     }`,
   );
+  console.log(
+    `  modal contract (report-only): ${modalContractStatuses.map(({ state, breakpoint, status }) => `${state}@${breakpoint}=${status}`).join(', ')}`,
+  );
+  console.log(`  ungated hover motion candidates (report-only): ${ungatedHoverMotionCount}`);
 }
 
 main().catch((e) => {

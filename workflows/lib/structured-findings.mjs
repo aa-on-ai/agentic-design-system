@@ -10,6 +10,7 @@ export const FINDING_CATEGORIES = Object.freeze([
 ]);
 
 export const FINDING_SEVERITIES = Object.freeze(['minor', 'major', 'blocker']);
+export const COVERAGE_STATUSES = Object.freeze(['clear', 'finding', 'not_reviewed']);
 
 const REQUIRED_FINDING_FIELDS = Object.freeze([
   'id',
@@ -59,9 +60,29 @@ export const STRUCTURED_FINDING_SCHEMA = {
   },
 };
 
+export const COVERAGE_LEDGER_SCHEMA = {
+  type: 'array',
+  minItems: FINDING_CATEGORIES.length,
+  maxItems: FINDING_CATEGORIES.length,
+  items: {
+    type: 'object',
+    additionalProperties: false,
+    required: ['category', 'status', 'evidence'],
+    properties: {
+      category: { enum: [...FINDING_CATEGORIES] },
+      status: { enum: [...COVERAGE_STATUSES] },
+      evidence: {
+        type: 'string',
+        minLength: 1,
+        description: 'artifact, measurement, or explicit reason the category was not reviewed',
+      },
+    },
+  },
+};
+
 export const GRADE_SCHEMA = {
   type: 'object',
-  required: ['verdict', 'scores', 'findings', 'nextRevisionPrompt'],
+  required: ['verdict', 'scores', 'findings', 'coverageLedger', 'nextRevisionPrompt'],
   properties: {
     verdict: { enum: ['satisfied', 'needs_revision', 'failed'] },
     scores: {
@@ -80,6 +101,10 @@ export const GRADE_SCHEMA = {
       items: STRUCTURED_FINDING_SCHEMA,
       description: 'evidence-linked visual findings; empty only when the grader found no material or minor issues',
     },
+    coverageLedger: {
+      ...COVERAGE_LEDGER_SCHEMA,
+      description: 'one evidenced clear, finding, or not_reviewed row for every ADS diagnostic category',
+    },
     failingRows: {
       type: 'array',
       items: { type: 'string' },
@@ -91,6 +116,52 @@ export const GRADE_SCHEMA = {
     },
   },
 };
+
+export function validateCoverageLedger(coverageLedger, findings = []) {
+  const errors = [];
+  if (!Array.isArray(coverageLedger)) {
+    return ['coverageLedger must be an array with all eight categories'];
+  }
+
+  const seen = new Set();
+  for (const [index, row] of coverageLedger.entries()) {
+    const label = `coverageLedger[${index}]`;
+    if (!row || typeof row !== 'object' || Array.isArray(row)) {
+      errors.push(`${label} must be an object`);
+      continue;
+    }
+    if (!FINDING_CATEGORIES.includes(row.category)) {
+      errors.push(`${label}.category is unsupported: ${row.category}`);
+    } else if (seen.has(row.category)) {
+      errors.push(`${label}.category is duplicated: ${row.category}`);
+    } else {
+      seen.add(row.category);
+    }
+    if (!COVERAGE_STATUSES.includes(row.status)) {
+      errors.push(`${label}.status is unsupported: ${row.status}`);
+    }
+    if (!nonEmptyString(row.evidence)) {
+      errors.push(`${label}.evidence must be a non-empty string`);
+    }
+  }
+
+  if (coverageLedger.length !== FINDING_CATEGORIES.length || seen.size !== FINDING_CATEGORIES.length) {
+    errors.push('coverageLedger must include all eight categories exactly once');
+  }
+
+  for (const category of FINDING_CATEGORIES) {
+    const hasFinding = findings.some((finding) => finding.category === category);
+    const row = coverageLedger.find((entry) => entry?.category === category);
+    if (hasFinding && row?.status !== 'finding') {
+      errors.push(`coverageLedger.${category} must use status finding when category findings exist`);
+    }
+    if (!hasFinding && row?.status === 'finding') {
+      errors.push(`coverageLedger.${category} cannot use status finding without a category finding`);
+    }
+  }
+
+  return errors;
+}
 
 export function validateStructuredFinding(finding, index = 0) {
   const label = `findings[${index}]`;
@@ -147,11 +218,13 @@ export function normalizeGrade(rawGrade) {
   }
 
   const errors = rawGrade.findings.flatMap((finding, index) => validateStructuredFinding(finding, index));
+  errors.push(...validateCoverageLedger(rawGrade.coverageLedger, rawGrade.findings));
   if (errors.length) {
     throw new Error(`structured findings validation failed: ${errors.join('; ')}`);
   }
 
   const findings = rawGrade.findings.map((finding) => ({ ...finding }));
+  const coverageLedger = rawGrade.coverageLedger.map((row) => ({ ...row }));
   const actionable = materialFindings(findings);
   let verdict = rawGrade.verdict;
   let nextRevisionPrompt = typeof rawGrade.nextRevisionPrompt === 'string'
@@ -170,6 +243,7 @@ export function normalizeGrade(rawGrade) {
     ...rawGrade,
     verdict,
     findings,
+    coverageLedger,
     failingRows: actionable.map(findingRow),
     nextRevisionPrompt,
   };

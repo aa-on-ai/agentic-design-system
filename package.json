@@ -13,6 +13,7 @@
     "eval-loop:render-smoke": "node testing/eval-loop-render-smoke.mjs",
     "production-gates:smoke": "node testing/production-gates-smoke.mjs",
     "capture-evidence:v2": "node testing/capture-evidence-v2-smoke.mjs",
+    "challenger-contracts:smoke": "node testing/challenger-contracts-smoke.mjs",
     "structured-findings:smoke": "node testing/structured-findings-smoke.mjs",
     "decision-trace:smoke": "node testing/decision-trace-smoke.mjs",
     "workbench:inspector-smoke": "node testing/workbench-inspector-smoke.mjs",
