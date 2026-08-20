@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-08-20-challenger-contracts",
+  "createdAt": "2026-08-20T15:14:36.407Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "631316b5c072c2c2c12b111a16da446217c05eda",
+  "behaviorDigest": "c0a58b0df26b388a5578ed5589a74bf739f5597d6bdda06e23a56a8e0772f619",
+  "behaviorFileCount": 77,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "Fresh Chromium recapture from challenger behavior digest c0a58b0d. All eight state and breakpoint captures passed rendered gates, the new report-only modal and hover diagnostics were clear, and the strict pixel comparison matched the prior passing Pawprint packet 8/8.",
+      "graderContext": "The prior independent Pawprint grade was retained only after the fresh strict comparison was identical and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "Fresh Chromium recapture from challenger behavior digest c0a58b0d. All eight state and breakpoint captures passed rendered gates, the new report-only modal and hover diagnostics were clear, and the strict pixel comparison matched the prior passing Glasshouse packet 8/8.",
+      "graderContext": "The prior independent Glasshouse grade was retained only after the fresh strict comparison was identical and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "Fresh Chromium recapture from challenger behavior digest c0a58b0d. All eight state and breakpoint captures passed rendered gates, the new report-only modal and hover diagnostics were clear, and the strict pixel comparison matched the prior passing Museum packet 8/8.",
+      "graderContext": "The prior independent Museum grade was retained only after the fresh strict comparison was identical and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "Fresh Chromium recapture from challenger behavior digest c0a58b0d. All eight state and breakpoint captures passed rendered gates, the new report-only modal and hover diagnostics were clear, and the strict pixel comparison matched the prior passing Kitchen packet 8/8.",
+      "graderContext": "The prior independent Kitchen grade was retained only after the fresh strict comparison was identical and the candidate verifier re-executed the native default and error action contract."
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "Fresh Chromium recapture from challenger behavior digest c0a58b0d. All eight state and breakpoint captures passed rendered gates, the new report-only modal and hover diagnostics were clear, and the strict pixel comparison matched the prior passing Radio packet 8/8.",
+      "graderContext": "The prior independent Radio grade was retained only after the fresh strict comparison was identical and the candidate verifier re-executed the native default and error action contract."
+    }
+  ]
+}

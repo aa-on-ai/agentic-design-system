@@ -1,12 +1,6 @@
 ---
-name: agentic-design-system
-description: >
-  Design system for AI agents that build UI. Automatically routes to the right
-  quality checks based on the task. Triggers on ANY visual, frontend, UI, design,
-  component, page, layout, or styling work. Includes: anti-pattern detection,
-  state completeness checks, accessibility verification, typography/color/spacing
-  guidance, and creative direction when needed. Install this one skill to get the
-  full system — it orchestrates everything else.
+name: "agentic-design-system"
+description: "Route all visual and frontend work through ADS outcome, review, evidence, and creative-pack gates."
 ---
 
 # Agentic Design System
@@ -194,6 +188,9 @@ rounded one-edge borders, one-edge shadow candidates, forced uppercase, typograp
 symbol-only controls, status-dot candidates, divider count, colons, and em dashes. those new fields
 remain report-only in this release.
 
+the rendered capture also reports modal-contract results and motion-bearing hover rules without
+fine-pointer capability gates. these interaction diagnostics remain report-only during calibration.
+
 ## What the reference files cover
 
 when you read `<skills-root>/design-review/SKILL.md`, it points to reference files in `<skills-root>/design-review/references/`. you don't need to read all of them — only load what's relevant:
@@ -232,6 +229,10 @@ each finding records:
 do not replace the four rubric scores with the diagnostic categories. do not turn a subjective
 label into a deterministic hard gate. a blocker finding forces `needs_revision` or `failed`, and
 every blocker or major finding must feed a bounded next-revision instruction.
+
+account for review coverage separately from findings. return one evidenced row for each of the
+eight categories with status `clear`, `finding`, or `not_reviewed`. use `not_reviewed` when the
+artifact cannot support a judgment. there is no minimum finding count.
 
 ### adjacent-action consistency check
 

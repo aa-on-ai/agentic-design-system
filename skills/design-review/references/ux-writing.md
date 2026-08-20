@@ -26,6 +26,20 @@ good UI copy is invisible when it works and helpful when things go wrong. it's a
 - ❌ "Resource not found (404)"
 - ✅ "We can't find that page. It might have been moved or deleted."
 
+### one primary name per concept
+
+choose one user-facing name for each concept and keep it stable across navigation, headings,
+controls, help text, empty states, and errors. if an alternate term is necessary for onboarding or
+migration, introduce the alias once, then return to the primary name.
+
+- ❌ "workspace" in navigation, "project" in the page heading, and "site" in the create button
+- ✅ "workspace" throughout, with one introduction such as "Workspace (formerly project)"
+- ❌ alternating between "review", "audit", and "check" when they refer to the same saved object
+- ✅ one primary term, with different verbs only when they describe genuinely different actions
+
+before changing a term, search the rendered surface and source context for nearby aliases. a local
+copy improvement that creates a second competing name is a terminology regression.
+
 ### front-load the important word
 - ❌ "Click here to download the report"
 - ✅ "Download report"
@@ -207,6 +221,7 @@ read just the text content with no visual design. does it sound like it came fro
 ## Writing Checklist
 
 before shipping any UI:
+- [ ] each user-facing concept has one primary name; necessary aliases are introduced once
 - [ ] every button says what it does (not "Submit" / "OK" / "Click here")
 - [ ] every empty state guides to the next action
 - [ ] every error says what happened and what to do

@@ -36,12 +36,16 @@ the builder would otherwise self-clear its own quality.
    every critique, emit a structured finding with category, severity, rubric row, state,
    breakpoint, exact artifact, concrete target, optional normalized region, observation, and
    evidence. A blocker cannot return `satisfied`.
-4. **Run the adjacent-action consistency check** before returning `satisfied`. In every state and
+4. **Account for coverage** with one row for every ADS diagnostic category. Mark each row `clear`,
+   `finding`, or `not reviewed` and cite the screenshot, measurement, or missing evidence that
+   supports the status. Do not invent a finding quota. A category the artifacts cannot support is
+   `not reviewed`, not `clear`.
+5. **Run the adjacent-action consistency check** before returning `satisfied`. In every state and
    breakpoint, compare status and instructional copy with every visible nearby primary, secondary,
    toolbar, and inline action. An enabled-looking action that contradicts a read-only, disabled,
    offline, permission-limited, or destructive state is a major `cues_affordances` finding and
    cannot return `satisfied`.
-5. **Back judgment with objective checks** on changed files so taste and defects stay separable:
+6. **Back judgment with objective checks** on changed files so taste and defects stay separable:
 
 ```bash
 python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
@@ -56,6 +60,7 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 - The three checks' output.
 - Each critic finding tied to a rubric row, state, breakpoint, exact screenshot, and concrete
   target or normalized screenshot region — no free-floating "feels off."
+- Eight evidenced coverage rows, including explicit `not reviewed` rows where evidence is missing.
 - A finding without evidence, with an unsupported category, or with an incomplete location is an
   invalid grader packet.
 
@@ -64,7 +69,7 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 A filled `templates/grader-report-template.md` with a verdict:
 `satisfied` / `needs_revision` / `max_iterations` / `failed`, the rubric scores, the structured
 findings table, and a bounded, testable next-revision prompt containing every blocker and major
-finding id if not satisfied.
+finding id if not satisfied, plus the complete coverage ledger.
 
 ## Blocked when
 

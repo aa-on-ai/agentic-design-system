@@ -3,9 +3,11 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  COVERAGE_STATUSES,
   FINDING_CATEGORIES,
   aggregateFindingHistory,
   normalizeGrade,
+  validateCoverageLedger,
   validateStructuredFinding,
 } from '../workflows/lib/structured-findings.mjs';
 
@@ -38,6 +40,15 @@ const finding = (overrides = {}) => ({
 
 const scores = { designQuality: 7, originality: 7, craft: 7, functionality: 7 };
 
+const coverageLedger = (findings = [], overrides = {}) => FINDING_CATEGORIES.map((category) => ({
+  category,
+  status: findings.some((entry) => entry.category === category) ? 'finding' : 'clear',
+  evidence: findings.some((entry) => entry.category === category)
+    ? `See ${findings.find((entry) => entry.category === category).id}.`
+    : `Reviewed ${category} in the rendered evidence.`,
+  ...overrides[category],
+}));
+
 await check('all eight diagnostic categories are stable', () => {
   assert.deepEqual(FINDING_CATEGORIES, [
     'layout_spacing_hierarchy',
@@ -49,6 +60,31 @@ await check('all eight diagnostic categories are stable', () => {
     'cues_affordances',
     'brand_fit_tone',
   ]);
+});
+
+await check('coverage statuses are stable', () => {
+  assert.deepEqual(COVERAGE_STATUSES, ['clear', 'finding', 'not_reviewed']);
+});
+
+await check('coverage ledger requires one evidenced row per diagnostic category', () => {
+  const findings = [finding()];
+  assert.deepEqual(validateCoverageLedger(coverageLedger(findings), findings), []);
+  assert.match(validateCoverageLedger(coverageLedger(findings).slice(1), findings)[0], /all eight categories/);
+});
+
+await check('coverage ledger rejects findings marked clear', () => {
+  const findings = [finding()];
+  const ledger = coverageLedger(findings, {
+    layout_spacing_hierarchy: { status: 'clear', evidence: 'Incorrectly marked clear.' },
+  });
+  assert.match(validateCoverageLedger(ledger, findings)[0], /must use status finding/);
+});
+
+await check('not reviewed coverage is explicit and does not require a finding', () => {
+  const ledger = coverageLedger([], {
+    interaction_motion: { status: 'not_reviewed', evidence: 'No motion recording was available.' },
+  });
+  assert.deepEqual(validateCoverageLedger(ledger, []), []);
 });
 
 await check('complete finding passes validation', () => {
@@ -75,6 +111,7 @@ await check('blocker cannot remain satisfied', () => {
     verdict: 'satisfied',
     scores,
     findings: [finding({ severity: 'blocker' })],
+    coverageLedger: coverageLedger([finding({ severity: 'blocker' })]),
     nextRevisionPrompt: '',
   });
   assert.equal(grade.verdict, 'needs_revision');
@@ -87,6 +124,7 @@ await check('major finding cannot remain satisfied', () => {
     verdict: 'satisfied',
     scores,
     findings: [finding()],
+    coverageLedger: coverageLedger([finding()]),
     nextRevisionPrompt: '',
   });
   assert.equal(grade.verdict, 'needs_revision');
@@ -98,6 +136,7 @@ await check('compatibility rows derive only from major and blocker findings', ()
     verdict: 'needs_revision',
     scores,
     findings: [finding(), finding({ id: 'finding-002', severity: 'minor' })],
+    coverageLedger: coverageLedger([finding(), finding({ id: 'finding-002', severity: 'minor' })]),
     failingRows: ['untrusted model output'],
     nextRevisionPrompt: 'Repair the mobile action hierarchy.',
   });
@@ -111,6 +150,7 @@ await check('minor finding can accompany a satisfied verdict', () => {
     verdict: 'satisfied',
     scores,
     findings: [finding({ severity: 'minor' })],
+    coverageLedger: coverageLedger([finding({ severity: 'minor' })]),
     nextRevisionPrompt: '',
   });
   assert.equal(grade.verdict, 'satisfied');
@@ -161,6 +201,26 @@ await check('manual review and state inventory carry the adjacent-action check',
   assert.match(review, /cannot return `satisfied`/);
   assert.match(states, /Adjacent-action consistency/);
   assert.match(states, /native `disabled`/);
+});
+
+await check('manual review and templates carry complete coverage accounting', async () => {
+  const review = await readFile(path.join(root, 'workflows/adversarial-design-review.md'), 'utf8');
+  const template = await readFile(path.join(root, 'templates/grader-report-template.md'), 'utf8');
+  const reference = await readFile(path.join(root, 'skills/agentic-design-system/references/structured-findings.md'), 'utf8');
+  assert.match(review, /clear.*finding.*not reviewed/is);
+  assert.match(review, /Do not invent a finding quota/i);
+  assert.match(template, /## coverage ledger/);
+  assert.match(reference, /all eight diagnostic categories/i);
+});
+
+await check('core review carries terminology, pointer gating, modal, and retrigger rules', async () => {
+  const skill = await readFile(path.join(root, 'skills/design-review/SKILL.md'), 'utf8');
+  const writing = await readFile(path.join(root, 'skills/design-review/references/ux-writing.md'), 'utf8');
+  const motion = await readFile(path.join(root, 'skills/design-review/references/motion.md'), 'utf8');
+  assert.match(skill, /initial focus, Tab and Shift\+Tab containment/);
+  assert.match(writing, /one primary name per concept/i);
+  assert.match(motion, /\(hover: hover\) and \(pointer: fine\)/);
+  assert.match(motion, /twice inside its animation window/i);
 });
 
 await check('grader template carries the structured table and blocker rule', async () => {

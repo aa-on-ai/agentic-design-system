@@ -48,6 +48,23 @@ found no minor or material issues.
 - a blocker cannot return `satisfied`
 - subjective findings do not become deterministic hard gates without a rendered measurement
 
+## coverage ledger
+
+account for every ADS diagnostic category. `clear` means reviewed with no finding, `finding` means
+one or more findings exist in that category, and `not reviewed` means the available artifact could
+not support a judgment. every row needs evidence. there is no minimum finding count.
+
+| category | status | evidence |
+|---|---|---|
+| layout_spacing_hierarchy | clear / finding / not reviewed | screenshot, measurement, or reason not reviewed |
+| polish_consistency | clear / finding / not reviewed |  |
+| typography | clear / finding / not reviewed |  |
+| originality | clear / finding / not reviewed |  |
+| color_contrast | clear / finding / not reviewed |  |
+| interaction_motion | clear / finding / not reviewed |  |
+| cues_affordances | clear / finding / not reviewed |  |
+| brand_fit_tone | clear / finding / not reviewed |  |
+
 ## hard stops reviewed
 
 - the selected profile was locked before generation and meets its eligibility rule
@@ -88,6 +105,9 @@ list judgment calls the grader cannot resolve. if none, write `none`.
 | accessibility-check.py | pass / fail / not run |  |
 | build/typecheck | pass / fail / not run |  |
 | screenshots / preview | pass / fail / not available |  |
+| modal contract | pass / fail / not verified / n/a | initial focus, Tab/Shift+Tab containment, Escape, focus return, inert background |
+| pointer-gated hover motion | pass / fail / not reviewed / n/a | motion-bearing hover rules use fine-pointer capability gates |
+| motion retrigger | pass / fail / not reviewed / n/a | second trigger inside the animation window retargets or deliberately debounces |
 
 ## event
 

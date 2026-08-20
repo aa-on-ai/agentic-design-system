@@ -1,9 +1,6 @@
 ---
-name: design-review
-description: >
-  Core pack — always active for visual work. Quality gate for UI, components, pages,
-  layouts, or frontend work. Triggers on any visual/design task automatically.
-  Use before presenting work, during builds, and for design QA.
+name: "design-review"
+description: "Core visual quality gate with evidence, coverage, modal, terminology, and motion review."
 ---
 
 # Design Review Skill
@@ -79,6 +76,7 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - `references/motion.md` — timing, easing, reduced motion, interactive feel, named motion vocabulary
 - `references/mobile.md` — mobile review profile: design-judgment vs platform-defect passes, decision forks, severity tiers
 - `references/anti-patterns.md` — common agent patterns to reject
+- `references/ux-writing.md` — interface copy, terminology consistency, labels, errors, and empty states
 
 ### For sub-agents
 - Read the relevant reference files based on what you're building.
@@ -87,6 +85,7 @@ Read only what the task needs. Keep this SKILL lean, load detail on demand:
 - Color or theming work? Read color + anti-patterns.
 - Interactive polish? Read motion + anti-patterns.
 - Mobile / responsive / app / PWA review? Read mobile + responsive.
+- Interface copy or competing names for the same concept? Read ux-writing.
 - If in doubt, at minimum read spacing + anti-patterns.
 
 ## Pre-Flight Checklist
@@ -96,6 +95,9 @@ Run this every time before presenting work.
 - [ ] Take a screenshot of the rendered result.
 - [ ] Compare side-by-side with the reference if one exists.
 - [ ] Check the target viewport, not an arbitrary devtools width.
+- [ ] Exercise reachable modal surfaces. Verify initial focus, Tab and Shift+Tab containment,
+  Escape dismissal, focus return, and inert background content. If the capture cannot open the
+  modal without site-specific instructions, record `not verified` rather than passing it.
 
 ### Step 2: Design audit
 - [ ] Spacing check — enough breathing room? Default to more.
@@ -103,6 +105,8 @@ Run this every time before presenting work.
 - [ ] Typography check — is hierarchy clear without leaning on color?
 - [ ] Pattern check — are you using the project's existing components?
 - [ ] Interaction check — hover, focus, active states exist and feel intentional.
+- [ ] Terminology check — each user-facing concept has one primary name; aliases are introduced
+  once and do not compete with the primary term.
 - [ ] Integrity check — no placeholders, dead states, broken assets, or missing data handling.
 
 ### Step 3: Honesty check
@@ -138,6 +142,10 @@ gate the verdict on the established rendered fields. evidence format 2 also reco
 borders, one-edge shadow candidates, forced uppercase, typography outliers, symbol-only controls,
 status-dot candidates, divider count, colons, and em dashes. those new measurements remain
 report-only until their fixture precision is proven.
+
+the rendered capture also reports visible `aria-modal` contract results and motion-bearing `:hover`
+rules that lack `(hover: hover) and (pointer: fine)`. these interaction diagnostics are report-only
+during calibration. a missing or unreachable modal is `not verified`, not a pass.
 
 for CI integration, copy `ci/design-eval.py` and `ci/design-eval.yml` into your project to run all three checks on every PR.
 

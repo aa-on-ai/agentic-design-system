@@ -257,7 +257,9 @@ while (iteration < MAX_ITERS) {
       `deterministic hard gates. Before returning satisfied, run an adjacent-action consistency check in every state and breakpoint: compare each status, instruction, ` +
       `and permission boundary with all visible nearby primary, secondary, toolbar, and inline actions. An enabled-looking action that contradicts a read-only, disabled, ` +
       `offline, permission-limited, or destructive state is a major cues_affordances finding and cannot return satisfied. ` +
-      `Use an empty findings array only if you found no issues.`,
+      `Use an empty findings array only if you found no issues. Also return a coverageLedger with exactly one row for each of the eight categories. ` +
+      `Each row needs category, status clear/finding/not_reviewed, and concrete evidence. Use finding when that category has any finding. ` +
+      `Use not_reviewed, never clear, when the available artifact cannot support a judgment. There is no minimum finding count.`,
     { label: `grade:iter${iteration}`, phase: 'Grade', schema: GRADE_SCHEMA, agentType: 'Explore' },
   );
   const grade = normalizeGrade(rawGrade);
@@ -307,6 +309,7 @@ const report = await agent(
       graderVerdict: h.grade.verdict,
       scores: h.grade.scores,
       findings: h.grade.findings,
+      coverageLedger: h.grade.coverageLedger,
       failingRows: h.grade.failingRows,
       nextRevisionPrompt: h.grade.nextRevisionPrompt,
     })), null, 2) +

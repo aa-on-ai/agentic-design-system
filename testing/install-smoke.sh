@@ -176,8 +176,26 @@ for runbook in "${runbooks[@]}"; do
 done
 
 capture_runner="$TMP_DIR/.agents/skills/agentic-design-system/scripts/run-capture.mjs"
+if [[ ! -f "$capture_runner" ]]; then
+  echo "missing installed skill asset: agentic-design-system/scripts/run-capture.mjs" >&2
+  exit 1
+fi
 node "$capture_runner" --check
 node "$trace_script" --help >/dev/null
+
+setup_capture_script="$TMP_DIR/.agents/skills/design-review/scripts/setup-capture.mjs"
+if [[ ! -f "$setup_capture_script" ]]; then
+  echo "missing installed skill asset: design-review/scripts/setup-capture.mjs" >&2
+  exit 1
+fi
+node --check "$setup_capture_script"
+
+compare_script="$TMP_DIR/.agents/skills/design-review/scripts/compare.mjs"
+if [[ ! -f "$compare_script" ]]; then
+  echo "missing installed skill asset: design-review/scripts/compare.mjs" >&2
+  exit 1
+fi
+node --check "$compare_script"
 
 sample="$TMP_DIR/ads-consumer-sample.tsx"
 printf '%s\n' \

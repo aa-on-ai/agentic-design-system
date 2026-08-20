@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Challenger contract passing fixture</title>
+    <style>
+      body { font-family: system-ui, sans-serif; }
+      .card { padding: 16px; transition: transform 160ms ease; }
+      @media (hover: hover) and (pointer: fine) {
+        .card:hover { transform: translateY(-2px); }
+      }
+      .link:hover { color: rebeccapurple; transition: color 120ms ease; }
+      .modal { background: white; border: 1px solid #ddd; padding: 24px; position: fixed; inset: 20% 25%; }
+    </style>
+  </head>
+  <body>
+    <main inert>
+      <h1>Review queue</h1>
+      <button id="open" type="button" aria-controls="review-dialog">Open review</button>
+      <article class="card">Pointer-gated hover motion</article>
+      <a class="link" href="#review-dialog">Static hover color</a>
+    </main>
+    <section id="review-dialog" class="modal" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Review details</h2>
+      <button id="first" type="button">First action</button>
+      <button id="last" type="button">Last action</button>
+    </section>
+    <script>
+      const dialog = document.querySelector('#review-dialog');
+      const trigger = document.querySelector('#open');
+      const focusable = [...dialog.querySelectorAll('button')];
+      dialog.addEventListener('keydown', (event) => {
+        if (event.key === 'Tab') {
+          const first = focusable[0];
+          const last = focusable.at(-1);
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+        if (event.key === 'Escape') {
+          dialog.hidden = true;
+          document.querySelector('main').inert = false;
+          trigger.focus();
+        }
+      });
+      focusable[0].focus();
+    </script>
+  </body>
+</html>
