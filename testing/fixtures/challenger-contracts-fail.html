@@ -7,12 +7,15 @@
       body { font-family: system-ui, sans-serif; }
       .card { padding: 16px; transition: transform 160ms ease; }
       .card:hover { transform: translateY(-2px); }
+      #details-panel { width: 120vw; }
       .modal { background: white; border: 1px solid #ddd; padding: 24px; position: fixed; inset: 20% 25%; }
     </style>
   </head>
   <body>
     <main>
       <h1>Review queue</h1>
+      <button id="details-trigger" type="button" aria-controls="details-panel" aria-expanded="false">Show details</button>
+      <div id="details-panel" hidden>Expanded details must not contaminate modal evidence.</div>
       <button id="open" type="button" aria-controls="review-dialog">Open review</button>
       <article class="card">Motion-bearing hover without pointer gating</article>
     </main>
@@ -22,6 +25,12 @@
       <button id="last" type="button">Last action</button>
     </section>
     <script>
+      document.querySelector('#details-trigger').addEventListener('click', () => {
+        const trigger = document.querySelector('#details-trigger');
+        const expanded = trigger.getAttribute('aria-expanded') !== 'true';
+        trigger.setAttribute('aria-expanded', String(expanded));
+        document.querySelector('#details-panel').hidden = !expanded;
+      });
       document.querySelector('#open').addEventListener('click', () => {
         document.querySelector('#review-dialog').hidden = false;
         document.querySelector('#first').focus();

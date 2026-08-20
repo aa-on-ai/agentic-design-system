@@ -38,6 +38,11 @@ try {
   assert.equal(passedDiagnostics.modalContract.status, 'verified');
   assert.equal(failedDiagnostics.ungatedHoverMotion.length, 1);
   assert.deepEqual(passedDiagnostics.ungatedHoverMotion, []);
+  assert.equal(
+    failing.snapshots[0].horizontalOverflow,
+    false,
+    'modal discovery must not mutate unrelated aria-controls surfaces before overflow evidence is read',
+  );
 
   const failedSurfaces = [failedDiagnostics.modalContract, passedDiagnostics.modalContract]
     .filter(({ status }) => status === 'failed');

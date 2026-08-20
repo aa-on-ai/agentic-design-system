@@ -448,6 +448,7 @@ async function inspectModalContract(page) {
 
     return {
       declaredCount: dialogs.length,
+      declaredIds: dialogs.flatMap((dialog) => dialog.id ? [dialog.id] : []),
       visibleCount: visible.length,
       activeIndex,
       surfaces: visible.map((dialog, index) => {
@@ -479,9 +480,12 @@ async function inspectModalContract(page) {
   let openedByGenericTrigger = false;
   if (inventory.visibleCount === 0) {
     const triggers = page.locator('button[aria-controls]:visible:not([disabled])');
+    const declaredIds = new Set(inventory.declaredIds);
     const triggerCount = Math.min(await triggers.count(), 12);
     for (let index = 0; index < triggerCount; index += 1) {
       const trigger = triggers.nth(index);
+      const controlledId = await trigger.getAttribute('aria-controls');
+      if (!controlledId || !declaredIds.has(controlledId)) continue;
       const clicked = await trigger.click({ timeout: 1000 }).then(() => true).catch(() => false);
       if (!clicked) continue;
       await page.waitForTimeout(30);
@@ -748,12 +752,12 @@ async function main() {
 
         const computedFacts = await readComputedFacts(page, opts.selectors);
         const { ungatedHoverMotion, ...facts } = computedFacts;
-        const modalContract = await inspectModalContract(page);
 
         // overflow check: does content exceed the viewport horizontally?
         const overflow = await page.evaluate(
           () => document.documentElement.scrollWidth > window.innerWidth + 1,
         );
+        const modalContract = await inspectModalContract(page);
 
         evidence.snapshots.push({
           state,
