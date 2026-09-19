@@ -1,16 +1,31 @@
-# Agentic Design System
+<p align="center">
+  <img src="./demos/public/brand/ads-mark.png" width="88" alt="Agentic Design System mark">
+</p>
 
-![Agentic Design System logo](./demos/public/brand/ads-mark.png)
+<h1 align="center">Agentic Design System</h1>
 
-**A design practice for coding agents.**
+<p align="center"><strong>A design practice for coding agents.</strong></p>
 
-[Live workshop](https://agentic-design-system-lovat.vercel.app) | [Install ADS](./docs/INSTALL.md) | [How it works](./PHILOSOPHY.md) | [Documentation](./docs/README.md)
+<p align="center">
+  <a href="https://agentic-design-system-lovat.vercel.app">Live workshop</a>
+  | <a href="./docs/INSTALL.md">Install ADS</a>
+  | <a href="./PHILOSOPHY.md">How it works</a>
+  | <a href="./docs/README.md">Documentation</a>
+</p>
+
+<p align="center">
+  <a href="https://agentic-design-system-lovat.vercel.app">
+    <img src="./demos/public/hero/graphite-rose-atelier.webp" alt="Three Ember characters working together at a design workbench">
+  </a>
+</p>
 
 Coding agents can make a screen quickly. Agentic Design System helps them understand the product, choose an appropriate approach, inspect the rendered result, and revise before calling the work done.
 
 ADS is a repo-local skill pack. Your agent does the work; you keep the final say. It is not a hosted design agent, a component library, or a UI generator.
 
 ## Start with one screen
+
+### 1. Install ADS
 
 Install the complete ten-skill pack from the project where your agent works:
 
@@ -28,7 +43,9 @@ Replace `codex` with the installer ID for your agent:
 | OpenClaw | `openclaw` | `skills/` |
 | Hermes | `hermes-agent` | `.hermes/skills/` |
 
-Then give your agent a real product task:
+The installer copies the skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. See the [installation guide](./docs/INSTALL.md) for verification, activation, updates, and a no-CLI fallback.
+
+### 2. Give your agent a real product task
 
 ```text
 Improve our account settings page. Keep our components and visual identity.
@@ -36,7 +53,7 @@ Make saving and validation clear. Show me the working result, checked on
 desktop and mobile.
 ```
 
-The installer copies the skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. See the [installation guide](./docs/INSTALL.md) for verification, activation, updates, and a no-CLI fallback.
+The orchestrator reads the project baseline, routes only the relevant skills, and requires rendered evidence before the work is called done.
 
 ## The practice
 
