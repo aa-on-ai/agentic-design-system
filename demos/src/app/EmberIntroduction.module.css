@@ -1,0 +1,24 @@
+/* One review station: a real character and a stable, tappable observation. */
+.introduction{display:grid;grid-template-columns:220px minmax(0,1fr);grid-template-rows:1fr;column-gap:44px;row-gap:16px;align-items:center;padding:36px 48px 36px 32px;margin:0;scroll-margin-top:32px;border:1px solid color-mix(in srgb,var(--accent) 18%,var(--paper));border-radius:28px;background:var(--companion-panel);color:var(--ink)}
+
+.introduction .character{grid-column:1;grid-row:1;display:block;width:220px;padding:0;border:0;border-radius:16px;background:transparent;color:var(--muted);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.character img{display:block;width:100%;height:auto;transform-origin:50% 88%}
+.characterHint{display:block;min-height:28px;margin-top:0;font-size:12px;line-height:1.5}
+.introduction .bubble{display:block;grid-column:2;grid-row:1;min-width:0;width:100%;padding:0;border:0;border-radius:8px;background:transparent;color:var(--ink);text-align:left;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.messages{display:grid}
+.message{grid-area:1 / 1;visibility:hidden;pointer-events:none}
+.message[data-current="true"]{visibility:visible}
+.hello{display:block;margin-bottom:12px;font-size:30px;font-weight:500;line-height:1.15;letter-spacing:var(--heading-tracking);text-wrap:balance}
+.promise{display:block;max-width:51ch;font-size:17px;line-height:1.6;text-wrap:pretty}
+.invitation{display:flex;align-items:center;gap:20px;margin-top:26px;min-height:48px;font-size:13px;line-height:1.4}
+.prompt{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:48px;padding:12px 12px 12px 18px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--paper));border-radius:26px;background:var(--surface);color:var(--accent);box-shadow:0 2px 4px var(--shadow);font-weight:600;transition-property:background-color,border-color,box-shadow,transform;transition-duration:160ms;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
+.prompt svg{flex:none}
+.position{flex:none;padding-left:12px;border-left:1px solid color-mix(in srgb,var(--accent) 28%,var(--paper));color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;font-weight:500}
+.introduction .bubble:focus-visible,.introduction .character:focus-visible{outline:3px solid var(--accent);outline-offset:6px}
+.bubble:active .prompt{background:color-mix(in srgb,var(--accent) 13%,var(--surface-raised));border-color:color-mix(in srgb,var(--accent) 62%,var(--paper));box-shadow:inset 0 2px 5px color-mix(in srgb,var(--accent) 22%,transparent);transform:translateY(2px)}
+.character:active{transform:translateY(2px)}
+.screenReaderOnly{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(hover:hover) and (pointer:fine){.bubble:hover .prompt{background:var(--surface-raised);border-color:color-mix(in srgb,var(--accent) 55%,var(--paper));box-shadow:0 7px 15px -10px color-mix(in srgb,var(--accent) 70%,var(--shadow))}.bubble:hover .prompt svg{transform:translateX(2px)}.character:hover .characterHint{text-decoration:underline;text-underline-offset:4px}.bubble:active .prompt{background:color-mix(in srgb,var(--accent) 13%,var(--surface-raised));border-color:color-mix(in srgb,var(--accent) 62%,var(--paper));box-shadow:inset 0 2px 5px color-mix(in srgb,var(--accent) 22%,transparent);transform:translateY(2px)}}
+@media(max-width:1050px){.introduction{grid-template-columns:170px minmax(0,1fr);column-gap:28px;padding:30px}.introduction .character{width:170px}.hello{font-size:27px}}
+@media(max-width:700px){.introduction{grid-template-columns:1fr;grid-template-rows:auto auto;gap:12px;padding:24px 22px;border-radius:24px}.introduction .character{grid-column:1;grid-row:1;width:160px;justify-self:center;margin-top:-2px}.characterHint{min-height:24px}.introduction .bubble{grid-column:1;grid-row:2}.hello{font-size:26px;margin-bottom:12px}.promise{font-size:16px;line-height:1.6}.invitation{margin-top:22px;gap:10px}.prompt{padding:12px 10px 12px 14px;font-size:12px;gap:8px}.position{padding-left:8px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.prompt{transition-duration:0s}.bubble:active .prompt,.character:active{transform:none}}

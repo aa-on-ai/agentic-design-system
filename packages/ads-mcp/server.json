@@ -3,10 +3,10 @@
   "name": "io.github.aa-on-ai/agentic-design-system",
   "title": "Agentic Design System",
   "description": "Render web and SwiftUI evidence, run explicit visual judgment, and trace ADS UI decisions.",
-  "websiteUrl": "https://agentic-design-system.vercel.app/mcp",
+  "websiteUrl": "https://agentic-design-system-lovat.vercel.app/mcp",
   "icons": [
     {
-      "src": "https://agentic-design-system.vercel.app/brand/ads-mark.png",
+      "src": "https://agentic-design-system-lovat.vercel.app/brand/ads-mark.png",
       "mimeType": "image/png",
       "sizes": [
         "512x512"

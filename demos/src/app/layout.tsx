@@ -29,16 +29,16 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/brand/ads-mark.png",
-        type: "image/png",
-        sizes: "512x512",
+        url: "/brand/peek-icon.svg",
+        type: "image/svg+xml",
+        sizes: "any",
       },
     ],
     apple: [
       {
-        url: "/brand/ads-mark.png",
+        url: "/brand/peek-apple.png",
         type: "image/png",
-        sizes: "512x512",
+        sizes: "180x180",
       },
     ],
   },

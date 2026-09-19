@@ -4,10 +4,10 @@
 
 ## Core pages
 
-- [Home](https://agentic-design-system.vercel.app/): Product overview and one complete UI review loop.
-- [MCP lab](https://agentic-design-system.vercel.app/mcp): The local three-tool MCP contract and a verified run.
-- [MCP contract](https://agentic-design-system.vercel.app/mcp/contract.json): Machine-readable tool sequence, resources, and boundaries.
-- [Decision trace](https://agentic-design-system.vercel.app/trace/002): A rendered repair case with frozen evidence.
+- [Home](https://agentic-design-system-lovat.vercel.app/): Product overview and one complete UI review loop.
+- [MCP lab](https://agentic-design-system-lovat.vercel.app/mcp): The local three-tool MCP contract and a verified run.
+- [MCP contract](https://agentic-design-system-lovat.vercel.app/mcp/contract.json): Machine-readable tool sequence, resources, and boundaries.
+- [Decision trace](https://agentic-design-system-lovat.vercel.app/trace/002): A rendered repair case with frozen evidence.
 
 ## Source
 

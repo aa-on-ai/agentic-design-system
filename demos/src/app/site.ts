@@ -1,5 +1,5 @@
 export const SITE_NAME = "Agentic Design System";
-export const SITE_URL = "https://agentic-design-system.vercel.app";
+export const SITE_URL = "https://agentic-design-system-lovat.vercel.app";
 export const SITE_DESCRIPTION =
   "A repo-local UI skill pack for coding agents. Turn a brief into a browser-tested repair, evidence, and a separate grader verdict.";
 

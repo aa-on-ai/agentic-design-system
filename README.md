@@ -2,31 +2,25 @@
 
 ![Agentic Design System logo](./demos/public/brand/ads-mark.png)
 
-Design governance for coding agents that build UI.
+**A design practice for coding agents.**
 
-[See the live workshop](https://agentic-design-system.vercel.app) · [Read the design philosophy](./PHILOSOPHY.md)
+[Live workshop](https://agentic-design-system-lovat.vercel.app) | [Install ADS](./docs/INSTALL.md) | [How it works](./PHILOSOPHY.md) | [Documentation](./docs/README.md)
 
-Coding agents can produce a screen quickly. Agentic Design System gives them a repeatable way to decide what the screen is for, load the right product context, review the rendered result, attach evidence, and revise before calling it done.
+Coding agents can make a screen quickly. Agentic Design System helps them understand the product, choose an appropriate approach, inspect the rendered result, and revise before calling the work done.
 
-ADS is a repo-local skill pack. It is not a hosted design agent or a UI generator.
+ADS is a repo-local skill pack. Your agent does the work; you keep the final say. It is not a hosted design agent, a component library, or a UI generator.
 
-## Install
+## Start with one screen
 
-From the project where your coding agent works, choose the agent explicitly:
+Install the complete ten-skill pack from the project where your agent works:
 
 ```bash
 npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes
 ```
 
-Verify what was installed:
+Replace `codex` with the installer ID for your agent:
 
-```bash
-npx skills list --agent codex --json
-```
-
-ADS supports these release-tested installer targets:
-
-| Agent | Installer ID | Project skill directory |
+| Agent | Installer ID | Project destination |
 |---|---|---|
 | Claude Code | `claude-code` | `.claude/skills/` |
 | Codex | `codex` | `.agents/skills/` |
@@ -34,221 +28,106 @@ ADS supports these release-tested installer targets:
 | OpenClaw | `openclaw` | `skills/` |
 | Hermes | `hermes-agent` | `.hermes/skills/` |
 
-Replace `codex` in the command with the installer ID for your agent. The installer adds all ten
-skills and writes `skills-lock.json`; it does not create or replace `AGENTS.md`, `CLAUDE.md`,
-Cursor rules, or other project instructions.
-
-For one task, tell your agent:
+Then give your agent a real product task:
 
 ```text
-Use the agentic-design-system skill for this UI task. Define the outcome, read the project baseline, run the applicable review chain, and return rendered evidence before calling it done.
+Improve our account settings page. Keep our components and visual identity.
+Make saving and validation clear. Show me the working result, checked on
+desktop and mobile.
 ```
 
-For an always-on project setup, add this to the instruction file your agent reads:
+The installer copies the skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. See the [installation guide](./docs/INSTALL.md) for verification, activation, updates, and a no-CLI fallback.
 
-```markdown
-For visual or UI work, load the installed `agentic-design-system` skill first and follow its routing and rendered-verification contract.
-```
-
-See the [canonical install guide](./docs/INSTALL.md) for exact per-agent commands, destination
-paths, activation instructions, updates, and a no-CLI fallback. The fuller
-[`templates/agents-snippet.md`](./templates/agents-snippet.md) is useful when you clone the
-repository and keep the complete `skills/`, `workflows/`, and `templates/` tree in your project.
-
-### Install an exact checkout
-
-Use this when you are reviewing a branch or local change:
-
-```bash
-git clone https://github.com/aa-on-ai/agentic-design-system.git
-cd agentic-design-system
-npx skills add . --agent codex --copy --yes
-```
-
-If `npx skills` is unavailable in your agent shell, use the
-[no-CLI install](./docs/INSTALL.md#no-cli-install).
-
-## The loop
+## The practice
 
 ```text
 intent → baseline → rubric → build → rendered evidence → review → revise or release
 ```
 
-| Stage | What the agent must establish |
+| Stage | What ADS establishes |
 |---|---|
-| Intent | The user, situation, desired outcome, and stop condition |
+| Intent | The user, desired outcome, constraints, and stop condition |
 | Baseline | Existing product rules, components, tokens, screenshots, and prior decisions |
-| Rubric | Fixed quality gates plus criteria specific to this task |
-| Evidence | Rendered states and breakpoints, accessibility, overflow, touch targets, and screenshots |
+| Rubric | Fixed quality gates plus criteria specific to the task |
+| Build | The requested change, grounded in the product’s own components and language |
+| Evidence | Rendered states, breakpoints, interactions, accessibility, and screenshots |
 | Review | A verdict that can send the artifact back for revision |
 
-The report is part of the product. “Looks good” is not evidence.
+The report is part of the product. Source checks help, but “looks good” is not evidence.
 
-The four weighted rubric scores remain the verdict layer. Substantial reviews also emit structured
-findings beneath those scores: a fixed failure category, minor/major/blocker severity, the exact
-state and breakpoint, a concrete target or screenshot region, and the rendered evidence. Repeated
-findings become candidates for a rule or gate; they do not become one automatically.
+## What is included
 
-## What installs
+The [`agentic-design-system`](./skills/agentic-design-system) skill routes the task and loads only the support the task needs.
 
-### Orchestrator
+### Core practice
 
-- [`agentic-design-system`](./skills/agentic-design-system) routes the task, defines the outcome, and orders the gates.
+- [`design-review`](./skills/design-review) reviews product fit, hierarchy, accessibility, and rendered quality.
+- [`ux-baseline-check`](./skills/ux-baseline-check) covers loading, empty, error, interaction, responsive, and edge states.
+- [`ui-polish-pass`](./skills/ui-polish-pass) finishes spacing, alignment, typography, controls, and interaction details.
 
-### Core pack
+### Scoped specialists
 
-- [`design-review`](./skills/design-review) checks hierarchy, product fit, anti-patterns, accessibility, and rendered quality.
-- [`ux-baseline-check`](./skills/ux-baseline-check) checks loading, empty, error, interaction, responsive, and edge states.
-- [`ui-polish-pass`](./skills/ui-polish-pass) finishes spacing, alignment, typography, and interaction details.
+- [`agent-friendly-design`](./skills/agent-friendly-design) covers semantic and machine-readable interfaces.
+- [`visual-reference-calibration`](./skills/visual-reference-calibration) interprets supplied visual references.
+- [`design-variations`](./skills/design-variations) explores genuinely unresolved directions.
+- [`web-animation-design`](./skills/web-animation-design) handles motion, easing, gestures, and interruption.
+- [`whimsical-design`](./skills/whimsical-design) and [`world-build`](./skills/world-build) add personality or atmosphere only when the brief calls for them.
 
-### Production and reference gates
+Creative skills are not a default styling layer. Their trigger rules determine when they belong.
 
-- [`agent-friendly-design`](./skills/agent-friendly-design) covers semantic structure and machine-readable state for public products.
-- [`visual-reference-calibration`](./skills/visual-reference-calibration) defines what to borrow from a screenshot, site, or visual reference before code is written.
+## Evidence, not ceremony
 
-### Creative pack
+ADS can capture requested states and breakpoints, run deterministic browser checks, and keep review findings tied to the rendered artifact.
 
-- [`design-variations`](./skills/design-variations) creates 3–5 structurally distinct directions in one disposable browser artifact before production implementation.
-- [`whimsical-design`](./skills/whimsical-design) is opt-in for personality, delight, and expressive marketing work.
-- [`world-build`](./skills/world-build) is opt-in for immersion and atmosphere.
-- [`web-animation-design`](./skills/web-animation-design) is opt-in for motion and interaction feel.
-
-Creative skills are not a default styling layer. Their trigger rules decide when they belong.
-
-## Start a task
-
-Use [`workflows/create-design-workflow.md`](./workflows/create-design-workflow.md) as the entrypoint.
-
-| Need | Workflow |
-|---|---|
-| Route a design or review task | [`create-design-workflow`](./workflows/create-design-workflow.md) |
-| Review mobile or responsive UI | [`mobile-review`](./workflows/mobile-review.md) |
-| Critique finished UI from a separate context | [`adversarial-design-review`](./workflows/adversarial-design-review.md) |
-| Check package installation | [`install-usability-smoke`](./workflows/install-usability-smoke.md) |
-| Critique onboarding docs | [`readme-docs-critique`](./workflows/readme-docs-critique.md) |
-| Test whether a cold agent can use ADS | [`cold-agent-usage-test`](./workflows/cold-agent-usage-test.md) |
-| Trace consequential decisions to exact loaded rules | [`decision-provenance`](./workflows/decision-provenance.md) |
-
-A source checkout includes the full template set under [`templates/`](./templates/). The installed orchestrator bundles the five runtime templates it references: outcome, project identity, reference intake, grader report, and run report. The most useful starting artifacts are:
-
-- [`outcome-template.md`](./templates/outcome-template.md)
-- [`project-identity-template.md`](./templates/project-identity-template.md)
-- [`reference-intake-contract.md`](./templates/reference-intake-contract.md)
-- [`grader-report-template.md`](./templates/grader-report-template.md)
-- [`run-report-template.md`](./templates/run-report-template.md)
-
-## Rendered verification
-
-Source checks are an inexpensive pre-flight. Rendered evidence is the real gate.
+From a source checkout:
 
 ```bash
-python3 skills/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 skills/design-review/scripts/state-check.py <file.tsx>
-python3 skills/design-review/scripts/accessibility-check.py <file.tsx>
-
 node skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --states default,loading,empty,error \
   --out evidence/<task>
 ```
 
-Those commands are repo-root paths for a clone. Installed agents run the same capture through the
-orchestrator's `scripts/run-capture.mjs` wrapper. The exact path for every supported installer is
-in [`integrations/`](./integrations/), and the install matrix executes each one.
+The rendered gate checks serious accessibility violations, overflow, missing landmarks, state semantics, layout shift, undersized touch targets, and whether requested states actually rendered. Structural checks do not decide taste; unresolved visual judgment remains human judgment.
 
-The rendered gate blocks serious axe violations, overflow, missing main landmarks,
-loading/error states without the corresponding live-region semantics, CLS above `0.1`,
-undersized touch targets, and requested states that did not actually render.
+See the [worked three-pass example](./docs/loop-demo/README.md), where the same screen moved from 12 serious accessibility violations and 114 undersized touch targets to zero of each before the final verdict.
 
-Evidence format 2 also records the visual foundation contract's rounded one-edge borders,
-one-edge shadow candidates, forced uppercase, typography outliers, symbol-only controls,
-status-dot candidates, divider count, colons, and em dashes. Those new measurements are
-report-only while fixture precision is established.
+## Find your way around
 
-After a finding-driven repair, ADS also sweeps adjacent actions before a grader can return
-`satisfied`. Status and instructional copy must agree with every visible nearby primary,
-secondary, toolbar, and inline action in each changed state and breakpoint. An enabled-looking
-contradiction in a read-only, disabled, offline, permission-limited, or destructive state becomes a
-major `cues_affordances` finding.
+| I want to… | Start here |
+|---|---|
+| Install the skill pack | [Install ADS](./docs/INSTALL.md) |
+| Understand the design philosophy | [Philosophy](./PHILOSOPHY.md) |
+| Start or route a design task | [Create design workflow](./workflows/create-design-workflow.md) |
+| Run or extend checks | [Testing guide](./testing/README.md) |
+| Work on the public workshop | [Workshop app](./demos/README.md) |
+| Use the local MCP server | [ads-mcp package](./packages/ads-mcp/README.md) |
+| Browse release and historical material | [Documentation index](./docs/README.md) |
 
-ADS behavior changes are guarded by the frozen v1.3.1 five-case regression suite. The release gate
-keeps its baseline immutable and requires a new candidate packet for changes under skills,
-workflows, templates, routing, or judge behavior. See
-[`testing/TESTING.md`](./testing/TESTING.md#frozen-adjacent-action-regression).
+## Local MCP server
 
-For a meaningful modification, capture the baseline and candidate with the same states and breakpoints, then compare them:
-
-```bash
-node skills/design-review/scripts/compare.mjs \
-  evidence/<task>-baseline \
-  evidence/<task>-candidate
-```
-
-The comparison records what changed. It does not decide whether the change was good.
-
-For substantial runs that need causal traceability, capture loaded skill/source hashes once before
-the build and verify 3-7 final decisions once at report time. The provenance path is deterministic,
-adds no model/browser/network calls, and enforces a 250ms budget per operation:
-
-```bash
-node skills/agentic-design-system/scripts/decision-trace.mjs capture --help
-```
-
-See [`workflows/decision-provenance.md`](./workflows/decision-provenance.md) for the manifest, trace,
-and report commands. Tiny fixes and routine polish skip this path by default.
-
-## Worked example
-
-[`docs/loop-demo/`](./docs/loop-demo/) preserves a real three-pass run on an Orders screen at 390, 768, and 1280px.
-
-- Iteration 1: 12 axe violations and 114 undersized touch targets
-- Iteration 2: 12 undersized touch targets remained
-- Iteration 3: zero axe violations and zero undersized touch targets
-
-Only then did the grader return `satisfied`.
-
-## Agent integrations
-
-- [Canonical install guide](./docs/INSTALL.md)
-- [Claude Code](./integrations/claude-code.md)
-- [Codex CLI](./integrations/codex.md)
-- [Cursor](./integrations/cursor.md)
-- [OpenClaw](./integrations/openclaw.md)
-- [Hermes](./integrations/hermes.md)
-
-## MCP server (v0.3.0)
-
-The repository also contains a local stdio MCP package that exposes the ADS evidence spine as
-three tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
+The independently runnable [`ads-mcp`](./packages/ads-mcp/README.md) package exposes the ADS evidence spine as three local stdio tools: `ads_render`, `ads_evaluate`, and `ads_trace`.
 
 ```bash
 npx --yes ads-mcp@0.3.0 setup
 npx --yes ads-mcp@0.3.0 --root /absolute/path/to/project
 ```
 
-The MCP server is intentionally local-first. It confines project files and run artifacts to the
-configured root, renders web or startup-configured SwiftUI targets, and records model-free
-deterministic evidence by default. Provider-neutral command adapters can add explicit visual
-judgment without changing the three-tool API or silently selecting a model. The SDK v2 server
-accepts both legacy initialization and MCP `2026-07-28` discovery, while compatible hosts can
-render the optional `ui://ads/review` MCP App. See the
-[`ads-mcp` package guide](./packages/ads-mcp/README.md) and
-[`v0.3 API contract`](./docs/ads-mcp-api-contract.md). Its official MCP Registry name is
-`io.github.aa-on-ai/agentic-design-system`.
+It confines project files and run artifacts to the configured root and uses provider-neutral command adapters for optional visual judgment. Its MCP Registry name is `io.github.aa-on-ai/agentic-design-system`.
 
 ## Repository map
 
 ```text
-skills/        installable agent skills and rendered checks
-workflows/     task entrypoints and review runbooks
-templates/     outcome, project identity, reference, grader, and report shapes
+skills/        installable skills and rendered checks
+workflows/     focused design and review runbooks
+templates/     outcome, reference, evidence, and report shapes
 presets/       starter baselines for common product types
-testing/       package and evidence-loop smoke tests
+testing/       install, behavior, evidence, and regression checks
 packages/      independently runnable integrations, including ads-mcp
-demos/         the public workshop site and worked UI examples
-docs/          influences, current audits, and archived provenance
+demos/         the public workshop and product examples
+docs/          current guides, release notes, evidence, and archive index
 ```
 
-Historical eval fixtures are intentionally kept under [`docs/archive/`](./docs/archive/) instead of mixed into the current product path.
+Historical fixtures and reports remain available for provenance. They live under `docs/archive/`, `docs/run-reports/`, and named evidence directories rather than defining the current getting-started path.
 
 ## Verify a source checkout
 
@@ -258,41 +137,26 @@ npm run playwright:install
 npm run release:check
 ```
 
-The release gate aligns version and skill manifests, installs a clean copy for all five supported
-agents, and reruns comparison, render-authority, production-evidence, structured-findings, and
-eval-loop authority smokes.
+The release check validates metadata, installs a clean copy for all five supported agent targets, and exercises the package’s comparison, render-authority, evidence, structured-finding, and evaluation-loop contracts.
 
-To exercise the public GitHub shorthand rather than the local checkout:
+The public workshop is a separate Next.js app:
 
 ```bash
-testing/install-smoke.sh aa-on-ai/agentic-design-system
-testing/install-matrix.sh aa-on-ai/agentic-design-system
+npm --prefix demos ci
+npm --prefix demos run dev
 ```
 
-## Status and limits
+## Limits
 
-ADS is an early public package. The skills, templates, runbooks, and rendered checks are usable now. The grader loop is workflow-driven, not a hosted service.
-
-- Agents still need real product context. Without a configured visual judge, evaluation stops for
-  human judgment.
+- Agents still need real product context.
+- File placement does not prove runtime discovery or skill selection.
 - Structural checks cannot decide whether a visual direction is tasteful.
-- Separate grader context is recommended when the host supports it.
-- Creative passes can over-steer utility UI, so they stay opt-in.
-
-## Influences
-
-- [Intent Engineering](https://github.com/kylezantos/intent-engineering)
-- [Anthropic Managed Agents: Define outcomes](https://platform.claude.com/docs/en/managed-agents/define-outcomes)
-- [Agentic Rubrics as Contextual Verifiers for SWE Agents](https://huggingface.co/papers/2601.04171)
-- [Karpathy autoresearch](https://github.com/karpathy/autoresearch)
-- [DESIGN.md](https://github.com/google-labs-code/design.md)
-- [make-interfaces-feel-better](https://github.com/jakubkrehel/make-interfaces-feel-better)
-
-See [`docs/influences.md`](./docs/influences.md) for what ADS borrows from each source.
+- Without a configured visual judge, evaluation stops for human judgment.
+- The grader loop is workflow-driven, not a hosted service.
 
 ## Contributing
 
-If you find a recurring anti-pattern, a better routing rule, or a missing verification step, open an issue or pull request.
+Recurring anti-patterns, clearer routing rules, and missing verification steps are welcome as focused issues or pull requests. For release mechanics, see [RELEASING.md](./docs/RELEASING.md).
 
 ## License
 
