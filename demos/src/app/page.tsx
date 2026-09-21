@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DesignPractice } from "./DesignPractice";
+import { HomepageReady } from "./HomepageReady";
 import { SITE_DESCRIPTION, SITE_NAME, SOCIAL_IMAGE_ALT } from "./site";
 
 export const metadata: Metadata = {
@@ -38,5 +39,10 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <DesignPractice />;
+  return (
+    <>
+      <DesignPractice />
+      <HomepageReady />
+    </>
+  );
 }

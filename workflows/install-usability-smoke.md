@@ -29,8 +29,8 @@ testing/install-matrix.sh
 Success ends with both:
 
 ```text
-install smoke passed: 10 skills, contracts, routing, presets, executable consumer commands, 5 bundled templates, and 7 workflow runbooks
-install matrix passed: 5 agents x 10 skills, with contracts, routing, presets, executable consumer commands, templates, workflow runbooks, and lockfiles verified
+install smoke passed: 10 skills, orchestrator contract, maintainer routing, presets, executable consumer commands, 5 bundled templates, and 6 specialist workflow runbooks
+install matrix passed: 5 agents x 10 skills, with the orchestrator contract, maintainer routing, presets, executable consumer commands, portable instructional references, templates, specialist workflow runbooks, and lockfiles verified
 ```
 
 Then confirm the verification scripts a consumer would run actually execute:

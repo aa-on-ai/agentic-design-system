@@ -5,14 +5,12 @@
 - Decoration used to compensate for weak structure.
 - New patterns invented when the product already has a good one.
 - Polishing a bad foundation instead of rebuilding the layout.
+- Translating a visual reference into implementation mechanics before identifying its visual language.
+- Treating “inspired by this reference” as permission to copy incidental demo chrome instead of the reference’s actual quality cues.
 
 ## Typography Mistakes
-- Rejecting Inter, Roboto, Arial, or a system font merely because it is generic. Conventional
-  families are valid defaults for utility work when they match the product.
-- Using an expressive family without an eligible marketing, editorial, landing, launch, or
-  brief-approved reason.
-- Forced uppercase styling or authored all-caps interface copy outside literal external identifiers.
-- Arbitrary letter spacing or line height without a named type role.
+- Inter, Roboto, Arial, or system font defaults as unexamined autopilot. agents reach for these every time. pick a distinctive font that matches the product's personality. there are thousands of fonts — using the default is a non-decision.
+- Same font on every project. if two different products use the same typeface, one of them chose wrong.
 - Mushy scales with too many neighboring sizes.
 - Large type trying to rescue weak hierarchy.
 - Monospace used as a shortcut for "tech" personality.
@@ -33,8 +31,6 @@
 - Centering everything because it feels "clean."
 - Equal spacing everywhere, so nothing groups or leads.
 - Heavy borders and separators where whitespace would be stronger.
-- A border on only one edge of a rounded rectangle, including selected-state treatments.
-- A zero-blur or inset shadow used to imitate a one-edge border on a rounded rectangle.
 - Hero metric layouts that scream template.
 - 4 equal-width stat cards across the top of every dashboard (the #1 agent layout cliche).
 - Every page using the same card-in-grid structure regardless of content type.
@@ -51,6 +47,7 @@
 
 ## Interaction Mistakes
 - Missing hover, focus, or active states.
+- Local hover polish when the reference behavior is actually shared/system-level, e.g. a grid-wide proximity field.
 - Bounce or elastic easing.
 - Hover-only affordances on touch-first surfaces.
 - Tiny click targets.
@@ -59,9 +56,6 @@
 
 ## Craft Mistakes
 - Colored icon circles that weren't in the brief.
-- Text symbols used as controls when the project icon family has the real icon.
-- Static or animated status dots. Use a readable label; add an icon only when it improves scanning.
-- Mixed icon families or stroke systems on one surface.
 - Placeholder copy left in place.
 - Random shadows, glows, and blur used as "polish."
 - Decorative sparklines, charts, or gradients with no information value.
@@ -87,10 +81,10 @@
 - Chips, tags, or badges overflowing their containers on narrow widths.
 - Long model names or agency names causing horizontal overflow.
 - Fixed-width elements that don't adapt below 640px.
-- Touch targets under 48px on mobile.
+- Touch targets under 44px on mobile.
 - Nav that disappears on mobile with no replacement (hamburger, bottom tabs, etc.).
 
-## Common red flags
+## Common quality red flags
 - Anything that feels like AI slop.
 - Anything crowded.
 - Anything loud without being sharp.

@@ -1,0 +1,8 @@
+{
+  "fixture": "ember-menu-v1",
+  "files": {
+    "menu-broken.html": "dc1c894135fa8425b2eeb272a5eac9fcd374b1f9f30669e470ce5c0c24b05d51",
+    "menu-repaired.html": "1966b53f1669ab19babca5dbded44b8bbbedb2bb6ae11f118106a897c487b014",
+    "repair.patch": "7958c809f9e0d33e3b433da87a04825ab0a3a9dfa6d46aad7c3c0c7c7ff30270"
+  }
+}

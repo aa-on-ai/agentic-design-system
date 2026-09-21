@@ -16,6 +16,7 @@ expected=(
   agentic-design-system
   design-review
   design-variations
+  ember
   ui-polish-pass
   ux-baseline-check
   visual-reference-calibration
@@ -33,7 +34,6 @@ bundled_templates=(
 )
 
 runbooks=(
-  create-design-workflow.md
   mobile-review.md
   adversarial-design-review.md
   install-usability-smoke.md
@@ -222,17 +222,6 @@ for spec in "${agent_specs[@]}"; do
     exit 1
   fi
 
-  compare_script="$project/$install_root/design-review/scripts/compare.mjs"
-  if [[ ! -f "$compare_script" ]]; then
-    echo "missing installed skill asset for $agent: design-review/scripts/compare.mjs" >&2
-    exit 1
-  fi
-  if ! node --check "$compare_script" >"$sandbox/compare-check.log" 2>&1; then
-    echo "installed compare syntax check failed for $agent" >&2
-    sed -n '1,120p' "$sandbox/compare-check.log" >&2
-    exit 1
-  fi
-
   sample="$project/ads-consumer-sample.tsx"
   printf '%s\n' \
     'export function Sample({ state }: { state: string }) {' \
@@ -246,6 +235,7 @@ for spec in "${agent_specs[@]}"; do
     fi
   done
 
+  node "$ROOT/testing/ember-package-smoke.mjs" "$project/$install_root"
   node "$ROOT/testing/installed-reference-smoke.mjs" "$project/$install_root"
 
   if [[ ! -f "$project/skills-lock.json" ]]; then
@@ -256,4 +246,4 @@ for spec in "${agent_specs[@]}"; do
   echo "install passed: $agent -> $install_root"
 done
 
-echo "install matrix passed: ${#agent_specs[@]} agents x ${#expected[@]} skills, with contracts, routing, presets, executable consumer commands, portable instructional references, templates, workflow runbooks, and lockfiles verified"
+echo "install matrix passed: ${#agent_specs[@]} agents x ${#expected[@]} skills, with Ember assets, contracts, routing, presets, executable consumer commands, portable instructional references, templates, workflow runbooks, and lockfiles verified"

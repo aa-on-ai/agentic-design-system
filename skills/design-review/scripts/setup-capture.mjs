@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-// setup-capture.mjs — one-command setup for capture.mjs's and compare.mjs's runtime dependencies.
+// setup-capture.mjs: one-command setup for capture.mjs runtime dependencies.
 //
-// capture.mjs needs Playwright + @axe-core/playwright + a Chromium browser; compare.mjs needs
-// pixelmatch + pngjs. Those are peer deps, not shipped with the skill, so a freshly-installed
-// agent hits a wall. This removes the scavenger hunt: one command installs everything and
-// verifies both scripts can run.
+// capture.mjs needs Playwright, @axe-core/playwright, and a Chromium browser. Those are project
+// dependencies, not shipped with the skill, so a fresh skill install does not imply browser
+// readiness. This command installs and verifies the runtime from the consumer project root.
 //
 //   node skills/design-review/scripts/setup-capture.mjs            install deps + chromium, then verify
 //   node skills/design-review/scripts/setup-capture.mjs --check     verify only (no install)
@@ -33,12 +32,6 @@ async function readiness() {
     return { ok: false, missing: '@axe-core/playwright (npm package)' };
   }
   try {
-    await import('pixelmatch');
-    await import('pngjs');
-  } catch {
-    return { ok: false, missing: 'pixelmatch + pngjs (npm packages, needed by compare.mjs)' };
-  }
-  try {
     const { chromium } = await import('playwright');
     const browser = await chromium.launch();
     await browser.close();
@@ -55,7 +48,7 @@ function run(cmd, args) {
 
 const before = await readiness();
 if (before.ok) {
-  console.log('capture deps ready: playwright + @axe-core/playwright + pixelmatch + pngjs + chromium ✓');
+  console.log('capture deps ready: playwright + @axe-core/playwright + chromium ✓');
   process.exit(0);
 }
 
@@ -69,12 +62,12 @@ if (checkOnly) {
 
 console.log(`setting up capture deps in ${process.cwd()} …`);
 try {
-  run('npm', ['install', '-D', 'playwright', '@axe-core/playwright', 'pixelmatch', 'pngjs']);
+  run('npm', ['install', '-D', 'playwright', '@axe-core/playwright']);
   run('npx', ['playwright', 'install', 'chromium']);
 } catch (e) {
   console.error(`\nsetup command failed: ${e?.message || e}`);
   console.error('install manually, then re-run with --check:');
-  console.error('  npm i -D playwright @axe-core/playwright pixelmatch pngjs && npx playwright install chromium');
+  console.error('  npm i -D playwright @axe-core/playwright && npx playwright install chromium');
   process.exit(1);
 }
 

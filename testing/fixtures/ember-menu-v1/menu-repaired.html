@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reading room</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f4f0; color: #252923; font: 16px/1.5 system-ui, sans-serif; }
+    header, main, footer { max-width: 680px; margin: auto; padding: 24px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    main { padding-top: 56px; min-height: 560px; }
+    h1 { font-size: 32px; line-height: 1.2; margin: 0 0 20px; }
+    h2 { font-size: 22px; margin: 0 0 24px; }
+    p { max-width: 40ch; margin-bottom: 32px; }
+    a { color: #285541; }
+    button, a { min-height: 48px; display: inline-flex; align-items: center; padding: 12px 16px; font: inherit; }
+    button { background: #fff; color: inherit; border: 1px solid #666d62; border-radius: 10px; cursor: pointer; }
+    :focus-visible { outline: 3px solid #285541; outline-offset: 4px; }
+    [hidden] { display: none !important; }
+    #layer { position: fixed; inset: 0; display: flex; align-items: flex-end; background: rgba(20, 24, 20, .3); }
+    #menu { background: #fff; padding: 32px 24px; width: 100%; border-radius: 20px 20px 0 0; }
+    #menu nav { display: grid; gap: 16px; margin-bottom: 24px; }
+    #menu a { padding-left: 0; }
+    #close-menu { width: 100%; justify-content: center; }
+    footer { color: #535c4e; }
+    @media (min-width: 700px) { #menu { max-width: 420px; margin: 24px auto; border-radius: 20px; } }
+  </style>
+</head>
+<body>
+  <div id="page-shell">
+    <header><strong>Reading room</strong><button id="open-menu" aria-controls="menu" aria-expanded="false">Menu</button></header>
+    <main id="saved"><h1>Saved reading</h1><p>A quiet place to return to the stories you want to read.</p><button id="background-action">Open a saved story</button><p id="story-status" role="status"></p></main>
+    <footer>Make room for a good story.</footer>
+  </div>
+  <div id="layer" hidden>
+    <section id="menu" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+      <h2 id="menu-title">Your reading room</h2>
+      <nav aria-label="Reading room pages"><a id="first-link" href="#saved">Saved reading</a><a id="second-link" href="#saved">Reading history</a></nav>
+      <button id="close-menu">Close menu</button>
+    </section>
+  </div>
+  <script>
+    const shell = document.querySelector('#page-shell');
+    const layer = document.querySelector('#layer');
+    const menu = document.querySelector('#menu');
+    const trigger = document.querySelector('#open-menu');
+    const close = document.querySelector('#close-menu');
+    const first = document.querySelector('#first-link');
+    function dismiss() {
+      layer.hidden = true;
+      shell.inert = false;
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.focus();
+    }
+    trigger.addEventListener('click', () => {
+      layer.hidden = false;
+      shell.inert = true;
+      trigger.setAttribute('aria-expanded', 'true');
+      first.focus();
+    });
+    close.addEventListener('click', dismiss);
+    document.querySelectorAll('#menu a').forEach(link => link.addEventListener('click', dismiss));
+    document.addEventListener('keydown', event => {
+      if (layer.hidden) return;
+      if (event.key === 'Escape') { event.preventDefault(); dismiss(); }
+      if (event.key === 'Tab') {
+        const atFirst = document.activeElement === first;
+        const atLast = document.activeElement === close;
+        if ((event.shiftKey && atFirst) || (!event.shiftKey && atLast)) {
+          event.preventDefault();
+          (event.shiftKey ? close : first).focus();
+        }
+      }
+    });
+    window.backgroundActivations = 0;
+    document.querySelector('#background-action').addEventListener('click', () => {
+      window.backgroundActivations += 1;
+      document.querySelector('#story-status').textContent = 'Story opened';
+    });
+  </script>
+</body>
+</html>

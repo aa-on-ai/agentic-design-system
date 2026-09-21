@@ -1,264 +1,146 @@
 ---
 name: "agentic-design-system"
-description: "Route all visual and frontend work through ADS outcome, review, evidence, and creative-pack gates."
+description: "Route visual and frontend builds, exploration, and reviews through one scoped design loop. Preserve the intended product, use relevant specialists, and verify the delivered experience."
 ---
 
 # Agentic Design System
 
-you have a design system installed. this skill orchestrates it. read this BEFORE starting any visual work.
+ADS is the single entrypoint for visual and frontend work. Use one loop:
 
-## Workflows (runnable runbooks)
+`understand → choose → work → prove → decide`
 
-if you just want to *use* ADS, start at `workflows/create-design-workflow.md` — it routes a task
-to the right profile or workflow by intent. each runbook is decision-shaped (when to use, read
-first, run, evidence, output, blocked when, stop when). these ship with this skill at
-`<skills-root>/agentic-design-system/workflows/` so installed agents have them, not just repo clones;
-the canonical copies live at the repo root `workflows/` and the two are kept in sync by the
-install smoke's drift guard.
+Tiny copy-only or mechanical edits stay tiny: preserve the chosen direction and check the affected
+result, without a new brief, research, variants, grader report, or full capture matrix. Skip ADS for
+non-visual work. Helpers contribute to this loop; they do not create another process or budget.
 
-> **Installed, not cloned? Read this.** Resolve shared files from the directory containing this
-> `SKILL.md`; that location is portable even when agents use different install roots. From this
-> file:
-> - `workflows/create-design-workflow.md` → `./workflows/create-design-workflow.md`
-> - portable capture command → `node ./scripts/run-capture.mjs <url> ...`
-> - `<skills-root>/design-review/references/mobile.md` resolves from every supported installer root
-> - `templates/run-report-template.md` → `./templates/run-report-template.md`
-> - `templates/project-identity-template.md` → `./templates/project-identity-template.md`
-> - `templates/reference-intake-contract.md` → `./templates/reference-intake-contract.md`
-> - visual foundation contract → `./contracts/visual-foundation.v2.json`
-> - routing contract → `./routing/ROUTING.md`
-> - starter presets → `./presets/`
+Resolve paths from this skill directory. `<skills-root>` is its parent. The installed release has
+no `create-design-workflow.md`. Optional source-maintenance workflows require a source checkout.
 
-## How it works
+## Understand
 
-the system installs a routing skill plus focused helper skills. you don't need to read them all — this file tells you which ones to read for your current task.
+For substantial work, recover a short internal brief from the request and current product sources:
 
-### core pack (read these for ALL visual work)
-- `<skills-root>/design-review/SKILL.md` — quality gate, reference files, verification scripts
-- `<skills-root>/ux-baseline-check/SKILL.md` — loading, empty, error states
-- `<skills-root>/ui-polish-pass/SKILL.md` — final spacing/alignment/hierarchy pass
+- **User job and success:** what someone must understand, decide, or do; the intended reading/action order.
+- **Exact surface and baseline:** the existing route, component, document, or artifact being changed,
+  plus what must stay. Open its current source and rendered baseline when relevant. Extending a
+  backend is not permission to replace the chosen frontend.
+- **Reference and direction:** what property to borrow, what to exclude, and the desired fidelity.
+  A screenshot identifying a defect is evidence, not automatically a new art direction.
+- **Output and coverage:** the requested format, meaningful states, target browsers/breakpoints,
+  and how the result will reach the user in a usable form.
 
-### creative pack (read ONLY when triggered)
-- `<skills-root>/visual-reference-calibration/SKILL.md` — BEFORE coding when the user provides a screenshot, CodePen, website, or other artifact as a desired visual target, or says “make it feel like this.” A screenshot used only to point at a defect is review evidence, not a reference target. Write the Reference Intake Contract first so the agent knows what to borrow, what not to borrow, and the fidelity target.
-- `<skills-root>/design-variations/SKILL.md` — BEFORE production implementation when the user asks for options, variations, concepts, mockups, or help choosing a direction. Build one disposable browser artifact, let the human choose or blend, then promote only the winner.
-- `<skills-root>/whimsical-design/SKILL.md` — ONLY if user asks for personality, delight, or brand expression. ONLY for marketing, editorial, or launch pages. Skip for utility UI.
-- `<skills-root>/world-build/SKILL.md` — ONLY if user explicitly asks for immersion or atmosphere. Skip unless told otherwise.
-- `<skills-root>/web-animation-design/SKILL.md` — ONLY if task specifically involves animation, motion, or interaction feel.
+Use the task's existing brief or notes; the [outcome template](templates/outcome-template.md) is
+optional when a fuller handoff helps. Reuse prior answers. Ask only when a material unresolved
+choice cannot be recovered and would change the result. An authorized build/fix request permits
+scoped reversible local implementation; do not ask for the same write permission again. External
+writes, deployment, installation, spending, and destructive actions retain their own authority.
 
-### agent-friendly (read for production sites)
-- `<skills-root>/agent-friendly-design/SKILL.md` — semantic HTML, ARIA, structured data. Read when building anything that ships to production.
+Read relevant `DESIGN.md`, guidelines, tokens, components and accepted/rejected decisions. Preserve
+unknown `DESIGN.md` sections; frontmatter tokens govern conflicting prose unless the current user
+or primary source corrects them. Resolve a material conflict, not a nearby substitute. Use a
+[preset](presets/README.md) only when no established product language answers the need.
 
-### project knowledge intake (optional; run when context needs alignment)
-default path: use a preset when there is no project context, then build. if the task depends on product taste and a preset is not enough, inspect local docs/components/screenshots/references, ask only the missing blocking questions, and write the result into `DESIGN.md` or the `templates/project-identity-template.md` shape so downstream skills can use it. installed copies live under this skill's `templates/` directory.
+For generation or substantial review, read [Foundation v2](contracts/visual-foundation.v2.json):
+`utility` is the default for product/operations work; `expressive` requires marketing, editorial,
+launch, or explicit brand-expression scope. Do not turn a plain utility surface into creative work.
+Confirmed `never` violations block a ready verdict; report-only candidates need actual confirmation.
+The contract's numeric rubric is optional diagnostic context, not a taste or release certificate.
 
-### reference intake gate (optional; run before reference-led visual work)
-if the user provides a visual reference/screenshot/site/CodePen as a desired target, says “make it feel like…”, the work is marketing/editorial/launch art direction, or prior output failed because it was generic/sloppy/wrong vibe, load `<skills-root>/visual-reference-calibration/SKILL.md` before generating UI. screenshots used only to identify a bug or region of concern stay in the normal review path.
+## Choose
 
-use `templates/reference-intake-contract.md`; installed copies live under this skill's `templates/` directory. hard rule for reference-led work: if you cannot state what to borrow, what not to borrow, and the fidelity target, you cannot build. if no visual reference matters, skip this gate. ask before building when the primary borrowed layer or fidelity target is unclear, when the reference implies unapproved structural change, or when the user already said the prior pass missed the point. after implementation, screenshot the result and report where it matched or drifted from the contract.
+Route by the user's intent: **Explore** a real unresolved direction, **Build** an authorized change,
+or **Review** without implied repair. Use only the owners the task needs:
 
-### outcome + grader loop (optional; run for substantial UI work)
-for non-trivial UI, define the user-facing intent and outcome before building, then grade the artifact in a separate context when possible.
+- [design-review](../design-review/SKILL.md) owns product/task fit, information architecture,
+  reference fidelity and visual judgment.
+- [ux-baseline-check](../ux-baseline-check/SKILL.md) owns applicable states and reusable component contracts.
+- [ui-polish-pass](../ui-polish-pass/SKILL.md) owns craft, geometry, text/data/form mechanics and primitives.
+- [Ember](../ember/SKILL.md) reads the evidence for substantial design handoffs by default.
+  It is not a builder, independent reviewer, or taste judge.
 
-use `templates/outcome-template.md` and `templates/grader-report-template.md` from the full repo. installed copies of all five runtime templates — outcome, project identity, reference intake, grader report, and run report — are bundled under this skill's `templates/` directory.
+Load conditional specialists only for their matching need:
 
-minimum loop:
+- A desired visual target: `../visual-reference-calibration/SKILL.md`. Record borrowed layers,
+  exclusions and fidelity, using [reference intake](templates/reference-intake-contract.md) if helpful.
+- Options or unresolved direction: `../design-variations/SKILL.md`. Bring a concrete recommendation
+  and a reviewable alternative or target when choice is needed; do not invent options after approval.
+- Requested personality/delight on eligible marketing/editorial/launch work: `../whimsical-design/SKILL.md`.
+- Explicit immersion/atmosphere: `../world-build/SKILL.md`.
+- Motion or interaction feel: `../web-animation-design/SKILL.md` and the design-review motion reference.
+- Agent-consumable public interfaces: `../agent-friendly-design/SKILL.md`, only for the required
+  semantics or machine-readable behavior, not automatic crawlability/API expansion.
+- Deep mobile judgment: [mobile review](workflows/mobile-review.md).
+- High-judgment work that benefits from an authorized independent critic:
+  [adversarial review](workflows/adversarial-design-review.md). Verify the runtime is available;
+  a same-agent reread is not independent review.
 
-1. define **intent**: user/situation, accomplish, notice, feel/operational state, alignment check
-2. define **done**: artifact, required evidence, deterministic checks, max iterations
-3. build
-4. attach evidence: changed files, checks, screenshots or preview, unresolved risks
-5. grade against the outcome using a separate agent/context when available
-6. stop at `satisfied`, `max_iterations`, or explicit human decision
+The [routing reference](routing/ROUTING.md) holds specialist detail, not a second entrypoint.
+Use the appropriate native artifact skill for a document, deck or image; the shared brief does not
+force those outputs through a web implementation or a web state inventory.
 
-do not turn this into ceremony for tiny fixes. use it when unclear intent, visual quality, reference fidelity, or regression risk would otherwise cause churn.
+## Work
 
-### decision provenance (optional; substantial work only)
+Build in the intended product and output format. Preserve its useful controls, content, tokens and
+interaction model. Apply structure, state coverage and craft as one coherent pass, not three
+serial ceremonies. Reuse existing primitives; define a component contract before proliferating
+one and verify real consumers when reuse is part of the requested outcome.
 
-when a reviewer needs inspectable causality, read `workflows/decision-provenance.md`. capture the
-loaded skill/source hashes once after routing and before building, then verify 3-7 consequential
-decisions once at report time. do not trace every CSS property or repeat provenance capture inside
-the revision loop.
+Review in this order, fixing an earlier failure before polishing a later one:
 
-skip this for copy-only changes, tiny mechanical fixes, and routine polish unless the user or risk
-profile explicitly requires traceability. the provenance path has a 250ms budget per deterministic
-operation and adds zero agent, model, browser, or network calls.
+1. Right product, surface and user task.
+2. Understandable information/action structure, including evidence inspection and return context.
+3. Brief/reference fidelity and an intentional visual direction.
+4. Craft and component consistency.
+5. Behavior, applicable states, target surfaces and usable delivery.
 
-## Project handoff context (DESIGN.md)
+Preserve what already works. A technical implementation summary is not the product's answer to
+the user. For Review, report findings without edits unless repair is already authorized.
 
-if a `DESIGN.md` file exists at the repo root — or at a path the orchestrator passes in — load it as handoff context **before** building. it is the normative source of truth for design tokens (colors, typography, spacing, rounded, components) and a prose overlay for atmosphere, component tone, and anti-goals. if it does not exist and the task needs project taste, run project knowledge intake before generation.
+## Prove
 
-- YAML frontmatter tokens win on conflicts with prose
-- prose gives the **why** so the agent can judge edge cases
-- unknown sections are preserved without error per the spec, so this repo's one extension (`Example Prompting Language`) is safe to use
+Use evidence that establishes the claim. Source checks are advisory. Inspect meaningful visual
+changes in the actual browser against matched baseline/reference captures; exercise interactions
+in the target desktop and mobile/WebKit surface when applicable. A screenshot cannot prove motion,
+keyboard handling, or returning to the prior context. Missing required access means unverified.
 
-the project-identity template is DESIGN.md-shaped. source checkouts use `templates/project-identity-template.md`; installed agents use the copy under this skill's `templates/` directory.
+[design-review](../design-review/SKILL.md) owns capture instructions and the distinction between
+established gates and report-only measurements. Select task-relevant source checks and states,
+not a universal matrix. Required accessibility, state, layout or interaction failures block a ready
+verdict even if source scanners pass. Keep diagnostics separate from unmodified primary captures.
 
-format reference: https://github.com/google-labs-code/design.md (alpha — this repo consumes the format, does not author tooling for it)
+For changed permission, readonly, disabled, offline or destructive states, verify every nearby
+action agrees in label, emphasis, native enabledness, semantics and helper text. Preserve valid
+actions in unaffected states. This adjacent-action sweep is owned by UX baseline and is also
+checked in a substantial independent review. Use [structured findings](references/structured-findings.md)
+when a review needs exact locations, severity and finding-to-repair traceability.
 
-prior art / ecosystem: https://github.com/VoltAgent/awesome-design-md — curated real-world DESIGN.md examples.
+Optional [decision provenance](workflows/decision-provenance.md) records consequential source-to-
+decision links for substantial work. It does not add model calls or make a tiny edit a traced run.
 
-## Routing decision
+## Decide
 
-```
-is this visual or frontend work?
-├── no → skip everything, do the task
-└── yes
-    ├── new page/component → run project knowledge intake if context is thin, read core pack skills, then build
-    ├── modification to existing UI → read design-review only
-    └── non-visual (scripts, backend, config) → skip
-    
-    does it need creative direction?
-    ├── user provided a desired visual reference/screenshot/CodePen/site/"feel like this" → also read visual-reference-calibration BEFORE coding
-    ├── user asked for options/variations/concepts or the direction is undecided → run design-variations BEFORE production implementation
-    ├── user asked for personality/delight → also read whimsical-design
-    ├── user asked for immersion/atmosphere → also read world-build  
-    ├── task involves animation specifically → also read web-animation-design
-    └── none of the above → core pack is enough
-```
+For substantial design handoffs, use [Ember](../ember/SKILL.md) to read the evidence already
+collected in this loop and present a concise **Ember’s review**: what was checked, what failed
+or remains unverified, and what still needs the user's judgment. Follow its
+[short handoff](../ember/references/first-use.md#short-result-complete-report); this is the review
+part of the result, not a second review or execution loop. Use the heading only after an actual
+evidence review. If no review occurred, say so plainly without the Ember label. Tiny copy or
+mechanical edits do not get this wrapper unless explicitly requested.
 
-## The key rule
+Return the result, evidence, and actual remaining decision. Use one scoped verdict: `ready`,
+`needs repair`, or `blocked`; identify whether the artifact is a local candidate, installed,
+delivered or released. Ready refers only to the evidenced task/version, not taste approval or
+release permission. Deliver a usable attachment or already-authorized accessible review surface;
+a machine-local path, screenshot folder or localhost is internal evidence, not remote delivery.
 
-if the default aesthetic is appropriate for the product, don't fight it. make it excellent, not different. a weather app CAN be dark and glassy. an admin panel SHOULD be clean and utilitarian. core pack makes defaults excellent. creative pack makes them different. only add creative when different is what the product actually needs.
+Use one task budget across ADS, Ember and specialists: one implementation/review pass plus at most
+one repair unless the user supplies another budget. Recapture affected evidence after repair.
+Switching skills, reviewers, aesthetics or runners does not reset the budget. At its boundary,
+preserve the candidate and unresolved findings; diagnose the failed assumption and report the
+specific blocker or decision. Do not automatically rebuild, pivot, or open another review loop.
 
-## Visual foundation profile
-
-lock the profile before generation. read `contracts/visual-foundation.v2.json`; installed copies
-live under this skill's `contracts/` directory.
-
-- **utility** — product interfaces, admin and operations surfaces, settings, workflows, and
-  internal tools. use the existing product family, a system sans, or another conventional
-  general-purpose family by default. weights are Functionality 35, Design Quality 30, Craft 25,
-  and Originality 10.
-- **expressive** — marketing, editorial, landing, launch, and brief-approved brand expression.
-  weights are Design Quality 35, Originality 30, Craft 20, and Functionality 15.
-
-the expressive profile requires an eligible surface or an explicit outcome. agents cannot promote
-utility work into expressive mode because it feels visually plain. utility Originality means
-product-specific decisions without generic software tropes; it does not mean decorative novelty.
-
-the visual foundation contract also governs rendered anti-agent evidence. confirmed violations of
-its `never` rules block presentation. report-only measurements remain review candidates until their
-fixture precision is proven.
-
-## Design rubric (grade yourself before presenting)
-
-score your output on the same four criteria using the locked profile's weights.
-
-| Criteria | Utility | Expressive | What it means |
-|----------|---------|------------|---------------|
-| **Functionality** | 35% | 15% | Users understand the state, primary task, actions, and recovery path. |
-| **Design Quality** | 30% | 35% | Hierarchy, layout, color, spacing, and type form a coherent whole. |
-| **Craft** | 25% | 20% | Typography, spacing, contrast, interaction states, and responsive behavior are competent. |
-| **Originality** | 10% | 30% | Decisions fit the product and avoid generic agent tropes; expressive work also needs a brief-supported point of view. |
-
-### scoring guide
-- **8-10:** ship it. would impress a human designer.
-- **6-7:** functional but needs another pass. common for first iteration.
-- **4-5:** generic AI slop. needs a creative pivot, not polish.
-- **1-3:** broken fundamentals. rebuild.
-
-**below 6 on Functionality or Design Quality blocks either profile. below 6 on Originality blocks
-the expressive profile; utility work uses the contract and independent review to reject generic
-tropes without forcing novelty.**
-
-## Iteration philosophy
-
-more iterations with structured feedback produce breakthroughs. Anthropic's harness research found that on iteration 10 of a museum site, the model reimagined the entire approach as a 3D spatial experience — something that would never emerge from a single pass.
-
-**rules for iteration:**
-- don't stop at "good enough" on creative work. push for at least 3 passes on new pages/components.
-- after each pass, score yourself on the rubric. if Design Quality or Originality aren't improving, **pivot the aesthetic entirely** instead of refining the current direction.
-- refinement and pivoting are both valid. if scores trend up, refine. if scores plateau, pivot.
-- the "2 rounds of fixes = rebuild" rule applies to BUG FIXES, not creative iteration. creative exploration benefits from more rounds, not fewer.
-
-## Verification (run before presenting)
-
-after ingest/interview (if needed), building, and scoring yourself on the rubric, run these source pre-flight scripts. replace `<skills-root>` with the directory containing the installed skill folders:
-
-```bash
-python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
-python3 <skills-root>/design-review/scripts/state-check.py <file.tsx>
-python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
-node <skills-root>/agentic-design-system/scripts/run-capture.mjs <running-route-url> --states default,loading,empty,error --out evidence/<slug>
-```
-
-investigate source warnings before presenting work. source heuristics are advisory and gameable.
-rendered evidence is authoritative for established gates. evidence format 2 additionally records
-rounded one-edge borders, one-edge shadow candidates, forced uppercase, typography outliers,
-symbol-only controls, status-dot candidates, divider count, colons, and em dashes. those new fields
-remain report-only in this release.
-
-the rendered capture writes a deterministic `modal-interaction-receipt.json`. when dialogs are
-declared, every dialog must be reachable through a visible enabled `aria-controls` trigger and
-pass focus, containment, Escape, focus-return, and inert-background checks. `failed`,
-`not_verified`, or a missing receipt blocks `satisfied`. motion-bearing hover rules without
-fine-pointer capability gates remain report-only during calibration.
-
-## What the reference files cover
-
-when you read `<skills-root>/design-review/SKILL.md`, it points to reference files in `<skills-root>/design-review/references/`. you don't need to read all of them — only load what's relevant:
-
-- `anti-patterns.md` — what NOT to do (always worth reading)
-- `layout.md` — composition and grid-breaking (read for new pages)
-- `typography.md` — type hierarchy, pairing, text-wrap (read when type feels off)
-- `color.md` — palette strategy, tinted neutrals (read when color feels generic)
-- `spacing.md` — rhythm and judgment (read when spacing feels cramped or uniform)
-- `alignment.md` — concentric radius, optical alignment, shadows, image overlays (read for polish)
-- `responsive.md` — mobile failures and what to check (read for responsive work)
-- `mobile.md` — mobile review profile: design-judgment vs platform-defect passes, decision forks, severity tiers (read for mobile/app/PWA review)
-- `motion.md` — interruptibility, enter/exit asymmetry, and the named motion vocabulary (read when adding or reviewing motion)
-- `ux-writing.md` — copy quality, button labels, empty states (read when writing UI text)
-- `mock-data.md` — realistic content, where humor goes (read when generating sample data)
-- `inspiration.md` — context pass, reference priority (read when building for a named company)
-- `structured-findings.md` — diagnostic categories, severity, evidence, and recurrence rules (read for substantial independent review)
-
-## Structured diagnostic findings
-
-the four weighted rubric criteria remain the verdict layer. for substantial UI review, the
-independent grader must also return structured findings that explain why a score failed and exactly
-where the failure appears. read `references/structured-findings.md` for the complete schema.
-
-each finding records:
-
-- `category`: `layout_spacing_hierarchy`, `polish_consistency`, `typography`, `originality`, `color_contrast`, `interaction_motion`, `cues_affordances`, or `brand_fit_tone`
-- `severity`: `minor`, `major`, or `blocker`
-- `rubricRow`: Design Quality, Originality, Craft, Functionality, or a task-specific criterion
-- `state` and `breakpoint`
-- `artifact`: the screenshot or preview actually judged
-- `target`: a concrete element description, plus an optional normalized bounding box
-- `observation`: one specific, falsifiable failure statement
-- `evidence`: the screenshot path, comparison, interaction receipt, or rendered measurement supporting it
-
-do not replace the four rubric scores with the diagnostic categories. do not turn a subjective
-label into a deterministic hard gate. a blocker finding forces `needs_revision` or `failed`, and
-every blocker or major finding must feed a bounded next-revision instruction.
-
-account for review coverage separately from findings. return one evidenced row for each of the
-eight categories with status `clear`, `finding`, or `not_reviewed`. use `not_reviewed` when the
-artifact cannot support a judgment. there is no minimum finding count.
-
-### adjacent-action consistency check
-
-before a revision closes or an independent grader returns `satisfied`, run this sweep in every
-changed state and breakpoint:
-
-1. name the state contract and what actions it permits
-2. inspect every visible nearby primary, secondary, toolbar, and inline action, not only the target
-   named by the finding
-3. verify each action's label, visual emphasis, enabledness, native semantics, and helper text agree
-   with the state and its instructions
-4. when the state is read-only, disabled, offline, permission-limited, or destructive, remove,
-   disable, relabel, or explain any action that would contradict it; use native `disabled`
-   semantics when the control remains visible
-5. preserve active actions in unaffected states
-
-run this in both the builder's revision instruction and the independent regrade. an enabled-looking
-contradictory action is a `cues_affordances` major finding and prevents `satisfied` until repaired.
-
-aggregate findings by category and severity across iterations. repeated findings become candidates
-for a rule, constraint, fixture, or deterministic gate only after a human or verified recurrence
-establishes the pattern. preserve the finding → revision → evidence trace in the run report.
-
-## Compounding
-
-after each build, if you learned something new — a pattern that worked, an anti-pattern you hit, a design decision worth preserving — add it to the relevant reference file. the system gets smarter every time it's used.
+Classify feedback before retaining it: explicit preferences belong with the existing preference
+owner, project decisions in project context, repeated measurable defects in a primitive/test,
+and one-off corrections with the task. Update an owning instruction only when warranted and
+within authority. Accepted examples must carry actual human acceptance; a revised screenshot is
+not automatically a positive example. Do not append a universal lesson after every build.

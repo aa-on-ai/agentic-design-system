@@ -26,6 +26,7 @@ expected=(
   agentic-design-system
   design-review
   design-variations
+  ember
   ui-polish-pass
   ux-baseline-check
   visual-reference-calibration
@@ -152,7 +153,6 @@ done
 # Runnable workflow runbooks must ship with the orchestrator skill AND stay byte-identical to the
 # canonical top-level workflows/ — otherwise installed agents get a stale steering wheel.
 runbooks=(
-  create-design-workflow.md
   mobile-review.md
   adversarial-design-review.md
   install-usability-smoke.md
@@ -190,13 +190,6 @@ if [[ ! -f "$setup_capture_script" ]]; then
 fi
 node --check "$setup_capture_script"
 
-compare_script="$TMP_DIR/.agents/skills/design-review/scripts/compare.mjs"
-if [[ ! -f "$compare_script" ]]; then
-  echo "missing installed skill asset: design-review/scripts/compare.mjs" >&2
-  exit 1
-fi
-node --check "$compare_script"
-
 sample="$TMP_DIR/ads-consumer-sample.tsx"
 printf '%s\n' \
   'export function Sample({ state }: { state: string }) {' \
@@ -206,4 +199,7 @@ python3 "$TMP_DIR/.agents/skills/design-review/scripts/anti-pattern-check.py" "$
 python3 "$TMP_DIR/.agents/skills/design-review/scripts/state-check.py" "$sample" >/dev/null
 python3 "$TMP_DIR/.agents/skills/design-review/scripts/accessibility-check.py" "$sample" >/dev/null
 
-echo "install smoke passed: ${#expected[@]} skills, contracts, routing, presets, executable consumer commands, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks"
+node "$ROOT/testing/ember-package-smoke.mjs" "$TMP_DIR/.agents/skills"
+node "$ROOT/testing/installed-reference-smoke.mjs" "$TMP_DIR/.agents/skills"
+
+echo "install smoke passed: ${#expected[@]} skills, Ember assets, contracts, routing, presets, executable consumer commands, ${#bundled_templates[@]} bundled templates, and ${#runbooks[@]} workflow runbooks"

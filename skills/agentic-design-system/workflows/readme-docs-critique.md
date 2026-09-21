@@ -12,7 +12,7 @@ reported.
 
 - `README.md`, `AGENTS.md`
 - `integrations/` (the per-tool setup docs)
-- `routing/ROUTING.md`
+- `<skills-root>/agentic-design-system/SKILL.md`
 
 ## Run
 

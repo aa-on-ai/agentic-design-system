@@ -1,7 +1,7 @@
 # Workflow: cold-agent ADS usage test
 
 The honest usability eval: can a brand-new agent, given only the repo, actually *use* ADS — find
-the entrypoint, route to the right profile, and produce evidence — without being told how?
+the orchestrator skill, follow the light default, escalate only when triggered, and produce evidence?
 
 ## When to use
 
@@ -16,11 +16,12 @@ observe what a cold agent finds on its own.
 ## Run
 
 1. **Open a fresh context** (a subagent or new session) with no priming beyond the repo and a
-   realistic task, e.g. *"review this mobile settings screen"* or *"build a pricing page."*
+   realistic task, e.g. *"Build an internal Orders screen with default, loading, empty, and error
+   states at mobile and desktop breakpoints."*
 2. **Observe its path, don't help it:**
-   - Did it find the entrypoint ([`create-design-workflow.md`](./create-design-workflow.md)) or
-     `AGENTS.md` / `ROUTING.md` on its own?
-   - Did it route to the correct profile/workflow?
+   - Did it find `<skills-root>/agentic-design-system/SKILL.md` through `AGENTS.md` or README?
+   - Did it follow understand → choose → work → prove → decide?
+   - Did it lock the correct profile and avoid specialist escalation when no trigger applied?
    - Did it run the right checks and produce a report with evidence?
    - Where did it stall, guess, or invent a step?
 3. **Record the trace** verbatim — especially the first wrong turn.
@@ -35,7 +36,7 @@ observe what a cold agent finds on its own.
 A usability report grouped by failure type, each gap → a concrete doc fix:
 
 - **discovery gaps** — couldn't find the entrypoint (→ fix README/AGENTS pointers).
-- **routing gaps** — found it but picked the wrong profile (→ tighten ROUTING triggers/table).
+- **routing gaps** — found it but picked the wrong profile or escalated unnecessarily (→ tighten the orchestrator trigger).
 - **evidence gaps** — did the work but produced no receipts (→ make the workflow's evidence step louder).
 
 ## Blocked when

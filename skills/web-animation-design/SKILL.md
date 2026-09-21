@@ -1,67 +1,41 @@
 ---
 name: web-animation-design
-description: "Design and implement web animations that feel natural and purposeful. Use this skill proactively whenever the user asks questions about animations, motion, easing, timing, duration, springs, transitions, or animation performance. This includes questions about how to animate specific UI elements, which easing to use, animation best practices, or accessibility considerations for motion. Triggers on: easing, ease-out, ease-in, ease-in-out, cubic-bezier, bounce, spring physics, keyframes, transform, opacity, fade, slide, scale, hover effects, microinteractions, Framer Motion, React Spring, GSAP, CSS transitions, entrance/exit animations, page transitions, stagger, will-change, GPU acceleration, prefers-reduced-motion, modal/dropdown/tooltip/popover/drawer animations, gesture animations, drag interactions, button press feel, feels janky, make it smooth."
+description: "Design, implement or diagnose a scoped web-motion task involving timing, easing, interruption, gestures or animation performance. Skip general UI work covered by the baseline motion reference."
 metadata:
   short-description: Design and implement web animations that feel natural and purposeful
 ---
 
 # Web Animation Design
 
-## ⚠️ Creative Pack — NOT auto-apply
+## Scope and ownership
 
-This skill is part of the creative pack. Use when the task explicitly involves animation, motion, or interaction feel. Do NOT load this for general UI building — the motion reference in design-review covers baseline motion quality.
+Use when the task involves animation, motion or interaction feel, or ADS identifies a specific motion defect. For ordinary UI work, the [baseline motion reference](../design-review/references/motion.md) is sufficient. ADS owns the task, authority, review and repair budget; this is its implementation specialist, not a second harness.
 
-**Use when:** user asks about animations, easing, springs, transitions, interaction feel, or "make it smooth."
-**Skip when:** building standard UI where the motion reference in design-review is sufficient.
+Start from the actual request and existing primitive, states and project tokens. Identify the state, hierarchy, causality or feedback job. Preserve clear static feedback when motion would add no value. A review request stays read-only; an implementation request proceeds within its existing authorization. Do not replace an actionable request with a generic readiness response.
 
-A comprehensive guide for creating animations that feel right, based on Emil Kowalski's "Animations on the Web" course.
+The examples below are implementation options informed by Emil Kowalski's "Animations on the Web" course, not a required aesthetic or dependency set. Numeric examples are starting points only where project tokens do not already define the decision.
 
-## Review Format (Required)
+## Review output
 
-When reviewing animations, you MUST use a markdown table. Do NOT use a list with "Before:" and "After:" on separate lines. Always output an actual markdown table like this:
+Report observed behavior, the relevant state/element, proposed change and evidence limits in the task's existing review. A before/after table helps compare several findings; a single defect needs no format ceremony. Separate deterministic state/timing checks, actual browser interaction, measured performance and the user's judgment of clarity and feel.
 
-| Before                            | After                                           |
-| --------------------------------- | ----------------------------------------------- |
-| `transform: scale(0)`             | `transform: scale(0.95)`                        |
-| `animation: fadeIn 400ms ease-in` | `animation: fadeIn 200ms ease-out`              |
-| No reduced motion support         | `@media (prefers-reduced-motion: reduce) {...}` |
+## Choose the existing implementation route
 
-Wrong format (never do this):
+- Preserve the existing component and motion library. Do not install or migrate a dependency merely to follow an example; verify the installed package/version and its supported API.
+- For interactive hover, press and open/close state changes, prefer CSS transitions when sufficient. They can retarget from the current interpolated state.
+- Keyframes describe a timeline, useful for deliberate sequences or real loading loops. They do not automatically retarget to a changed endpoint like a transition. Cancellation, reversal or retargeting needs explicit orchestration.
+- Use an existing Motion/animation-library route for gesture physics, coordinated exits or shared layout when that complexity is justified. Neither CSS nor JavaScript alone guarantees compositor execution.
 
-```
-Before: transform: scale(0)
-After: transform: scale(0.95)
-────────────────────────────
-Before: 400ms duration
-After: 200ms
-```
-
-Correct format: A single markdown table with | Before | After | columns, one row per issue.
-
-## Decision Tree: What Tool Do I Use?
-
-```
-Does this involve layout changes, shared transitions, or exit animations in React?
-├── Yes → Framer Motion (layout animations, AnimatePresence, layoutId)
-│         Import from "motion/react" (NOT "framer-motion")
-└── No
-    ├── Is it a simple enter/exit or hover? → CSS transitions/keyframes
-    ├── Is it performance-critical (heavy page, many elements)? → CSS (hardware-accelerated)
-    ├── Does it need spring physics or interruptibility? → Framer Motion
-    ├── Does it need gesture tracking (drag, cursor follow)? → FM motion values
-    └── Is it a constant-speed loop? → CSS keyframes
-```
-
-Always check `prefers-reduced-motion`. No exceptions.
+Check reduced motion and retain the accessible primitive's focus, keyboard, hidden-content and unmount lifecycle. The Motion examples below use `motion/react`; adapt to the package actually present rather than silently changing imports or dependencies.
 
 ## Quick Start
 
-Every animation decision starts with these questions:
+When project tokens do not settle the choice, these are starting points:
 
 1. **Is this element entering or exiting?** → Use `ease-out`
 2. **Is an on-screen element moving?** → Use `ease-in-out`
 3. **Is this a hover/color transition?** → Use `ease`
-4. **Will users see this 100+ times daily?** → Don't animate it
+4. **Is this a high-frequency control?** → Prefer immediate/static feedback; add motion only for a concrete comprehension need
 
 ## The Easing Blueprint
 
@@ -79,7 +53,7 @@ Use for **user-initiated interactions**: dropdowns, modals, tooltips, any elemen
 --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
 ```
 
-Why it works: Acceleration at the start creates an instant, responsive feeling. The element "jumps" toward its destination then settles in.
+Why it can work: Faster initial movement makes the response apparent quickly. The element "jumps" toward its destination then settles in.
 
 ### ease-in-out (For Movement)
 
@@ -103,22 +77,17 @@ Use for **hover states and color transitions**. The asymmetrical curve (faster s
 transition: background-color 150ms ease;
 ```
 
-### linear (Avoid in UI)
+### linear (Constant speed or direct mapping)
 
-Only use for:
-
-- Constant-speed animations (marquees, tickers)
-- Time visualization (hold-to-delete progress indicators)
-
-Linear feels robotic and unnatural for interactive elements.
+Useful for constant-speed motion, truthful time/progress visualization, or direct scroll/gesture mapping. Do not add smoothing lag to a control that should track input directly.
 
 ### ease-in (Almost Never)
 
-**Avoid for UI animations.** Makes interfaces feel sluggish because the slow start delays visual feedback.
+Avoid a slow-start curve when it delays user feedback. An intentional departure may warrant a different curve; preserve the existing interaction semantics and inspect the result.
 
 ### Paired Elements Rule
 
-Elements that animate together must use the same easing and duration. Modal + overlay, tooltip + arrow, drawer + backdrop—if they move as a unit, they should feel like a unit.
+Coordinate related elements so they feel like a unit. Shared easing/duration is a useful starting point; a purposeful overlay/content asymmetry is valid if it preserves the existing component lifecycle.
 
 ```css
 /* Both use the same timing */
@@ -140,21 +109,22 @@ Elements that animate together must use the same easing and duration. Modal + ov
 | Standard UI (tooltips, dropdowns) | 150-250ms |
 | Modals, drawers                   | 200-300ms |
 
-**Rules:**
-- UI animations should stay under 300ms
+**Product defaults, not universal limits:**
+- Keep product-control motion brief, normally within 100–300ms, with no bounce or elastic overshoot
 - Larger elements animate slower than smaller ones
 - Exit animations can be ~20% faster than entrance
-- Match duration to distance - longer travel = longer duration
+- Match duration to distance and task frequency; do not delay usable content
+- A longer gesture settle or expressive brand sequence needs support from the approved brief and inspection in context. It is not the default for adjacent controls
 
 ### The Frequency
 
 Determine how often users will see the animation:
 
-- **100+ times/day** → No animation (or drastically reduced)
+- **High frequency** → No added animation or minimal feedback
 - **Occasional use** → Standard animation
 - **Rare/first-time** → Can be more special
 
-**Example:** Raycast never animates because users open it hundreds of times a day.
+For example, a frequently opened command palette may benefit from appearing immediately.
 
 ## When to Animate
 
@@ -167,9 +137,9 @@ Determine how often users will see the animation:
 
 **Don't animate:**
 
-- Keyboard-initiated actions
+- Repeated keyboard navigation or focus movement where animation delays response
 - Hover effects on frequently-used elements
-- Anything users interact with 100+ times daily
+- High-frequency controls whose static feedback is already clear
 - When speed matters more than smoothness
 
 **Marketing vs. Product:**
@@ -179,66 +149,67 @@ Determine how often users will see the animation:
 
 ## Spring Animations
 
-Springs feel more natural because they don't have fixed durations—they simulate real physics.
+Springs can preserve a gesture's momentum and retargeting. They are an option, not inherently better than a short transition; duration-based and physics-based configurations behave differently.
 
 ### When to Use Springs
 
 - Drag interactions with momentum
-- Elements that should feel "alive" (Dynamic Island)
 - Gestures that can be interrupted mid-animation
-- Organic, playful interfaces
+- A specifically approved expressive interaction where a spring serves the brief
 
 ### Configuration
 
-**Apple's approach (recommended):**
+**Duration-based, non-bouncing product example (adapt to installed API/tokens):**
 
 ```js
 // Duration + bounce (easier to understand)
-{ type: "spring", duration: 0.5, bounce: 0.2 }
+{ type: "spring", duration: 0.25, bounce: 0 }
 ```
 
 **Traditional physics:**
 
 ```js
 // Mass, stiffness, damping (more complex)
-{ type: "spring", mass: 1, stiffness: 100, damping: 10 }
+{ type: "spring", mass: 1, stiffness: 100, damping: 20 }
 ```
 
 ### Bounce Guidelines
 
-- **Avoid bounce** in most UI contexts
-- **Use bounce** for drag-to-dismiss, playful interactions
-- Keep bounce subtle (0.1-0.3) when used
+- Baseline product motion has no bounce or elastic overshoot.
+- A gesture/boundary response or brand expression may use a restrained exception only when the approved brief supports it. “Playful” alone does not authorize adding bounce everywhere.
+- Judge the selected parameters in the actual interaction; numeric bounce ranges are not taste approval. Preserve immediate feedback and reduced-motion behavior.
 
 ### Interruptibility
 
-Springs maintain velocity when interrupted—CSS animations restart from zero. This makes springs ideal for gestures users might change mid-motion.
+Some spring implementations preserve current velocity when retargeted; verify the installed API. CSS transitions also retarget interactively. Do not confuse them with replaying a keyframe timeline from its authored start.
+
+Exercise close/reopen/close inside the animation window. The latest intent must win without an obsolete callback clearing a newer state. Cancel or invalidate stale work on retarget/unmount, and handle zero-duration reduced-motion paths without waiting for an event that may not fire. Keep state cleanup in the existing primitive.
 
 ## Layout Animations (Framer Motion)
 
-The most powerful FM feature. Lets you animate properties CSS can't: `flex-direction`, `justify-content`, position changes.
+Motion layout projection can animate the visual result of size/position changes, including discrete layout changes such as `flex-direction`. It does not turn those CSS properties into directly interpolable values.
 
 ### The `layout` Prop
 Add `layout` to any `motion.*` element to auto-animate layout changes:
 ```jsx
 <motion.div layout className="element" />
 ```
-When this element's size or position changes (due to state, content, siblings), FM animates it smoothly. No manual measurement needed.
+The library measures supported layout changes and animates their visual result. Inspect child distortion, clipping, scrolling and performance in the actual consumer; the prop is not a smoothness guarantee.
 
 ### Shared Layout Animations (`layoutId`)
 Connect two separate elements so one morphs into the other:
 ```jsx
-// Tab highlight — only rendered for active tab
+// Tab highlight: only rendered for active tab
 {activeTab === tab ? (
   <motion.div layoutId="tab-indicator" className="highlight" />
 ) : null}
 ```
 Use cases: tab highlights, card → modal expansion, button → popover morph, trash interaction (images move between containers).
 
-**Creative trick:** `layoutId` creates illusions. The feedback popover's "placeholder" is actually a `<span>` with a shared `layoutId` — not a real textarea placeholder. It morphs from button text to popover text.
+**Creative trick:** `layoutId` creates illusions. The feedback popover's "placeholder" is actually a `<span>` with a shared `layoutId`: not a real textarea placeholder. It morphs from button text to popover text.
 
 ### Dynamic Height Animation
-FM can't animate `auto` to `auto`. Use `react-use-measure`:
+When dynamic content needs an explicitly measured height, reuse a measurement facility already in the project; `react-use-measure` is one option if installed:
 ```jsx
 import useMeasure from "react-use-measure";
 const [ref, bounds] = useMeasure();
@@ -248,12 +219,14 @@ const [ref, bounds] = useMeasure();
 </motion.div>
 ```
 
+Height animation affects layout. Use it only when spatial continuity warrants it and measure the target browser; do not add a dependency just for this snippet.
+
 ## AnimatePresence (Deep)
 
 ### Modes
-- `"sync"` (default) — enter and exit play simultaneously
-- `"wait"` — exit completes before enter starts (copy/check icon swap)
-- `"popLayout"` — removes exiting element from layout flow immediately (often the right choice for morphing UIs)
+- `"sync"` (default): enter and exit play simultaneously
+- `"wait"`: exit completes before enter starts (copy/check icon swap)
+- `"popLayout"`: removes exiting element from layout flow immediately (often the right choice for morphing UIs)
 
 ### Direction-Aware Transitions
 Use the `custom` prop to pass dynamic data to exiting components (whose state is stale):
@@ -277,13 +250,13 @@ Use the `custom` prop to pass dynamic data to exiting components (whose state is
 ### Key Rules
 - Always add `key` prop on animated elements inside AnimatePresence
 - Use `initial={false}` to skip mount animation (icon swaps, button states)
-- Known bug: rapid switching can show both elements — pin to FM v11.0.10 if hit
+- Reproduce rapid-switching defects in the installed version before changing orchestration. Do not apply a historical version pin as an automatic repair
 
 ## Motion Values & Hooks
 
-Motion values update outside React's render cycle — no re-renders, 60fps.
+Motion values can update outside React's render cycle. That avoids per-frame React state updates, but does not guarantee a frame rate.
 
-### `useMotionValue` — Instant updates (gestures)
+### `useMotionValue`: Instant updates (gestures)
 ```jsx
 const x = useMotionValue(0);
 // Update via x.set(newValue), read via x.get()
@@ -291,14 +264,14 @@ const x = useMotionValue(0);
 ```
 Use for: direct gesture tracking (drag distance → scale), any 1:1 mapping where spring lag would feel disconnected.
 
-### `useSpring` — Animated updates (follow-behind)
+### `useSpring`: Animated updates (follow-behind)
 ```jsx
 const x = useSpring(0, { mass: 0.1, damping: 16, stiffness: 71 });
 // x.set(newValue) animates to it with spring physics
 ```
 Use for: cursor followers, momentum effects, anything that should trail behind input.
 
-### `useTransform` — Map one value to another
+### `useTransform`: Map one value to another
 ```jsx
 // Range mapping: y position [0, 300] → scale [1, 1.5]
 const scale = useTransform(y, [0, 300], [1, 1.5]);
@@ -308,26 +281,26 @@ const display = useTransform(angle, v => `${Math.round(v)}°`);
 ```
 Use for: scroll-linked effects, cursor-distance effects, value formatting.
 
-### `useMotionTemplate` — String interpolation with motion values
+### `useMotionTemplate`: String interpolation with motion values
 ```jsx
 const clipPath = useMotionTemplate`inset(0px ${percent}% 0px 0px)`;
 <motion.div style={{ clipPath }} />
 ```
 
-### `MotionConfig` — Default transitions for a subtree
+### `MotionConfig`: Default transitions for a subtree
 ```jsx
-<MotionConfig transition={{ type: "spring", duration: 0.5, bounce: 0.2 }}>
+<MotionConfig transition={{ type: "spring", duration: 0.25, bounce: 0 }}>
   {/* All children use this transition unless overridden */}
 </MotionConfig>
 ```
 
 ## Orchestration (Stagger & Sequencing)
 
-Staggered entrance animations create a wave effect. Trial and error until it feels right — no formula.
+Use stagger only when a short sequence improves reading order or an approved expressive beat. Keep real content and actions available without waiting for the sequence.
 
 ### CSS stagger (no library):
 ```css
-.item { animation: fadeSlideIn 400ms ease-out both; }
+.item { animation: fadeSlideIn 200ms ease-out both; }
 .item:nth-child(1) { animation-delay: 0ms; }
 .item:nth-child(2) { animation-delay: 50ms; }
 .item:nth-child(3) { animation-delay: 100ms; }
@@ -347,88 +320,38 @@ const item = {
 
 **Rules:**
 - Keep delays small (30-80ms between items)
-- Cap total sequence time — 10 items at 80ms each = 800ms, too slow
+- Include the last item's duration when bounding total sequence time: 10 items with 80ms between starts and 200ms duration take 920ms, too slow for a routine control
 - Marketing pages can be more elaborate; product UI should be fast
 
 ## Brand Expression Through Animation Speed
 
-Animation timing IS brand identity:
-- **Speed brand** (Vercel): instant or very fast, minimal easing. "We don't waste your time."
-- **Premium brand** (Stripe): slower, more deliberate. `ease` curve (not ease-out) for elegance.
-- **Playful brand** (Family): springs with subtle bounce, fluid morphing.
+Timing can reinforce an approved brand direction:
+- **Speed:** immediate or very fast feedback.
+- **Deliberate:** a restrained expressive transition where it does not delay the task.
+- **Playful:** a narrowly scoped spring or morph, with any bounce exception justified by the brief.
 - **Product UI** should generally feel fast regardless of brand.
 - **Marketing pages** are where you express brand personality through motion.
 
 ## Fluid Interfaces (Aspirational)
 
-The north star: nothing "appears" or "disappears" — everything morphs. Family (iOS) is the gold standard.
+Fluid continuity is useful when it explains where something came from or went. It is not a requirement that everything morph, and simple appearance may be clearer.
 
 - Shared layout animations are the web's closest tool to native fluidity
-- Fluid motion improves perceived performance (feels faster even with same load time)
-- Think about animations BEFORE designing the UI — position elements to enable seamless transitions
-- Currently hard on web, but the direction everything is heading
+- Check perceived continuity against actual task speed; do not assume animation makes latency acceptable
+- Consider continuity during an authorized composition decision; do not rearrange the existing UI just to showcase a morph
 - Text morphing (e.g., button label changes) highlights state changes subtly
 
 ## Performance
 
-### The Golden Rule
+Prefer `transform` and `opacity` for motion when they express the intended change. They often avoid layout work and are good compositor candidates, but the browser, animated content, library implementation and device determine the actual execution path. A CSS declaration or library prop is not a GPU/frame-rate guarantee. See the [Motion performance guide](https://motion.dev/docs/performance).
 
-Only animate `transform` and `opacity`. These skip layout and paint stages, running entirely on the GPU.
+- Height, width, padding and margin animation can require layout; use only for a justified spatial change and measure the real consumer.
+- Blur/filter cost depends on the painted area, radius, device and browser. There is no universally safe 20px cutoff. Do not use blur to conceal an unresolved transition or state defect.
+- Keep per-frame changes local. Inherited custom-property updates can broaden style work; preserve project tokens and inspect affected descendants before changing the approach.
+- Avoid per-frame React state updates when direct motion values or a supported animation API suffice. Neither every React render nor every JavaScript animation necessarily drops a frame.
+- Add `will-change` only for an observed issue when measurement supports it, limited to the relevant elements/lifetime. It is a hint with memory and stacking-context costs, not forced GPU execution. See [MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/will-change).
 
-**Avoid animating:**
-
-- `padding`, `margin`, `height`, `width` (trigger layout)
-- `blur` filters above 20px (expensive, especially Safari)
-- CSS variables in deep component trees
-
-### Optimization Techniques
-
-```css
-/* Force GPU acceleration */
-.animated-element {
-  will-change: transform;
-}
-```
-
-**React-specific:**
-
-- Animate outside React's render cycle when possible
-- Use refs to update styles directly instead of state
-- Re-renders on every frame = dropped frames
-
-**Framer Motion:**
-
-```jsx
-// Hardware accelerated (transform as string)
-<motion.div animate={{ transform: "translateX(100px)" }} />
-
-// NOT hardware accelerated (more readable)
-<motion.div animate={{ x: 100 }} />
-```
-
-### CSS vs. JavaScript
-
-- CSS animations run off main thread (smoother under load)
-- JS animations (Framer Motion, React Spring) use `requestAnimationFrame`
-- CSS better for simple, predetermined animations
-- JS better for dynamic, interruptible animations
-- **Combine both:** CSS for simple/perf-critical animations, FM for complex/layout/springs
-
-### CSS Variables Gotcha
-CSS variables are inheritable — changing one causes style recalc for ALL children. In deep component trees (20+ items), this kills drag/scroll performance.
-```jsx
-// BAD — recalculates all children
-const style = { "--swipe-amount": `${distance}px` };
-
-// GOOD — updates only this element
-const style = { transform: `translateY(${distance}px)` };
-```
-
-### Transform Shift Fix
-GPU/CPU handoff can cause 1px shift at animation start/end:
-```css
-.element { will-change: transform; }
-```
+Record the actual browser/device, interaction and performance trace when performance is a claim. Check desktop and target mobile/WebKit for justified layout or blur motion; a build, transformed still or successful dependency import is not that evidence.
 
 ## Accessibility
 
@@ -436,7 +359,7 @@ Animations can cause motion sickness or distraction for some users.
 
 ### prefers-reduced-motion
 
-Whenever you add an animation, also add a media query to disable it:
+Honor the preference through the existing CSS or library mechanism. For a decorative CSS animation, a scoped fallback can disable it:
 
 ```css
 .modal {
@@ -452,13 +375,13 @@ Whenever you add an animation, also add a media query to disable it:
 
 ### Reduced Motion Guidelines
 
-**Reduced motion ≠ no motion.** Animations help users understand UI. Removing all motion hurts comprehension.
+Reduced motion must retain state and feedback, not necessarily animation. A static change is valid; a short fade is optional if appropriate, not a universal fallback.
 
 - **Remove:** transform-based movement, scaling, sliding, parallax
-- **Keep:** opacity fades, color transitions, background changes
-- **Replace:** slide-in → fade-in, scale → opacity, complex → simple
+- **Retain:** visible state, focus and truthful status; use static feedback or a suitable brief fade
+- **Optional replacements:** slide-in → fade-in, scale → opacity, complex → static or simple
 - Disable autoplay on videos/animated images; show play buttons instead
-- For looping hero animations: pause on a good frame via `animation-delay: -0.4s`
+- Stop decorative loops and show a chosen static frame. A negative animation delay alone does not pause an animation
 
 ### Framer Motion Implementation
 
@@ -466,7 +389,7 @@ Whenever you add an animation, also add a media query to disable it:
 ```jsx
 import { useReducedMotion } from "motion/react";
 
-function Component() {
+function Component({ isOpen }) {
   const shouldReduceMotion = useReducedMotion();
   const closedX = shouldReduceMotion ? 0 : "-100%";
 
@@ -479,14 +402,14 @@ function Component() {
 }
 ```
 
-**Option 2: App-wide wrapper (recommended)**
+**Option 2: Existing subtree configuration**
 ```jsx
 import { MotionConfig } from "motion/react";
 
-// Wraps your entire app — FM auto-reduces to opacity/backgroundColor only
+// Honors the user preference for Motion transform/layout animation in this subtree
 <MotionConfig reducedMotion="user">{children}</MotionConfig>
 ```
-Note: default is `"never"` — you must set this yourself.
+Use or extend the existing configuration within scope, not a duplicate app wrapper. The documented default is `"never"`; `"user"` disables transform/layout animation, while other values may still animate. Inspect opacity, color, timing and any CSS/third-party loops separately. See [MotionConfig documentation](https://motion.dev/docs/react-motion-config). These snippets describe motion only, not a complete accessible modal lifecycle.
 
 ### Touch Device Considerations
 
@@ -507,14 +430,14 @@ Quick reference for common scenarios. See [PRACTICAL-TIPS.md](PRACTICAL-TIPS.md)
 
 | Scenario                        | Solution                                        |
 | ------------------------------- | ----------------------------------------------- |
-| Make buttons feel responsive    | Add `transform: scale(0.97)` on `:active`       |
+| Press feedback is missing       | Preserve static feedback first; use scoped scale only if justified |
 | Element appears from nowhere    | Start from `scale(0.95)`, not `scale(0)`        |
-| Shaky/jittery animations        | Add `will-change: transform`                    |
+| Shaky/jittery animations        | Inspect layout, snapping and rendering before testing a hint |
 | Hover causes flicker            | Animate child element, not parent               |
 | Popover scales from wrong point | Set `transform-origin` to trigger location      |
 | Sequential tooltips feel slow   | Skip delay/animation after first tooltip        |
-| Small buttons hard to tap       | Use 44px minimum hit area (pseudo-element)      |
-| Something still feels off       | Add subtle blur (under 20px) to mask it         |
+| Small buttons hard to tap       | Preserve the shared target-size primitive; avoid overlapping hitboxes |
+| Something still feels off       | Record/retrigger and inspect the state and geometry before adding effects |
 | Hover triggers on mobile        | Use `@media (hover: hover) and (pointer: fine)` |
 
 ## Easing Decision Flowchart
@@ -532,6 +455,7 @@ Is the element entering or exiting the viewport?
 
 ## Reference Files
 
-- [PRACTICAL-TIPS.md](PRACTICAL-TIPS.md) - Detailed implementations for common animation scenarios
+- [PRACTICAL-TIPS.md](PRACTICAL-TIPS.md): read only the relevant implementation recipe.
+- [Transitions candidate](references/transitions-candidate.md): consult only when one pinned recipe addresses a specific motion gap; assessed, not adopted or installed.
 
 ---

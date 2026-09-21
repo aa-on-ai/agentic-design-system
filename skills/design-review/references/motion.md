@@ -3,7 +3,7 @@
 ## Core Rules
 - Motion should clarify state, not audition for attention.
 - If the animation is more noticeable than the change it is explaining, it is wrong.
-- No bounce. No elastic. No toy physics.
+- Utility controls favor restrained motion. Use springs or overshoot only when a gesture or brief-supported expressive context benefits; do not animate high-frequency controls by default.
 - Exits should usually feel faster than entrances.
 
 ## What Good Motion Does
@@ -14,7 +14,7 @@
 
 ## Interruptibility
 - CSS transitions are interruptible — they retarget to the latest state mid-animation. Use for interactive state changes (hover, open/close, toggles).
-- CSS keyframe animations are NOT interruptible — they run on a fixed timeline. Use for staged sequences that run once (entrance animations, loading loops).
+- CSS keyframes run on an authored timeline; class toggles alone do not smoothly retarget it. Prefer transitions for ordinary interactive state changes, or explicitly implement cancellation/retargeting when a staged sequence needs it.
 - If a user can change their intent mid-interaction (opening then quickly closing a dropdown), the animation MUST be interruptible. Non-interruptible animations on interactive elements make the UI feel broken.
 - Test interactive motion twice inside its animation window. The second trigger must retarget from
   the current visual state or use a deliberate, documented debounce. A snap back to the authored
@@ -30,7 +30,7 @@
   interaction judgment.
 
 ## Enter vs Exit
-- Enter animations can be expressive: combine opacity, translateY, and blur. Break content into chunks and stagger them (title, then description, then buttons) rather than animating one big block.
+- Entrances can be expressive when the brief supports them. Opacity, offset, blur or stagger are options, not required layers; preserve immediate access to content and measure expensive effects.
 - Exit animations should be subtler than enter. Use a small fixed offset (like -12px) instead of the full reverse movement. The element is leaving — it doesn't need the same attention as arrival.
 - This asymmetry (expressive enter, subtle exit) is what makes motion feel polished rather than mechanical.
 
@@ -61,7 +61,7 @@ The full lexicon (springs, scroll-driven, perf terms) lives at <https://animatio
 
 | pattern | job | default timing / easing | reduced-motion | evidence |
 |---|---|---|---|---|
-| **press/tap feedback** | feedback | `scale(0.97)` on `:active`, 100–150ms | keep (it's confirmation, not decoration) | the active-state value |
+| **press/tap feedback** | feedback | project state token; subtle scale only if useful | static color/outline feedback; omit travel/scale when needed | actual active-state interaction |
 | **ripple** | feedback | expand from tap point, ~200ms ease-out | keep, or replace with a static highlight | named + origin = tap point |
 | **crossfade** | state | 150–200ms ease-out, paired in+out | keep (opacity is allowed) | both elements share timing |
 | **enter/exit** | state | enter ease-out 200–250ms; exit ~20% faster, smaller offset | replace movement with fade | enter/exit asymmetry present |
@@ -79,7 +79,7 @@ The full lexicon (springs, scroll-driven, perf terms) lives at <https://animatio
 
 **Evidence for motion** = name the pattern, record its timing/easing values, and confirm a
 `prefers-reduced-motion` fallback exists (a gate, not a nicety). When the motion is load-bearing
-(it carries state or causality), attach a short capture or the CSS/Framer Motion snippet — a
-still screenshot can't prove motion. Retrigger interactive motion inside its animation window and
+(it carries state or causality), exercise the interaction and attach a short capture or timing receipt. A
+snippet records implementation, and a still records appearance; neither proves runtime motion. Retrigger interactive motion inside its animation window and
 record whether it retargets, deliberately debounces, or snaps. For implementation depth, defer to
 `web-animation-design`.

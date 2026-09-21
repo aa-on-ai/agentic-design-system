@@ -18,7 +18,9 @@ export function behaviorFiles(root = repoRoot) {
     ['ls-files', '--cached', '--others', '--exclude-standard'],
     { cwd: root, encoding: 'utf8' },
   );
-  return [...new Set(output.split('\n').filter(Boolean).filter(isBehaviorPath))].sort();
+  return [...new Set(output.split('\n').filter(Boolean).filter(isBehaviorPath))]
+    .filter((relativePath) => fs.existsSync(path.join(root, relativePath)))
+    .sort();
 }
 
 export function behaviorDigest(root = repoRoot) {

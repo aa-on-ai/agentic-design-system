@@ -1,6 +1,6 @@
 # outcome
 
-define this before the agent starts building. outcome is the work contract: what artifact is being produced, how it will be judged, when the loop stops, and when a human needs to step in.
+Optional expanded brief for substantial work. Reuse the existing task brief when it already answers the job, exact surface, preserve-list, reference, output and success criterion. Tiny edits do not need this document.
 
 ---
 
@@ -8,12 +8,14 @@ define this before the agent starts building. outcome is the work contract: what
 
 - **task:** one-line user request
 - **slug:** short stable id
-- **artifact:** route, component, file path, screenshot set, or prototype URL
+- **artifact:** requested output format and exact existing route, component, document or file
+- **preserve:** controls, content, tokens and behavior that must survive
+- **delivery:** usable review destination and separately authorized release scope, if any
 - **owner agent:** builder model / lane
 - **grader agent:** separate model / lane, if available
 - **visual foundation profile:** `utility` / `expressive` with eligibility reason
 - **created:** ISO 8601
-- **max iterations:** 2 for fixes, 3 for normal UI, 5 for creative/reference-heavy work
+- **max iterations:** shared ADS budget: one pass plus one repair, unless the user supplied another total
 - **status:** `defined` / `building` / `grading` / `needs_revision` / `satisfied` / `max_iterations` / `failed`
 
 ## intent
@@ -44,42 +46,41 @@ example:
 | run report | yes / no |
 | grader report | yes / no |
 
-## rubric
+## Acceptance
 
-lock the profile before generation using `contracts/visual-foundation.v2.json`. score 1-10 unless
-a criterion is pass/fail.
+Use the ADS judgment order. Record task-specific evidence, not a required weighted score:
 
-| criterion | utility | expressive | pass condition |
-|---|---:|---:|---|
-| Functionality | 35% | 15% | primary task and state transitions are understandable |
-| Design Quality | 30% | 35% | coherent visual system; hierarchy, layout, color, and spacing feel intentional |
-| Craft | 25% | 20% | spacing, typography, contrast, hover/focus, responsive behavior are competent |
-| Originality | 10% | 30% | avoids obvious AI defaults and shows product-specific choices; expressive work also has a brief-supported point of view |
-| State coverage | pass/fail | pass/fail | loading, empty, and error states exist or are explicitly not applicable |
-| Accessibility | pass/fail | pass/fail | semantic structure, focus paths, labels, alt text, and contrast clear the scripts/review |
-| Evidence | pass/fail | pass/fail | report, screenshots/preview, and verification commands are present |
+1. Right product, exact surface and successful user task.
+2. Understandable information/action order and preserved reading/navigation context.
+3. Agreed reference property and fidelity, or the established product direction.
+4. Coherent craft and component mechanics.
+5. Applicable states, accessibility, target browser/viewport behavior and usable delivery.
 
-## hard stops
+Use the locked utility/expressive Foundation profile. Numeric rubric scores, if useful, remain
+diagnostic and cannot offset a failed task, missing evidence or an unresolved material finding.
 
-- Functionality or Design Quality below 6 -> `needs_revision`
-- Originality below 6 on creative or marketing work -> `needs_revision` or `pivot`
-- any confirmed visual-foundation `never` rule -> `needs_revision`
-- missing required state with no stated reason -> `needs_revision`
-- accessibility warning left unresolved -> `needs_revision` unless human accepts it
-- vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
-- max iterations reached -> stop and escalate; do not keep patching
+## Hard stops
+
+- Wrong surface/task, confirmed Foundation `never` violation, or missing required behavior prevents a satisfied verdict.
+- Investigate source warnings against actual behavior; heuristics do not establish or clear a defect.
+- Unavailable required evidence stays unverified, not passed.
+- Vague intent words need observable meaning in the product, not merely a claim in the report.
+- At the shared budget boundary preserve the candidate and exact unresolved decision; do not automatically rebuild or add another loop.
 
 ## iteration budget
+
+This is the shared host budget, not an additional allowance. An explicitly authorized task budget supersedes these defaults. Self-scores are diagnostic; independent or human judgment governs quality claims.
 
 | work type | default max | stop rule |
 |---|---:|---|
 | bug fix / narrow visual fix | 2 | if still failing, reset diagnosis |
-| normal UI/page/component | 3 | if scores plateau, ask for human direction |
-| creative/reference-heavy work | 5 | if Design Quality or Originality plateau, pivot aesthetic |
+| normal UI/page/component | 2 | one pass plus one repair; preserve unresolved findings |
+| creative/reference-heavy work | 2 | same task budget; no automatic aesthetic pivot |
 
 ## grader instructions
 
-the grader must be a separate context from the builder when possible. the grader reads:
+Use a separate critic only when authorized, available and meaningful for the task. Otherwise label
+self-review honestly and retain any required human judgment. A critic reads:
 
 1. this outcome
 2. the artifact/report/screenshots

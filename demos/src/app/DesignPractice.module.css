@@ -129,7 +129,7 @@
 .homepage .footer .github-link{border:1px solid color-mix(in srgb,var(--ink) 12%,var(--line));border-radius:50%;background:linear-gradient(180deg,var(--surface-raised),color-mix(in srgb,var(--surface) 88%,var(--paper)));box-shadow:inset 0 1px 0 var(--edge),0 5px 14px -8px var(--shadow);color:var(--ink)}
 .homepage .footer .github-link svg{fill:currentColor;stroke:currentColor}
 .homepage .footer-credit{grid-column:2;grid-row:1;justify-self:center;text-align:center;font-size:12px}
-.homepage .footer .footer-credit a{display:inline;min-height:0;color:inherit;text-decoration:none;text-underline-offset:3px}
+.homepage .footer .footer-credit a{display:inline-flex;align-items:center;min-height:44px;padding:0 4px;color:inherit;text-decoration:none;text-underline-offset:3px}
 .homepage .footer .footer-credit a:focus-visible{text-decoration:underline;text-decoration-thickness:2px}
 @media(hover:hover) and (pointer:fine){.homepage .footer .github-link:hover{text-decoration:none;background:var(--surface-raised);box-shadow:inset 0 1px 0 var(--edge),0 7px 16px -8px var(--shadow)}.homepage .footer .footer-credit a:hover{text-decoration:underline;text-decoration-thickness:2px}}
 @media(max-width:700px){.homepage .footer{grid-template-columns:1fr auto;row-gap:8px}.homepage .footer-copyright{grid-column:1;grid-row:1}.homepage .footer-links{grid-column:2;grid-row:1}.homepage .footer-credit{grid-column:1 / -1;grid-row:2}}

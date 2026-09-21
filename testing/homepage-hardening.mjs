@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import AxeBuilder from "@axe-core/playwright";
 import { chromium, webkit } from "playwright";
 
 const url = process.argv[2];
@@ -9,636 +10,218 @@ if (!url) {
   process.exit(2);
 }
 
+const expectedInstallUrl = "https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md";
 const viewports = [
+  { name: "narrow", width: 320, height: 568 },
   { name: "mobile", width: 390, height: 844 },
   { name: "tablet", width: 768, height: 1024 },
   { name: "desktop", width: 1280, height: 900 },
 ];
-
-const requestedBrowser = process.env.ADS_TEST_BROWSER?.toLowerCase();
-const browserTypes = [
-  ["Chromium", chromium],
-  ["WebKit", webkit],
-].filter(([name]) => !requestedBrowser || name.toLowerCase() === requestedBrowser);
-
+const themes = ["light", "dark"];
 const failures = [];
 const receipts = [];
-const pageReadySelector = 'main[data-ads-homepage][data-page-ready="true"]';
-const expectedInstallCommand = "npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes";
-const browserStepTimeoutMs = 20_000;
 
 function fail(scope, message) {
   failures.push(`${scope}: ${message}`);
 }
 
-async function withBrowserStepTimeout(promise, label) {
-  let timeoutId;
-  const timeout = new Promise((_, reject) => {
-    timeoutId = setTimeout(
-      () => reject(new Error(`${label} timed out after ${browserStepTimeoutMs}ms`)),
-      browserStepTimeoutMs,
-    );
+function visibleControls(page) {
+  return page.locator('a[href], button:not([disabled])').filter({ visible: true });
+}
+
+async function inspectStaticPage(page, scope, viewport, theme) {
+  await page.goto(`${url}?theme=${theme}&hardening=${scope}`, { waitUntil: "domcontentloaded" });
+  await page.locator('[data-ads-homepage][data-page-ready="true"]').waitFor({ timeout: 20_000 });
+  await page.evaluate(() => document.fonts.ready);
+  await page.locator("[data-ember-character]").scrollIntoViewIfNeeded();
+  await page.locator("[data-ember-character] img").evaluate(async (image) => {
+    await image.decode();
   });
 
-  try {
-    return await Promise.race([promise, timeout]);
-  } finally {
-    clearTimeout(timeoutId);
+  const axe = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
+  const blockingAxe = axe.violations.filter(({ impact }) => impact === "serious" || impact === "critical");
+  for (const violation of blockingAxe) {
+    fail(scope, `axe ${violation.id} has ${violation.nodes.length} serious or critical node(s)`);
   }
-}
 
-async function settleMotionFrame(page) {
-  await page.evaluate(
-    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
-  );
-}
-
-async function installObservers(page) {
-  await page.addInitScript(() => {
-    window.__adsHardening = { cls: 0, firstFrameTheme: null };
-    requestAnimationFrame(() => {
-      window.__adsHardening.firstFrameTheme = document.documentElement.dataset.theme ?? null;
-    });
-    new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (!entry.hadRecentInput) window.__adsHardening.cls += entry.value;
-      }
-    }).observe({ type: "layout-shift", buffered: true });
-  });
-}
-
-async function waitForHero(page, theme) {
-  try {
-    await page.waitForFunction((expectedTheme) => {
-      const images = [...document.querySelectorAll(".hero-media img")];
-      const activeImage = document.querySelector(`.hero-media img[data-theme-image="${expectedTheme}"]`);
-      return images.length === 2 && images.every((image) => image.complete && image.naturalWidth > 0) &&
-        activeImage instanceof HTMLImageElement &&
-        activeImage.currentSrc.includes(`creative-pipeline-${expectedTheme}`) &&
-        Number.parseFloat(getComputedStyle(activeImage).opacity) > 0;
-    }, theme, { timeout: 10_000 });
-  } catch (error) {
-    const state = await page.evaluate(() => ({
-      theme: document.documentElement.dataset.theme,
-      transition: document.documentElement.dataset.themeTransition,
-      images: [...document.querySelectorAll(".hero-media img")].map((image) => ({
-        theme: image.dataset.themeImage,
-        complete: image.complete,
-        naturalWidth: image.naturalWidth,
-        src: image.currentSrc,
-        opacity: getComputedStyle(image).opacity,
-      })),
-    }));
-    throw new Error(`hero ${theme} did not settle: ${JSON.stringify(state)}`, { cause: error });
-  }
-}
-
-async function gotoReady(page, target) {
-  await page.goto(target, { waitUntil: "domcontentloaded" });
-  await page.locator(pageReadySelector).waitFor({ state: "attached", timeout: 20_000 });
-}
-
-async function readStationState(page, stage) {
-  return page.evaluate((targetStage) => {
-    const climber = document.querySelector(".assembly-climber");
-    const station = document.querySelector(`.station[data-stage="${targetStage}"]`);
-    const marker = station?.querySelector(".station-index");
-    const markerRect = marker?.getBoundingClientRect();
-    const topAtMarker = markerRect
-      ? document.elementsFromPoint(markerRect.left + markerRect.width / 2, markerRect.top + markerRect.height / 2)[0]
-      : null;
-    const image = climber?.querySelector("img");
-    const stopWrap = climber?.querySelector(".assembly-climber-stop");
-    return {
-      phase: climber?.getAttribute("data-phase"),
-      pose: climber?.getAttribute("data-pose"),
-      station: climber?.getAttribute("data-station"),
-      reactionCount: climber?.getAttribute("data-station-reaction-count"),
-      animationName: stopWrap ? getComputedStyle(stopWrap).animationName : null,
-      imageSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
-      imageCount: climber?.querySelectorAll("img").length ?? 0,
-      activeStations: document.querySelectorAll('.station[data-active="true"]').length,
-      arrivingStations: document.querySelectorAll('.station[data-arrival="true"]').length,
-      imageStayedMounted: image?.dataset.mountProbe === "assembly-ember",
-      climberZ: climber ? Number.parseInt(getComputedStyle(climber).zIndex, 10) : null,
-      stationZ: station ? Number.parseInt(getComputedStyle(station).zIndex, 10) : null,
-      markerOwnsTopLayer: topAtMarker instanceof Element && Boolean(topAtMarker.closest(".station")),
-    };
-  }, stage);
-}
-
-async function installStationStateObserver(page, stage) {
-  await page.evaluate((targetStage) => {
-    const climber = document.querySelector(".assembly-climber");
-    if (!climber) return;
-
-    const capture = () => {
-      const station = document.querySelector(`.station[data-stage="${targetStage}"]`);
-      const marker = station?.querySelector(".station-index");
-      const markerRect = marker?.getBoundingClientRect();
-      const topAtMarker = markerRect
-        ? document.elementsFromPoint(markerRect.left + markerRect.width / 2, markerRect.top + markerRect.height / 2)[0]
-        : null;
-      const image = climber.querySelector("img");
-      const stopWrap = climber.querySelector(".assembly-climber-stop");
-      return {
-        phase: climber.getAttribute("data-phase"),
-        pose: climber.getAttribute("data-pose"),
-        station: climber.getAttribute("data-station"),
-        reactionCount: climber.getAttribute("data-station-reaction-count"),
-        animationName: stopWrap ? getComputedStyle(stopWrap).animationName : null,
-        imageSrc: image instanceof HTMLImageElement ? image.currentSrc : null,
-        imageCount: climber.querySelectorAll("img").length,
-        activeStations: document.querySelectorAll('.station[data-active="true"]').length,
-        arrivingStations: document.querySelectorAll('.station[data-arrival="true"]').length,
-        imageStayedMounted: image?.dataset.mountProbe === "assembly-ember",
-        climberZ: Number.parseInt(getComputedStyle(climber).zIndex, 10),
-        stationZ: station ? Number.parseInt(getComputedStyle(station).zIndex, 10) : null,
-        markerOwnsTopLayer: topAtMarker instanceof Element && Boolean(topAtMarker.closest(".station")),
-      };
-    };
-
-    window.__adsStationPhaseLog = [];
-    const observed = new Set();
-    const record = () => {
-      const state = capture();
-      if (
-        state.station !== targetStage ||
-        !["arriving", "peeking", "resting"].includes(state.phase ?? "")
-      ) return;
-
-      const key = `${state.reactionCount}:${state.phase}`;
-      if (observed.has(key)) return;
-      observed.add(key);
-      window.__adsStationPhaseLog.push(state);
-    };
-
-    new MutationObserver(record).observe(climber, {
-      attributes: true,
-      attributeFilter: ["data-phase", "data-station", "data-pose"],
-    });
-    record();
-  }, stage);
-}
-
-async function readObservedStationState(page, stage, phase) {
-  try {
-    await page.waitForFunction(
-      ({ targetStage, targetPhase }) => window.__adsStationPhaseLog?.some(
-        (state) => state.station === targetStage && state.phase === targetPhase,
-      ),
-      { targetStage: stage, targetPhase: phase },
-      { timeout: 5_000 },
-    );
-  } catch (error) {
-    const diagnostics = await page.evaluate((targetStage) => {
-      const climber = document.querySelector(".assembly-climber");
-      const figure = document.querySelector(".assembly-climber-figure");
-      const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
-      const figureRect = figure?.getBoundingClientRect();
-      const markerRect = marker?.getBoundingClientRect();
-      return {
-        phase: climber?.getAttribute("data-phase"),
-        station: climber?.getAttribute("data-station"),
-        scrollY: window.scrollY,
-        distance: figureRect && markerRect
-          ? Math.abs(markerRect.top + markerRect.height / 2 - (figureRect.top + figureRect.height * 0.52))
-          : null,
-        observed: window.__adsStationPhaseLog ?? [],
-      };
-    }, stage);
-    throw new Error(`station ${stage}/${phase} was not observed: ${JSON.stringify(diagnostics)}`, { cause: error });
-  }
-  return page.evaluate(
-    ({ targetStage, targetPhase }) => window.__adsStationPhaseLog.find(
-      (state) => state.station === targetStage && state.phase === targetPhase,
-    ),
-    { targetStage: stage, targetPhase: phase },
-  );
-}
-
-async function settleAtStation(page, stage) {
-  await page.evaluate(() => {
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
-    window.dispatchEvent(new Event("scroll"));
-  });
-  await page.waitForFunction(() => {
-    const climber = document.querySelector(".assembly-climber");
-    return climber?.getAttribute("data-phase") === "staged" &&
-      climber.getAttribute("data-station") === "between";
-  }, undefined, { timeout: 5_000 });
-  await installStationStateObserver(page, stage);
-  for (let attempt = 0; attempt < 5; attempt += 1) {
-    const aligned = await page.evaluate((targetStage) => {
-      const figure = document.querySelector(".assembly-climber-figure");
-      const marker = document.querySelector(`.station[data-stage="${targetStage}"] .station-index`);
-      if (!figure || !marker) return false;
-      const figureRect = figure.getBoundingClientRect();
-      const markerRect = marker.getBoundingClientRect();
-      window.scrollTo(
-        0,
-        window.scrollY + markerRect.top + markerRect.height / 2 - (figureRect.top + figureRect.height * 0.52),
-      );
-      window.dispatchEvent(new Event("scroll"));
-      const nextFigureRect = figure.getBoundingClientRect();
-      const nextMarkerRect = marker.getBoundingClientRect();
-      return Math.abs(
-        nextMarkerRect.top + nextMarkerRect.height / 2 - (nextFigureRect.top + nextFigureRect.height * 0.52),
-      ) <= 2;
-    }, stage);
-    await settleMotionFrame(page);
-    if (aligned) break;
-    await page.waitForTimeout(80);
-  }
-  const arrival = await readObservedStationState(page, stage, "arriving");
-  const peeking = await readObservedStationState(page, stage, "peeking");
-  const resting = await readObservedStationState(page, stage, "resting");
-  await page.waitForTimeout(120);
-  const persistent = await readStationState(page, stage);
-
-  await page.evaluate(() => window.scrollBy(0, 8));
-  await page.waitForTimeout(60);
-  await page.evaluate(() => window.scrollBy(0, -8));
-  await page.waitForTimeout(760);
-  const repeated = await readStationState(page, stage);
-
-  return { arrival, peeking, resting, persistent, repeated };
-}
-
-async function inspectPage(page) {
-  return page.evaluate(() => ({
-    theme: document.documentElement.dataset.theme,
-    firstFrameTheme: window.__adsHardening.firstFrameTheme,
-    cls: window.__adsHardening.cls,
-    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    heroResources: performance
-      .getEntriesByType("resource")
-      .filter((entry) => entry.name.includes("creative-pipeline"))
-      .map((entry) => entry.name),
-    heroImages: [...document.querySelectorAll(".hero-media img")].map((image) => image.currentSrc),
-    artifacts: [...document.querySelectorAll(".ads-artifact")].map((node) => node.getAttribute("data-artifact")),
-    handoffs: document.querySelectorAll(".release-handoff").length,
-    activeStations: document.querySelectorAll('.station[data-active="true"]').length,
-    installGuideLinks: document.querySelectorAll('a[href*="docs/INSTALL.md"]').length,
-    releaseBackground: getComputedStyle(document.querySelector(".release-bay")).backgroundColor,
-  }));
-}
-
-async function verifyKeyboard(page, scope) {
-  await page.evaluate(() => {
-    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
-  });
-  await page.waitForTimeout(50);
-
-  const controlSelector = '.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary';
-  const expectedCount = await page.locator(controlSelector).evaluateAll((controls) => controls.filter((control) => {
-    const style = getComputedStyle(control);
-    const rect = control.getBoundingClientRect();
-    const closedMenu = control.closest("details:not([open])");
-    const availableInClosedMenu = !closedMenu || control.tagName === "SUMMARY";
-    return availableInClosedMenu && style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
-  }).length);
-  const visited = [];
-  for (let index = 0; index < expectedCount; index += 1) {
-    await page.keyboard.press("Tab");
-    await page.waitForTimeout(60);
-    const focused = await page.evaluate(() => {
-      const element = document.activeElement;
-      if (!(element instanceof HTMLElement)) return null;
-      const controls = [...document.querySelectorAll('.ads-system-nav a[href], .ads-system-nav button:not([disabled]), .theme-page a[href], .theme-page button:not([disabled]), .theme-page summary')];
+  const state = await page.evaluate(() => {
+    const isVisible = (element) => {
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
-      return {
-        tag: element.tagName,
-        index: controls.indexOf(element),
-        label: element.getAttribute("aria-label") || element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) || "",
-        outlineStyle: style.outlineStyle,
-        outlineWidth: Number.parseFloat(style.outlineWidth),
-        inViewport: rect.bottom >= 0 && rect.top <= innerHeight && rect.right >= 0 && rect.left <= innerWidth,
-      };
-    });
+      return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+    };
+    const controls = [...document.querySelectorAll('a[href], button:not([disabled])')]
+      .filter(isVisible)
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          label: element.getAttribute("aria-label") || element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80),
+          width: rect.width,
+          height: rect.height,
+        };
+      });
+    const images = [...document.querySelectorAll("img")]
+      .filter(isVisible)
+      .map((image) => ({
+        src: image.currentSrc,
+        complete: image.complete,
+        naturalWidth: image.naturalWidth,
+        naturalHeight: image.naturalHeight,
+        width: image.getBoundingClientRect().width,
+        height: image.getBoundingClientRect().height,
+      }));
+    const heroImage = document.querySelector("main figure img");
+    const heroRect = heroImage?.getBoundingClientRect();
+    return {
+      theme: document.documentElement.dataset.theme,
+      mainCount: document.querySelectorAll("main").length,
+      h1Count: document.querySelectorAll("h1").length,
+      practice: Boolean(document.querySelector("#practice")),
+      start: Boolean(document.querySelector("#start")),
+      ember: Boolean(document.querySelector("[data-ember-step]")),
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      installLinks: [...document.querySelectorAll('a[href*="docs/INSTALL.md"]')].map((link) => link.href),
+      controls,
+      images,
+      heroRatio: heroRect ? heroRect.width / heroRect.height : null,
+      heroNaturalRatio: heroImage instanceof HTMLImageElement && heroImage.naturalHeight
+        ? heroImage.naturalWidth / heroImage.naturalHeight
+        : null,
+    };
+  });
 
-    if (!focused) {
-      fail(scope, `keyboard step ${index + 1} has no HTMLElement focus target`);
-      continue;
-    }
-    visited.push(focused.index);
-    if (focused.outlineStyle === "none" || focused.outlineWidth < 2) {
-      fail(scope, `focus is not visibly outlined on ${focused.tag}:${focused.label}`);
-    }
-    if (!focused.inViewport) {
-      fail(scope, `focused control is offscreen: ${focused.tag}:${focused.label}`);
+  if (state.theme !== theme) fail(scope, `resolved ${state.theme ?? "no"} theme instead of ${theme}`);
+  if (state.mainCount !== 1) fail(scope, `found ${state.mainCount} main landmarks`);
+  if (state.h1Count !== 1) fail(scope, `found ${state.h1Count} h1 elements`);
+  if (!state.practice || !state.start || !state.ember) fail(scope, "practice, start, or Ember section is missing");
+  if (state.overflow > 1) fail(scope, `horizontal overflow is ${state.overflow}px`);
+  if (state.installLinks.length !== 2 || state.installLinks.some((href) => href !== expectedInstallUrl)) {
+    fail(scope, `install links are ${JSON.stringify(state.installLinks)}`);
+  }
+  for (const control of state.controls) {
+    if (control.width < 44 || control.height < 44) {
+      fail(scope, `control "${control.label}" is ${control.width.toFixed(1)}x${control.height.toFixed(1)}px`);
     }
   }
-
-  if (new Set(visited).size !== expectedCount) {
-    fail(scope, `keyboard reached ${new Set(visited).size}/${expectedCount} unique controls`);
+  for (const image of state.images) {
+    if (!image.complete || image.naturalWidth === 0 || image.naturalHeight === 0) {
+      fail(scope, `image failed to load: ${image.src || "missing src"}`);
+    }
   }
-  return visited;
+  if (viewport.width <= 390 && state.heroRatio && state.heroNaturalRatio &&
+      Math.abs(state.heroRatio - state.heroNaturalRatio) > 0.03) {
+    fail(scope, `mobile hero ratio ${state.heroRatio.toFixed(3)} crops source ratio ${state.heroNaturalRatio.toFixed(3)}`);
+  }
+
+  receipts.push({ scope, viewport, theme, blockingAxe: blockingAxe.length, ...state });
 }
 
-async function verifyReducedMotion(browser, browserName) {
+async function inspectInteractions(browser, browserName) {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
-    colorScheme: "dark",
   });
-  const scope = `${browserName}/reduced-motion`;
-  const page = await withBrowserStepTimeout(context.newPage(), `${scope} page startup`);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await gotoReady(page, `${url}?theme=dark&reduced=${Date.now()}`);
-  await waitForHero(page, "dark");
+  const page = await context.newPage();
+  const scope = `${browserName}/interactions`;
+  try {
+    await page.goto(`${url}?theme=light&interactions=${Date.now()}`, { waitUntil: "domcontentloaded" });
+    await page.locator('[data-ads-homepage][data-page-ready="true"]').waitFor({ timeout: 20_000 });
 
-  await page.getByRole("button", { name: "Make Ember hop" }).click();
-  const climberAnimation = await page.locator(".assembly-climber-image").evaluate((node) => ({
-    name: getComputedStyle(node).animationName,
-    duration: getComputedStyle(node).animationDuration,
-  }));
-  if (climberAnimation.name !== "none") fail(scope, `climber animation is ${climberAnimation.name}`);
-  const climberCadence = await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).animationName);
-  if (climberCadence !== "none") fail(scope, `reduced-motion climber cadence is ${climberCadence}`);
-  const climberPosition = await page.locator(".assembly-climber").evaluate((node) => getComputedStyle(node).position);
-  if (climberPosition !== "absolute") fail(scope, `reduced-motion climber position is ${climberPosition}`);
+    await page.getByRole("button", { name: "Switch to dark theme" }).click();
+    if (await page.evaluate(() => document.documentElement.dataset.theme) !== "dark") {
+      fail(scope, "theme control did not apply dark theme");
+    }
+    if ((await page.getByRole("button", { name: "Switch to light theme" }).count()) !== 1) {
+      fail(scope, "theme control did not expose its next action");
+    }
 
-  await page.getByRole("button", { name: "Make Ember bounce" }).click();
-  const footerAnimation = await page.locator(".footer-ember-image").evaluate((node) => ({
-    name: getComputedStyle(node).animationName,
-    duration: getComputedStyle(node).animationDuration,
-  }));
-  if (footerAnimation.name !== "none") fail(scope, `footer animation is ${footerAnimation.name}`);
+    const ember = page.getByRole("button", { name: "Next observation from Ember" });
+    const expectedSteps = ["1", "2", "3", "0"];
+    for (const expectedStep of expectedSteps) {
+      await ember.click();
+      if (await page.locator("[data-ember-step]").getAttribute("data-ember-step") !== expectedStep) {
+        fail(scope, `Ember did not advance to step ${expectedStep}`);
+      }
+    }
+    const emberStatus = await page.getByRole("status").first().innerText();
+    if (!emberStatus.startsWith("1 of 4.")) fail(scope, `Ember status is ${JSON.stringify(emberStatus)}`);
 
-  const pageTransition = await page.locator(".theme-page").evaluate((node) => getComputedStyle(node).transitionDuration);
-  const longestTransition = Math.max(...pageTransition.split(",").map((value) => Number.parseFloat(value)));
-  if (longestTransition > 0.00002) fail(scope, `theme transition duration is ${pageTransition}`);
+    const request = await page.locator("#example-request").innerText();
+    await page.getByRole("button", { name: "Copy example request" }).click();
+    await page.waitForFunction(() => document.querySelector('[role="status"]')?.textContent?.length > 0);
+    const copyStatus = await page.locator('[role="status"]').last().innerText();
+    if (!/Copied|Request selected/.test(copyStatus)) fail(scope, `copy fallback status is ${JSON.stringify(copyStatus)}`);
+    const selected = await page.evaluate(() => window.getSelection()?.toString() ?? "");
+    if (selected !== request && !copyStatus.startsWith("Copied")) {
+      fail(scope, "copy fallback neither copied nor kept the request selected");
+    }
 
-  receipts.push({ scope, climberAnimation, climberCadence, climberPosition, footerAnimation, pageTransition });
-  await context.close();
+    await page.goto(`${url}?theme=light&keyboard=${Date.now()}`, { waitUntil: "domcontentloaded" });
+    await page.locator('[data-ads-homepage][data-page-ready="true"]').waitFor({ timeout: 20_000 });
+    const skip = page.getByRole("link", { name: "Skip to content" });
+    if (browserName === "Chromium") {
+      await page.keyboard.press("Tab");
+      if (!(await skip.evaluate((node) => node === document.activeElement))) fail(scope, "skip link is not first in tab order");
+    } else {
+      await skip.focus();
+      if (!(await skip.evaluate((node) => node === document.activeElement))) fail(scope, "skip link cannot receive focus");
+    }
+    const outline = await skip.evaluate((node) => getComputedStyle(node).outlineWidth);
+    if (Number.parseFloat(outline) < 2) fail(scope, `skip link outline is ${outline}`);
+    await skip.press("Enter");
+    if (!(await page.locator("main").evaluate((node) => node === document.activeElement))) {
+      fail(scope, "skip link did not move focus to main");
+    }
+  } finally {
+    await context.close();
+  }
+
+  const reducedContext = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    reducedMotion: "reduce",
+  });
+  const reducedPage = await reducedContext.newPage();
+  try {
+    await reducedPage.goto(`${url}?theme=light&reduced=${Date.now()}`, { waitUntil: "domcontentloaded" });
+    await reducedPage.locator('[data-ads-homepage][data-page-ready="true"]').waitFor({ timeout: 20_000 });
+    await reducedPage.getByRole("button", { name: "Next observation from Ember" }).click();
+    const animationCount = await reducedPage.locator("[data-ember-character] img").evaluate((node) => node.getAnimations().length);
+    if (animationCount !== 0) fail(`${browserName}/reduced-motion`, `Ember retained ${animationCount} animation(s)`);
+  } finally {
+    await reducedContext.close();
+  }
 }
 
-for (const [browserName, browserType] of browserTypes) {
+for (const [browserName, browserType] of [["Chromium", chromium], ["WebKit", webkit]]) {
   const browser = await browserType.launch({ headless: true });
   try {
     for (const viewport of viewports) {
-      const scope = `${browserName}/${viewport.name}`;
-      const context = await browser.newContext({
-        viewport: { width: viewport.width, height: viewport.height },
-        colorScheme: "light",
-        ...(browserName === "Chromium" ? { permissions: ["clipboard-read", "clipboard-write"] } : {}),
-      });
-      const page = await withBrowserStepTimeout(context.newPage(), `${scope} page startup`);
-      await context.addCookies([{ name: "ads-theme", value: "light", url }]);
-      const errors = [];
-      page.on("pageerror", (error) => errors.push(error.message));
-      await installObservers(page);
-
-      await gotoReady(page, `${url}?matrix=${browserName}-${viewport.name}-${Date.now()}`);
-      await waitForHero(page, "light");
-      const initial = await inspectPage(page);
-      if (initial.theme !== "light" || initial.firstFrameTheme !== "light") {
-        fail(scope, `first theme is ${initial.firstFrameTheme}/${initial.theme}, expected light/light`);
-      }
-      if (
-        initial.heroResources.length !== 2 ||
-        !initial.heroResources.some((resource) => resource.includes("creative-pipeline-light")) ||
-        !initial.heroResources.some((resource) => resource.includes("creative-pipeline-dark"))
-      ) {
-        fail(scope, `first load did not predecode both heroes: ${initial.heroResources.join(" | ") || "no hero"}`);
-      }
-      if (
-        initial.heroImages.length !== 2 ||
-        !initial.heroImages.some((resource) => resource.includes("creative-pipeline-light")) ||
-        !initial.heroImages.some((resource) => resource.includes("creative-pipeline-dark"))
-      ) {
-        fail(scope, `rendered heroes are ${initial.heroImages.join(" | ") || "missing"}`);
-      }
-
-      const initialClimber = await page.locator(".assembly-climber").evaluate((node) => ({
-        motion: node.getAttribute("data-motion"),
-        position: getComputedStyle(node).position,
-        documentTop: window.scrollY + node.getBoundingClientRect().top,
-        transform: getComputedStyle(node.querySelector(".assembly-climber-figure")).transform,
-      }));
-      await page.locator(".assembly-climber img").evaluate((node) => {
-        node.dataset.mountProbe = "assembly-ember";
-      });
-      const mobileRailAlignment = viewport.name === "mobile"
-        ? await page.evaluate(() => {
-            const mouth = document.querySelector(".hero-track-mouth").getBoundingClientRect();
-            const track = document.querySelector(".continuous-track").getBoundingClientRect();
-            return {
-              centerDelta: Math.abs((mouth.left + mouth.width / 2) - (track.left + track.width / 2)),
-              widthDelta: Math.abs(mouth.width - track.width),
-            };
-          })
-        : null;
-      const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
-      const climberTransforms = new Set([initialClimber.transform]);
-      for (let step = 0; step <= 16; step += 1) {
-        await page.evaluate(({ step, pageHeight }) => {
-          document.documentElement.style.scrollBehavior = "auto";
-          document.documentElement.scrollTop = (pageHeight * step) / 16;
-          document.body.scrollTop = (pageHeight * step) / 16;
-        }, { step, pageHeight });
-        await settleMotionFrame(page);
-        climberTransforms.add(await page.locator(".assembly-climber-figure").evaluate((node) => getComputedStyle(node).transform));
-      }
-      const finalClimber = await page.locator(".assembly-climber").evaluate((node) => ({
-        documentTop: window.scrollY + node.getBoundingClientRect().top,
-      }));
-      const stationStop = viewport.name === "mobile" ? await settleAtStation(page, "rubric") : null;
-      const scrolled = await inspectPage(page);
-
-      if (errors.length) fail(scope, `page errors: ${errors.join(" | ")}`);
-      if (scrolled.overflow > 0) fail(scope, `horizontal overflow ${scrolled.overflow}px`);
-      if (scrolled.cls > 0.1) fail(scope, `CLS ${scrolled.cls.toFixed(3)} exceeds 0.1`);
-      if (initialClimber.motion !== "rail-follow" || initialClimber.position !== "sticky") {
-        fail(scope, `Ember motion is ${initialClimber.motion}/${initialClimber.position}, expected rail-follow/sticky`);
-      }
-      if (finalClimber.documentTop - initialClimber.documentTop < 200) {
-        fail(scope, `Ember only traveled ${Math.round(finalClimber.documentTop - initialClimber.documentTop)}px with the rail`);
-      }
-      if (climberTransforms.size < 3) fail(scope, `Ember climb cadence only produced ${climberTransforms.size} transform state(s)`);
-      if (mobileRailAlignment && (mobileRailAlignment.centerDelta > 0.5 || mobileRailAlignment.widthDelta > 0.5)) {
-        fail(scope, `mobile rail mismatch is ${mobileRailAlignment.centerDelta.toFixed(1)}px center / ${mobileRailAlignment.widthDelta.toFixed(1)}px width`);
-      }
-      if (new Set(scrolled.artifacts).size !== 5) fail(scope, `artifact count is ${new Set(scrolled.artifacts).size}`);
-      if (scrolled.handoffs) fail(scope, "release handoff returned");
-      if (scrolled.activeStations > 1) fail(scope, `${scrolled.activeStations} station states are active`);
-      if (stationStop) {
-        const { arrival, peeking, resting, persistent, repeated } = stationStop;
-        if (
-          arrival.phase !== "arriving" || arrival.pose !== "climb" || arrival.station !== "rubric" ||
-          arrival.animationName !== "ember-stop-rubric" || !arrival.imageSrc?.includes("ember-climbing") ||
-          arrival.imageCount !== 1 || arrival.arrivingStations !== 1 || !arrival.imageStayedMounted
-        ) {
-          fail(scope, `station arrival failed: ${JSON.stringify(arrival)}`);
-        }
-        if (
-          peeking.phase !== "peeking" || peeking.pose !== "peek" || peeking.station !== "rubric" ||
-          peeking.imageCount !== 1 || !peeking.imageStayedMounted
-        ) {
-          fail(scope, `station peek failed: ${JSON.stringify(peeking)}`);
-        }
-        for (const [label, state] of [["resting", resting], ["persistent", persistent], ["repeated", repeated]]) {
-          if (
-            state.phase !== "resting" || state.pose !== "peek" || state.station !== "rubric" ||
-            state.animationName !== "none" || !state.imageSrc?.includes("ember-peek") ||
-            state.imageCount !== 1 || state.activeStations !== 1 || state.arrivingStations !== 0 ||
-            !state.imageStayedMounted || !(state.climberZ < state.stationZ) || !state.markerOwnsTopLayer
-          ) {
-            fail(scope, `station ${label} state/occlusion failed: ${JSON.stringify(state)}`);
-          }
-        }
-        if (
-          arrival.reactionCount !== resting.reactionCount || resting.reactionCount !== persistent.reactionCount ||
-          persistent.reactionCount !== repeated.reactionCount
-        ) {
-          fail(scope, `station reaction count changed within one visit: ${JSON.stringify({
-            arrival: arrival.reactionCount,
-            resting: resting.reactionCount,
-            persistent: persistent.reactionCount,
-            repeated: repeated.reactionCount,
-          })}`);
+      for (const theme of themes) {
+        const context = await browser.newContext({ viewport, colorScheme: theme });
+        const page = await context.newPage();
+        const scope = `${browserName}/${viewport.name}/${theme}`;
+        page.on("pageerror", (error) => fail(scope, `page error: ${error.message}`));
+        try {
+          await inspectStaticPage(page, scope, viewport, theme);
+        } finally {
+          await context.close();
         }
       }
-      if (scrolled.installGuideLinks !== 2) {
-        fail(scope, `install/activation guide link count is ${scrolled.installGuideLinks}`);
-      }
-      if (scrolled.releaseBackground !== "rgb(232, 93, 38)") {
-        fail(scope, `release background is ${scrolled.releaseBackground}`);
-      }
-
-      const keyboardOrder = browserName === "Chromium" ? await verifyKeyboard(page, scope) : [];
-
-      await page.evaluate(() => {
-        document.documentElement.style.scrollBehavior = "auto";
-        window.scrollTo(0, 0);
-        window.dispatchEvent(new Event("scroll"));
-      });
-      await page.waitForFunction(() => {
-        const nav = document.querySelector(".ads-system-nav");
-        return nav instanceof HTMLElement &&
-          Math.abs(nav.getBoundingClientRect().top - 12) < 2;
-      });
-      let themeToggle = page.getByRole("button", {
-        name: "Switch to dark theme",
-      });
-      if (
-        (await themeToggle.count()) === 0 ||
-        !(await themeToggle.first().isVisible())
-      ) {
-        await page.locator(".ads-system-nav-trigger").click();
-        await page.waitForFunction(
-          () =>
-            document
-              .querySelector(".ads-system-nav-layer")
-              ?.getAttribute("data-state") === "open",
-        );
-        themeToggle = page.getByRole("button", {
-          name: "Switch to dark theme",
-        });
-      }
-      await themeToggle.click();
-      await waitForHero(page, "dark");
-      await gotoReady(page, `${url}?persistence=${browserName}-${viewport.name}-${Date.now()}`);
-      await waitForHero(page, "dark");
-      const persisted = await inspectPage(page);
-      if (persisted.theme !== "dark" || persisted.firstFrameTheme !== "dark") {
-        fail(scope, `persisted theme is ${persisted.firstFrameTheme}/${persisted.theme}, expected dark/dark`);
-      }
-      if (
-        persisted.heroResources.length !== 2 ||
-        !persisted.heroResources.some((resource) => resource.includes("creative-pipeline-light")) ||
-        !persisted.heroResources.some((resource) => resource.includes("creative-pipeline-dark"))
-      ) {
-        fail(scope, `persisted first load did not predecode both heroes: ${persisted.heroResources.join(" | ") || "no hero"}`);
-      }
-
-      const copyButton = page.getByRole("button", { name: "Copy Codex install command" }).first();
-      const renderedInstallCommand = await copyButton.locator("code").getAttribute("aria-label");
-      if (renderedInstallCommand !== expectedInstallCommand) {
-        fail(scope, `install command is ${renderedInstallCommand ?? "missing"}`);
-      }
-      const beforeCopy = await copyButton.boundingBox();
-      await copyButton.click();
-      await page.waitForTimeout(50);
-      const afterCopy = await copyButton.boundingBox();
-      const copyFeedback = await copyButton.locator("[aria-live='polite']").textContent();
-      if (!copyFeedback || !["Copied", "Try again"].includes(copyFeedback.trim())) {
-        fail(scope, `copy feedback is ${copyFeedback ?? "missing"}`);
-      }
-      if (
-        !beforeCopy || !afterCopy ||
-        Math.abs(beforeCopy.width - afterCopy.width) > 1 ||
-        Math.abs(beforeCopy.height - afterCopy.height) > 1
-      ) {
-        fail(scope, "copy feedback shifted the install action");
-      }
-
-      await page.locator(".footer-ember-image img").evaluate((node) => {
-        node.dataset.mountProbe = "footer-ember";
-      });
-      await page.locator(".footer-ember-image").evaluate((node) => {
-        window.__adsFooterAnimationName = null;
-        node.addEventListener("animationstart", (event) => {
-          if (event.target === node) window.__adsFooterAnimationName = event.animationName;
-        }, { once: true });
-      });
-      await page.getByRole("button", { name: "Make Ember bounce" }).click();
-      await page.waitForFunction(
-        () => window.__adsFooterAnimationName === "ember-peek-pop",
-        undefined,
-        { timeout: 2_000 },
-      ).catch(() => undefined);
-      const footerBounce = await page.locator(".footer-ember-image").evaluate((node) => {
-        const image = node.querySelector("img");
-        const style = getComputedStyle(node);
-        return {
-          animationName: window.__adsFooterAnimationName ?? style.animationName,
-          imageLoaded: image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
-          imageStayedMounted: image?.dataset.mountProbe === "footer-ember",
-          opacity: Number.parseFloat(style.opacity),
-        };
-      });
-      if (footerBounce.animationName !== "ember-peek-pop") {
-        fail(scope, `footer bounce animation is ${footerBounce.animationName}`);
-      }
-      if (!footerBounce.imageLoaded || !footerBounce.imageStayedMounted || footerBounce.opacity < 1) {
-        fail(scope, `footer Ember visibility failed: ${JSON.stringify(footerBounce)}`);
-      }
-
-      receipts.push({
-        scope,
-        cls: scrolled.cls,
-        initialHero: initial.heroResources,
-        persistedHero: persisted.heroResources,
-        emberTravel: Math.round(finalClimber.documentTop - initialClimber.documentTop),
-        emberCadenceStates: climberTransforms.size,
-        mobileRailAlignment,
-        stationStop,
-        footerBounce,
-        keyboardControls: keyboardOrder.length,
-        copyFeedback: copyFeedback?.trim() ?? null,
-      });
-      await context.close();
     }
-
-    await verifyReducedMotion(browser, browserName);
-  } catch (error) {
-    fail(browserName, error instanceof Error ? error.message : String(error));
+    await inspectInteractions(browser, browserName);
   } finally {
     await browser.close();
   }
 }
 
-if (failures.length) {
+if (process.env.ADS_HOMEPAGE_RECEIPTS === "1") {
   console.log(JSON.stringify(receipts, null, 2));
-  console.error("homepage hardening failed:");
-  for (const failure of failures) console.error(`- ${failure}`);
+}
+
+if (failures.length > 0) {
+  console.error("homepage hardening failed:\n" + failures.map((item) => `- ${item}`).join("\n"));
   process.exit(1);
 }
 
-console.log(JSON.stringify(receipts, null, 2));
-console.log(`homepage hardening passed: ${browserTypes.map(([name]) => name).join(" + ")} at 390/768/1280, active-theme hero, smooth Ember rail motion, reduced motion, keyboard focus, copy feedback, and theme persistence`);
+console.log(`homepage hardening passed: ${receipts.length} Chromium/WebKit viewport and theme cases, copy/theme/Ember/skip interactions, reduced motion, accessibility, image integrity, and mobile crop checks`);

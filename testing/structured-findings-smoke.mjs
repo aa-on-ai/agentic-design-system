@@ -200,7 +200,7 @@ await check('manual review and state inventory carry the adjacent-action check',
   assert.match(review, /adjacent-action consistency/i);
   assert.match(review, /cannot return `satisfied`/);
   assert.match(states, /Adjacent-action consistency/);
-  assert.match(states, /native `disabled`/);
+  assert.match(states, /enabledness, native semantics and helper text/);
 });
 
 await check('manual review and templates carry complete coverage accounting', async () => {

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Add a diagnostic layer beneath the existing ADS verdict rubric. This borrows the useful part of Contra Labs' landing-page study methodology: reviewers marked exact failure locations, assigned a fixed category, and rated severity. ADS operationalizes that pattern inside its rendered-evidence and revision loop.
+Use structured observations beneath the ADS outcome-based qualitative verdict; numeric scores are optional diagnostics. This borrows the useful part of Contra Labs' landing-page study methodology: reviewers marked exact failure locations, assigned a fixed category, and rated severity. ADS operationalizes that pattern inside its rendered-evidence and revision loop.
 
 Source: https://x.com/contralabs_ai/status/2078202668711895356
 
@@ -24,7 +24,7 @@ Source: https://x.com/contralabs_ai/status/2078202668711895356
 }
 ```
 
-`region` is optional and normalized from 0 to 1. All other fields are required for substantial screenshot review.
+`region` is optional and normalized from 0 to 1. All other fields are required when using this structured format for substantial review. `rubricRow` can identify a task-specific criterion such as product fit, IA or reference fidelity; it does not require numeric scoring.
 
 ## Coverage ledger
 
@@ -56,16 +56,13 @@ revision and before the grader can return `satisfied`:
 An enabled-looking contradiction is a `cues_affordances` major finding. It prevents `satisfied`,
 and the next revision prompt must name the conflicting state, action, and expected repair.
 
-## Implementation slice after Phase 7
+## Verdict and retention
 
-1. Extend the grader schema in `workflows/new-page-component.mjs` with `findings[]`; keep `failingRows` temporarily as a derived compatibility field.
-2. Add the structured-finding section to the canonical grader and run-report templates plus bundled copies.
-3. Update adversarial review so every material critique maps to a category, severity, rubric row, state, breakpoint, and evidence artifact.
-4. Aggregate counts by category and severity per iteration and preserve finding-to-revision traceability.
-5. Add fixtures and smoke tests for schema completeness, blocker verdict behavior, missing evidence, and compatibility output.
-6. Add the Contra study to `docs/influences.md`, including its five-brief, one-output-per-model-per-brief, and split-session limitations.
-7. Do not add model-specific gates or routing rules from this study.
+Findings explain the outcome-based verdict, not a weighted-score threshold. Product/task fit and
+IA can block success before visual craft is judged. An observation without supporting evidence
+remains unverified; a confirmed blocker cannot return `satisfied`. Preserve what works, any
+unreviewed coverage and the finding → revision → evidence trace within the shared ADS budget.
 
-## Stop condition
-
-The release gate passes, a planted blocker cannot return `satisfied`, unsupported findings fail validation, and the run report shows a complete finding → revision → evidence trail.
+Repeated findings become candidates for the existing preference, project, primitive/test or skill
+owner only after an explicit preference or verified recurrence warrants the update. This reference
+does not authorize self-modifying skills, new model gates or a release from source checks alone.

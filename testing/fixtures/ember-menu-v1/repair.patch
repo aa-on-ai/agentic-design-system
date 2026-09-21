@@ -1,0 +1,17 @@
+--- menu-broken.html
++++ menu-repaired.html
+@@ -64,6 +64,14 @@
+     document.addEventListener('keydown', event => {
+       if (layer.hidden) return;
+       if (event.key === 'Escape') { event.preventDefault(); dismiss(); }
++      if (event.key === 'Tab') {
++        const atFirst = document.activeElement === first;
++        const atLast = document.activeElement === close;
++        if ((event.shiftKey && atFirst) || (!event.shiftKey && atLast)) {
++          event.preventDefault();
++          (event.shiftKey ? close : first).focus();
++        }
++      }
+     });
+     window.backgroundActivations = 0;
+     document.querySelector('#background-action').addEventListener('click', () => {

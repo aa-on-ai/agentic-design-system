@@ -1,6 +1,6 @@
 # Practical Animation Tips
 
-Detailed reference guide for common animation scenarios. Use this as a checklist when implementing animations.
+Conditional recipes for a scoped motion task. Read only the relevant section under [web-animation-design](SKILL.md); preserve the existing accessible primitive, project tokens and task budget. Examples illustrate motion, not complete components or verified browser behavior.
 
 ## Recording & Debugging
 
@@ -10,39 +10,43 @@ When something feels off but you can't identify why, record the animation and pl
 
 ### Fix Shaky Animations
 
-Elements may shift by 1px at the start/end of CSS transform animations due to GPU/CPU rendering handoff.
-
-**Fix:**
+Inspect layout changes, fractional geometry, rasterization and layer behavior before attributing a shift to a rendering cause. Test a scoped hint only when the observed issue and measurement justify it:
 
 ```css
-.element {
+.element[data-motion-preparing] {
   will-change: transform;
 }
 ```
 
-This tells the browser to keep the element on the GPU throughout the animation.
+Remove the temporary hint when no longer useful. `will-change` does not force GPU execution or prove smoothness, and excessive use can increase memory/rendering cost. See [MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/will-change).
 
 ### Take Breaks
 
-Don't code and ship animations in one sitting. Step away, return with fresh eyes. The best animations are reviewed and refined over days, not hours.
+Use a fresh look when it helps diagnose feel, within the existing task budget. Do not impose a multi-day review or new approval ceremony on a small correction.
 
 ## Button & Click Feedback
 
 ### Scale Buttons on Press
 
-Make interfaces feel responsive by adding subtle scale feedback:
+Preserve an existing clear pressed state. If tactile scale is justified, scope it to the intended control, not every button:
 
 ```css
-button:active {
+.tactile-button:active {
   transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tactile-button:active {
+    transform: none;
+  }
 }
 ```
 
-This gives instant visual feedback that the interface is listening.
+Retain the primitive's visible static pressed and focus feedback in both modes.
 
 ### Don't Animate from scale(0)
 
-Starting from `scale(0)` makes elements appear from nowhere—it feels unnatural.
+A large zoom from `scale(0)` can feel disconnected from a routine control; preserve the intended origin and context.
 
 **Bad:**
 
@@ -68,7 +72,7 @@ Starting from `scale(0)` makes elements appear from nowhere—it feels unnatural
 }
 ```
 
-Elements should always have some visible shape, like a deflated balloon.
+For a routine popover, a small scale change plus opacity may preserve context better than a large zoom. This is not a requirement that all elements scale; a static appearance or fade may be clearer.
 
 ## Tooltips & Popovers
 
@@ -96,7 +100,7 @@ First tooltip: delay + animation. Subsequent tooltips (while one is open): insta
 }
 ```
 
-Radix UI and Base UI support this pattern with `data-instant` attribute.
+Attribute names are illustrative. Check the installed primitive's documented state hooks; do not assume different libraries expose identical attributes. Preserve keyboard-triggered access and hidden-content semantics.
 
 ### Make Animations Origin-Aware
 
@@ -114,7 +118,7 @@ Popovers should scale from their trigger, not from center.
 }
 ```
 
-**Radix UI:**
+**Radix dropdown-menu example (verify the installed primitive):**
 
 ```css
 .popover {
@@ -122,7 +126,7 @@ Popovers should scale from their trigger, not from center.
 }
 ```
 
-**Base UI:**
+**Other primitives:** use the actual documented origin variable, not a guessed shared name. A project adapter might expose:
 
 ```css
 .popover {
@@ -134,19 +138,21 @@ Popovers should scale from their trigger, not from center.
 
 ### Keep Animations Fast
 
-A faster-spinning spinner makes apps feel faster even with identical load times. A 180ms select animation feels more responsive than 400ms.
+Keep product-control feedback brief, ordinarily 100–300ms with no bounce, using the project's purpose-matched tokens. Do not spin loaders faster or hide latency to imply faster data arrival.
 
-**Rule:** UI animations should stay under 300ms.
+Longer gesture settling or expressive brand sequences are exceptions supported by the approved brief, not defaults for controls. Include stagger delays in total time and never delay usable data to finish a reveal.
 
-### Don't Animate Keyboard Interactions
+### Keep Keyboard Feedback Immediate
 
-Arrow key navigation, keyboard shortcuts—these are repeated hundreds of times daily. Animation makes them feel slow and disconnected.
+Arrow-key navigation and keyboard shortcuts can be repeated rapidly. Avoid animation that makes feedback lag behind those inputs.
 
-**Never animate:**
+Avoid delayed feedback for:
 
 - List navigation with arrow keys
 - Keyboard shortcut responses
 - Tab/focus movements
+
+Do not remove an accessible state change merely because the input came from a keyboard. A panel transition may be shared with pointer activation if it stays responsive and preserves focus, semantics and reduced motion.
 
 ### Be Careful with Frequently-Used Elements
 
@@ -186,7 +192,7 @@ When hover animation changes element position, the cursor may leave the element,
 }
 ```
 
-The parent's hover area stays stable while the child moves.
+The parent's hover area stays stable while the child moves. Put this motion-bearing hover rule behind the pointer-capability query below, and provide equivalent static focus feedback.
 
 ### Disable Hover on Touch Devices
 
@@ -200,22 +206,22 @@ Touch devices don't have true hover. Accidental finger movement triggers unwante
 }
 ```
 
-**Note:** Tailwind v4's `hover:` class automatically applies only when the device supports hover.
+If using framework variants, inspect the generated selector/media query in the installed version rather than assuming it includes both capability conditions.
 
 ## Touch & Accessibility
 
 ### Ensure Appropriate Target Areas
 
-Small buttons are hard to tap. Use a pseudo-element to create larger hit areas without changing layout.
+Prefer the shared component's target sizing and spacing. A pseudo-element can enlarge the hit region without changing visible geometry, but must not overlap adjacent targets or intercept unrelated actions.
 
-**Minimum target:** 44px (Apple and WCAG recommendation)
+For a touch-oriented control, 44px is a useful product starting point, not a blanket statement of standards compliance. Preserve the actual project's accessibility requirements and verify hit regions in context.
 
 ```css
-@utility touch-hitbox {
+.touch-hitbox {
   position: relative;
 }
 
-@utility touch-hitbox::before {
+.touch-hitbox::before {
   content: "";
   position: absolute;
   display: block;
@@ -226,7 +232,6 @@ Small buttons are hard to tap. Use a pseudo-element to create larger hit areas w
   height: 100%;
   min-height: 44px;
   min-width: 44px;
-  z-index: 9999;
 }
 ```
 
@@ -252,7 +257,7 @@ Elements entering or exiting should use `ease-out`. The fast start creates respo
 }
 ```
 
-`ease-in` starts slow—wrong for UI. Same duration feels slower because the movement is back-loaded.
+`ease-in` starts slowly, so avoid it when the delay obscures input feedback. Preserve the project's intentional entry/exit asymmetry where appropriate.
 
 ### Use ease-in-out for On-Screen Movement
 
@@ -266,39 +271,46 @@ Elements already visible that need to move should use `ease-in-out`. Mimics natu
 
 ### Use Custom Easing Curves
 
-Built-in CSS curves are usually too weak. Custom curves create more intentional motion.
+Use established project easing first. A custom curve is an option for a specific feel problem, not an automatic improvement over built-in CSS easing.
 
 **Resources:**
 
-- Course reference: `/learn/easing-curves`
-- External: [easings.co](https://easings.co/)
+- Relevant easing options live in [the motion skill](SKILL.md#the-easing-blueprint). Do not import a global token collection to change one transition.
 
 ## Visual Tricks
 
-### Use Blur as a Fallback
+### Blur Is an Optional Effect, Not a Repair
 
-When easing and timing adjustments don't solve the problem, add subtle blur to mask imperfections.
+First inspect state lifecycle, retargeting, geometry and timing. Use blur only when the selected reference or approved expressive brief needs it. Do not blur text or controls to conceal an unresolved defect.
 
 ```css
-.button-transition {
+.expressive-layer {
   transition:
     transform 150ms ease-out,
     filter 150ms ease-out;
 }
 
-.button-transition:active {
-  transform: scale(0.97);
+.expressive-layer[data-exiting] {
+  transform: translateY(-2px);
   filter: blur(2px);
 }
 ```
 
-Blur bridges visual gaps between states, tricking the eye into seeing smoother transitions. The two states blend instead of appearing as distinct objects.
+This effect still needs a scoped reduced-motion fallback that leaves state readable. Preserve the existing component's completion and focus handling.
 
-**Performance note:** Keep blur under 20px, especially on Safari.
+**Performance:** measure the real surface on target desktop and mobile/WebKit. Radius alone is not a cost guarantee; painted area, device and browser matter. If useful evidence is unavailable, leave performance unverified and prefer the simpler effect.
+
+## Lifecycle and Evidence
+
+- Retrigger interactive motion inside its animation window, including close/reopen/close. A stale cleanup must not finish a newer close. Preserve cancellation/unmount handling and latest-user-intent state.
+- Prefer the primitive's supported completion lifecycle. If a timer adapter is genuinely needed, read computed duration from the themed consumer, convert seconds and milliseconds correctly, and account for the actual delay/sequence. Test the zero-duration/reduced-motion path. Do not paste a `parseFloat` timeout from a recipe.
+- Exercise pointer and keyboard activation, Escape, focus restoration and hidden-content tab order. Motion CSS alone does not supply these behaviors.
+- Drive skeleton/content reveal from real async state. Check cached/fast and slow data, error/retry and long content without fixed demo waits or collapsed geometry.
+- Capture normal, interrupted and reduced-motion behavior in the real browser. Stills prove composition only. Keep deterministic timing, browser interaction, performance and the user's clarity and feel judgment separate.
 
 ## Why Details Matter
 
 > "All those unseen details combine to produce something that's just stunning, like a thousand barely audible voices all singing in tune."
-> — Paul Graham, Hackers and Painters
+> Paul Graham, Hackers and Painters
 
 Details that go unnoticed are good—users complete tasks without friction. Great interfaces enable users to achieve goals with ease, not to admire animations.

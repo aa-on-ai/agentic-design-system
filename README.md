@@ -27,7 +27,7 @@ ADS is a repo-local skill pack. Your agent does the work; you keep the final say
 
 ### 1. Install ADS
 
-Install the complete ten-skill pack from the project where your agent works:
+Install the complete eleven-skill pack from the project where your agent works:
 
 ```bash
 npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes
@@ -53,28 +53,32 @@ Make saving and validation clear. Show me the working result, checked on
 desktop and mobile.
 ```
 
-The orchestrator reads the project baseline, routes only the relevant skills, and requires rendered evidence before the work is called done.
+The orchestrator preserves the requested product, routes only the relevant guidance, and requires
+evidence that supports the actual completion claim. For substantial design handoffs, Ember reads
+that evidence and presents the scoped verdict by default.
 
 ## The practice
 
 ```text
-intent → baseline → rubric → build → rendered evidence → review → revise or release
+understand → choose → work → prove → decide
 ```
 
 | Stage | What ADS establishes |
 |---|---|
-| Intent | The user, desired outcome, constraints, and stop condition |
-| Baseline | Existing product rules, components, tokens, screenshots, and prior decisions |
-| Rubric | Fixed quality gates plus criteria specific to the task |
-| Build | The requested change, grounded in the product’s own components and language |
-| Evidence | Rendered states, breakpoints, interactions, accessibility, and screenshots |
-| Review | A verdict that can send the artifact back for revision |
+| Understand | The user job, exact surface, baseline, desired direction, output, and coverage |
+| Choose | Explore, build, or review, plus only the specialists the task needs |
+| Work | One coherent implementation or review pass that preserves what already works |
+| Prove | Task-relevant rendered states, breakpoints, interactions, accessibility, and screenshots |
+| Decide | A scoped `ready`, `needs repair`, or `blocked` verdict, with remaining judgment explicit |
 
 The report is part of the product. Source checks help, but “looks good” is not evidence.
 
 ## What is included
 
 The [`agentic-design-system`](./skills/agentic-design-system) skill routes the task and loads only the support the task needs.
+
+[`ember`](./skills/ember) reads completed evidence for substantial design handoffs and presents a
+concise review. It is not a second execution loop, independent reviewer, or repair agent.
 
 ### Core practice
 
@@ -96,13 +100,18 @@ Creative skills are not a default styling layer. Their trigger rules determine w
 
 ADS can capture requested states and breakpoints, run deterministic browser checks, and keep review findings tied to the rendered artifact.
 
-From a source checkout:
+Browser dependencies are installed into the consumer project, not bundled with the skills. After
+installing ADS, follow the [browser runtime setup](./docs/INSTALL.md#prepare-rendered-review-once-per-consumer-project).
+Then capture from the consumer project:
 
 ```bash
-node skills/design-review/scripts/capture.mjs "<running-route-url>" \
+node .agents/skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --states default,loading,empty,error \
   --out evidence/<task>
 ```
+
+That path matches the Codex and Cursor example above. Use `.claude/skills/`, `skills/`, or
+`.hermes/skills/` for the other installer targets.
 
 The rendered gate checks serious accessibility violations, overflow, missing landmarks, state semantics, layout shift, undersized touch targets, and whether requested states actually rendered. Structural checks do not decide taste; unresolved visual judgment remains human judgment.
 
@@ -114,7 +123,8 @@ See the [worked three-pass example](./docs/loop-demo/README.md), where the same 
 |---|---|
 | Install the skill pack | [Install ADS](./docs/INSTALL.md) |
 | Understand the design philosophy | [Philosophy](./PHILOSOPHY.md) |
-| Start or route a design task | [Create design workflow](./workflows/create-design-workflow.md) |
+| Understand the scoped design loop | [Agentic Design System skill](./skills/agentic-design-system/SKILL.md) |
+| Read evidence with Ember | [Ember skill](./skills/ember/SKILL.md) |
 | Run or extend checks | [Testing guide](./testing/README.md) |
 | Work on the public workshop | [Workshop app](./demos/README.md) |
 | Use the local MCP server | [ads-mcp package](./packages/ads-mcp/README.md) |
@@ -154,7 +164,9 @@ npm run playwright:install
 npm run release:check
 ```
 
-The release check validates metadata, installs a clean copy for all five supported agent targets, and exercises the package’s comparison, render-authority, evidence, structured-finding, and evaluation-loop contracts.
+The release check validates metadata, installs a clean copy for all five supported agent targets,
+and exercises the package's render-authority, evidence, structured-finding, and evaluation-loop
+contracts.
 
 The public workshop is a separate Next.js app:
 

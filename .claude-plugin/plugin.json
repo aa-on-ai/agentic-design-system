@@ -1,12 +1,13 @@
 {
   "name": "agentic-design-system",
-  "version": "1.3.1",
-  "description": "A design system for AI agents that build UI. 10 skills, routing logic, templates, and verification scripts that raise the quality floor on agent-generated interfaces.",
+  "version": "1.4.0",
+  "description": "A scoped design practice for coding agents. 11 skills, including Ember evidence reading, plus templates and rendered verification scripts.",
   "author": "aa-on-ai",
   "license": "MIT",
   "homepage": "https://github.com/aa-on-ai/agentic-design-system",
   "skills": [
     "skills/agentic-design-system",
+    "skills/ember",
     "skills/design-review",
     "skills/ux-baseline-check",
     "skills/ui-polish-pass",

@@ -120,22 +120,30 @@ for (const templatePath of [
   path.join(root, "skills", "agentic-design-system", "templates", "outcome-template.md"),
 ]) {
   const outcomeTemplate = await readFile(templatePath, "utf8");
-  for (const criterion of ["State coverage", "Accessibility", "Evidence"]) {
-    assert.match(
-      outcomeTemplate,
-      new RegExp(`\\| ${criterion} \\| pass/fail \\| pass/fail \\|`),
-      `${path.relative(root, templatePath)} must preserve all four rubric columns for ${criterion}`,
-    );
+  for (const criterion of [
+    "Right product, exact surface and successful user task",
+    "Understandable information/action order",
+    "Applicable states, accessibility, target browser/viewport behavior and usable delivery",
+  ]) {
+    assert.match(outcomeTemplate, new RegExp(criterion.replace("/", "\\/"), "i"),
+      `${path.relative(root, templatePath)} must preserve the outcome-based acceptance criterion: ${criterion}`);
   }
+  assert.match(outcomeTemplate, /Numeric rubric scores, if useful, remain\s+diagnostic/i,
+    `${path.relative(root, templatePath)} must keep numeric scores optional and diagnostic`);
 }
 
-console.log("[visual-foundation-v2] outcome rubric table shape passed");
+console.log("[visual-foundation-v2] outcome-based acceptance contract passed");
 
 const releaseWorkflow = await readFile(path.join(root, ".github", "workflows", "release-gate.yml"), "utf8");
 assert.match(
   releaseWorkflow,
   /npm run pawprint:states -- http:\/\/127\.0\.0\.1:3000/,
   "release-gate browser coverage must exercise Pawprint hash routing in Chromium",
+);
+assert.match(
+  releaseWorkflow,
+  /npm run homepage:hardening -- http:\/\/127\.0\.0\.1:3000/,
+  "release-gate browser coverage must exercise the current homepage in Chromium and WebKit",
 );
 assert.match(
   releaseWorkflow,

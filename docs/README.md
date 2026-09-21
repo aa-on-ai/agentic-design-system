@@ -7,7 +7,8 @@ Use this page to distinguish the current product path from release records and p
 - [Install ADS](INSTALL.md): project-local installation for Claude Code, Codex, Cursor, OpenClaw, and Hermes.
 - [Testing](../testing/README.md): source-checkout checks and when to run them.
 - [Philosophy](../PHILOSOPHY.md): why ADS treats design as an evidence-backed practice.
-- [Create a design workflow](../workflows/create-design-workflow.md): route a visual task into the appropriate skills and gates.
+- [Agentic Design System skill](../skills/agentic-design-system/SKILL.md): the single scoped execution loop.
+- [Ember skill](../skills/ember/SKILL.md): evidence reading for substantial design handoffs.
 
 ## Packages and contracts
 

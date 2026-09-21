@@ -2,6 +2,24 @@
 
 All notable changes to Agentic Design System are recorded here.
 
+## [1.4.0] - 2026-09-21
+
+### Added
+
+- Ember as the default evidence-reading voice for substantial ADS design handoffs, with portable
+  contracts, examples, source preflight, and Chromium/WebKit regression coverage.
+- First-use browser readiness instructions that distinguish installed skill files from a working
+  Playwright and Chromium runtime.
+
+### Changed
+
+- Replaced the broad rubric-first entrypoint with the scoped
+  `understand → choose → work → prove → decide` loop and task-triggered supporting skills.
+- Updated all eleven installable skills to the current scoped guidance and removed personal,
+  machine-specific, and repository-only assumptions from the public payload.
+- Clarified exact-checkout installation with an explicit branch selection, recorded revision, and
+  separate consumer project.
+
 ## [1.3.1] - 2026-07-19
 
 ### Changed

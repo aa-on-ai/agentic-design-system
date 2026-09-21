@@ -25,7 +25,11 @@ await Promise.all([
     path.join(vendorDir, 'capture.mjs'),
   ),
   cp(
-    path.join(repositoryRoot, 'skills', 'design-review', 'scripts', 'compare.mjs'),
+    path.join(repositoryRoot, 'skills', 'design-review', 'scripts', 'rendered-dot-candidates.mjs'),
+    path.join(vendorDir, 'rendered-dot-candidates.mjs'),
+  ),
+  cp(
+    path.join(packageRoot, 'vendor', 'compare.mjs'),
     path.join(vendorDir, 'compare.mjs'),
   ),
   cp(

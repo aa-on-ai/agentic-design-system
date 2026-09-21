@@ -1,36 +1,19 @@
 ---
 name: whimsical-design
-description: >
-  Creative pack — use only when a UI task explicitly needs personality, delight,
-  brand expression, marketing/editorial energy, or a non-default visual direction.
-  Skip for utility UI unless the default-safe output is the problem.
+description: Develop purposeful personality, delight or brand expression when requested or established by the brief. Skip routine utility UI and settled product aesthetics.
 ---
 
 # Whimsical Design Skill
 
-## ⚠️ Creative Pack — NOT auto-apply
+## Conditional specialist
 
-This skill is part of the creative pack. Do NOT apply it by default on every visual task.
+Use when the requested experience calls for personality, delight or expressive brand direction. A marketing page, portfolio or variation exercise is not sufficient on its own: the user job and brief must support the choice. Skip routine utility UI, state repairs and settled aesthetics. ADS owns the task and review; do not start another loop.
 
-**Use ONLY when at least one is true:**
-- user explicitly asks for personality, delight, whimsy, or brand expression
-- task is marketing, landing page, portfolio, launch, or editorial
-- the default/safe output is clearly the problem (everything looks the same)
-- multiple creative directions are being explored on purpose
+Recover the desired character and any accepted examples before inventing an aesthetic. Calm, static and familiar can be the right result. No decorative dots or all-caps visual treatments; preserve current user preferences and project tokens. Techniques below are options, not required ingredients.
 
-**Do NOT use when:**
-- building utility UI, admin tools, settings pages, or internal tools
-- the product already has a clear design language you should match
-- the default aesthetic is already appropriate for the product category
-- task is primarily about structure, states, or production hardening
+## The bar
 
-If in doubt, skip this skill. Core skills (design-review, ux-baseline-check, ui-polish-pass) are always safe. This one requires judgment about whether "push past safe" is actually what the product needs.
-
-## When It Applies
-Design-review catches quality problems. This skill pushes toward delight. Use alongside `<skills-root>/design-review/SKILL.md` when the triggers above are met.
-
-## The Bar
-Would someone screenshot this and send it to a friend? Would it make them smile? If no, push further.
+Does the chosen character help this audience understand, remember or enjoy the experience without obstructing the task? Novelty and the agent's smile test are not user acceptance.
 
 ## Core Principles
 
@@ -41,26 +24,14 @@ Default away from corporate SaaS. Toward warmth, personality, surprise. Think: t
 - Personality in empty states, loading screens, error messages
 - Small details that reward people who look closely
 
-### 2. Juice
-Everything should feel alive. Static interfaces are dead interfaces.
-- Micro-interactions on hover, click, drag
-- Subtle spring animations on state changes
-- Parallax, bob, breathe — things that move even when idle
-- Sound design where appropriate (click, whoosh, chirp)
-- The difference between "functional" and "delightful" is 50ms of easing
+### 2. Responsive character
 
-**Concrete recipes:**
-- Hover on cards: `scale(1.02)` + subtle shadow increase + 150ms ease-out
-- Button press: `scale(0.97)` for 100ms, then back. feels tactile.
-- Page entrance: stagger children with 50ms delay each, fade+translateY(8px), 300ms ease-out
-- Status indicators: pulse animation on "live" items (opacity 1→0.4→1, 2s infinite)
-- Charts: animate data points in on mount, left-to-right, 400ms ease-out with 30ms stagger
-- Hover on table rows: background-color transition 150ms + slight translateX(2px) to feel "picked up"
-- Toggle switches: spring physics (slight overshoot on slide, ~200ms)
-- Empty states: gentle floating animation on the illustration (translateY ±4px, 3s ease-in-out infinite)
+Meaningful feedback can reinforce tactility or personality. Use [web-animation-design](../web-animation-design/SKILL.md) for timing, interruption, reduced motion and target-browser verification. Preserve no-motion for high-frequency controls. Do not add idle bobbing, perpetual pulses, moving table rows or animated data simply to make a surface feel alive.
+
+Optional recipes include subtle press feedback on a suitable control, a bounded reveal that explains new content, or a gesture-driven spring when the brief permits it. Match existing tokens, preserve keyboard/focus and do not delay real content. Sound is opt-in and must not be necessary to understand the result.
 
 ### 3. Bold Aesthetic Commitment
-Before writing a single line of code, commit to a specific aesthetic direction. not "clean and modern" — that's a non-decision. pick an extreme and execute it with intention:
+For a new expressive direction, name a specific aesthetic in the existing brief. Reuse a settled direction rather than forcing another decision. Possibilities include:
 
 - brutally minimal (nothing that doesn't earn its place)
 - maximalist chaos (dense, layered, overwhelming in the best way)
@@ -72,22 +43,21 @@ Before writing a single line of code, commit to a specific aesthetic direction. 
 - brutalist/raw (exposed structure, no decoration, confrontational)
 - industrial/utilitarian (functional, dense, no-nonsense)
 
-the key is intentionality, not intensity. bold maximalism and refined minimalism both work. what doesn't work is the timid middle — the agent default of "a little of everything."
+Intentionality matters more than intensity. A restrained treatment can be the most specific choice; avoid an arbitrary mixture of unrelated styles.
 
-write one sentence describing your aesthetic direction before building. if you can't articulate it, you haven't committed.
+Make a direction check only if the missing choice is material. Do not turn a scoped craft edit into an aesthetic interview.
 
 ### 4. Background Atmosphere
-agents default to flat solid color backgrounds. that's the single biggest "AI built this" tell after card grids. backgrounds create mood before any content loads.
+A background can establish mood. Keep flat color when it supports clarity; add texture only if it contributes to the intended material or atmosphere.
 
 techniques:
-- **noise/grain texture** — `background-image: url("data:image/svg+xml,...")` with a subtle noise pattern at 3-5% opacity. makes flat colors feel tactile.
-- **gradient mesh** — 2-3 radial gradients layered at low opacity. creates depth without being gaudy.
-- **subtle pattern** — dots, lines, or geometric shapes at 2-4% opacity. adds texture without distraction.
-- **layered transparencies** — overlapping semi-transparent shapes in the background. creates depth and atmosphere.
+- **noise/grain texture** ; `background-image: url("data:image/svg+xml,...")` with a subtle noise pattern at 3-5% opacity. makes flat colors feel tactile.
+- **gradient mesh** ; 2-3 radial gradients layered at low opacity. creates depth without being gaudy.
+- **subtle pattern** ; lines or geometric shapes at 2-4% opacity. adds texture without distraction.
+- **layered transparencies** ; overlapping semi-transparent shapes in the background. creates depth and atmosphere.
 
 ```css
-/* noise texture overlay — canonical copy of this recipe; world-build Layer 1 reuses the same
-   SVG data-URI as a fixed full-screen variant. If you change it here, sync it there. */
+/* noise texture overlay */
 .textured {
   position: relative;
 }
@@ -112,9 +82,9 @@ techniques:
 don't: use these on every surface. use them on the page background and hero sections. inner components should be clean.
 
 ### 5. Craft Signals
-The opposite of "AI generated this." Every surface should feel touched by a human.
+Choose only craft details that fit the product and reference. These are possible techniques, not provenance or quality tests:
 - Grain textures, noise overlays, subtle paper feel
-- Intentional imperfection — slightly uneven, hand-placed, organic
+- Intentional imperfection ; slightly uneven, hand-placed, organic
 - Serif accents mixed with clean sans (not all one or the other)
 - Asymmetric layouts that feel composed, not random
 - Custom illustrations over stock icons where possible
@@ -122,7 +92,7 @@ The opposite of "AI generated this." Every surface should feel touched by a huma
 
 ### 6. Color With Feeling
 Color should create mood, not just differentiate elements.
-- **Dominant + accent, not evenly distributed** — one dominant color owns the page. one sharp accent draws attention to what matters. a timid, evenly-spread palette is an agent default. commit: what's the ONE color someone remembers?
+- **Dominant + accent, not evenly distributed** ; one dominant color owns the page. one sharp accent draws attention to what matters. a timid, evenly-spread palette is an agent default. commit: what's the ONE color someone remembers?
 - Studio Ghibli palettes: warm earth tones, saturated sky blues, forest greens
 - Pantone-chip energy: specific, intentional, named
 - Avoid: gray-on-white corporate void, neon-on-dark "developer tool"
@@ -131,76 +101,52 @@ Color should create mood, not just differentiate elements.
 **Concrete recipes:**
 - Warm light mode: background `#FAFAF8` (not pure white), text `#1A1A1A` (not pure black), accent `#E8723A` (warm orange) or `#2D6A4F` (forest green)
 - Cozy dark mode: background `#1C1917` (warm black, not zinc-900), text `#E7E5E4`, accent `#F59E0B` (amber) or `#818CF8` (soft indigo)
-- Data viz palette (warm): `#E8723A`, `#2D6A4F`, `#D4A373`, `#588157`, `#BC6C25` — earthy, distinct, accessible
-- Data viz palette (cool): `#3B82F6`, `#8B5CF6`, `#06B6D4`, `#6366F1`, `#14B8A6` — techy but not cold
+- Illustrative data palette (warm, verify series separation and contrast in context): `#E8723A`, `#2D6A4F`, `#D4A373`, `#588157`, `#BC6C25` ; earthy; accessibility is not established by the hex values alone
+- Data viz palette (cool): `#3B82F6`, `#8B5CF6`, `#06B6D4`, `#6366F1`, `#14B8A6` ; techy but not cold
 - Status colors: success `#16A34A` (not neon green), warning `#D97706` (not yellow), error `#DC2626` (not pink), info `#2563EB`
-- Gradient (subtle, not gaudy): `from-amber-50 to-orange-50` for warm sections, `from-slate-50 to-blue-50` for cool sections — backgrounds only, never on text
+- Gradient (subtle, not gaudy): `from-amber-50 to-orange-50` for warm sections, `from-slate-50 to-blue-50` for cool sections ; backgrounds only, never on text
 
 ### 7. Typography as Character
 Type carries personality before anyone reads a word.
 - Mix weights dramatically (thin headlines + chunky body, or vice versa)
-- Consider display faces for headers — not just system fonts
+- Consider display faces for headers ; not just system fonts
 - Letterspacing and line-height are design decisions, not defaults
 - Monospace for data/code, but make it feel intentional (not "I forgot to style this")
 
 ## References (study these)
 
 **Product / Physical**
-- Teenage Engineering — products as objects of desire, every surface designed
-- Panic / Playdate — joy in every interaction, surprise and delight as core values
-- Nothing Phone — glyphs, transparency, making tech feel human
+- Teenage Engineering ; products as objects of desire, every surface designed
+- Panic / Playdate ; joy in every interaction, surprise and delight as core values
+- Nothing Phone ; glyphs, transparency, making tech feel human
 
 **Digital**
-- Perplexity marketing pages — confident whitespace, editorial feel, illustrations
-- Linear changelog — density with craft, every detail considered
-- Vercel ship pages — motion, drama, typographic confidence
-- Raycast — command palette as art form
-- Arc Browser — sidebar as expression
+- Perplexity marketing pages ; confident whitespace, editorial feel, illustrations
+- Linear changelog ; density with craft, every detail considered
+- Vercel ship pages ; motion, drama, typographic confidence
+- Raycast ; command palette as art form
+- Arc Browser ; sidebar as expression
 
 **Visual Language**
-- Old Apple ads (Think Different era) — simplicity with soul
-- Studio Ghibli color grading — warm, lived-in, natural light
-- Indie game UIs (Celeste, Hollow Knight, Slay the Spire) — personality in every pixel
-- Poolsuite / Poolsuite FM — retro-futurism, nostalgia as design language
+- Old Apple ads (Think Different era) ; simplicity with soul
+- Studio Ghibli color grading ; warm, lived-in, natural light
+- Indie game UIs (Celeste, Hollow Knight, Slay the Spire) ; personality in every pixel
+- Poolsuite / Poolsuite FM ; retro-futurism, nostalgia as design language
 
-## Anti-Patterns (NEVER DO THESE)
+## Patterns to question in context
 - Glassmorphism for its own sake (blur ≠ design)
 - Neon gradients as a substitute for personality
 - Generic card grids with drop shadows
-- Bootstrap energy (you know it when you see it)
+- Unexamined framework styling that conflicts with the intended product
 - "Clean and modern" as the entire design brief
-- Stock illustrations from undraw/humaaans (everyone uses these)
+- Generic imagery that does not explain this product
 - Gray-200 backgrounds with gray-300 borders everywhere
 - Tailwind defaults without customization
 - Cookie-cutter hero sections (headline + subhead + CTA + mockup)
 - Animations that don't serve meaning (spinning logos, floating shapes)
 
-## Pre-Flight Checklist (run alongside design-review)
+## Review within ADS
 
-### Whimsy Check
-- [ ] **The smile test** — does this make you smile? Would you show someone?
-- [ ] **Personality audit** — remove one element. Does it still feel like "us"? If yes, you haven't gone far enough.
-- [ ] **Empty state check** — what happens when there's no data? Is it delightful or depressing?
-- [ ] **Error state check** — is the error message human? Funny? At least warm?
-- [ ] **Hover state check** — does hovering over things feel rewarding?
+Inspect the selected character against the original brief and preserve what already works. Check legibility, primary action, truthful error/empty-state copy, responsive composition and any actual motion. Remove decoration that competes with content. Texture, multiple fonts, animation and easter eggs are not acceptance requirements.
 
-### Craft Check
-- [ ] **Texture** — is there grain, noise, or tactile quality? Or is it flat vectors on white?
-- [ ] **Typography** — are font choices intentional? Is there contrast in scale/weight?
-- [ ] **Color** — does the palette create a mood? Could you name the vibe in one word?
-- [ ] **Motion** — do transitions have easing? Do elements enter and exit with intention?
-- [ ] **Detail** — is there at least one "easter egg" level detail someone might notice on second look?
-
-### Kill Switch
-- [ ] **Not whimsy for whimsy's sake** — does the personality serve the product or distract from it?
-- [ ] **Readable** — is body text still legible? Are CTAs still clear?
-- [ ] **Accessible** — does color contrast pass WCAG? Do animations respect prefers-reduced-motion?
-- [ ] **Performance** — are animations GPU-accelerated? Are textures optimized?
-
-## Updating This Skill
-After design reviews where the user gives feedback on visual personality, tone, or craft:
-- What delighted the user → add to Principles or References
-- What felt flat → add to Anti-Patterns
-- Specific decisions (texture style, color choice, animation timing) → `DESIGN.md` or the project decision log
-
-The goal: every build should feel more "us" than the last.
+Record accepted examples with the specific reason they work and their actual approval status. Classify feedback: explicit preference, project decision, repeated defect or one-off correction. Update the existing owner only when justified; do not add a permanent rule after every build.

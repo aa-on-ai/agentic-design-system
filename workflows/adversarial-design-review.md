@@ -8,13 +8,15 @@ installed agentic-design-system skill and `<skills-root>` is its parent director
 
 ## When to use
 
-Before merging or shipping notable UI; when a build "feels fine" and you want a skeptic; whenever
-the builder would otherwise self-clear its own quality.
+For requested independent critique or high-judgment work where it adds value, when delegation is
+authorized and the receiving runtime exists. This is part of the ADS task budget, not a mandatory
+second loop for all visual work. If independence is unavailable, label the review accordingly and
+retain the actual human judgment needed.
 
 ## Read first
 
 - `<skills-root>/design-review/SKILL.md` (the quality gate + pre-flight checklist)
-- `<orchestrator-skill>/SKILL.md` → the profile-locked 4-criteria rubric
+- `<orchestrator-skill>/SKILL.md` → the brief, judgment order and shared budget
 - `<orchestrator-skill>/references/structured-findings.md` → diagnostic categories, severity, and evidence schema
 - [`templates/grader-report-template.md`](../templates/grader-report-template.md) (the verdict shape)
 - the task's outcome artifact ([`templates/outcome-template.md`](../templates/outcome-template.md)), if one exists
@@ -28,15 +30,18 @@ the builder would otherwise self-clear its own quality.
      --states default,empty,loading,error --out evidence/<slug>
    ```
 
-   Read both `evidence/<slug>/evidence.json` and
-   `evidence/<slug>/modal-interaction-receipt.json`. If any declared dialog is `failed` or
-   `not_verified`, or the receipt is missing, the review cannot return `satisfied`.
+   Select only applicable required states. Read `evidence/<slug>/evidence.json` and the actual
+   interaction evidence. Required dialog behavior needs focus, containment, Escape, focus-return
+   and inert-background proof, using site-specific interactions when the capture cannot reach it.
+   A missing required interaction receipt blocks completion; do not assume every capture version
+   emits a file named `modal-interaction-receipt.json`.
 
 2. **Open a separate critic context** — a fresh subagent or session that did not write the code.
    Give it the outcome + the captured screenshots (`evidence/<slug>/*.png`) and the `evidence.json`
    gates, not the builder's commentary.
-3. **Prompt it to refute, not to praise:** "Find the strongest reasons this fails the outcome and
-   the rubric. Default to needs_revision when uncertain." Score each of the 4 rubric criteria. For
+3. **Judge the requested outcome:** inspect product/task fit, IA, reference fidelity, craft, then
+   behavior/delivery. Identify what should be preserved as well as failures. Distinguish uncertainty
+   from an evidenced defect; scores are optional diagnostics, not the verdict. For
    every critique, emit a structured finding with category, severity, rubric row, state,
    breakpoint, exact artifact, concrete target, optional normalized region, observation, and
    evidence. A blocker cannot return `satisfied`.
@@ -61,8 +66,8 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 
 - The `capture.mjs` screenshots + `evidence.json` the critic actually judged (axe, overflow,
   main/live-region semantics, CLS, state, and touch-target gates included).
-- `modal-interaction-receipt.json`; when dialogs are declared it must deterministically verify
-  initial focus, Tab/Shift+Tab containment, Escape dismissal, focus return, and inert background.
+- Actual interaction receipts for required dialogs: initial focus, Tab/Shift+Tab containment,
+  Escape dismissal, focus return and inert background. Unreachable is not verified.
 - The three checks' output.
 - Each critic finding tied to a rubric row, state, breakpoint, exact screenshot, and concrete
   target or normalized screenshot region — no free-floating "feels off."
@@ -73,14 +78,14 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <file.tsx>
 ## Output
 
 A filled `templates/grader-report-template.md` with a verdict:
-`satisfied` / `needs_revision` / `max_iterations` / `failed`, the rubric scores, the structured
+`satisfied` / `needs_revision` / `max_iterations` / `failed` (mapped to ADS ready/needs repair/blocked), optional diagnostic scores, the structured
 findings table, and a bounded, testable next-revision prompt containing every blocker and major
 finding id if not satisfied, plus the complete coverage ledger.
 
 ## Blocked when
 
-- No outcome is defined — you cannot judge against nothing. Write the outcome first (one pass of
-  `templates/outcome-template.md`), then review.
+- A material outcome/surface ambiguity remains after reading the request and current source.
+  An existing brief is sufficient; the template is optional, not a required new document.
 - The artifact can't be rendered/screenshotted, so the critic would be judging source only — say so.
 - A required modal interaction receipt is missing, `failed`, or `not_verified`.
 
@@ -88,5 +93,5 @@ finding id if not satisfied, plus the complete coverage ledger.
 
 Verdict is `satisfied`, or `max_iterations` is hit and the remaining gaps are recorded for a human.
 **The builder does not get to overrule the separate critic by re-asserting the work is done** —
-that defeats the purpose. If scores plateau across revisions, escalate to a human decision rather
-than manufacturing a pass.
+that defeats the purpose. At the shared budget boundary, retain unresolved findings and the precise decision instead of
+manufacturing a pass or starting another reviewer loop.

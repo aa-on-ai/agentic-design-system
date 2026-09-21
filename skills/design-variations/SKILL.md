@@ -1,6 +1,6 @@
 ---
 name: "design-variations"
-description: "Explore 3-5 distinct UI directions in one browser artifact before implementation; use when direction is undecided."
+description: "Explore meaningful alternatives when a UI direction or interaction choice is unresolved or options are requested. Skip settled directions and small fixes."
 ---
 
 # Design Variations
@@ -19,7 +19,7 @@ Skip it when:
 - the difference is only a single token or style value
 - the user asked to implement one specified reference closely
 
-If a visual reference matters, complete the reference-intake contract before creating variants.
+If a desired visual reference matters, use [visual-reference-calibration](../visual-reference-calibration/SKILL.md) to recover what to borrow. Reuse prior answers; do not add a second intake interview.
 
 ## Workflow
 
@@ -29,9 +29,8 @@ If a visual reference matters, complete the reference-intake contract before cre
    - Identify the invariant content and state every variant will share.
 
 2. Choose the variant count.
-   - Default to four.
-   - Use three for a narrow decision.
-   - Use five only when the space is genuinely broad.
+   - Use the fewest alternatives that resolve the actual choice, often two.
+   - Explore more only when there are genuinely distinct theses, not to satisfy a quota.
    - Honor an explicit user-specified count.
 
 3. Name distinct theses.
@@ -41,7 +40,8 @@ If a visual reference matters, complete the reference-intake contract before cre
    - A recolor, font swap, or spacing adjustment is not a distinct direction.
 
 4. Build one disposable browser artifact.
-   - Start from `assets/variations.html`.
+   - Use `assets/variations.html` for a standalone comparison when appropriate.
+   - For an implemented app comparison, use [browser-variant-workflow](../browser-variant-workflow/SKILL.md) as the technique beneath this decision, not another variant/review loop.
    - Keep it self-contained unless the task requires project assets.
    - Show one complete direction at a time through an accessible switcher.
    - Make each direction coherent enough to judge in context.
@@ -51,19 +51,19 @@ If a visual reference matters, complete the reference-intake contract before cre
    - Render the artifact at the relevant desktop and mobile widths.
    - Capture each direction with the same state and viewport.
    - Check overflow, keyboard navigation, labels, focus, and basic contrast.
-   - Score each direction with the Agentic Design System rubric.
+   - Compare the user job, information order, visual direction and behavior using the existing ADS review. Do not substitute a composite self-score for a useful choice.
    - Judge conceptual distinctness from the theses and interaction model. Pixel difference alone is not evidence of meaningful divergence.
 
 6. Present the decision.
    - Lead with one recommended direction and why.
    - Summarize the meaningful tradeoff of every direction.
-   - Ask the human to choose one, blend named elements, or reject the set.
-   - Do not implement production code before a direction is chosen unless explicitly requested.
+   - If human direction is still needed, present the concrete choice once. Honor prior direction and any instruction to select and proceed autonomously.
+   - Do not invent an extra approval gate for already-authorized implementation.
 
 7. Promote only the winner.
    - Rebuild the selected direction in the real stack.
    - Run the normal ADS core chain and rendered evidence gates.
-   - Remove the disposable artifact and unused variants unless the user wants a review artifact preserved.
+   - Remove your temporary implementation scaffolding after promotion. Preserve useful comparison evidence with the task; do not delete existing user artifacts.
 
 ## Verification contract
 
@@ -87,5 +87,4 @@ Return:
 - Invariants shared across variants
 - Rendered evidence
 - Risks or unresolved questions
-- Exact reply options
 - Artifact path

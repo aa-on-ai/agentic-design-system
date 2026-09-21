@@ -1,6 +1,6 @@
 # grader report
 
-the artifact emitted by a separate grader pass. the builder should not self-clear final quality on non-trivial UI work.
+Optional artifact for substantial authorized independent review. Label the actual reviewer and evidence; a self-review is not independent, and this format is not required for tiny edits.
 
 ---
 
@@ -19,24 +19,26 @@ the artifact emitted by a separate grader pass. the builder should not self-clea
 
 one paragraph. be direct. say whether the artifact clears the outcome, not whether effort was good.
 
-## rubric scores
+## Outcome judgment
 
-| criterion | utility / expressive weight | score | verdict | note |
-|---|---:|---:|---|---|
-| Functionality | 35% / 15% |  | pass / fail |  |
-| Design Quality | 30% / 35% |  | pass / fail |  |
-| Craft | 25% / 20% |  | pass / fail |  |
-| Originality | 10% / 30% |  | pass / fail |  |
-| Intent alignment | pass/fail |  | pass / fail | accomplish/notice/feel are visible in the artifact and support each other |
-| Required states covered | pass/fail/n/a |  | pass / fail / n/a | loading, empty, error, focus, and mobile states are covered or explicitly not applicable |
-| Accessibility | pass/fail |  | pass / fail |  |
-| Evidence attached | pass/fail |  | pass / fail | screenshots or preview link for visible changes; diff for code changes |
+Review in order. Record the observation and artifact supporting each applicable criterion:
+
+| criterion | outcome | evidence / remaining decision |
+|---|---|---|
+| Intended product, surface and user task | pass / fail / unverified | |
+| Information/action structure and return context | pass / fail / unverified / n/a | |
+| Reference fidelity and chosen visual direction | pass / fail / unverified / n/a | |
+| Craft and component consistency | pass / fail / unverified | |
+| Applicable behavior, states, accessibility and delivery | pass / fail / unverified | |
+
+Name baseline strengths to preserve. Numeric Foundation rubric scores may be included as optional
+diagnostics; they cannot clear a failed task, unverified requirement or material finding.
 
 ## structured findings
 
-the four weighted scores remain the verdict layer. use this table to say exactly what failed,
-where it failed, and which rendered artifact proves it. use an empty table only when the grader
-found no minor or material issues.
+The qualitative outcome verdict governs. Use this table to locate supported failures; `rubric row`
+may name a task-specific criterion such as product fit or IA, without numeric scoring. Use an empty
+table when there are no supported findings; do not manufacture criticism.
 
 | id | category | severity | rubric row | state @ breakpoint | target / region | observation | evidence |
 |---|---|---|---|---|---|---|---|
@@ -105,7 +107,7 @@ list judgment calls the grader cannot resolve. if none, write `none`.
 | accessibility-check.py | pass / fail / not run |  |
 | build/typecheck | pass / fail / not run |  |
 | screenshots / preview | pass / fail / not available |  |
-| modal interaction receipt | pass / fail / not verified / n/a | receipt path; initial focus, Tab/Shift+Tab containment, Escape, focus return, inert background. fail/not verified blocks satisfied |
+| modal contract | pass / fail / not verified / n/a | initial focus, Tab/Shift+Tab containment, Escape, focus return, inert background |
 | pointer-gated hover motion | pass / fail / not reviewed / n/a | motion-bearing hover rules use fine-pointer capability gates |
 | motion retrigger | pass / fail / not reviewed / n/a | second trigger inside the animation window retargets or deliberately debounces |
 

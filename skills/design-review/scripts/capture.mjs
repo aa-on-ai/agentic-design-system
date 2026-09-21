@@ -31,6 +31,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { readRenderedDotCandidates } from './rendered-dot-candidates.mjs';
 
 const SETUP_SCRIPT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'setup-capture.mjs');
 
@@ -806,6 +807,7 @@ async function main() {
         }
 
         const computedFacts = await readComputedFacts(page, opts.selectors);
+        computedFacts.visualFoundation.dotGlyphCandidates = await page.evaluate(readRenderedDotCandidates);
         const { ungatedHoverMotion, ...facts } = computedFacts;
 
         // overflow check: does content exceed the viewport horizontally?

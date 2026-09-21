@@ -1,17 +1,30 @@
 ---
-name: ux-baseline-check
-description: >
-  Core pack — always active for visual work. Enforces UX quality standards on any
-  screen, flow, form, or dashboard. Ensures nothing ships with missing states.
-  Auto-activates alongside design-review for all frontend work.
+name: "ux-baseline-check"
+description: "Define and verify applicable UI states, responsive and accessible behavior, and reusable component contracts for changed screens, flows, and primitives."
 ---
 
 # UX Baseline Check
 
-## Core Pack — Always Active
-This is a core skill. Apply it on ALL visual and frontend work alongside design-review.
+## Role and scope
 
-Every screen ships with ALL states covered. No exceptions. This is the minimum bar.
+The ADS state and component-contract owner. Select states from the requested behavior and product
+contract, not every state that can be imagined. A tiny copy or spacing edit checks its affected
+behavior without inventing loading, forms, permissions or additional screens. Use the ADS task
+budget; this inventory is part of the same work/review pass, not a separate ceremony.
+
+## Component contract before duplication
+
+Before introducing a new reusable component or duplicating one, recover or define its contract
+from existing code/types/stories. Do not require a separate document when those already answer:
+
+- anatomy and content slots
+- properties and meaningful variants
+- applicable data, interaction, validation, loading, error, and success states
+- responsive behavior at target breakpoints
+- keyboard, pointer, touch, and semantic behavior
+- the existing component and tokens it reuses
+
+Every instance should follow the same contract. A component without this contract is not ready to proliferate.
 
 ## The State Inventory
 
@@ -19,31 +32,29 @@ Before any page or component is "done", verify each applicable state exists:
 
 ### 1. Data States
 - [ ] **Empty** — no data yet. Helpful message + clear CTA, not a blank screen
-- [ ] **Loading** — skeleton, spinner, or shimmer. Never a white flash
+- [ ] **Loading** — preserve content geometry and expose genuine pending work; do not delay cached/fast data to show a loader
 - [ ] **Loaded** — the happy path, obviously
 - [ ] **Error** — API failure, network issue. User-friendly message + retry action
 - [ ] **Partial** — some data loaded, some failed. Don't hide what works
 - [ ] **Long content** — what happens with 200 items? 2000-character names? Test it
 
 ### 2. Interaction States
-- [ ] **Hover** — every clickable element has a hover state
+- [ ] **Hover** — appropriate pointer feedback; do not make touch or keyboard use depend on it
 - [ ] **Focus** — keyboard navigation works, focus rings visible
 - [ ] **Active/pressed** — buttons respond to clicks visually
-- [ ] **Disabled** — grayed out with clear reason why (tooltip or helper text)
+- [ ] **Disabled** — native semantics and a legible state; explain the reason in persistent nearby copy when needed, not a tooltip that requires focusing a disabled control
 - [ ] **Selected** — multi-select, current tab, active filter all visually distinct
-- [ ] **Adjacent-action consistency** — when a state is read-only, disabled, offline,
-  permission-limited, or destructive, inspect every nearby primary, secondary, toolbar, and inline
-  action. Remove, relabel, or visibly explain contradictions; use native `disabled` semantics when
-  an inactive control remains visible, and preserve active actions in unaffected states.
 
 ### 3. Form States
-- [ ] **Validation** — inline errors on blur, not just on submit
+- [ ] **Validation** — timely field-level guidance, with blur/submit timing suited to the task; do not reject unfinished input prematurely
 - [ ] **Required fields** — clearly marked
 - [ ] **Success feedback** — user knows their action worked (toast, inline, redirect)
-- [ ] **Destructive confirmation** — delete/remove actions require confirmation
+- [ ] **Destructive recovery** — prefer undo for reversible actions; confirm genuinely irreversible or consequential actions, retaining the product’s authority model
 - [ ] **Autofill** — doesn't break layout when browser autofills
 
 ### 4. Responsive
+
+Use supported target breakpoints; these are example widths, not four mandatory captures:
 - [ ] **Mobile (375px)** — usable, not just visible. Touch targets ≥48px with ≥8px spacing between them
 - [ ] **Tablet (768px)** — layout adapts, not just shrinks
 - [ ] **Desktop (1280px)** — the primary target, looks intentional
@@ -52,7 +63,7 @@ Before any page or component is "done", verify each applicable state exists:
 ### 5. Accessibility
 - [ ] **Keyboard nav** — can reach all interactive elements with Tab
 - [ ] **Screen reader** — semantic HTML, aria-labels on icons, alt text on images
-- [ ] **Color contrast** — 4.5:1 minimum for text (use WebAIM checker)
+- [ ] **Color contrast** — measure final composited colors against the applicable text/control requirement; do not assume opacity percentages prove contrast
 - [ ] **No color-only indicators** — don't rely solely on red/green for status
 
 ### 6. Edge Cases
@@ -61,19 +72,19 @@ Before any page or component is "done", verify each applicable state exists:
 - [ ] **Stale data** — timestamps or refresh indicators when data might be outdated
 - [ ] **Concurrent edits** — what happens if two people edit the same thing?
 
-## How to Use
+## Adjacent-action consistency
 
-Run this checklist AFTER the feature works but BEFORE design review. For each missing state, either:
-1. **Implement it** (preferred)
-2. **Document it as a known gap** and tell the user explicitly
+For changed readonly, disabled, offline, permission-limited or destructive states, inspect every
+nearby primary, secondary, toolbar and inline action at the affected breakpoints. Labels, emphasis,
+enabledness, native semantics and helper text must agree with the state. Remove, disable, relabel
+or explain a contradiction while preserving valid actions in unaffected states. Verify again after
+repair; fixing only the named control is insufficient.
 
-Never silently skip a state. If it's intentionally deferred, say so.
+## Use within the ADS pass
 
-## Quick Pass vs Full Pass
-
-**Quick pass** (components, small features): States 1-2 only
-**Full pass** (pages, flows, shipping features): All 6 sections
-
-## The Test
-
-Ask yourself: "What happens if the network is slow, the data is weird, the user is on a phone, or they're using a keyboard?" If you don't know, you haven't finished.
+Identify applicable states before implementation and exercise them before the design verdict.
+A small form change still needs its relevant form/accessibility checks; a static page does not
+need fabricated async states. Required missing states stay open and block claiming the feature
+complete. Record unavailable evidence or an intentional product deferral separately from a pass.
+Use a real browser for meaningful interaction changes, including the target mobile/WebKit surface
+when applicable. Source strings and screenshots alone do not establish state transitions.
