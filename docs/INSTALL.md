@@ -9,6 +9,7 @@ handoffs. Skill installation does not edit project instructions or install brows
 - Node.js 20 or newer with `npx`
 - A project directory where the agent can read local skills
 - Python 3 only when using the optional source-check scripts
+- For Hermes project discovery, a Git checkout and the native `hermes` executable
 
 ## Choose your agent
 
@@ -33,6 +34,28 @@ npx skills add aa-on-ai/agentic-design-system --agent hermes-agent --copy --yes
 
 `--copy` creates a self-contained project install rather than links to an installer cache. The
 command also creates `skills-lock.json`; commit it when you want reproducible team installs.
+
+### Activate a Hermes project install
+
+The skills CLI installer ID and the Hermes executable have different names. Use `hermes-agent`
+with `npx skills`, as shown above, then use the native `hermes` CLI to trust the consumer Git
+checkout:
+
+```bash
+git rev-parse --show-toplevel
+hermes skills trust
+hermes skills list
+```
+
+Hermes intentionally ignores `.hermes/skills/` and `.agents/skills/` in untrusted repositories.
+It resolves the project from the nearest `.git` ancestor, so a plain directory with copied skill
+files is not a discoverable Hermes project. `hermes skills trust` writes the resolved repository
+root to the active Hermes profile after you have reviewed the checkout. The final listing must
+include `agentic-design-system` and `ember`.
+
+Start a new Hermes session from inside that trusted repository. Hermes fixes the working project
+and skill index at session start, so installing or trusting skills does not retrofit an already
+running session.
 
 ## Verify the files
 
@@ -61,9 +84,11 @@ For a direct filesystem check, confirm `agentic-design-system/SKILL.md`, `ember/
 skill directory. Keep all eleven sibling skill directories together because Ember uses the ADS
 orchestrator and Foundation contract.
 
-The release matrix executes the agent-specific verification commands in [`integrations/`](../integrations/)
-for all five targets. File verification proves the skill payload is installed; it does not prove
-that a browser can launch.
+The release matrix executes the agent-specific file verification commands in
+[`integrations/`](../integrations/) for all five targets. File verification proves the skill
+payload is installed; it does not prove native runtime discovery or that a browser can launch.
+When Hermes is installed locally, run `npm run install:hermes-discovery` to exercise its trust gate
+and native skill listing in an isolated temporary profile.
 
 ## Prepare rendered review once per consumer project
 
@@ -156,4 +181,5 @@ cp -R /path/to/agentic-design-system/skills/. /path/to/consumer-project/<agent-s
 
 Use `.claude/skills/`, `.agents/skills/`, `skills/`, or `.hermes/skills/` from the matrix above.
 Verify all eleven skill directories, Ember's references, and the browser runtime before relying on
-rendered capture.
+rendered capture. A no-CLI Hermes copy still requires a Git checkout, `hermes skills trust`, and a
+fresh session from inside the repository.

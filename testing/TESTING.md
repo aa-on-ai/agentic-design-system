@@ -125,6 +125,17 @@ success ends with:
 install matrix passed: 5 agents x 11 skills, with Ember assets, contracts, routing, presets, executable consumer commands, portable instructional references, templates, workflow runbooks, and lockfiles verified
 ```
 
+This matrix verifies the copied payload, not native agent discovery. If the native Hermes CLI is
+installed, run the trust-gated discovery smoke separately:
+
+```bash
+npm run install:hermes-discovery
+```
+
+The smoke creates a temporary Git checkout and temporary `HOME`/`HERMES_HOME`, proves that
+untrusted `.hermes/skills/` are absent from `hermes skills list`, runs `hermes skills trust`, and
+then requires ADS and Ember in the native listing. It never edits the real Hermes profile.
+
 The GitHub release-gate workflow also starts the production demo and runs Pawprint direct hash-state
 coverage in Chromium and WebKit. This keeps the route-level state contract inside the release gate
 without making the package-only `npm run release:check` install or build the demo application.

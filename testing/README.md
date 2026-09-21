@@ -8,6 +8,18 @@ The frozen adjacent-action suite lives at `testing/regression/adjacent-actions-v
 append-only release regression for ADS behavior changes; see [`TESTING.md`](./TESTING.md) for the
 baseline, candidate, and CI commands.
 
+## Hermes project discovery smoke
+
+When the native Hermes CLI is installed, verify more than file placement with:
+
+```bash
+npm run install:hermes-discovery
+```
+
+The smoke uses a temporary Git checkout plus isolated `HOME` and `HERMES_HOME` directories. It
+checks the native trust boundary before and after `hermes skills trust` and does not start a model
+session or modify the real Hermes profile.
+
 ## eval-loop.ts — ADS on vs off (A/B)
 
 For each prompt in `prompts.json`, the same generator builds twice:

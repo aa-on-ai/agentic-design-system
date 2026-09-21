@@ -6,6 +6,7 @@
   "scripts": {
     "install:smoke": "testing/install-smoke.sh",
     "install:matrix": "testing/install-matrix.sh",
+    "install:hermes-discovery": "testing/hermes-discovery-smoke.sh",
     "release:metadata": "node testing/check-release-metadata.mjs",
     "release:check": "testing/release-check.sh",
     "render-eval:smoke": "node testing/render-eval-smoke.mjs",

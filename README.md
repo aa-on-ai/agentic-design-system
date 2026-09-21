@@ -45,6 +45,10 @@ Replace `codex` with the installer ID for your agent:
 
 The installer copies the skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. See the [installation guide](./docs/INSTALL.md) for verification, activation, updates, and a no-CLI fallback.
 
+Hermes requires one additional native activation step from a Git checkout: run
+`hermes skills trust`, then start a fresh Hermes session inside that repository. The
+`hermes-agent` value above is the skills installer ID; `hermes` is the native runtime command.
+
 ### 2. Give your agent a real product task
 
 ```text
