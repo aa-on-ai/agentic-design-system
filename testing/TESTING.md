@@ -206,5 +206,5 @@ feedback without layout shift, and the locked recovery invariants.
 
 ## archived eval fixtures
 
-historical source-judged results and case studies live under `docs/archive/pre-spine-evals/`.
+Historical source-judged results and case studies are preserved in [Git history](https://github.com/aa-on-ai/agentic-design-system/tree/652abef05fd507bc21ef0ef4c2ff7c8a7fa60589/docs/archive/pre-spine-evals).
 the current `testing/eval-loop.ts` renders both variants and treats source heuristics as advisory.

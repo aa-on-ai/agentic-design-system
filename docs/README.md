@@ -27,11 +27,10 @@ Use this page to distinguish the current product path from release records and p
 
 These directories are evidence from specific runs, not current installation instructions.
 
-## Historical material
+## Retained evidence and history
 
 - [`releases/`](releases/) contains version-specific release notes.
-- [`run-reports/`](run-reports/) contains dated implementation and verification records.
-- [`archive/`](archive/) contains superseded evaluation material retained for provenance.
-- [`variants/`](variants/) contains exploratory artifacts rather than supported product entrypoints.
+- [MCP v0.2 verification record](run-reports/2026-07-25-ads-mcp-v0.2.md) remains because `testing/mcp-lab-real-run.mjs` uses its source constraint for trace verification.
+- The example and evidence directories above support the public site and verification workflows; they are not installation instructions.
 
-Historical files are intentionally preserved. New users should begin with the current guides above, not infer current behavior from an old run report.
+Superseded evaluation fixtures, internal diaries, dated implementation reports, and unused explorations are available in [Git history](https://github.com/aa-on-ai/agentic-design-system/tree/652abef05fd507bc21ef0ef4c2ff7c8a7fa60589), rather than the current tree.

@@ -151,10 +151,10 @@ presets/       starter baselines for common product types
 testing/       install, behavior, evidence, and regression checks
 packages/      independently runnable integrations, including ads-mcp
 demos/         the public workshop and product examples
-docs/          current guides, release notes, evidence, and archive index
+docs/          current guides, release notes, and maintained evidence
 ```
 
-Historical fixtures and reports remain available for provenance. They live under `docs/archive/`, `docs/run-reports/`, and named evidence directories rather than defining the current getting-started path.
+Superseded evaluations, implementation diaries, and unused explorations are preserved in [Git history](https://github.com/aa-on-ai/agentic-design-system/tree/652abef05fd507bc21ef0ef4c2ff7c8a7fa60589). The current tree keeps supported guides and evidence referenced by the site or verification tools.
 
 ## Verify a source checkout
 
