@@ -373,7 +373,7 @@
 .assemblyLine li p { margin: 10px 0 0; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
 
 .result { display: grid; min-height: 600px; grid-template-columns: 0.82fr 1.18fr; }
-.resultCopy { display: flex; padding: 90px max(58px, calc((100vw - 1180px) / 2)); flex-direction: column; justify-content: center; background: var(--orange); }
+.resultCopy { display: flex; padding: 90px clamp(58px, 6vw, 96px); flex-direction: column; justify-content: center; background: var(--orange); }
 .resultCopy .eyebrow { color: #371208; }
 .resultCopy h2 { font-size: clamp(3rem, 5vw, 4.5rem); }
 .resultCopy h2 em { color: #522414; }

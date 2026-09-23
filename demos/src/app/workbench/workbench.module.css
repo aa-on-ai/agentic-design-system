@@ -202,7 +202,7 @@
   max-width: 620px;
   margin-bottom: 0;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(3.1rem, 4.2vw, 4.25rem);
+  font-size: clamp(3.1rem, 4.2vw, 4rem);
   font-weight: 520;
   letter-spacing: -0.048em;
   line-height: 0.98;
