@@ -1,0 +1,18 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 8.5,
+    "originality": 8.8,
+    "craft": 8.7,
+    "functionality": 8.8
+  },
+  "weightedScore": 8.68,
+  "priorFindingClosure": {
+    "id": "museum-foundation-v2-001",
+    "status": "closed",
+    "evidence": "The current empty captures show both record-specific toolbar actions disabled while Review approved requests remains enabled. Default preserves both toolbar actions, and error preserves Download condition report while disabling Approve transfer."
+  },
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}

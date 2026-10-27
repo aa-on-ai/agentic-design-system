@@ -1,0 +1,18 @@
+{
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 8.5,
+    "originality": 8.3,
+    "craft": 8.6,
+    "functionality": 8.8
+  },
+  "weightedScore": 8.5,
+  "priorFindingClosure": {
+    "id": "kitchen-foundation-v2-001",
+    "status": "closed",
+    "evidence": "Fire next course is visibly disabled in both repaired empty captures while Call station and Review reservations remain available."
+  },
+  "findings": [],
+  "failingRows": [],
+  "nextRevisionPrompt": ""
+}
