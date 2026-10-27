@@ -133,3 +133,11 @@
 .homepage .footer .footer-credit a:focus-visible{text-decoration:underline;text-decoration-thickness:2px}
 @media(hover:hover) and (pointer:fine){.homepage .footer .github-link:hover{text-decoration:none;background:var(--surface-raised);box-shadow:inset 0 1px 0 var(--edge),0 7px 16px -8px var(--shadow)}.homepage .footer .footer-credit a:hover{text-decoration:underline;text-decoration-thickness:2px}}
 @media(max-width:700px){.homepage .footer{grid-template-columns:1fr auto;row-gap:8px}.homepage .footer-copyright{grid-column:1;grid-row:1}.homepage .footer-links{grid-column:2;grid-row:1}.homepage .footer-credit{grid-column:1 / -1;grid-row:2}}
+
+/* Optional MCP setup stays secondary to the skill-pack installation. */
+.homepage .mcp-link{display:inline-flex;align-items:center;gap:12px;min-height:48px;color:var(--accent);font-size:14px;font-weight:600;text-decoration:none}
+.homepage .mcp-setup{margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
+.homepage .mcp-setup h3{font-size:17px;font-weight:600;margin:0 0 8px}
+.homepage .mcp-setup .mcp-link{margin-top:8px}
+.homepage .mcp-setup p{font-size:14px;color:var(--muted);max-width:38ch;margin:0;line-height:1.6}
+@media(hover:hover) and (pointer:fine){.homepage .mcp-link:hover{color:var(--ink)}}
