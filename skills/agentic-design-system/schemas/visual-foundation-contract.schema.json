@@ -73,7 +73,7 @@
           "type": "array",
           "prefixItems": [
             { "const": "existing-coherent-project-family" },
-            { "const": "licensed-nucleo" },
+            { "const": "explicit-licensed-project-preference" },
             { "const": "one-open-family" }
           ],
           "items": false,

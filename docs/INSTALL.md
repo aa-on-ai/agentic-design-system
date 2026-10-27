@@ -4,6 +4,26 @@ Install ADS from the consumer project where your coding agent will use it. The r
 eleven skills, including Ember, the evidence-reading voice used by default for substantial design
 handoffs. Skill installation does not edit project instructions or install browser dependencies.
 
+## Before you install
+
+Read the [orchestrator](../skills/agentic-design-system/SKILL.md) and the specialist instructions
+relevant to your task before letting an agent use them. Follow their linked scripts and references;
+a skill is instructions plus supporting files, not a sandbox or a guarantee of safe execution.
+
+- Review [what runs and what it changes](../skills/agentic-design-system/references/trust-and-customization.md#execution-inventory), including optional telemetry and browser interactions.
+- Check [documented influences and attribution](influences.md). Conceptual inspiration is not the same as copied source.
+- Try a disposable consumer project or an isolated checkout first, using the [exact-checkout route](#install-an-exact-checkout). A branch alone does not isolate dependency installs, browser actions, or external services. Use local fixtures/test accounts.
+- Set your [project taste and overrides](../skills/agentic-design-system/references/trust-and-customization.md#customize-the-design-direction) before the first task. Existing components and tokens remain the starting point.
+- Inspect the resulting file and dependency diff before adopting it. Installation does not authorize deployment, external writes, or paid model calls.
+
+A useful review-only request:
+
+```text
+Inspect this ADS checkout before installing it. Read the relevant SKILL.md files and linked
+scripts. Summarize commands, file writes, network access, documented credits, and conflicts
+with our design system. Do not install packages or change files yet.
+```
+
 ## Requirements
 
 - Node.js 20 or newer with `npx`

@@ -2,6 +2,26 @@
 
 ADS is assembled from public ideas and local dogfooding. These are influences, not vendored source files.
 
+## Reading this record
+
+This is the existing conceptual-influence record, not a complete source-provenance audit. The
+entries distinguish ideas from copied files; third-party dependencies and assets retain their own
+licenses. Do not infer borrowing from a similar visual style. When adapting source, record the
+exact source/revision, affected local file, changes, and required license/notice alongside it.
+
+Useful starting points in the current pack:
+
+- Intent/outcome ideas: `skills/agentic-design-system/templates/outcome-template.md`.
+- Project identity: `skills/agentic-design-system/SKILL.md` and its project-identity template.
+- Mobile review structure: `skills/design-review/references/mobile.md`.
+- Motion vocabulary: `skills/design-review/references/motion.md`, which also names Emil Kowalski locally.
+- Structured failure annotations: `skills/design-review/references/structured-findings.md`.
+
+The [pre-install checklist](INSTALL.md#before-you-install) was prompted by
+[Tommy Geoco’s skill-review checklist](https://x.com/designertom/status/2114786186250379759).
+ADS applies it to its own files and runtime behavior; no third-party skill implementation was
+imported for this update.
+
 ## Intent Engineering
 
 - Source: <https://github.com/kylezantos/intent-engineering>
