@@ -1,0 +1,26 @@
+{
+  "method": "Decoded RGBA exact equality; dimensions must match",
+  "reference": "2026-08-20-modal-interaction-gate",
+  "comparisons": [
+    {
+      "case": "pawprint",
+      "identical": 8
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "identical": 8
+    },
+    {
+      "case": "museum-loans",
+      "identical": 8
+    },
+    {
+      "case": "kitchen-pass",
+      "identical": 8
+    },
+    {
+      "case": "radio-rundown",
+      "identical": 8
+    }
+  ]
+}

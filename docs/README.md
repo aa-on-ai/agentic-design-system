@@ -5,6 +5,7 @@ Use this page to distinguish the current product path from release records and p
 ## Start here
 
 - [Install ADS](INSTALL.md): project-local installation for Claude Code, Codex, Cursor, OpenClaw, and Hermes.
+- [Trust and customization](../skills/agentic-design-system/references/trust-and-customization.md): commands, side effects, and project overrides.
 - [Testing](../testing/README.md): source-checkout checks and when to run them.
 - [Philosophy](../PHILOSOPHY.md): why ADS treats design as an evidence-backed practice.
 - [Agentic Design System skill](../skills/agentic-design-system/SKILL.md): the single scoped execution loop.

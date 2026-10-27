@@ -44,7 +44,7 @@ When no control scale exists, use three named heights:
 - `default: 40px` for routine desktop controls
 - `touch: 48px` for touch-first and primary mobile controls
 
-Controls in the same row share a height. Touch targets are at least 48 by 48px with at least 8px between adjacent targets, even when the visible glyph is smaller. Use 18px Nucleo interface icons inside routine controls and reserve 24px icons for larger standalone or editorial use. Centralize icon-to-label gaps, horizontal padding, radius, and focus treatment in the control primitive.
+Controls in the same row share a height. Touch targets are at least 48 by 48px with at least 8px between adjacent targets, even when the visible glyph is smaller. Use the selected family’s intended optical sizes for routine controls and larger standalone or editorial contexts. Centralize icon-to-label gaps, horizontal padding, radius, and focus treatment in the control primitive.
 
 Dropdown carets have at least 16px edge inset and reserve at least 44px for text clearance.
 Put both values in the shared select/menu-trigger primitive, not repeated per-instance patches.
@@ -120,10 +120,9 @@ Do not use these mechanical defaults to choose a universal typeface, palette, de
 
 ## Iconography defaults
 
-Treat Nucleo as the default icon ecosystem when a project does not already have an established icon system and its license permits use.
+Preserve the project’s existing coherent icon family first. Otherwise follow an explicit project or user preference when its license permits use; if none exists, choose one suitable open-source family. ADS has no required icon vendor.
 
-- Use Nucleo UI Outline 18 for product interfaces and compact controls.
-- Use Nucleo Core Outline 24 for larger product, editorial, or marketing contexts.
+- Use consistent weight/stroke and the chosen family’s intended optical sizes.
 - Preserve an existing coherent icon family until the project explicitly approves migration.
 - Allow intentional exceptions for native platform conventions, branded systems, games, and other domain-specific visual languages.
 - Do not mix icon families or stroke systems inside one surface without an explicit design reason.
@@ -135,7 +134,7 @@ Use a shared `Icon` or `InlineIcon` primitive to centralize family, size, stroke
 - Decorative icons are hidden from assistive technology. Icon-only controls need an accessible name.
 - When an icon's meaning is not universally clear, pair it with a visible label.
 
-Nucleo is a licensed dependency, not a bundle to redistribute. Never commit the full premium library or a license key. Use authorized package access, keep credentials in secret storage, and verify project-specific sharing, open-source, template, and icon-count terms before release. When premium use is not licensed, use an appropriate Nucleo Essential open-source set or the project's documented fallback.
+Icon libraries have their own licenses. Do not commit premium libraries or license keys without redistribution rights. Preserve required notices, use authorized package access, and verify project-specific sharing and template terms before release. If the selected family is not licensed for the intended use, choose an approved alternative.
 
 ## Craft review
 

@@ -16,6 +16,9 @@ non-visual work. Helpers contribute to this loop; they do not create another pro
 Resolve paths from this skill directory. `<skills-root>` is its parent. The installed release has
 no `create-design-workflow.md`. Optional source-maintenance workflows require a source checkout.
 
+For installation review or project-default changes, read [trust and customization](references/trust-and-customization.md):
+execution effects, optional telemetry, taste overrides, and provenance. This is not an extra per-task stage.
+
 ## Understand
 
 For substantial work, recover a short internal brief from the request and current product sources:

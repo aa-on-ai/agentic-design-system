@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glasshouse irrigation</title>
+  <style>
+    :root { --ink:#253729; --muted:#58675a; --paper:#f1f1e7; --surface:#fbfcf6; --line:#cdd2c5; --leaf:#356843; --leaf-soft:#dfebdd; --clay:#98603a; --clay-soft:#f2e4d7; --danger:#963e35; --danger-soft:#f5dfdc; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-width:320px; background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:16px; line-height:1.5; }
+    button,a { font:inherit; }
+    button:focus-visible,a:focus-visible { outline:3px solid #286eb1; outline-offset:3px; }
+    .shell { width:min(1160px,100%); margin:auto; padding:26px clamp(18px,4vw,52px) 56px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:42px; }
+    .brand { display:flex; gap:12px; align-items:center; }
+    .brand-icon { width:46px; height:46px; display:grid; place-items:center; border-radius:15px; background:var(--leaf); color:white; }
+    svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .brand strong,.brand span { display:block; }
+    .brand strong { font-size:19px; line-height:1.2; }
+    .brand span { color:var(--muted); font-size:14px; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .button { min-height:48px; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:0 16px; border:1px solid var(--leaf); border-radius:12px; background:var(--leaf); color:white; text-decoration:none; font-weight:680; cursor:pointer; }
+    .button.secondary { background:transparent; color:var(--ink); border-color:#7f8a7f; }
+    .button:disabled { background:#dcdfd8; border-color:#c6cbc2; color:#777e77; cursor:not-allowed; }
+    .intro { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,.42fr); gap:34px; align-items:end; }
+    .eyebrow,.kicker { margin:0 0 7px; color:var(--leaf); font-size:14px; font-weight:700; }
+    h1 { margin:0; font-size:clamp(32px,5vw,54px); line-height:1.15; }
+    .lede { max-width:680px; margin:15px 0 0; color:var(--muted); font-size:18px; }
+    .weather { padding:18px; border:1px solid var(--line); border-radius:16px; background:rgba(251,252,246,.6); }
+    .weather strong { display:block; font-size:25px; line-height:1.2; }
+    .weather span { color:var(--muted); }
+    .state { display:none; }
+    [data-ui-state="default"] .state-default,[data-ui-state="loading"] .state-loading,[data-ui-state="empty"] .state-empty,[data-ui-state="error"] .state-error { display:block; }
+    .run { margin-top:30px; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr); gap:0; border:1px solid var(--line); border-radius:22px; overflow:hidden; background:var(--surface); box-shadow:0 18px 44px rgba(49,64,42,.07); }
+    .run-main,.run-side { padding:clamp(22px,4vw,36px); }
+    .run-side { border-left:1px solid var(--line); background:#f6f7ef; }
+    h2 { margin:0; font-size:clamp(23px,3vw,32px); line-height:1.2; }
+    .run p { color:var(--muted); }
+    .run-note { max-width:620px; }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:28px; }
+    .fact { padding-top:14px; border-top:1px solid var(--line); }
+    .fact strong,.fact span { display:block; }
+    .fact strong { font-size:20px; }
+    .fact span { color:var(--muted); font-size:14px; }
+    .risk { margin-top:22px; padding:14px; border:1px solid #d9b48d; border-radius:12px; background:var(--clay-soft); color:#6d3d21; }
+    .risk strong { display:flex; align-items:center; gap:8px; }
+    .risk p { margin:5px 0 0; color:#6d3d21; }
+    .zone-title { display:flex; justify-content:space-between; align-items:end; gap:20px; margin:34px 0 13px; }
+    .zone-title h2 { font-size:22px; }
+    .zone-title p { margin:0; color:var(--muted); }
+    .zones { display:grid; gap:12px; }
+    .zone { display:grid; grid-template-columns:minmax(160px,.8fr) minmax(180px,1fr) minmax(160px,.7fr); gap:20px; align-items:center; padding:18px 20px; border:1px solid var(--line); border-radius:15px; background:rgba(251,252,246,.72); }
+    .zone strong,.zone span { display:block; }
+    .zone span { color:var(--muted); font-size:14px; }
+    .meter { height:12px; overflow:hidden; border-radius:8px; background:#dfe4db; }
+    .meter i { display:block; height:100%; border-radius:8px; background:var(--leaf); }
+    .reading { display:flex; align-items:center; gap:8px; font-weight:700; }
+    .reading svg { width:18px; height:18px; color:var(--leaf); }
+    .reading.watch { color:var(--clay); }
+    .state-panel { margin-top:30px; min-height:360px; display:grid; place-items:center; padding:36px 22px; border:1px solid var(--line); border-radius:22px; background:var(--surface); text-align:center; }
+    .state-panel .icon { width:60px; height:60px; display:grid; place-items:center; margin:0 auto 18px; border-radius:18px; background:var(--leaf-soft); color:var(--leaf); }
+    .state-panel .icon svg { width:30px; height:30px; }
+    .state-panel p { max-width:540px; margin:10px auto 0; color:var(--muted); }
+    .state-panel .button { margin-top:22px; }
+    .state-error .state-panel { border-color:#d4a19b; background:#fff9f7; }
+    .state-error .icon { background:var(--danger-soft); color:var(--danger); }
+    .error-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:22px; }
+    .loading-lines { width:min(560px,100%); display:grid; gap:14px; }
+    .loading-lines i { height:18px; border-radius:8px; background:linear-gradient(90deg,#e3e6dc,#f5f6ef,#e3e6dc); background-size:200% 100%; animation:move 1.4s linear infinite; }
+    .loading-lines i:nth-child(2) { width:75%; }
+    .loading-lines i:nth-child(3) { width:90%; }
+    @keyframes move { to { background-position:-200% 0; } }
+    @media (prefers-reduced-motion:reduce) { .loading-lines i { animation:none; } }
+    @media (max-width:720px) {
+      .topbar { align-items:flex-start; margin-bottom:30px; }
+      .brand span { display:none; }
+      .actions { justify-content:flex-end; }
+      .button .optional { display:none; }
+      .intro { grid-template-columns:1fr; gap:20px; }
+      .run { grid-template-columns:1fr; }
+      .run-side { border-left:0; border-top:1px solid var(--line); }
+      .facts { grid-template-columns:1fr; }
+      .zone { grid-template-columns:1fr; gap:10px; }
+      .zone-title { align-items:start; flex-direction:column; gap:4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" id="app" data-ui-state="default">
+    <header class="topbar">
+      <div class="brand"><div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21V9m0 0C8 9 5 6.8 5 3c4 0 7 2 7 6Zm0 4c4 0 7-2.2 7-6-4 0-7 2-7 6Z"/></svg></div><div><strong>North house</strong><span>Irrigation desk</span></div></div>
+      <div class="actions"><button class="button" data-restricted type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V6m8 12V9m8 9v-6M2 6h4m4 3h4m4 3h4"/></svg><span>Adjust schedule</span></button><a class="button secondary" href="tel:+15550115"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3l1.4 4-2 1.5a15 15 0 0 0 5.1 5.1l1.5-2 4 1.4v3c0 1.1-.9 2-2 2C10.8 19 5 13.2 5 6c0-1.1.9-2 2-2Z"/></svg><span>Call grower</span></a></div>
+    </header>
+    <main>
+      <div class="intro"><div><p class="eyebrow">Morning cycle</p><h1>Water where the crop needs it</h1><p class="lede" id="state-summary">The next run starts in 24 minutes. Bay three is drying faster than its neighboring pepper rows.</p></div><aside class="weather"><p class="kicker">Outside conditions</p><strong>27° and rising</strong><span>Vent screens open, light wind</span></aside></div>
+
+      <section class="state state-default" aria-label="Live irrigation plan">
+        <article class="run"><div class="run-main"><p class="kicker">Next run at 6.40 am</p><h2>Bay three pepper lines</h2><p class="run-note">A short recovery cycle will bring the upper beds back into range without increasing runoff at the east gutter.</p><div class="facts"><div class="fact"><strong>18 min</strong><span>Planned duration</span></div><div class="fact"><strong>42%</strong><span>Lowest moisture</span></div><div class="fact"><strong>1.8 mm</strong><span>Target delivery</span></div></div></div><aside class="run-side"><p class="kicker">Attention</p><h2>Probe seven is trending dry</h2><div class="risk"><strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5m0 3h.01M5 20h14L12 4 5 20Z"/></svg>Review after this run</strong><p>If the reading stays below 46 percent, ask Mara to inspect the emitter.</p></div></aside></article>
+        <div class="zone-title"><div><p class="kicker">Zone moisture</p><h2>Three growing areas</h2></div><p>Readings from 6.12 am</p></div>
+        <div class="zones"><article class="zone"><div><strong>Bay three peppers</strong><span>Upper beds</span></div><div class="meter" role="progressbar" aria-label="Moisture" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100"><i style="width:42%"></i></div><div class="reading watch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5m0 3h.01M5 20h14L12 4 5 20Z"/></svg>42 percent, watch</div></article><article class="zone"><div><strong>Bay one cucumbers</strong><span>West trellis</span></div><div class="meter" role="progressbar" aria-label="Moisture" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"><i style="width:58%"></i></div><div class="reading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>58 percent, ready</div></article><article class="zone"><div><strong>Propagation bench</strong><span>Young plants</span></div><div class="meter" role="progressbar" aria-label="Moisture" aria-valuenow="63" aria-valuemin="0" aria-valuemax="100"><i style="width:63%"></i></div><div class="reading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>63 percent, ready</div></article></div>
+      </section>
+      <section class="state state-loading" aria-label="Loading irrigation telemetry"><div class="state-panel" role="status" aria-live="polite" aria-busy="true"><div class="loading-lines" aria-hidden="true"><i></i><i></i><i></i></div><p>Collecting the latest moisture readings and valve state</p></div></section>
+      <section class="state state-empty" aria-label="No irrigation plan"><div class="state-panel" role="status" aria-live="polite"><div><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11Z"/></svg></div><h2>No runs are planned</h2><p>All zones are within their resting range. The next plan will appear when a crop crosses its moisture threshold.</p><button class="button" type="button">Review thresholds</button></div></div></section>
+      <section class="state state-error" aria-label="Telemetry unavailable"><div class="state-panel" role="alert" aria-live="assertive"><div><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8v5m0 3h.01M5 20h14L12 4 5 20Z"/></svg></div><h2>Telemetry is offline</h2><p>Safe mode keeps the last plan visible but blocks schedule changes. Call the grower to confirm conditions on the floor.</p><div class="error-actions"><button class="button" type="button">Retry telemetry</button></div></div></div></section>
+    </main>
+  </div>
+  <script>
+    const app=document.querySelector('#app'); const restricted=document.querySelector('[data-restricted]'); const summary=document.querySelector('#state-summary'); const states=new Set(['default','loading','empty','error']);
+    function render(){ const requested=new URLSearchParams(location.hash.slice(1)).get('state')||'default'; const state=states.has(requested)?requested:'default'; app.dataset.uiState=state; restricted.disabled=state==='error'; summary.textContent={default:'The next run starts in 24 minutes. Bay three is drying faster than its neighboring pepper rows.',loading:'The latest moisture readings and valve state are being collected.',empty:'All zones are resting within range. No watering run is planned.',error:'Safe mode is active while live moisture readings and schedule changes are unavailable.'}[state]; }
+    addEventListener('hashchange',render); render();
+  </script>
+</body>
+</html>

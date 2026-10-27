@@ -58,7 +58,7 @@
   "iconography": {
     "preferenceOrder": [
       "existing-coherent-project-family",
-      "licensed-nucleo",
+      "explicit-licensed-project-preference",
       "one-open-family"
     ],
     "mixFamilies": false,

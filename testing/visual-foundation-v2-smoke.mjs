@@ -93,7 +93,7 @@ assert.equal(rules.get("divider-density").automaticEnforcement, "report-only");
 assert.equal(contract.typography.utilityDefault, "conventional-general-purpose");
 assert.deepEqual(contract.iconography.preferenceOrder, [
   "existing-coherent-project-family",
-  "licensed-nucleo",
+  "explicit-licensed-project-preference",
   "one-open-family",
 ]);
 

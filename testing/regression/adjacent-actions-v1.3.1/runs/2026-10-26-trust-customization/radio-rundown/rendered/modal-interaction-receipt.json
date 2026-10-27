@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "ads.modal-interaction-receipt",
+  "sourceEvidence": "evidence.json",
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-trust-20261026/testing/regression/adjacent-actions-v1.3.1/runs/2026-10-26-trust-customization/radio-rundown/artifact/index.html",
+  "required": false,
+  "requiredDialogs": [],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "checks": [],
+  "failures": [],
+  "passed": true
+}

@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Community radio rundown</title>
+    <style>
+      :root {
+        --ink: #202b32;
+      --muted: #56656d;
+        --paper: #edf1f2;
+        --surface: #fbfdfd;
+        --line: #cad3d7;
+        --blue: #315e78;
+        --blue-soft: #dfebf0;
+        --gold: #8b651d;
+        --gold-soft: #f4e9ce;
+        --danger: #983b38;
+        --danger-soft: #f4dfdd;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      button,
+      a {
+        font: inherit;
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid #246fa7;
+        outline-offset: 3px;
+      }
+      .shell {
+        width: min(1180px, 100%);
+        margin: auto;
+        padding: 26px clamp(18px, 4vw, 52px) 60px;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 38px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .mark {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: var(--blue);
+        color: white;
+      }
+      .mark svg,
+      .button svg,
+    .status svg,
+    .risk svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .brand strong,
+      .brand span {
+        display: block;
+      }
+      .brand strong {
+        font-size: 19px;
+        line-height: 1.2;
+      }
+      .brand span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .button {
+        min-height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        padding: 0 16px;
+        border: 1px solid var(--blue);
+        border-radius: 11px;
+        background: var(--blue);
+        color: white;
+        text-decoration: none;
+        font-weight: 680;
+        cursor: pointer;
+      }
+      .button.secondary {
+        background: transparent;
+        border-color: #76848b;
+        color: var(--ink);
+      }
+      .button:disabled {
+        background: #dce1e2;
+        border-color: #c5cccf;
+        color: #747c80;
+        cursor: not-allowed;
+      }
+      .eyebrow {
+        margin: 0 0 7px;
+        color: var(--blue);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      h1 {
+        margin: 0;
+        max-width: 840px;
+        font-size: clamp(32px, 5vw, 54px);
+        line-height: 1.15;
+      }
+      .lede {
+        max-width: 720px;
+        margin: 15px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .state {
+        display: none;
+      }
+      [data-ui-state="default"] .state-default,
+      [data-ui-state="loading"] .state-loading,
+      [data-ui-state="empty"] .state-empty,
+      [data-ui-state="error"] .state-error {
+        display: block;
+      }
+      .on-air {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(270px, 0.55fr);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        overflow: hidden;
+        background: var(--surface);
+        box-shadow: 0 18px 44px rgba(35, 54, 63, 0.07);
+      }
+      .now,
+      .next {
+        padding: clamp(23px, 4vw, 38px);
+      }
+      .next {
+        border-left: 1px solid var(--line);
+        background: #f4f8f9;
+      }
+      .on-air h2 {
+        margin: 0;
+        font-size: clamp(25px, 3.5vw, 36px);
+        line-height: 1.16;
+      }
+      .on-air p {
+        color: var(--muted);
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 38px;
+        margin-bottom: 17px;
+        padding: 6px 11px;
+        border-radius: 9px;
+        background: var(--blue-soft);
+        color: var(--blue);
+        font-weight: 700;
+      }
+      .next .time {
+        display: block;
+        margin: 14px 0 6px;
+        font-size: 26px;
+        font-weight: 780;
+        font-variant-numeric: tabular-nums;
+      }
+      .risk {
+        margin-top: 18px;
+        padding: 14px;
+        border: 1px solid #d9bd84;
+        border-radius: 11px;
+        background: var(--gold-soft);
+        color: #6f4d13;
+      }
+      .risk strong {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .risk p {
+        margin: 5px 0 0;
+        color: #6f4d13;
+      }
+      .rundown-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 18px;
+        margin: 34px 0 13px;
+      }
+      .rundown-head h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+      .rundown-head p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .segments {
+        display: grid;
+        gap: 12px;
+      }
+      .segment {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1.1fr) minmax(170px, 0.7fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 18px 20px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(251, 253, 253, 0.75);
+      }
+      .segment .time {
+        font-weight: 780;
+        font-variant-numeric: tabular-nums;
+      }
+      .segment strong,
+      .segment span {
+        display: block;
+      }
+      .segment span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .duration {
+        font-weight: 700;
+        color: var(--blue);
+      }
+      .state-panel {
+        margin-top: 28px;
+        min-height: 360px;
+        display: grid;
+        place-items: center;
+        padding: 38px 22px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: var(--surface);
+        text-align: center;
+      }
+      .state-panel .icon {
+        width: 60px;
+        height: 60px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 18px;
+        border-radius: 18px;
+        background: var(--blue-soft);
+        color: var(--blue);
+      }
+      .state-panel .icon svg {
+        width: 30px;
+        height: 30px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+      }
+      .state-panel h2 {
+        margin: 0;
+        font-size: 28px;
+      }
+      .state-panel p {
+        max-width: 540px;
+        margin: 10px auto 0;
+        color: var(--muted);
+      }
+      .state-panel .button {
+        margin-top: 22px;
+      }
+      .state-error .state-panel {
+        border-color: #d3a29f;
+        background: #fff9f8;
+      }
+      .state-error .icon {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+      .loading {
+        width: min(570px, 100%);
+        display: grid;
+        gap: 14px;
+      }
+      .loading i {
+        height: 18px;
+        border-radius: 7px;
+        background: linear-gradient(90deg, #e1e7e9, #f5f8f8, #e1e7e9);
+        background-size: 200% 100%;
+        animation: move 1.4s linear infinite;
+      }
+      .loading i:nth-child(2) {
+        width: 72%;
+      }
+      .loading i:nth-child(3) {
+        width: 90%;
+      }
+      @keyframes move {
+        to {
+          background-position: -200% 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading i {
+          animation: none;
+        }
+      }
+      @media (max-width: 740px) {
+        .top {
+          align-items: flex-start;
+        }
+        .brand span {
+          display: none;
+        }
+        .on-air {
+          grid-template-columns: 1fr;
+        }
+        .next {
+          border-left: 0;
+          border-top: 1px solid var(--line);
+        }
+        .segment {
+          grid-template-columns: 70px minmax(0, 1fr);
+        }
+        .segment .guest,
+        .segment .duration {
+          grid-column: 2;
+        }
+        .rundown-head {
+          align-items: start;
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell" id="app" data-ui-state="default">
+      <header class="top">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 10v4m4-7v10m4-14v18m4-14v10m4-7v4" />
+            </svg>
+          </div>
+          <div>
+            <strong>Harbor community radio</strong><span>Live rundown</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="button" data-restricted type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 7h11m0 0-3-3m3 3-3 3M16 17H5m0 0 3 3m-3-3 3-3" /></svg
+            ><span>Move segment</span></button
+          ><a class="button secondary" href="tel:+15550144"
+            ><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 4h3l1.4 4-2 1.5a15 15 0 0 0 5.1 5.1l1.5-2 4 1.4v3c0 1.1-.9 2-2 2C10.8 19 5 13.2 5 6c0-1.1.9-2 2-2Z"
+              /></svg
+            ><span>Call host</span></a
+          >
+        </div>
+      </header>
+      <main>
+        <p class="eyebrow">Morning harbor live</p>
+        <h1>The next voice, cue, and timing risk at a glance</h1>
+        <p class="lede" id="state-summary">
+          A neighborhood news magazine with six segments remaining and one guest
+          arriving close to air.
+        </p>
+        <section class="state state-default" aria-label="Live radio rundown">
+          <article class="on-air">
+            <div class="now">
+              <span class="status"
+                ><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 7v10m4-14v18m4-14v10" /></svg
+                >On air now</span
+              >
+              <h2>Port repair vote with Elena Ruiz</h2>
+              <p>
+                Host Nia Brooks is in the second interview block. Producer cue
+                for listener questions in three minutes.
+              </p>
+              <div class="risk">
+                <strong
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 8v5m0 3h.01M5 20h14L12 4 5 20Z" /></svg
+                  >Guest timing needs attention</strong
+                >
+                <p>
+                  Chef Andre is nine minutes away for the 8.36 segment. Confirm
+                  his arrival before the music bed ends.
+                </p>
+              </div>
+            </div>
+            <aside class="next">
+              <p class="eyebrow">Next segment</p>
+              <span class="time">8.28 am</span>
+              <h2>Neighborhood notices</h2>
+              <p>
+                Four minutes with three community announcements and a weather
+                handoff.
+              </p>
+            </aside>
+          </article>
+          <div class="rundown-head">
+            <div>
+              <p class="eyebrow">Rundown</p>
+              <h2>What follows the live interview</h2>
+            </div>
+            <p>Six segments remaining</p>
+          </div>
+          <div class="segments">
+            <article class="segment">
+              <div class="time">8.28</div>
+              <div>
+                <strong>Neighborhood notices</strong
+                ><span>Host read with weather handoff</span>
+              </div>
+              <div class="guest">
+                <strong>Nia Brooks</strong><span>In studio</span>
+              </div>
+              <div class="duration">4 min</div>
+            </article>
+            <article class="segment">
+              <div class="time">8.32</div>
+              <div>
+                <strong>Music bed</strong><span>Low Tide by Marisol Park</span>
+              </div>
+              <div class="guest">
+                <strong>Studio playback</strong><span>Loaded and checked</span>
+              </div>
+              <div class="duration">4 min</div>
+            </article>
+            <article class="segment">
+              <div class="time">8.36</div>
+              <div>
+                <strong>Community kitchen</strong
+                ><span>Summer market cooking</span>
+              </div>
+              <div class="guest">
+                <strong>Chef Andre Bell</strong><span>Arrival unconfirmed</span>
+              </div>
+              <div class="duration">9 min</div>
+            </article>
+          </div>
+        </section>
+        <section class="state state-loading" aria-label="Loading rundown">
+          <div
+            class="state-panel"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div class="loading" aria-hidden="true"><i></i><i></i><i></i></div>
+            <p>Syncing the playout clock and guest rundown</p>
+          </div>
+        </section>
+        <section class="state state-empty" aria-label="No scheduled segments">
+          <div class="state-panel" role="status" aria-live="polite">
+            <div>
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 18V6m12 12V6M9 9h6m-6 6h6" />
+                </svg>
+              </div>
+              <h2>No segments are scheduled</h2>
+              <p>
+                Create the first segment to shape today’s live program and guest
+                coordination.
+              </p>
+              <button class="button" type="button">Add a segment</button>
+            </div>
+          </div>
+        </section>
+        <section class="state state-error" aria-label="Schedule locked">
+          <div class="state-panel" role="alert" aria-live="assertive">
+            <div>
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 11V8a5 5 0 0 1 10 0v3m-11 0h12v9H6z" />
+                </svg>
+              </div>
+              <h2>The rundown is locked</h2>
+              <p>
+                The playout system is holding schedule order. Call the host for
+                timing changes while segment moves remain unavailable.
+              </p>
+              <button class="button secondary" type="button">
+                Retry schedule
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      const app = document.querySelector("#app"),
+        restricted = document.querySelector("[data-restricted]"),
+        summary = document.querySelector("#state-summary"),
+        states = new Set(["default", "loading", "empty", "error"]);
+      function render() {
+        const requested =
+            new URLSearchParams(location.hash.slice(1)).get("state") ||
+            "default",
+          state = states.has(requested) ? requested : "default";
+        app.dataset.uiState = state;
+        restricted.disabled = state !== "default";
+        summary.textContent = {
+          default:
+            "A neighborhood news magazine with six segments remaining and one guest arriving close to air.",
+          loading: "The playout clock and guest rundown are being synchronized.",
+          empty:
+            "No segments are scheduled. Add the first item when today’s program is ready to take shape.",
+          error:
+            "The current rundown remains readable while schedule order is locked by the playout system.",
+        }[state];
+      }
+      addEventListener("hashchange", render);
+      render();
+    </script>
+  </body>
+</html>

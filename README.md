@@ -27,6 +27,8 @@ ADS is a repo-local skill pack. Your agent does the work; you keep the final say
 
 ### 1. Install ADS
 
+First read [Before you install](./docs/INSTALL.md#before-you-install) for execution effects, credits, and project overrides.
+
 Install the complete eleven-skill pack from the project where your agent works:
 
 ```bash
