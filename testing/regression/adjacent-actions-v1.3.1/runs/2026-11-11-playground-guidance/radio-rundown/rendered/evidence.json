@@ -1,0 +1,617 @@
+{
+  "evidenceFormat": 2,
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-playground-20261111/testing/regression/adjacent-actions-v1.3.1/runs/2026-11-11-playground-guidance/radio-rundown/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 1048,
+      "renderedTextSample": "Harbor Radio Studio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Keep the interview on time. Studio snapshot / 16:24 On air / 16:18–16:26 The future of the night bus Maya is speaking with transit organizer Luis Vega. Wrap by 16:26 to protect the live wea",
+      "renderSignature": "9598327c",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 1047,
+      "renderedTextSample": "Harbor RadioStudio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Keep the interview on time. Studio snapshot / 16:24 On air / 16:18–16:26 The future of the night bus Maya is speaking with transit organizer Luis Vega. Wrap by 16:26 to protect the live weat",
+      "renderSignature": "e16cf9ac",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 267,
+      "renderedTextSample": "Harbor Radio Studio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Loading the studio rundown Loading the running order, playout ownership and host cues for studio 2. Synthetic data. Local interactions only; no operational system is connected.",
+      "renderSignature": "884ad5ee",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 266,
+      "renderedTextSample": "Harbor RadioStudio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Loading the studio rundown Loading the running order, playout ownership and host cues for studio 2. Synthetic data. Local interactions only; no operational system is connected.",
+      "renderSignature": "da78f8fe",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 321,
+      "renderedTextSample": "Harbor Radio Studio rundown Local demonstration Studio 2 / unassigned rundown No segments in this rundown No show loaded Load a running order before the studio goes live. The sample rundown is available for local inspection. Open sample rundown Synthetic data. Local interactions ",
+      "renderSignature": "87278817",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 320,
+      "renderedTextSample": "Harbor RadioStudio rundown Local demonstration Studio 2 / unassigned rundown No segments in this rundown No show loaded Load a running order before the studio goes live. The sample rundown is available for local inspection. Open sample rundown Synthetic data. Local interactions o",
+      "renderSignature": "76949d27",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1249,
+      "renderedTextSample": "Harbor Radio Studio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Playout holds the running order. Rundown current / reordering locked until 16:26 Schedule locked by playout Playout owns the rundown during the live segment. Reordering is disabled. Call th",
+      "renderSignature": "be32d458",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1248,
+      "renderedTextSample": "Harbor RadioStudio rundown Local demonstration Neighborhood hour / Studio 2 / 16:00–17:00 Playout holds the running order. Rundown current / reordering locked until 16:26 Schedule locked by playout Playout owns the rundown during the live segment. Reordering is disabled. Call the",
+      "renderSignature": "356f2228",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder48": [],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": [],
+    "modalInteractions": {
+      "receiptPath": "modal-interaction-receipt.json",
+      "required": false,
+      "passed": true,
+      "requiredDialogs": [],
+      "failures": []
+    }
+  }
+}
