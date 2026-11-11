@@ -1,0 +1,246 @@
+{
+  "passed": true,
+  "sourceRun": "2026-11-11-playground-guidance",
+  "screenshots": [
+    {
+      "case": "pawprint",
+      "image": "default-1280x800.png",
+      "sha256": "38f34d851a70424a1c3e828352d733d74c9422da96ec71176eb89664490f4696",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "default-390x844.png",
+      "sha256": "e532b13865e980aaa3b91ccb79a8127de809d6692f6e30faa520d9d9d014022e",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "empty-1280x800.png",
+      "sha256": "c0f17e9c9d2c221e87c0a3a338adcf9f236dcbade2687a34fb8b2593a5cb7570",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "empty-390x844.png",
+      "sha256": "ca4ede7640446734af94a59b2252787e529e6ea9daf82345e111190e03c35f7a",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "error-1280x800.png",
+      "sha256": "57c37007b4088937921167f537035c910a0ea1228d78bf8597861cbb505dc2b9",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "error-390x844.png",
+      "sha256": "77a136722a5949f95d3db11f478e392e70d3dc6c1f1b164dd5b56357c8787883",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "loading-1280x800.png",
+      "sha256": "2c55d2ef57da8e51d95169f8f580526d7e0fafa1de23d26472446d780063f914",
+      "matchesPrior": true
+    },
+    {
+      "case": "pawprint",
+      "image": "loading-390x844.png",
+      "sha256": "58dc5b88d3afbfa1785e253e0c5051a1e62e3c4fcdebc018ab240f7fe561cef8",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "default-1280x800.png",
+      "sha256": "394613cf7fc2bfb81a550894d544490683a8700c68550a8d38fd0ff6eeef3642",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "default-390x844.png",
+      "sha256": "fc33ddcbdbbcf7f3a1c8f49edbbdc1e7d830192c9216e7025b81d9a04c0f8fe7",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "empty-1280x800.png",
+      "sha256": "95d0429c73bb21a1d4cc5fc5f17f7ffe0d11c7edf8a8316964f31733d69b7435",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "empty-390x844.png",
+      "sha256": "c7c862619a9762e10a5b44f47d3ca030fac5dcc2bab6f041b17bf400f0a807a1",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "error-1280x800.png",
+      "sha256": "da23656d5fd98ba126cdf1cbe53cc7f713316170fdc8680e7c953cc313214f8a",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "error-390x844.png",
+      "sha256": "9cdbbbf7020a755a0cf273093dcb66c7262a7a4299ae20fc34ee7e7e46916754",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "loading-1280x800.png",
+      "sha256": "b76935bd38444dcd583291d5947a6601334001f603e07cbb84c15dddd2b454f2",
+      "matchesPrior": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "image": "loading-390x844.png",
+      "sha256": "81e08f94b1ef7dc14d33b0bb2bc2ddca58ff1d48a71749e7e8926d56518c0f43",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "default-1280x800.png",
+      "sha256": "b730e715d37398f9dbae4f2784df8a61cfcaeeb003d5f7b318ec15cf7aca52ac",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "default-390x844.png",
+      "sha256": "8cc234da967d053e1cd7e8ecbeb409986ee30909b58c57633d3d63a55f2d414d",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "empty-1280x800.png",
+      "sha256": "dadd7d8b412e3bfa4327ad847c535a2188962436140bd8fd94dace512e0c49c5",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "empty-390x844.png",
+      "sha256": "3e92ed00c3f457c7470ab5d1a0f1384a4d157a28ce2a4eb915d047742ebf7720",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "error-1280x800.png",
+      "sha256": "9d0e5f17544cf15e76dfc369daf10aea8f37e1752046d5e738fc051ac917d0f9",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "error-390x844.png",
+      "sha256": "41c2f031164effe5d80c00b2aaa651ad0e106374acd79cbdb6001021c6457328",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "loading-1280x800.png",
+      "sha256": "be221622c42e9ca293abb7141b36627d368bf65b69cf8fbb5f99ecfe5e09db8a",
+      "matchesPrior": true
+    },
+    {
+      "case": "museum-loans",
+      "image": "loading-390x844.png",
+      "sha256": "ff3815f5ab08bef87bd0f961b89b92f34a6d464031d96335ea268da8360ef6e3",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "default-1280x800.png",
+      "sha256": "df1e0e3cf83a5caf9699c792199658476e7aded08f78fcb0700b739b7394377b",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "default-390x844.png",
+      "sha256": "e04d4fd209c6dbd354ac5fef9999ceb79bf7666649700c40c8bef10e01ad98ec",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "empty-1280x800.png",
+      "sha256": "3ababf452fdf359726da839339b51410db6e0ce5298546cb41e283ce89e50cad",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "empty-390x844.png",
+      "sha256": "3b8d7338843a79306d4315f9c6c0daa6df17e349f58b5800a69ccc247baeda94",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "error-1280x800.png",
+      "sha256": "c675c057f17c2f7e5d172612caff5826953d644f7d5de77a44ad1a5cc302c99e",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "error-390x844.png",
+      "sha256": "5b2a9eb9bce5c3e2894acca16684a9c383de12549c2f437a9be11e497a0b9a2d",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "loading-1280x800.png",
+      "sha256": "087ece7dab939ee8d41531cc59bc5102ed248fee9c0bb3839f41074cadc5af22",
+      "matchesPrior": true
+    },
+    {
+      "case": "kitchen-pass",
+      "image": "loading-390x844.png",
+      "sha256": "ade6087bf233a94c72b7c21235fbc23d2662578ed24ba2a3fd4934f03a3b480e",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "default-1280x800.png",
+      "sha256": "fa9bf03fccd0451338df70f6ac7902275f2b2b9c115fc30bfb606aa5e58ff902",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "default-390x844.png",
+      "sha256": "48bcfb6e49a775fbde5fd471267dd9b83bf84ea757b616d589a5b1382a4572ed",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "empty-1280x800.png",
+      "sha256": "688bba8b6292f9dd2666281be51e850b38864764dec354c9e8d6c73dba21f949",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "empty-390x844.png",
+      "sha256": "77e482839d1dba66614e76a5925fa96e3afc473bda97ed9c574267381f07ada2",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "error-1280x800.png",
+      "sha256": "79f85accdb244a8c5ccc3c95325ff372146affe1876ae7238d7c55750b2cbad4",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "error-390x844.png",
+      "sha256": "3faeaa91d885357998025000e4c2d04b925c42989ceb0603f78a475cdac7c5f5",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "loading-1280x800.png",
+      "sha256": "4a56a27dc66c5eef82b6f33240f69ca85b711ac5cae39d18dd221b1c017fad42",
+      "matchesPrior": true
+    },
+    {
+      "case": "radio-rundown",
+      "image": "loading-390x844.png",
+      "sha256": "aaac0b3c825263ae4771a91823c71a2881fc79fdaf97b24a0cd9dd5718d7d4c5",
+      "matchesPrior": true
+    }
+  ]
+}

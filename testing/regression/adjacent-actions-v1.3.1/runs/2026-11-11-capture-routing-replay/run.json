@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-11-11-capture-routing-replay",
+  "createdAt": "2026-11-11T19:41:18.864Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "1f1cbc81af087678d3c2a86c3eb1d1bf7b9c9703",
+  "behaviorDigest": "c0448d667931b61cd4b04cb94b376f5a3990559deb47a6c6eb581893a87dbf3a",
+  "behaviorFileCount": 84,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "clawc-routing-replay:2026-11-11:unchanged-artifact",
+      "graderContext": "independent-fable-5.2:2026-11-11:targeted-regrade:reused-identical-evidence"
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "clawc-routing-replay:2026-11-11:unchanged-artifact",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade:reused-identical-evidence"
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "clawc-routing-replay:2026-11-11:unchanged-artifact",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade:reused-identical-evidence"
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "clawc-routing-replay:2026-11-11:unchanged-artifact",
+      "graderContext": "independent-fable-5.2:2026-11-11:targeted-regrade:reused-identical-evidence"
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "clawc-routing-replay:2026-11-11:unchanged-artifact",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade:reused-identical-evidence"
+    }
+  ],
+  "verificationScope": "CLI fallback replay on unchanged independently graded artifacts; not fresh agent generation or independent route-selection trial"
+}
