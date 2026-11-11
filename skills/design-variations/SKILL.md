@@ -5,7 +5,7 @@ description: "Explore meaningful alternatives when a UI direction or interaction
 
 # Design Variations
 
-Use the browser as a disposable decision surface. Diverge before production implementation, let the human choose or blend a direction, then send only the winner through the normal Agentic Design System build and review chain.
+Explore meaningful alternatives in a runnable playground, using the project's real components and tokens when available. Keep alternatives recoverable as the human compares, tunes, chooses or blends them. Promote the selected implementation through the normal Agentic Design System build and review chain.
 
 ## Trigger gate
 
@@ -15,11 +15,12 @@ Skip it when:
 
 - the direction is already chosen
 - the task is a bug fix, copy edit, or mechanical polish
-- the task needs real data wiring before its shape can be judged
 - the difference is only a single token or style value
 - the user asked to implement one specified reference closely
 
 If a desired visual reference matters, use [visual-reference-calibration](../visual-reference-calibration/SKILL.md) to recover what to borrow. Reuse prior answers; do not add a second intake interview.
+
+Missing production data does not rule out exploration. Use realistic local fixtures when they can represent the decision honestly. If missing data or behavior would materially change the choice and cannot be represented, name that dependency rather than inventing a working flow.
 
 ## Workflow
 
@@ -39,18 +40,20 @@ If a desired visual reference matters, use [visual-reference-calibration](../vis
    - Keep content, data, state, viewport, and core user goal identical.
    - A recolor, font swap, or spacing adjustment is not a distinct direction.
 
-4. Build one disposable browser artifact.
-   - Use `assets/variations.html` for a standalone comparison when appropriate.
-   - For an implemented app comparison, use [browser-variant-workflow](../browser-variant-workflow/SKILL.md) as the technique beneath this decision, not another variant/review loop.
-   - Keep it self-contained unless the task requires project assets.
-   - Show one complete direction at a time through an accessible switcher.
+4. Build a project-native playground.
+   - Reuse the actual stack, components and design-system context. Prefer an existing development route, component explorer or native preview; otherwise use a small isolated playground. Do not create another application or canvas framework just to compare variants.
+   - Keep distinct implementations reachable through a comparison gallery, named branches or equivalent saved revisions. Record each thesis, source revision, run/open instructions and matched evidence with the task so an earlier alternative can be revisited.
+   - Use [the standalone HTML asset](assets/variations.html) when no product stack exists yet or a disposable concept study genuinely answers the question. State when promotion will require a real-stack implementation.
+   - Provide an accessible way to select and compare complete directions. A shared visual canvas can supplement runnable versions, not replace them or become a required vendor dependency.
    - Make each direction coherent enough to judge in context.
-   - Do not add production dependencies, feature flags, or long-lived variant architecture.
+   - Keep experiments isolated from shipping routes. Do not add production dependencies or a permanent feature-flag system solely for exploration.
+   - When repeated fine adjustments would be easier by hand, expose a few task-relevant development-only controls, such as density, radius or motion timing. Keep the controls accessible and persist chosen values into the real components or tokens; do not leave them only in transient UI state.
 
-5. Review in the browser.
-   - Render the artifact at the relevant desktop and mobile widths.
+5. Review on the target platform.
+   - Render the alternatives at the relevant sizes and states, in the browser or native runtime as appropriate.
    - Capture each direction with the same state and viewport.
-   - Check overflow, keyboard navigation, labels, focus, and basic contrast.
+   - Exercise relevant interactions, not just stills. Check applicable overflow, keyboard navigation, labels, focus, contrast and platform behavior.
+   - For native/mobile work whose touch feel or performance matters, include physical-device verification, using a representative older device when relevant. Simulator or browser evidence alone does not prove that behavior; record unavailable device checks as unverified.
    - Compare the user job, information order, visual direction and behavior using the existing ADS review. Do not substitute a composite self-score for a useful choice.
    - Judge conceptual distinctness from the theses and interaction model. Pixel difference alone is not evidence of meaningful divergence.
 
@@ -61,9 +64,10 @@ If a desired visual reference matters, use [visual-reference-calibration](../vis
    - Do not invent an extra approval gate for already-authorized implementation.
 
 7. Promote only the winner.
-   - Rebuild the selected direction in the real stack.
+   - Promote the selected real components and persisted values without an obligatory rewrite. Implement in the product stack only when the study used a different stack or real integration is still missing.
    - Run the normal ADS core chain and rendered evidence gates.
-   - Remove your temporary implementation scaffolding after promotion. Preserve useful comparison evidence with the task; do not delete existing user artifacts.
+   - Exclude tuning controls and unselected alternatives from the shipping build. Preserve the alternatives in the playground or recoverable revisions, with the instructions and evidence needed to run them again. Check the selected production path separately from the playground.
+   - Do not delete existing user artifacts. Keep the existing task budget; tuning and switching variants do not create an unlimited agent iteration loop.
 
 ## Verification contract
 
@@ -72,10 +76,12 @@ Before presenting variants, verify:
 - every direction has a unique thesis name
 - all directions use the same realistic content and application state
 - at least one structural or interaction axis differs between each direction
-- the switcher is keyboard accessible and exposes the selected state
+- the comparison controls are accessible and expose the selected direction
 - every direction renders at the required viewports
 - screenshots or equivalent rendered evidence exist for each direction
 - the recommendation cites user fit and tradeoffs, not visual novelty alone
+- the recorded source and run instructions can reopen each alternative
+- after promotion, chosen values persist and the shipping path excludes experimental controls and alternatives
 
 ## Output
 
@@ -88,3 +94,4 @@ Return:
 - Rendered evidence
 - Risks or unresolved questions
 - Artifact path
+- How to reopen each alternative, and what was promoted versus kept experimental

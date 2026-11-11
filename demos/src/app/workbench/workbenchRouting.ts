@@ -30,10 +30,10 @@ export function routeWorkbenchIntent(intent: IntentId, task: string): WorkbenchR
   const lower = normalized.toLowerCase();
   if (intent === "explore") {
     return readyRoute(
-      "Disposable browser exploration",
+      "Runnable design alternatives",
       "skills/design-variations/SKILL.md",
       "The user wants meaningful alternatives before production implementation.",
-      ["Matched-content variants", "Desktop and mobile comparison", "Human choose, blend, or reject gate"],
+      ["Matched-content variants", "Target-platform comparison", "Human choose, blend, or reject gate"],
       ["Production implementation", "Agent execution inside Workbench", "Deploy or external writes"],
     );
   }

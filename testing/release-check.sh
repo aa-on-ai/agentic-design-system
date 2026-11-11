@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 node testing/check-release-metadata.mjs
+node --test testing/installed-reference-smoke.test.mjs
 npm run orchestrator:contract
 npm run ember:package
 npm run ember:first-use

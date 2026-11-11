@@ -22,6 +22,7 @@ async function markdownFiles(directory) {
 
 const failures = [];
 const references = new Set();
+let entrypointLinks = 0;
 
 for (const file of await markdownFiles(skillsRoot)) {
   const source = await readFile(file, "utf8");
@@ -39,6 +40,37 @@ for (const file of await markdownFiles(skillsRoot)) {
   for (const match of source.matchAll(/<skills-root>\/([A-Za-z0-9._/-]+)/g)) {
     references.add(match[1]);
   }
+
+  // Entrypoint links must work in the installed pack, not just the author's workspace.
+  // Ignore fenced examples; their illustrative paths are not runtime dependencies.
+  if (path.basename(file) === "SKILL.md") {
+    const prose = source.replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1\s*$/gm, "");
+    for (const match of prose.matchAll(/\]\(\s*(?:<([^>]+)>|([^\s)]+))(?:\s+"[^"\n]*")?\s*\)/g)) {
+      const href = match[1] || match[2];
+      if (/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(href)) continue;
+      const targetPath = href.split(/[?#]/, 1)[0];
+      if (!targetPath) continue;
+      let decoded;
+      try {
+        decoded = decodeURIComponent(targetPath);
+      } catch {
+        failures.push(`${path.relative(skillsRoot, file)} has invalid link ${href}`);
+        continue;
+      }
+      const target = path.resolve(path.dirname(file), decoded);
+      const relative = path.relative(path.resolve(skillsRoot), target);
+      entrypointLinks += 1;
+      if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+        failures.push(`${path.relative(skillsRoot, file)} links outside the installed pack: ${href}`);
+        continue;
+      }
+      try {
+        await stat(target);
+      } catch {
+        failures.push(`${path.relative(skillsRoot, file)} has unresolved link ${href}`);
+      }
+    }
+  }
 }
 
 for (const reference of references) {
@@ -51,4 +83,4 @@ for (const reference of references) {
 }
 
 assert.deepEqual(failures, [], `installed guidance has unresolved references\n${failures.join("\n")}`);
-console.log(`[installed-reference-smoke] ${references.size} portable references resolved under ${skillsRoot}`);
+console.log(`[installed-reference-smoke] ${references.size} portable references and ${entrypointLinks} entrypoint links resolved under ${skillsRoot}`);

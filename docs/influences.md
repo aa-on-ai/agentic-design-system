@@ -52,6 +52,13 @@ imported for this update.
 - What ADS borrows: project identity should be readable by agents as structured design context.
 - What ADS changes: ADS treats project identity as one input to a loop, not the whole system.
 
+## Quest's design playground workflow
+
+- Source: [Vincent Nallatamby's November 6, 2026 thread](https://x.com/VNallatamby/status/2118811242592907427), describing Tân Tân Nguyễn's design process at Quest.
+- What ADS borrows: explore with coded design-system components, preserve runnable alternatives, tune details directly in prototypes, and review on the actual target platform before promoting the chosen implementation.
+- What ADS changes: `skills/design-variations/SKILL.md` applies the pattern across platforms within the existing scoped loop. A small project-native playground is the default when feasible; disposable concepts remain available. Paper, Mobbin, TestFlight, a particular branching scheme and ten simulators are not requirements.
+- Limits: the thread is a practitioner account, not measured proof of improved outcomes. No third-party code or unpublished skill was copied. Retained alternatives stay outside the shipping path; review and release authority remain unchanged.
+
 ## make-interfaces-feel-better
 
 - Source: <https://github.com/jakubkrehel/make-interfaces-feel-better>

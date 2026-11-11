@@ -43,7 +43,7 @@ for (const target of [
   assert.equal(await continueButton.isDisabled(), true, `${target.name}: ambiguous task created a handoff`);
 
   await task.fill("Compare three onboarding structures for the first-run dashboard");
-  await page.getByRole("heading", { name: "Disposable browser exploration" }).waitFor();
+  await page.getByRole("heading", { name: "Runnable design alternatives" }).waitFor();
   await page.getByText("Human choose, blend, or reject gate", { exact: true }).waitFor();
   assert.equal(await continueButton.isDisabled(), true, `${target.name}: route advanced before explicit review`);
   await page.getByRole("checkbox", { name: /I reviewed this route/ }).check();
