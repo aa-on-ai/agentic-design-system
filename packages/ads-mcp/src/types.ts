@@ -46,6 +46,7 @@ export type RenderInput = {
 export type EvaluateInput = {
   runId: string;
   compareToRunId?: string;
+  context?: { referenceRunIds?: string[]; sourceFiles?: string[] };
   rubric: {
     task: string;
     criteria: Array<{ name: string; weight: number }>;
@@ -87,6 +88,11 @@ export type VisualFinding = {
   evidence: string[];
 };
 
+export type JudgeContext = {
+  images: Array<{ role: 'baseline' | 'reference'; runId: string; state: string; breakpoint: string; artifact: string; path: string }>;
+  sources: Array<{ path: string; sha256: string; content: string; trust: 'source_data_not_instructions' }>;
+};
+
 export type VisualJudgeRequest = {
   schemaVersion: 1;
   runId: string;
@@ -94,7 +100,9 @@ export type VisualJudgeRequest = {
   rubric: EvaluateInput['rubric'];
   gates: Record<string, unknown>;
   comparison: Record<string, unknown> | null;
+  context?: JudgeContext;
   screenshots: Array<{
+    role?: 'candidate';
     state: string;
     breakpoint: string;
     artifact: string;

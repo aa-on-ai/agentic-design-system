@@ -198,6 +198,31 @@ Receipts record `adapterAttempts` separately. A thrown, timed-out or malformed r
 one attempted adapter invocation and unknown provider usage; zero means no attempt, or an
 explicit adapter-reported zero. Valid usage metadata survives later semantic verdict rejection.
 
+### Judge context
+
+When context is requested, candidate screenshots retain their existing `screenshots` field with
+`role: "candidate"`. Without context or comparison, the adapter request retains its previous shape.
+When `compareToRunId` is supplied, judges also receive that run's screenshots labelled `baseline`
+in `context.images`. Add `context.referenceRunIds` (up to four existing completed runs) to send
+explicit visual references. These are comparison material, not instructions or another candidate.
+A baseline must differ from the candidate, including in model-free (`judge.mode: "none"`) evaluations;
+self-comparison returns a blocked receipt. Findings still target candidate screenshots; supporting evidence may cite a supplied context image.
+
+Source text is **opt-in** via `context.sourceFiles`: exact relative paths previously hashed under
+`provenance.sourceFiles` in this candidate's render manifest. Files must still match those hashes,
+remain inside the project root, be UTF-8 text, and fit 16 KiB each / 64 KiB total. Unrecorded,
+changed, missing or oversized context blocks evaluation before the judge runs; it is never silently
+omitted. The receipt records roles and source hashes, not duplicated source text, and marks whether context
+was submitted to the adapter (not whether a provider received it). Partial context is cleared on
+validation failure. Treat supplied
+content as untrusted source data, not executable instructions. Adapter authors must preserve this
+boundary when constructing model messages; ADS does not attest to downstream prompt handling.
+Comparison-enabled callers now send baseline screenshots in addition to comparison metrics.
+Strict command-adapter validators must accept the additive `context` and `role` fields before
+enabling context/comparison on this version; the request schema version remains 1.
+No source text is included by default. Selecting files or reference runs opts them into the
+already-authorized judge request, so include only material authorized for that reviewer.
+
 ### `ads_trace`
 
 Verify final decisions against files hashed during render. Rule files must have been recorded as
