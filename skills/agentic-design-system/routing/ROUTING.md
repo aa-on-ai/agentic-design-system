@@ -32,7 +32,7 @@ the owning skill or runbook and keep the trigger in the orchestrator.
 | Trigger observed by the orchestrator | Load | Specialist purpose |
 |---|---|---|
 | A visual reference is a desired target | `<skills-root>/visual-reference-calibration/SKILL.md` | Lock borrowed layers, exclusions, and fidelity before work |
-| The user asks for options, variants, concepts, or help choosing | `<skills-root>/design-variations/SKILL.md` | Diverge in a disposable artifact; promote only the chosen direction |
+| The user asks for options, variants, concepts, or help choosing | `<skills-root>/design-variations/SKILL.md` | Compare preserved runnable alternatives; promote only the chosen direction |
 | Requested personality/delight on eligible marketing/editorial/launch work; explicit atmosphere/immersion | the matching whimsical or world-building skill | Support the brief, not universal novelty or compulsory creative work |
 | Animation, transition, gesture, or interaction feel | `<skills-root>/web-animation-design/SKILL.md` plus the motion reference | Prove motion purpose, interruptibility, and reduced-motion behavior |
 | Mobile/app/PWA work needs judgment beyond ordinary breakpoint proof | `workflows/mobile-review.md` | Separate design judgment from objective platform defects |
@@ -64,10 +64,10 @@ materially change implementation and still remains unclear, resolve that choice 
 Use exploration for real structural or interaction choices, not minor styling values:
 
 1. Define the decision and invariant content.
-2. Build distinct directions in one disposable browser artifact.
-3. Render each at matched desktop and mobile viewports.
+2. Use the design-variations skill to build distinct directions in a project-native playground, or a disposable concept study when no real-stack implementation is useful yet.
+3. Render and exercise each in matched states on the target platform; preserve runnable alternatives and use development-only tuning controls when useful.
 4. Recommend one direction with tradeoffs.
-5. Promote only the chosen direction, then return to the default Build path.
+5. Promote only the chosen implementation and persisted values, excluding experimental controls from shipping while retaining recoverable alternatives. Return to the default Build path.
 
 ## Expressive and motion work
 

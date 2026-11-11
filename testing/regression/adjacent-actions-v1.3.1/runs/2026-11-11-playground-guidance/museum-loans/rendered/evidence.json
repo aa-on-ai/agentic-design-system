@@ -1,0 +1,617 @@
+{
+  "evidenceFormat": 2,
+  "url": "file:///Users/moltbot/clawd/worktrees/ads-playground-20261111/testing/regression/adjacent-actions-v1.3.1/runs/2026-11-11-playground-guidance/museum-loans/artifact/index.html",
+  "capturedStates": [
+    "default",
+    "loading",
+    "empty",
+    "error"
+  ],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "axeAvailable": true,
+  "snapshots": [
+    {
+      "state": "default",
+      "breakpoint": "390x844",
+      "screenshot": "default-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 1065,
+      "renderedTextSample": "Fieldwork Museum Loan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum One final check before departure. Current loan record / registrar workspace Transfer / 14 November Ceramic vessel, circa 1920 A hairline crack at the rim is stable. The condition report",
+      "renderSignature": "786cd81e",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "default",
+      "breakpoint": "1280x800",
+      "screenshot": "default-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 1064,
+      "renderedTextSample": "Fieldwork MuseumLoan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum One final check before departure. Current loan record / registrar workspace Transfer / 14 November Ceramic vessel, circa 1920 A hairline crack at the rim is stable. The condition report ",
+      "renderSignature": "ba75277a",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "390x844",
+      "screenshot": "loading-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 284,
+      "renderedTextSample": "Fieldwork Museum Loan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum Opening the loan record Opening the accession record, condition report and custody milestones for loan 2026-041. Synthetic data. Local interactions only; no operational system is connec",
+      "renderSignature": "2c030a34",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "loading",
+      "breakpoint": "1280x800",
+      "screenshot": "loading-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 283,
+      "renderedTextSample": "Fieldwork MuseumLoan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum Opening the loan record Opening the accession record, condition report and custody milestones for loan 2026-041. Synthetic data. Local interactions only; no operational system is connect",
+      "renderSignature": "1d6373a0",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "390x844",
+      "screenshot": "empty-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 324,
+      "renderedTextSample": "Fieldwork Museum Loan registrar Local demonstration Loan register / no selection No loan selected Choose an object loan to inspect Open the sample loan to inspect its condition and custody record. No loan is selected in this view. Open sample loan Synthetic data. Local interactio",
+      "renderSignature": "fbba9495",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "empty",
+      "breakpoint": "1280x800",
+      "screenshot": "empty-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": false,
+      "renderedTextLength": 323,
+      "renderedTextSample": "Fieldwork MuseumLoan registrar Local demonstration Loan register / no selection No loan selected Choose an object loan to inspect Open the sample loan to inspect its condition and custody record. No loan is selected in this view. Open sample loan Synthetic data. Local interaction",
+      "renderSignature": "b45f4be1",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 1,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "390x844",
+      "screenshot": "error-390x844.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1267,
+      "renderedTextSample": "Fieldwork Museum Loan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum Approval belongs to the collections lead. Read access active / collections lead approval required Approval permission required Your registrar role can inspect records but cannot approve",
+      "renderSignature": "29f5861c",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    },
+    {
+      "state": "error",
+      "breakpoint": "1280x800",
+      "screenshot": "error-1280x800.png",
+      "horizontalOverflow": false,
+      "cumulativeLayoutShift": {
+        "supported": true,
+        "value": 0,
+        "entryCount": 0,
+        "excludedByRecentInput": 0,
+        "largestShift": 0
+      },
+      "axe": {
+        "violations": [],
+        "violationCount": 0,
+        "seriousOrCritical": 0
+      },
+      "smallTouchTargets": [],
+      "body": {
+        "fontFamily": "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+        "color": "rgb(34, 42, 41)",
+        "backgroundColor": "rgb(246, 245, 241)",
+        "visible": true
+      },
+      "landmarks": {
+        "main": true,
+        "nav": false,
+        "header": true,
+        "footer": true
+      },
+      "statusRegion": true,
+      "alertRegion": true,
+      "renderedTextLength": 1266,
+      "renderedTextSample": "Fieldwork MuseumLoan registrar Local demonstration Loan 2026-041 / Fieldwork to Harbor Museum Approval belongs to the collections lead. Read access active / collections lead approval required Approval permission required Your registrar role can inspect records but cannot approve ",
+      "renderSignature": "edcbc1c0",
+      "probe": {},
+      "visualFoundation": {
+        "enforcement": "report-only",
+        "roundedSingleEdgeBorders": [],
+        "oneEdgeShadowCandidates": [],
+        "forcedUppercase": [],
+        "typographyCandidates": [],
+        "symbolOnlyControls": [],
+        "statusDotCandidates": [],
+        "dividerCount": 4,
+        "colonTextCandidates": [],
+        "emDashTextCandidates": [],
+        "dotGlyphCandidates": []
+      },
+      "interactionDiagnostics": {
+        "enforcement": "modal-blocking",
+        "hoverEnforcement": "report-only",
+        "modalContract": {
+          "status": "not_present",
+          "declaredCount": 0,
+          "declaredIds": [],
+          "visibleCount": 0,
+          "reason": "no aria-modal surface was present in the captured state",
+          "surfaces": [],
+          "openedByGenericTrigger": false
+        },
+        "ungatedHoverMotion": []
+      }
+    }
+  ],
+  "gates": {
+    "axeAvailable": true,
+    "seriousAxeViolations": 0,
+    "horizontalOverflowAt": [],
+    "landmarkFailures": [],
+    "liveRegionFailures": [],
+    "stateRendered": {
+      "default": true,
+      "loading": true,
+      "empty": true,
+      "error": true
+    },
+    "renderedFonts": [
+      "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+    ],
+    "touchTargetsUnder48": [],
+    "touchTargetsUnder44": [],
+    "clsAvailable": true,
+    "clsThreshold": 0.1,
+    "maxCumulativeLayoutShift": 0,
+    "cumulativeLayoutShiftAt": [
+      {
+        "state": "default",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "default",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "loading",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "empty",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "390x844",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      },
+      {
+        "state": "error",
+        "breakpoint": "1280x800",
+        "supported": true,
+        "value": 0,
+        "entryCount": 0
+      }
+    ],
+    "clsUnavailableAt": [],
+    "clsFailures": [],
+    "modalInteractions": {
+      "receiptPath": "modal-interaction-receipt.json",
+      "required": false,
+      "passed": true,
+      "requiredDialogs": [],
+      "failures": []
+    }
+  }
+}

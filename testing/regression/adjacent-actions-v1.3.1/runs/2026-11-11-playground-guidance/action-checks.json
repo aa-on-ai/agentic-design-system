@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "slug": "pawprint",
+      "state": "default",
+      "viewport": "390x844",
+      "restrictedDisabled": false,
+      "preservedEnabled": null
+    },
+    {
+      "slug": "pawprint",
+      "state": "error",
+      "viewport": "390x844",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "pawprint",
+      "state": "default",
+      "viewport": "1280x800",
+      "restrictedDisabled": false,
+      "preservedEnabled": null
+    },
+    {
+      "slug": "pawprint",
+      "state": "error",
+      "viewport": "1280x800",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "state": "default",
+      "viewport": "390x844",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "state": "error",
+      "viewport": "390x844",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "state": "default",
+      "viewport": "1280x800",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "state": "error",
+      "viewport": "1280x800",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "museum-loans",
+      "state": "default",
+      "viewport": "390x844",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "museum-loans",
+      "state": "error",
+      "viewport": "390x844",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "museum-loans",
+      "state": "default",
+      "viewport": "1280x800",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "museum-loans",
+      "state": "error",
+      "viewport": "1280x800",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "kitchen-pass",
+      "state": "default",
+      "viewport": "390x844",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "kitchen-pass",
+      "state": "error",
+      "viewport": "390x844",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "kitchen-pass",
+      "state": "default",
+      "viewport": "1280x800",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "kitchen-pass",
+      "state": "error",
+      "viewport": "1280x800",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "radio-rundown",
+      "state": "default",
+      "viewport": "390x844",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "radio-rundown",
+      "state": "error",
+      "viewport": "390x844",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "radio-rundown",
+      "state": "default",
+      "viewport": "1280x800",
+      "restrictedDisabled": false,
+      "preservedEnabled": true
+    },
+    {
+      "slug": "radio-rundown",
+      "state": "error",
+      "viewport": "1280x800",
+      "restrictedDisabled": true,
+      "preservedEnabled": true
+    }
+  ]
+}

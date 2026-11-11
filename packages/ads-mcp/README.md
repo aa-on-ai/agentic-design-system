@@ -184,6 +184,20 @@ The server validates exact rubric score keys, ADS finding categories, severities
 normalized screenshot regions, and verdict consistency before accepting the result. Missing,
 timed-out, or inconsistent judge output returns `blocked`, never a pass.
 
+Command judges may add an optional `usage` object to their JSON response:
+
+```json
+{"provider":"actual-provider","model":"returned-model","modelCalls":0}
+```
+
+Place that object under the `usage` key alongside the existing verdict/scores/findings fields.
+It is **adapter-reported**, not independent provider verification. Operator-configured identity
+remains unchanged even when the reported model differs. Old adapters remain compatible; when
+`usage` is absent, `modelCalls` is `null` (unknown), not one inferred call.
+Receipts record `adapterAttempts` separately. A thrown, timed-out or malformed result records
+one attempted adapter invocation and unknown provider usage; zero means no attempt, or an
+explicit adapter-reported zero. Valid usage metadata survives later semantic verdict rejection.
+
 ### `ads_trace`
 
 Verify final decisions against files hashed during render. Rule files must have been recorded as
@@ -236,7 +250,7 @@ response. Resource URIs are stable logical identifiers rather than disk paths. F
 - External adapters run as fixed argv processes without a shell. Executables must be absolute
   paths and stdout is bounded.
 - A model call requires both startup configuration and per-evaluation
-  `judge.mode: "configured"`; provider, model, and call count are written to the receipt.
+  `judge.mode: "configured"`; configured identity, adapter attempts, and explicitly reported usage are written separately to the receipt.
 
 ## Verify
 

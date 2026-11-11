@@ -49,6 +49,11 @@ const visualJudgeResponseSchema = z.object({
   scores: z.record(z.string(), z.number()),
   findings: z.array(findingSchema),
   nextRevisionPrompt: z.string(),
+  usage: z.object({
+    provider: z.string().trim().min(1),
+    model: z.string().trim().min(1),
+    modelCalls: z.number().int().nonnegative(),
+  }).strict().optional(),
 }).strict();
 
 const swiftUiResponseSchema = z.object({
@@ -111,6 +116,7 @@ async function runJsonCommand(
 
 export class CommandVisualJudge implements VisualJudge {
   readonly id: string;
+  readonly configuredIdentity: Readonly<{ provider: string; model: string }>;
   private readonly config: CommandConfig;
   private readonly provider: string;
   private readonly model: string;
@@ -118,6 +124,7 @@ export class CommandVisualJudge implements VisualJudge {
   constructor(config: CommandConfig & { provider: string; model: string }) {
     this.id = `command:${config.provider}/${config.model}`;
     this.config = { command: config.command, args: [...config.args] };
+    this.configuredIdentity = Object.freeze({ provider: config.provider, model: config.model });
     this.provider = config.provider;
     this.model = config.model;
   }
@@ -127,7 +134,9 @@ export class CommandVisualJudge implements VisualJudge {
     return {
       provider: this.provider,
       model: this.model,
-      modelCalls: 1,
+      modelCalls: response.usage?.modelCalls ?? null,
+      identitySource: 'configured',
+      ...(response.usage ? { reportedUsage: response.usage } : {}),
       verdict: response.verdict,
       scores: response.scores,
       findings: response.findings,

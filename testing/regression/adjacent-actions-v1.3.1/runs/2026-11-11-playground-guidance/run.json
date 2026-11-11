@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-11-11-playground-guidance",
+  "createdAt": "2026-11-11T19:01:28.708Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "ef0b4bb2a086b7a25a0261d57562f5ee8aaf8bb2",
+  "behaviorDigest": "e1e11a45defb87fd9a6e80f798ccf7692a68e0b3f41c1f1992e68f29f27039fe",
+  "behaviorFileCount": 83,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "clawc-local-builder:2026-11-11-playground-guidance",
+      "graderContext": "independent-fable-5.2:2026-11-11:targeted-regrade"
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "clawc-local-builder:2026-11-11-playground-guidance",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade"
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "clawc-local-builder:2026-11-11-playground-guidance",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade"
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "clawc-local-builder:2026-11-11-playground-guidance",
+      "graderContext": "independent-fable-5.2:2026-11-11:targeted-regrade"
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "clawc-local-builder:2026-11-11-playground-guidance",
+      "graderContext": "independent-fable-5.2:2026-11-11:regression-regrade"
+    }
+  ]
+}

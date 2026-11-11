@@ -1,0 +1,56 @@
+{
+  "slug": "pawprint",
+  "verdict": "satisfied",
+  "scores": {
+    "designQuality": 7,
+    "originality": 6,
+    "craft": 6,
+    "functionality": 7
+  },
+  "findings": [
+    {
+      "severity": "minor",
+      "row": "adjacentActionSemantics",
+      "issue": "The H1 says to reconnect and the alert names Retry, but Retry is still below the first viewport at both sizes. It now sits beside the disabled 'New walk', so the adjacent pair is intact; only its distance from the alert remains.",
+      "evidence": "error-1280x800.png: alert y\u2248262-360, 'New walk' (grey) and 'Retry' (outlined) side by side at y\u2248846 against an 800 viewport. error-390x844.png: 'New walk' y\u22481030, 'Retry' y\u22481090."
+    },
+    {
+      "severity": "minor",
+      "row": "functionality",
+      "issue": "Unresolved: the only feedback region is inside the focus card, so 'New walk' and 'Retry' messages appear under 'Contact Mina'. The route can now be discussed but never recorded as confirmed.",
+      "evidence": "index.html:6 has a single #feedback inside .focus; index.html:7 writes every message to it; the button keeps data-action=\"route\". Source only."
+    },
+    {
+      "severity": "minor",
+      "row": "craft",
+      "issue": "Unresolved: at 390 in error the two heading actions stack as a narrow right-hand column, the 'Route change' chip nearly disappears on the exception row, and a second rule follows the exception box.",
+      "evidence": "error-390x844.png y\u22481007-1115; error-1280x800.png chip at y\u2248980 and rule at y\u22481022."
+    },
+    {
+      "severity": "minor",
+      "row": "hierarchy",
+      "issue": "Unresolved: the outage is stated four times in a stack (H1, status line, alert title, alert body).",
+      "evidence": "error-1280x800.png y\u2248180-330."
+    },
+    {
+      "severity": "minor",
+      "row": "originality",
+      "issue": "Template residue remains: unused c.rows, c.col, c.target and a c.domain that still holds the old 'Confirm canal route' button, plus CSS for other products and an unreachable 'open-sample' branch.",
+      "evidence": "index.html:1,3,7."
+    }
+  ],
+  "failingRows": [],
+  "nextRevisionPrompt": "Optional polish. Move or duplicate Retry next to the alert in the error state. Give the schedule-heading actions their own feedback region. Fix the stacked heading actions at 390, the chip contrast on the exception row and the double rule. State the outage once in the H1 and once in the alert. Remove unused config, CSS and branches.",
+  "rationale": "The prior major is resolved. The focus-card action is now 'Contact Mina', rendered enabled in both default and error at both sizes, with no disabled attribute in source (index.html:6). The only restricted control in error is 'New walk', natively disabled with aria-describedby pointing at the alert body, which says new walks are paused and names Retry (index.html:5-6). Retry is enabled and directly adjacent to it. No second disabled mutation exists and default shows 'New walk' enabled with no Retry. The swap introduced no new material defect: the contact action is safe during an outage and its feedback text is specific. Remaining items are the prior minors plus Retry's distance from the alert, which the outcome does not gate.",
+  "imagesRead": [
+    "default-390x844.png",
+    "default-1280x800.png",
+    "loading-390x844.png",
+    "loading-1280x800.png",
+    "empty-390x844.png",
+    "empty-1280x800.png",
+    "error-390x844.png",
+    "error-1280x800.png"
+  ],
+  "weightedScore": 6.5
+}
