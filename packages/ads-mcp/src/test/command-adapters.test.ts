@@ -42,7 +42,9 @@ process.stdout.write(JSON.stringify({
   });
   assert.equal(result.provider, 'fixture-provider');
   assert.equal(result.model, 'fixture-model');
-  assert.equal(result.modelCalls, 1);
+  assert.equal(result.modelCalls, null);
+  assert.equal(result.identitySource, 'configured');
+  assert.equal(result.reportedUsage, undefined);
   assert.equal(result.verdict, 'satisfied');
   assert.equal(result.scores['Design Quality'], 9);
 });
@@ -113,4 +115,37 @@ test('command adapters reject invalid or unbounded protocol output', async () =>
     }),
     /invalid JSON/,
   );
+});
+
+const usageRequest = {
+  schemaVersion: 1 as const, runId: 'run_usage_fixture',
+  target: { type: 'url' as const, url: 'http://localhost:3000/' },
+  rubric: { task: 'Review', criteria: [{ name: 'Quality', weight: 100 }] },
+  gates: {}, comparison: null, screenshots: [],
+};
+function usageJudge(extra: Record<string, unknown>) {
+  const response = { verdict: 'satisfied', scores: { Quality: 8 }, findings: [], nextRevisionPrompt: '', ...extra };
+  return new CommandVisualJudge({ command: process.execPath,
+    args: ['--input-type=module', '-e', `for await (const chunk of process.stdin) {} process.stdout.write(${JSON.stringify(JSON.stringify(response))})`],
+    provider: 'configured-provider', model: 'requested-model',
+  });
+}
+test('command judge separates explicit zero or multi-call usage from immutable configured identity', async () => {
+  for (const modelCalls of [0, 3]) {
+    const usage = { provider: 'reported-provider', model: 'different-returned-model', modelCalls };
+    const judge = usageJudge({ usage });
+    const result = await judge.evaluate(usageRequest);
+    assert.deepEqual(judge.configuredIdentity, { provider: 'configured-provider', model: 'requested-model' });
+    assert.equal(result.provider, 'configured-provider');
+    assert.equal(result.model, 'requested-model');
+    assert.equal(result.modelCalls, modelCalls);
+    assert.deepEqual(result.reportedUsage, usage);
+  }
+});
+test('command judge rejects invalid usage and top-level identity spoofing', async () => {
+  for (const modelCalls of [-1, 0.5, Number.MAX_SAFE_INTEGER + 1]) {
+    await assert.rejects(usageJudge({ usage: { provider: 'p', model: 'm', modelCalls } }).evaluate(usageRequest));
+  }
+  await assert.rejects(usageJudge({ usage: { provider: '', model: 'm', modelCalls: 0 } }).evaluate(usageRequest));
+  await assert.rejects(usageJudge({ provider: 'spoof', model: 'spoof', modelCalls: 0 }).evaluate(usageRequest));
 });

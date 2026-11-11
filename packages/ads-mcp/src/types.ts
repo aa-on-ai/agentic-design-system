@@ -102,10 +102,18 @@ export type VisualJudgeRequest = {
   }>;
 };
 
-export type VisualJudgeResult = {
+export type ReportedJudgeUsage = {
   provider: string;
   model: string;
   modelCalls: number;
+};
+
+export type VisualJudgeResult = {
+  provider: string;
+  model: string;
+  modelCalls: number | null;
+  identitySource?: 'configured' | 'adapter_reported';
+  reportedUsage?: ReportedJudgeUsage;
   verdict: 'satisfied' | 'needs_revision' | 'failed';
   scores: Record<string, number>;
   findings: VisualFinding[];
@@ -114,6 +122,7 @@ export type VisualJudgeResult = {
 
 export type VisualJudge = {
   id: string;
+  readonly configuredIdentity?: Readonly<{ provider: string; model: string }>;
   evaluate: (request: VisualJudgeRequest, signal?: AbortSignal) => Promise<VisualJudgeResult>;
 };
 

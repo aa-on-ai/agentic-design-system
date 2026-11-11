@@ -454,3 +454,41 @@ test('SwiftUI target returns a preserved blocked run when no adapter is configur
   const evidence = await service.readResource(rendered.artifacts.evidence);
   assert.match(evidence.bytes.toString('utf8'), /"adapterAvailable": false/);
 });
+
+
+test('judge receipts count attempts and retain reported usage after semantic failure, never invent zero on failure', async () => {
+  for (const failure of ['throw', 'invalid-verdict', 'none', 'hard-blocked', 'unknown', 'zero'] as const) {
+    const { config } = await fixture();
+    const visualJudge: VisualJudge = {
+      id: 'receipt-fixture', configuredIdentity: { provider: 'configured', model: 'requested' },
+      async evaluate() {
+        if (failure === 'throw') throw new Error('provider may already have incurred usage');
+        assert.notEqual(failure, 'hard-blocked', 'hard gates must prevent judge invocation');
+        return {
+          provider: 'configured', model: 'requested', identitySource: 'configured',
+          modelCalls: failure === 'unknown' ? null : failure === 'zero' ? 0 : 2,
+          ...(failure !== 'unknown' ? { reportedUsage: { provider: 'actual', model: 'returned', modelCalls: failure === 'zero' ? 0 : 2 } } : {}),
+          verdict: 'satisfied', scores: { [failure === 'invalid-verdict' ? 'WrongRubric' : 'Quality']: 8 }, findings: [], nextRevisionPrompt: '',
+        };
+      },
+    };
+    const service = await AdsService.create(config, { captureRunner: failure === 'hard-blocked' ? unverifiedModalCapture : fakeCapture, visualJudge });
+    const rendered = await service.render({ target: { type: 'url', url: 'http://localhost:3000' } });
+    const evaluated = await service.evaluate({ runId: rendered.runId,
+      rubric: { task: 'Review', criteria: [{ name: 'Quality', weight: 100 }] },
+      judge: { mode: failure === 'none' ? 'none' : 'configured' },
+    });
+    const resource = await service.readResource(evaluated.artifacts.receipt);
+    const receipt = JSON.parse(resource.bytes.toString('utf8')).judge;
+    const unattempted = failure === 'none' || failure === 'hard-blocked';
+    const unknown = failure === 'throw' || failure === 'unknown';
+    assert.equal(receipt.adapterAttempts, unattempted ? 0 : 1);
+    assert.equal(receipt.modelCalls, unattempted || failure === 'zero' ? 0 : unknown ? null : 2);
+    assert.equal(receipt.usageSource, unattempted ? 'not_invoked' : unknown ? 'unknown' : 'adapter_reported');
+    if (failure === 'invalid-verdict') {
+      assert.equal(evaluated.status, 'blocked');
+      assert.equal(receipt.configured.model, 'requested');
+      assert.equal(receipt.reportedUsage.model, 'returned');
+    }
+  }
+});

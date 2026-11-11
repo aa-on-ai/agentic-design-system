@@ -233,15 +233,32 @@ async function snapshotBlockers(
   return blockers;
 }
 
+function validateJudgeMetadata(result: VisualJudgeResult) {
+  if (typeof result.provider !== 'string' || !result.provider.trim()
+    || typeof result.model !== 'string' || !result.model.trim()) throw new Error('judge provider and model are required');
+  if (result.modelCalls !== null && (!Number.isSafeInteger(result.modelCalls) || result.modelCalls < 0)) {
+    throw new Error('judge modelCalls must be null or a non-negative safe integer');
+  }
+  const identitySource = result.identitySource ?? 'adapter_reported';
+  if (identitySource !== 'configured' && identitySource !== 'adapter_reported') throw new Error('invalid judge identity source');
+  const usage = result.reportedUsage;
+  if (usage && (typeof usage.provider !== 'string' || !usage.provider.trim()
+    || typeof usage.model !== 'string' || !usage.model.trim()
+    || !Number.isSafeInteger(usage.modelCalls) || usage.modelCalls < 0
+    || usage.modelCalls !== result.modelCalls)) throw new Error('invalid or inconsistent reported judge usage');
+  return {
+    provider: result.provider, model: result.model, identitySource,
+    modelCalls: result.modelCalls,
+    reportedUsage: usage ?? (identitySource === 'adapter_reported' && result.modelCalls !== null
+      ? { provider: result.provider, model: result.model, modelCalls: result.modelCalls } : null),
+  };
+}
+
 function validateJudgeResult(
   result: VisualJudgeResult,
   rubric: EvaluateInput['rubric'],
   allowedArtifacts: Map<string, { state: string; breakpoint: string }>,
 ): VisualJudgeResult {
-  if (!result.provider.trim() || !result.model.trim()) throw new Error('judge provider and model are required');
-  if (!Number.isInteger(result.modelCalls) || result.modelCalls < 0) {
-    throw new Error('judge modelCalls must be a non-negative integer');
-  }
   const criteria = new Set(rubric.criteria.map(({ name }) => name));
   const scoreNames = Object.keys(result.scores);
   if (scoreNames.length !== criteria.size || scoreNames.some((name) => !criteria.has(name))) {
@@ -650,6 +667,8 @@ export class AdsService {
 
       const hardBlocked = run.status !== 'complete' || blockers.length > 0;
       let judgeResult: VisualJudgeResult | null = null;
+      let adapterAttempts = 0;
+      let judgeMetadata: ReturnType<typeof validateJudgeMetadata> | null = null;
       if (!hardBlocked && judgeMode === 'configured') {
         if (!this.visualJudge) {
           blockers.push(
@@ -672,16 +691,19 @@ export class AdsService {
             screenshots.map(({ artifact, state, breakpoint }) => [artifact, { state, breakpoint }]),
           );
           try {
+            adapterAttempts += 1;
+            const rawResult = await this.visualJudge.evaluate({
+              schemaVersion: 1,
+              runId: input.runId,
+              target: manifest.target,
+              rubric: input.rubric,
+              gates,
+              comparison,
+              screenshots,
+            }, combineAbortSignals(signal, this.config.timeoutMs));
+            judgeMetadata = validateJudgeMetadata(rawResult);
             judgeResult = validateJudgeResult(
-              await this.visualJudge.evaluate({
-                schemaVersion: 1,
-                runId: input.runId,
-                target: manifest.target,
-                rubric: input.rubric,
-                gates,
-                comparison,
-                screenshots,
-              }, combineAbortSignals(signal, this.config.timeoutMs)),
+              rawResult,
               input.rubric,
               allowedArtifacts,
             );
@@ -716,19 +738,19 @@ export class AdsService {
         stageId,
         generatedAt: now(),
         rubric: input.rubric,
-        judge: judgeResult
-          ? {
-            mode: judgeMode,
-            adapter: this.visualJudge?.id,
-            provider: judgeResult.provider,
-            model: judgeResult.model,
-            modelCalls: judgeResult.modelCalls,
-          }
-          : {
-            mode: judgeMode,
-            ...(judgeMode === 'configured' && this.visualJudge ? { adapter: this.visualJudge.id } : {}),
-            modelCalls: 0,
-          },
+        judge: {
+          mode: judgeMode,
+          ...(judgeMode === 'configured' && this.visualJudge ? { adapter: this.visualJudge.id } : {}),
+          adapterAttempts,
+          configured: judgeMode === 'configured' ? this.visualJudge?.configuredIdentity ?? null : null,
+          provider: judgeMetadata?.provider ?? null,
+          model: judgeMetadata?.model ?? null,
+          identitySource: judgeMetadata?.identitySource ?? null,
+          reportedUsage: judgeMetadata?.reportedUsage ?? null,
+          modelCalls: adapterAttempts === 0 ? 0 : judgeMetadata?.modelCalls ?? null,
+          usageSource: adapterAttempts === 0 ? 'not_invoked'
+            : judgeMetadata?.modelCalls != null ? 'adapter_reported' : 'unknown',
+        },
       });
       const report = [
         `# ADS evaluation ${input.runId}`,
@@ -739,7 +761,9 @@ export class AdsService {
         '',
         'Deterministic rendered gates are attached in `receipt.json`.',
         judgeMode === 'none' ? 'Visual judgment remains unresolved and requires a human or configured judge.' : '',
-        judgeResult ? `Visual judge: ${judgeResult.provider}/${judgeResult.model}` : '',
+        judgeMetadata ? `Judge identity (${judgeMetadata.identitySource}): ${judgeMetadata.provider}/${judgeMetadata.model}` : '',
+        `Judge adapter attempts: ${adapterAttempts}. Provider usage is ${adapterAttempts === 0 ? 'not invoked' : judgeMetadata?.modelCalls != null ? 'adapter-reported, not independently verified' : 'unknown'}.`,
+        judgeMetadata?.reportedUsage ? `Adapter-reported usage: ${JSON.stringify(judgeMetadata.reportedUsage)}` : '',
         judgeResult ? `Verdict: ${judgeResult.verdict}` : '',
         judgeResult ? `Scores: ${JSON.stringify(judgeResult.scores)}` : '',
         judgeResult?.findings.length ? `Findings: ${JSON.stringify(judgeResult.findings)}` : '',
