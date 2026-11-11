@@ -41,12 +41,16 @@ python3 <skills-root>/design-review/scripts/anti-pattern-check.py <file.tsx>
 Then capture the rendered route at mobile breakpoints — this is the **authoritative** platform
 evidence (axe on the live DOM; measured overflow, semantics, and CLS), not an eyeball pass:
 
+Use `<skills-root>/design-review/references/capture-routing.md` to select MCP or CLI once.
+Reuse readable matched MCP evidence instead of running the CLI example below again.
+
 ```bash
 node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
   --states default,empty,loading,error --breakpoints 390x844,768x1024 --out evidence/<slug>
 ```
 
-Read `evidence/<slug>/evidence.json` → `gates` and map them to platform defects:
+Read `evidence/<slug>/evidence.json` (or the returned MCP evidence resource) → `gates`
+and map them to platform defects:
 
 - `seriousAxeViolations > 0` → P0/P1 (by impact), cite the axe rule id
 - `horizontalOverflowAt` non-empty → P0 (overflow at that breakpoint)
@@ -71,7 +75,8 @@ then re-run capture. If you genuinely can't install, fall back to a manual 375px
 
 ## Evidence required
 
-- `evidence/<slug>/evidence.json` + the captured screenshots from `capture.mjs` (or a manual
+- Readable evidence and screenshots from the chosen route: returned MCP resources/exports,
+  or `evidence/<slug>/evidence.json` + the screenshots from `capture.mjs` (or a manual
   375px screenshot with an explicit note that capture was unavailable).
 - Output of the three source checks on changed files.
 - Pass A findings tied to decision forks; Pass B findings tied to a `file:line`, axe rule id, or

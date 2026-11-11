@@ -22,6 +22,7 @@ import type {
   EvaluateInput,
   EvaluateOutput,
   FileRecord,
+  JudgeContext,
   RenderInput,
   RenderOutput,
   RenderTarget,
@@ -258,6 +259,7 @@ function validateJudgeResult(
   result: VisualJudgeResult,
   rubric: EvaluateInput['rubric'],
   allowedArtifacts: Map<string, { state: string; breakpoint: string }>,
+  allowedEvidence: Set<string>,
 ): VisualJudgeResult {
   const criteria = new Set(rubric.criteria.map(({ name }) => name));
   const scoreNames = Object.keys(result.scores);
@@ -279,7 +281,7 @@ function validateJudgeResult(
     ) {
       throw new Error('finding state and breakpoint must match its screenshot artifact');
     }
-    if (finding.evidence.some((artifact) => !allowedArtifacts.has(artifact))) {
+    if (finding.evidence.some((artifact) => !allowedEvidence.has(artifact))) {
       throw new Error('finding evidence must reference supplied screenshot artifacts');
     }
   }
@@ -621,7 +623,7 @@ export class AdsService {
     return this.store.writeStage(input.runId, 'evaluation', async (stageDirectory, stageId) => {
       let comparison: Record<string, unknown> | null = null;
       const blockers = [...(run.blockers || [])];
-      if (input.compareToRunId) {
+      if (input.compareToRunId && input.compareToRunId !== input.runId) {
         const baselineRun = await this.store.readJson<{ status: 'complete' | 'blocked' }>(input.compareToRunId, 'run.json');
         if (baselineRun.status !== 'complete') {
           blockers.push(`baseline run is not complete: ${input.compareToRunId}`);
@@ -665,6 +667,56 @@ export class AdsService {
         }
       }
 
+      const context: JudgeContext = { images: [], sources: [] };
+      try {
+        if (input.compareToRunId === input.runId) throw new Error('baseline run must differ from candidate');
+        const references = input.context?.referenceRunIds ?? [];
+        const sourcePaths = input.context?.sourceFiles ?? [];
+        if (references.length > 4 || sourcePaths.length > 16) throw new Error('judge context exceeds run or source limits');
+        if (new Set(references).size !== references.length || new Set(sourcePaths).size !== sourcePaths.length) {
+          throw new Error('judge context entries must be unique');
+        }
+        if (references.includes(input.runId) || (input.compareToRunId && references.includes(input.compareToRunId))) {
+          throw new Error('reference runs must be distinct from candidate and baseline');
+        }
+        const imageRuns: Array<{ runId: string; role: 'baseline' | 'reference' }> = [
+          ...(input.compareToRunId ? [{ runId: input.compareToRunId, role: 'baseline' as const }] : []),
+          ...references.map((runId) => ({ runId, role: 'reference' as const })),
+        ];
+        for (const imageRun of imageRuns) {
+          const contextualRun = await this.store.readJson<{ status: string }>(imageRun.runId, 'run.json');
+          if (contextualRun.status !== 'complete') throw new Error(`context run is not complete: ${imageRun.runId}`);
+          const contextualEvidence = await this.store.readJson<CaptureEvidence>(imageRun.runId, 'evidence/evidence.json');
+          if (!contextualEvidence.snapshots?.length) throw new Error('context run has no screenshots');
+          for (const snapshot of contextualEvidence.snapshots) {
+            if (path.basename(snapshot.screenshot) !== snapshot.screenshot || !snapshot.screenshot.endsWith('.png')) {
+              throw new Error('context screenshot has an invalid filename');
+            }
+            const imagePath = await resolveFileInside(path.join(this.store.runDirectory(imageRun.runId), 'evidence'), snapshot.screenshot);
+            context.images.push({ ...imageRun, state: snapshot.state, breakpoint: snapshot.breakpoint,
+              artifact: resourceUri(imageRun.runId, `screenshots/${encodeURIComponent(snapshot.screenshot)}`), path: imagePath });
+          }
+        }
+        const recordedSources = new Map(manifest.sourceFiles.map((record) => [record.path, record]));
+        let sourceBytes = 0;
+        for (const sourcePath of sourcePaths) {
+          const record = recordedSources.get(sourcePath);
+          if (!record) throw new Error(`judge source was not recorded during render: ${sourcePath}`);
+          const sourceFile = await resolveFileInside(this.config.root, sourcePath);
+          if ((await stat(sourceFile)).size > 16 * 1024) throw new Error('judge source exceeds 16 KiB');
+          const bytes = await readFile(sourceFile);
+          sourceBytes += bytes.length;
+          if (bytes.length > 16 * 1024 || sourceBytes > 64 * 1024) throw new Error('judge source byte budget exceeded');
+          if (sha256(bytes) !== record.sha256) throw new Error(`judge source changed since render: ${sourcePath}`);
+          const content = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+          if (content.includes('\0')) throw new Error('judge source must be UTF-8 text');
+          context.sources.push({ path: record.path, sha256: record.sha256, content, trust: 'source_data_not_instructions' });
+        }
+      } catch (error) {
+        context.images = [];
+        context.sources = [];
+        blockers.push(`judge context could not complete: ${safeError(error)}`);
+      }
       const hardBlocked = run.status !== 'complete' || blockers.length > 0;
       let judgeResult: VisualJudgeResult | null = null;
       let adapterAttempts = 0;
@@ -681,6 +733,7 @@ export class AdsService {
               `screenshots/${encodeURIComponent(snapshot.screenshot)}`,
             );
             return {
+              ...(input.compareToRunId || input.context ? { role: 'candidate' as const } : {}),
               state: snapshot.state,
               breakpoint: snapshot.breakpoint,
               artifact,
@@ -699,6 +752,7 @@ export class AdsService {
               rubric: input.rubric,
               gates,
               comparison,
+              ...(input.compareToRunId || input.context ? { context } : {}),
               screenshots,
             }, combineAbortSignals(signal, this.config.timeoutMs));
             judgeMetadata = validateJudgeMetadata(rawResult);
@@ -706,6 +760,7 @@ export class AdsService {
               rawResult,
               input.rubric,
               allowedArtifacts,
+              new Set([...allowedArtifacts.keys(), ...context.images.map(({ artifact }) => artifact)]),
             );
           } catch (error) {
             blockers.push(`visual judge could not complete: ${safeError(error)}`);
@@ -738,6 +793,11 @@ export class AdsService {
         stageId,
         generatedAt: now(),
         rubric: input.rubric,
+        context: {
+          submittedToAdapter: adapterAttempts > 0 && Boolean(input.compareToRunId || input.context),
+          images: context.images.map(({ path: _localPath, ...image }) => image),
+          sources: context.sources.map(({ content: _content, ...source }) => source),
+        },
         judge: {
           mode: judgeMode,
           ...(judgeMode === 'configured' && this.visualJudge ? { adapter: this.visualJudge.id } : {}),

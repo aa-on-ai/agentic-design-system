@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, unlink, symlink } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -490,5 +490,54 @@ test('judge receipts count attempts and retain reported usage after semantic fai
       assert.equal(receipt.configured.model, 'requested');
       assert.equal(receipt.reportedUsage.model, 'returned');
     }
+  }
+});
+
+
+test('judge context source opt-in validates recorded hashes and bounds before invoking any judge', async () => {
+  for (const scenario of ['default', 'valid', 'changed', 'unrecorded', 'oversized', 'binary', 'duplicate', 'escape', 'invalid-run', 'self-reference', 'symlink', 'invalid-utf8', 'total-budget', 'deleted', 'none'] as const) {
+    const { config, root } = await fixture();
+    if (scenario === 'oversized') await writeFile(path.join(root, 'brief.md'), 'x'.repeat(16 * 1024 + 1));
+    if (scenario === 'binary') await writeFile(path.join(root, 'brief.md'), Buffer.from([0, 1, 2]));
+    if (scenario === 'invalid-utf8') await writeFile(path.join(root, 'brief.md'), Buffer.from([255, 254]));
+    const sourceFiles = scenario === 'total-budget' ? ['brief.md', 's1.md', 's2.md', 's3.md', 's4.md'] : ['brief.md'];
+    if (scenario === 'total-budget') for (const file of sourceFiles) await writeFile(path.join(root, file), 'x'.repeat(16 * 1024));
+    let attempts = 0;
+    let received: VisualJudgeRequest | undefined;
+    const service = await AdsService.create(config, { captureRunner: fakeCapture,
+      visualJudge: { id: 'context-source-test', async evaluate(request) {
+        attempts++; received = request;
+        return { provider: 'fixture', model: 'fixture', modelCalls: 0, verdict: 'satisfied',
+          scores: { Quality: 8 }, findings: [], nextRevisionPrompt: '' };
+      } },
+    });
+    const render = await service.render({ target: { type: 'url', url: 'http://localhost:3000/' },
+      provenance: { sourceFiles } });
+    if (scenario === 'changed') await writeFile(path.join(root, 'brief.md'), 'changed after render');
+    if (scenario === 'deleted') await unlink(path.join(root, 'brief.md'));
+    if (scenario === 'symlink') {
+      const outside = path.join(await mkdtemp(path.join(os.tmpdir(), 'ads-outside-')), 'brief.md');
+      await writeFile(outside, await readFile(path.join(root, 'brief.md')));
+      await unlink(path.join(root, 'brief.md'));
+      await symlink(outside, path.join(root, 'brief.md'));
+    }
+    const result = await service.evaluate({ runId: render.runId,
+      rubric: { task: 'Review', criteria: [{ name: 'Quality', weight: 100 }] }, judge: { mode: scenario === 'none' ? 'none' : 'configured' },
+      ...(scenario !== 'default' ? { context: {
+        sourceFiles: scenario === 'duplicate' ? ['brief.md', 'brief.md'] : scenario === 'unrecorded' ? ['missing.md'] : scenario === 'escape' ? ['../outside.md'] : sourceFiles,
+        ...(scenario === 'invalid-run' ? { referenceRunIds: ['../../outside'] } : {}),
+        ...(scenario === 'self-reference' ? { referenceRunIds: [render.runId] } : {}),
+      } } : {}),
+    });
+    const allowed = scenario === 'default' || scenario === 'valid';
+    assert.equal(attempts, allowed ? 1 : 0, scenario);
+    assert.equal(result.status, allowed ? 'complete' : scenario === 'none' ? 'needs_human' : 'blocked', scenario);
+    const receipt = JSON.parse((await service.readResource(result.artifacts.receipt)).bytes.toString('utf8'));
+    assert.equal(receipt.context.submittedToAdapter, scenario === 'valid', scenario);
+    if (!allowed && scenario !== 'none') assert.deepEqual(receipt.context.sources, [], scenario);
+    if (scenario === 'default') { assert.equal(received!.context, undefined); assert.ok(received!.screenshots.every(({ role }) => role === undefined)); }
+    if (scenario === 'valid') assert.equal(received!.context!.sources[0]!.path, 'brief.md');
+    const errors: Record<string, RegExp> = { changed: /changed since render/, unrecorded: /not recorded/, oversized: /16 KiB/, binary: /UTF-8 text/, duplicate: /must be unique/, escape: /not recorded/, 'invalid-run': /invalid run ID/, 'self-reference': /must be distinct/, symlink: /outside|escapes/, 'invalid-utf8': /encoded data.*utf-8/i, 'total-budget': /byte budget/, deleted: /ENOENT/ };
+    if (errors[scenario]) assert.ok(result.blockers.some((blocker) => errors[scenario]!.test(blocker)), `${scenario}: ${result.blockers.join('; ')}`);
   }
 });

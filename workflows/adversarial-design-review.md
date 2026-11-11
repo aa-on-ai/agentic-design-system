@@ -25,6 +25,9 @@ retain the actual human judgment needed.
 
 1. **Capture the artifact** so the critic judges pixels, not source:
 
+   Use `<skills-root>/design-review/references/capture-routing.md` to select MCP or CLI once.
+   Reuse readable matched MCP evidence instead of running the CLI example below again.
+
    ```bash
    node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
      --states default,empty,loading,error --out evidence/<slug>
@@ -37,8 +40,9 @@ retain the actual human judgment needed.
    emits a file named `modal-interaction-receipt.json`.
 
 2. **Open a separate critic context** — a fresh subagent or session that did not write the code.
-   Give it the outcome + the captured screenshots (`evidence/<slug>/*.png`) and the `evidence.json`
-   gates, not the builder's commentary.
+   Give it the outcome + readable captured screenshots and gates, not builder commentary.
+   On the CLI route these are `evidence/<slug>/*.png` and `evidence.json`; on MCP they are the
+   returned `ads://` resources or exports of those same artifacts, not another capture.
 3. **Judge the requested outcome:** inspect product/task fit, IA, reference fidelity, craft, then
    behavior/delivery. Identify what should be preserved as well as failures. Distinguish uncertainty
    from an evidenced defect; scores are optional diagnostics, not the verdict. For

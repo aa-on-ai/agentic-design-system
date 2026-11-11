@@ -1,0 +1,2 @@
+# Capture routing replay: pawprint
+Clawc selected the revised CLI fallback because ADS MCP tools are not exposed in this session. Existing artifact reused unchanged from 2026-11-11-playground-guidance; not newly generated under revised guidance. The current wrapper captured all four states at both breakpoints. Exact source and screenshot byte equality gates reuse of the prior independent Fable grade. This verifies fallback capture and output preservation, not independent-agent route selection or MCP preference.

@@ -87,6 +87,10 @@ const renderOutputSchema = {
 const evaluateInputSchema = {
   runId: z.string().min(1),
   compareToRunId: z.string().min(1).optional(),
+  context: z.object({
+    referenceRunIds: z.array(z.string().min(1)).max(4).optional().describe('Existing captured runs to send as reference images, distinct from the candidate/baseline.'),
+    sourceFiles: z.array(z.string().min(1)).max(16).optional().describe('Opt-in source text for the judge; exact paths already hashed in this run manifest. Maximum 16 KiB per file and 64 KiB total.'),
+  }).optional(),
   rubric: z.object({
     task: z.string().min(1),
     criteria: z.array(z.object({

@@ -106,6 +106,8 @@ changes in the actual browser against matched baseline/reference captures; exerc
 in the target desktop and mobile/WebKit surface when applicable. A screenshot cannot prove motion,
 keyboard handling, or returning to the prior context. Missing required access means unverified.
 
+[Capture routing](../design-review/references/capture-routing.md) selects the existing MCP when
+actually available, otherwise the CLI fallback, without duplicate captures or implicit paid judgment.
 [design-review](../design-review/SKILL.md) owns capture instructions and the distinction between
 established gates and report-only measurements. Select task-relevant source checks and states,
 not a universal matrix. Required accessibility, state, layout or interaction failures block a ready
