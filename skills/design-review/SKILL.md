@@ -155,7 +155,9 @@ python3 <skills-root>/design-review/scripts/accessibility-check.py <your-file.ts
 
 investigate the warnings before presenting. these checks grep source and are intentionally cheap and gameable; a comment containing “loading, empty, error” can satisfy the state check without rendering any state. they advise, but they do not clear the work.
 
-For meaningful visual changes, capture the actual route. Select the states the task requires;
+For meaningful visual changes, use [capture routing](references/capture-routing.md) to choose the
+available MCP or CLI route once. The command below is the CLI fallback, not an extra capture after
+MCP evidence. Select the states the task requires;
 `default,loading,empty,error` below is an example, not a mandatory universal matrix:
 
 ```bash
