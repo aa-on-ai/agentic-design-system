@@ -32,9 +32,9 @@ export function routeWorkbenchIntent(intent: IntentId, task: string): WorkbenchR
     return readyRoute(
       "Runnable design alternatives",
       "skills/design-variations/SKILL.md",
-      "The user wants meaningful alternatives before production implementation.",
+      "The user wants meaningful alternatives before shipping integration.",
       ["Matched-content variants", "Target-platform comparison", "Human choose, blend, or reject gate"],
-      ["Production implementation", "Agent execution inside Workbench", "Deploy or external writes"],
+      ["Shipping integration", "Agent execution inside Workbench", "Deploy or external writes"],
     );
   }
 
