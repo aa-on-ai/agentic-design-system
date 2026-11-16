@@ -1,0 +1,1387 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account settings · Quorum</title>
+<script>
+/* Apply the saved theme before first paint. */
+try {
+  var t = (JSON.parse(localStorage.getItem('quorum.account.v1') || '{}') || {}).theme || 'system';
+  var d = t === 'dark' || (t === 'system' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+} catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+</script>
+<style>
+:root {
+  --bg: #f4f2ec;
+  --surface: #ffffff;
+  --surface-2: #f8f6f1;
+  --ink: #1a1c19;
+  --muted: #5a5f57;
+  --line: #e3dfd5;
+  --field: #8c887b;
+  --accent: #1e5b4a;
+  --accent-ink: #1e5b4a;
+  --on-accent: #ffffff;
+  --accent-soft: #e2eee8;
+  --danger: #a3301d;
+  --on-danger: #ffffff;
+  --warn-ink: #7a4b00;
+  --warn-soft: #f8ecd2;
+  --inv-bg: #1a1c19;
+  --inv-ink: #f4f2ec;
+  --inv-line: #6d7269;
+  --inv-danger: #ffb3a1;
+  --thumb: #ffffff;
+  --shadow: 0 1px 2px rgba(26, 28, 25, .06), 0 12px 32px rgba(26, 28, 25, .14);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #131513;
+  --surface: #1b1e1b;
+  --surface-2: #222622;
+  --ink: #eceae4;
+  --muted: #a6aba1;
+  --line: #2f342f;
+  --field: #767d73;
+  --accent: #86d3b7;
+  --accent-ink: #86d3b7;
+  --on-accent: #0d1f19;
+  --accent-soft: #1f3a31;
+  --danger: #f1917e;
+  --on-danger: #2a0f09;
+  --warn-ink: #f0c674;
+  --warn-soft: #3a2f14;
+  --inv-bg: #eceae4;
+  --inv-ink: #1a1c19;
+  --inv-line: #8c887b;
+  --inv-danger: #8f2413;
+  --thumb: #131513;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  background: var(--inv-bg); color: var(--inv-ink);
+  padding: 10px 14px; border-radius: 8px; text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: 12px; }
+
+/* ---------- Top bar ---------- */
+.topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar-in {
+  max-width: 1040px; margin: 0 auto; padding: 0 16px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 650; font-size: 17px; letter-spacing: -.01em; }
+.brand svg { color: var(--accent-ink); flex: none; }
+.who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.who-text { min-width: 0; text-align: right; line-height: 1.25; }
+.who-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.who-ws { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.avatar {
+  width: 72px; height: 72px; border-radius: 50%; flex: none; overflow: hidden;
+  display: grid; place-items: center;
+  background: var(--accent); color: var(--on-accent);
+  font-weight: 600; font-size: 25px; letter-spacing: .01em;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar.sm { width: 32px; height: 32px; font-size: 13px; }
+
+/* ---------- Page frame ---------- */
+.shell { max-width: 1040px; margin: 0 auto; padding: 0 16px 112px; }
+.page-head { padding: 28px 0 18px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 30px; line-height: 1.15; letter-spacing: -.015em; margin-bottom: 8px; }
+.page-head p { color: var(--muted); max-width: 58ch; }
+
+.sections {
+  position: sticky; top: 0; z-index: 20;
+  margin: 0 -16px; background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.sections ul {
+  list-style: none; margin: 0; padding: 0 6px; display: flex; gap: 0; position: relative;
+  overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.sections ul::-webkit-scrollbar { display: none; }
+.sections a {
+  display: flex; align-items: center; min-height: 48px; padding: 0 10px;
+  color: var(--muted); text-decoration: none; white-space: nowrap;
+  font-size: 15px; font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+.sections a:hover { color: var(--ink); }
+.sections a:focus-visible { outline-offset: -3px; }
+.sections a[aria-current] { color: var(--ink); font-weight: 600; border-bottom-color: var(--accent); }
+
+main { min-width: 0; }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  margin-top: 16px; padding: 20px 16px;
+  scroll-margin-top: 64px;
+}
+.card-head { margin-bottom: 20px; }
+h2 { font-family: var(--serif); font-weight: 600; font-size: 21px; line-height: 1.25; letter-spacing: -.01em; margin-bottom: 4px; }
+.card-head p { color: var(--muted); font-size: 15px; }
+h3 { font-size: 15px; font-weight: 600; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 44px; padding: 0 14px;
+  border: 1px solid var(--field); border-radius: 8px;
+  background: var(--surface); color: var(--ink);
+  font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer;
+  transition: background-color .12s;
+}
+.btn:hover { background: var(--surface-2); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+.btn-primary:hover { background: var(--accent); filter: brightness(1.08); }
+.btn-danger { color: var(--danger); border-color: var(--danger); }
+.btn-danger-solid { background: var(--danger); border-color: var(--danger); color: var(--on-danger); font-weight: 600; }
+.btn-danger-solid:hover { background: var(--danger); filter: brightness(1.08); }
+.btn-quiet { border-color: transparent; background: none; color: var(--accent-ink); padding: 0 10px; }
+
+/* ---------- Form fields ---------- */
+.fields { display: grid; gap: 18px; }
+.field { min-width: 0; }
+.lbl { display: block; font-size: 14px; line-height: 22px; font-weight: 600; margin-bottom: 6px; }
+.lbl-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-height: 22px; }
+.lbl-row .lbl { margin-bottom: 0; }
+.optional { font-weight: 400; color: var(--muted); }
+.input, select {
+  display: block; width: 100%; height: 46px; padding: 0 12px;
+  border: 1px solid var(--field); border-radius: 8px;
+  background: var(--surface); color: var(--ink);
+  font-size: 16px; scroll-margin-top: 110px;
+}
+.input::placeholder { color: var(--muted); opacity: 1; }
+.input[aria-invalid="true"] { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+select:disabled { opacity: .55; cursor: not-allowed; }
+.select { position: relative; }
+.select select { -webkit-appearance: none; appearance: none; padding-right: 36px; text-overflow: ellipsis; cursor: pointer; }
+.select::after {
+  content: ""; position: absolute; right: 15px; top: 50%; width: 8px; height: 8px;
+  border: solid var(--muted); border-width: 0 1.75px 1.75px 0;
+  transform: translateY(-70%) rotate(45deg); pointer-events: none;
+}
+.hint { font-size: 14px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
+.error { font-size: 14px; color: var(--danger); font-weight: 500; margin-top: 6px; }
+
+.badge {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 600; white-space: nowrap;
+  background: var(--surface-2); color: var(--muted); border: 1px solid var(--line);
+}
+.badge.ok { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
+.badge.warn { background: var(--warn-soft); color: var(--warn-ink); border-color: transparent; }
+
+/* ---------- Profile ---------- */
+.avatar-row { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+.avatar-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.avatar-side { min-width: 0; }
+
+/* ---------- Rows ---------- */
+.list { list-style: none; margin: 0; padding: 0; }
+.row {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 12px 16px;
+  padding: 16px 0; border-top: 1px solid var(--line);
+}
+.row:first-child { border-top: 0; padding-top: 0; }
+.row:last-child { padding-bottom: 0; }
+.row-main { flex: 1 1 140px; min-width: 0; }
+.row-title { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-size: 15px; font-weight: 600; }
+.row-desc { display: block; font-size: 14px; color: var(--muted); margin-top: 2px; }
+.row-icon {
+  width: 40px; height: 40px; flex: none; border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--muted);
+}
+.ws-mark { font-size: 13.5px; font-weight: 700; letter-spacing: .02em; color: var(--ink); }
+.sub { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 18px; }
+.sub > h3 { margin-bottom: 14px; }
+.sub-foot { margin-top: 16px; font-size: 14px; color: var(--muted); }
+
+/* ---------- Password panel ---------- */
+.panel { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.panel .fields { max-width: 380px; }
+.panel-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.inline-check { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 8px; font-size: 15px; cursor: pointer; }
+
+/* ---------- Checkbox + switch ---------- */
+.cb {
+  -webkit-appearance: none; appearance: none; flex: none;
+  width: 22px; height: 22px; margin: 0; border-radius: 6px;
+  border: 1.5px solid var(--field); background: var(--surface);
+  display: inline-grid; place-items: center; cursor: pointer;
+  transition: background-color .12s, border-color .12s;
+}
+.cb::after {
+  content: ""; width: 6px; height: 11px;
+  border: solid var(--on-accent); border-width: 0 2px 2px 0;
+  transform: translateY(-1px) rotate(45deg) scale(0); transition: transform .12s;
+}
+.cb:checked { background: var(--accent); border-color: var(--accent); }
+.cb:checked::after { transform: translateY(-1px) rotate(45deg) scale(1); }
+.check { display: inline-grid; place-items: center; width: 44px; height: 44px; cursor: pointer; }
+
+.switch {
+  -webkit-appearance: none; appearance: none; flex: none;
+  width: 46px; height: 28px; margin: 0; border-radius: 999px;
+  background: var(--field); position: relative; cursor: pointer;
+  transition: background-color .15s;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--thumb); box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+  transition: transform .15s;
+}
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(18px); }
+.switch-row { display: flex; align-items: center; gap: 16px; min-height: 44px; cursor: pointer; }
+
+/* ---------- Notification matrix ---------- */
+.matrix { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.matrix col.c { width: 56px; }
+.matrix th, .matrix td { padding: 0; border-top: 1px solid var(--line); vertical-align: middle; }
+.matrix thead th { border-top: 0; padding-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; }
+.matrix thead th:first-child { text-align: left; }
+.matrix tbody th { text-align: left; font-weight: 400; padding: 12px 12px 12px 0; }
+.matrix td { text-align: center; }
+.na { color: var(--muted); }
+.quiet-times { display: grid; grid-template-columns: repeat(2, minmax(0, 160px)); gap: 12px; margin-top: 14px; }
+.quiet-times.is-off .lbl { color: var(--muted); }
+
+/* ---------- Preferences ---------- */
+.pref { display: grid; gap: 10px; padding: 16px 0; border-top: 1px solid var(--line); }
+.pref:first-child { border-top: 0; padding-top: 0; }
+.pref:last-child { padding-bottom: 0; }
+.seg {
+  display: flex; gap: 2px; padding: 3px;
+  border: 1px solid var(--field); border-radius: 8px; background: var(--surface);
+}
+.seg label { position: relative; flex: 1 1 0; min-width: 0; }
+.seg input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.seg span {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 38px; padding: 0 10px; border-radius: 6px;
+  font-size: 15px; font-weight: 500; color: var(--muted); white-space: nowrap;
+  transition: background-color .12s, color .12s;
+}
+.seg input:hover + span { color: var(--ink); }
+.seg input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.seg input:focus-visible + span { outline: 2px solid var(--accent-ink); outline-offset: 2px; }
+
+/* ---------- Save bar, toast, dialog ---------- */
+.savebar {
+  position: fixed; z-index: 40; left: 0; right: 0; margin: 0 auto;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  width: min(560px, calc(100% - 24px));
+  padding: 10px 10px 10px 16px; border-radius: 12px;
+  background: var(--inv-bg); color: var(--inv-ink); box-shadow: var(--shadow);
+  animation: rise .18s ease-out;
+}
+.savebar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.savebar-error { margin: 4px 6px 10px 0; font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--inv-danger); }
+.savebar-text { min-width: 0; font-size: 15px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.savebar-actions { display: flex; gap: 8px; flex: none; }
+.savebar .btn { min-height: 44px; }
+.btn-inv { background: var(--inv-ink); border-color: var(--inv-ink); color: var(--inv-bg); font-weight: 600; min-width: 76px; }
+.btn-inv:hover { background: var(--inv-ink); filter: brightness(.94); }
+.btn-inv-ghost { background: transparent; border-color: var(--inv-line); color: var(--inv-ink); }
+.btn-inv-ghost:hover { background: rgba(128, 128, 128, .2); }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.toast {
+  position: fixed; z-index: 50; left: 0; right: 0; margin: 0 auto;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  width: -webkit-fit-content; width: fit-content; max-width: calc(100% - 24px);
+  padding: 12px 16px; border-radius: 10px;
+  background: var(--inv-bg); color: var(--inv-ink); box-shadow: var(--shadow);
+  font-size: 15px; font-weight: 500; text-align: center;
+  opacity: 0; transform: translateY(8px); pointer-events: none;
+  transition: opacity .18s, transform .18s;
+}
+.toast.show { opacity: 1; transform: none; }
+body.is-dirty .toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+
+dialog {
+  width: min(440px, calc(100% - 32px)); padding: 0;
+  border: 1px solid var(--line); border-radius: 14px;
+  background: var(--surface); color: var(--ink); box-shadow: var(--shadow);
+}
+dialog::backdrop { background: rgba(16, 18, 16, .55); }
+.dlg { padding: 24px; }
+.dlg h2 { font-size: 21px; margin-bottom: 8px; }
+.dlg p { color: var(--muted); font-size: 15px; }
+.dlg .field { margin-top: 16px; }
+.dlg .lbl { font-weight: 500; overflow-wrap: anywhere; }
+.dlg-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+
+/* ---------- Wider screens ---------- */
+@media (min-width: 640px) {
+  .fields.two { grid-template-columns: 1fr 1fr; }
+  .card { padding: 28px; }
+  .matrix col.c { width: 80px; }
+  .pref { grid-template-columns: minmax(0, 1fr) 280px; align-items: center; gap: 24px; }
+}
+@media (min-width: 900px) {
+  body { font-size: 15px; }
+  .topbar-in { padding: 0 32px; }
+  .shell {
+    display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 56px;
+    padding: 0 32px 128px;
+  }
+  .page-head { grid-column: 1 / -1; padding: 44px 0 28px; }
+  h1 { font-size: 36px; }
+  .page-head p { font-size: 16px; }
+  .sections { top: 24px; align-self: start; margin: 0; background: none; border: 0; }
+  .sections ul { flex-direction: column; gap: 2px; padding: 0; overflow: visible; }
+  .sections a { min-height: 38px; padding: 0 12px; border: 0; border-radius: 8px; font-size: 15px; }
+  .sections a:hover { background: var(--surface); }
+  .sections a:focus-visible { outline-offset: 2px; }
+  .sections a[aria-current] { background: var(--accent-soft); color: var(--accent-ink); }
+  .card { margin-top: 20px; scroll-margin-top: 24px; }
+  .card:first-child { margin-top: 0; }
+  .card-head p { font-size: 15px; }
+  .btn { min-height: 40px; }
+  .input, select { height: 42px; font-size: 15px; scroll-margin-top: 80px; }
+  .seg span { min-height: 34px; }
+  .row-main { flex-basis: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to settings</a>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15" cy="12" r="6.5" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-width="2"/></svg>
+      <span>Quorum</span>
+    </div>
+    <div class="who">
+      <div class="who-text">
+        <div class="who-name" id="top-name">Dana</div>
+        <div class="who-ws">Northwind Studio</div>
+      </div>
+      <div class="avatar sm" id="top-avatar" aria-hidden="true">DO</div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <div class="page-head">
+    <h1>Account settings</h1>
+    <p>Your profile, sign-in and notifications. These follow you across every workspace you belong to.</p>
+  </div>
+
+  <nav class="sections" aria-label="Settings sections">
+    <ul id="section-nav">
+      <li><a href="#profile" aria-current="location">Profile</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#notifications">Notifications</a></li>
+      <li><a href="#preferences">Preferences</a></li>
+      <li><a href="#workspaces">Workspaces</a></li>
+      <li><a href="#data">Data &amp; account</a></li>
+    </ul>
+  </nav>
+
+  <main id="content">
+
+    <!-- Profile -->
+    <section class="card" id="profile" aria-labelledby="h-profile">
+      <div class="card-head">
+        <h2 id="h-profile">Profile</h2>
+        <p>How you appear to teammates in messages, comments and mentions.</p>
+      </div>
+
+      <div class="avatar-row">
+        <div class="avatar" id="profile-avatar" role="img" aria-label="Your profile photo">DO</div>
+        <div class="avatar-side">
+          <div class="avatar-actions">
+            <button type="button" class="btn" id="photo-upload">Upload photo</button>
+            <button type="button" class="btn btn-quiet" id="photo-remove" hidden>Remove</button>
+            <input type="file" id="photo-input" accept="image/png,image/jpeg" hidden>
+          </div>
+          <p class="hint" id="photo-hint">PNG or JPG, up to 2 MB.</p>
+          <p class="error" id="photo-err" role="alert" hidden></p>
+        </div>
+      </div>
+
+      <form id="profile-form" novalidate>
+        <div class="fields two">
+          <div class="field">
+            <label class="lbl" for="fullName">Full name</label>
+            <input class="input" id="fullName" data-key="fullName" type="text" autocomplete="name" required aria-describedby="err-fullName">
+            <p class="error" id="err-fullName" hidden></p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="displayName">Display name <span class="optional">(optional)</span></label>
+            <input class="input" id="displayName" data-key="displayName" type="text" autocomplete="nickname" aria-describedby="hint-displayName">
+            <p class="hint" id="hint-displayName">Shown in messages and @mentions.</p>
+          </div>
+          <div class="field">
+            <div class="lbl-row">
+              <label class="lbl" for="email">Email</label>
+              <span class="badge ok" id="email-badge">Verified</span>
+            </div>
+            <input class="input" id="email" data-key="email" type="email" autocomplete="email" inputmode="email" spellcheck="false" required aria-describedby="err-email hint-email">
+            <p class="error" id="err-email" hidden></p>
+            <p class="hint" id="hint-email">Used for sign-in and account notices.</p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="title">Job title <span class="optional">(optional)</span></label>
+            <input class="input" id="title" data-key="title" type="text" autocomplete="organization-title">
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Security -->
+    <section class="card" id="security" aria-labelledby="h-security">
+      <div class="card-head">
+        <h2 id="h-security">Sign-in &amp; security</h2>
+        <p>Changes here take effect straight away.</p>
+      </div>
+
+      <div class="rows">
+      <div class="row">
+        <div class="row-main">
+          <div class="row-title">Password</div>
+          <p class="row-desc" id="pw-meta">Last changed 14 Jul 2026</p>
+        </div>
+        <button type="button" class="btn" id="pw-toggle" aria-expanded="false" aria-controls="pw-form">Change<span class="sr-only"> password</span></button>
+      </div>
+
+      <form class="panel" id="pw-form" novalidate hidden>
+        <div class="fields">
+          <div class="field">
+            <label class="lbl" for="pw-current">Current password</label>
+            <input class="input" id="pw-current" type="password" autocomplete="current-password" aria-describedby="err-pw-current">
+            <p class="error" id="err-pw-current" hidden></p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="pw-new">New password</label>
+            <input class="input" id="pw-new" type="password" autocomplete="new-password" aria-describedby="err-pw-new hint-pw-new">
+            <p class="error" id="err-pw-new" hidden></p>
+            <p class="hint" id="hint-pw-new">At least 12 characters. A few unrelated words works well.</p>
+          </div>
+          <div class="field">
+            <label class="lbl" for="pw-confirm">Confirm new password</label>
+            <input class="input" id="pw-confirm" type="password" autocomplete="new-password" aria-describedby="err-pw-confirm">
+            <p class="error" id="err-pw-confirm" hidden></p>
+          </div>
+        </div>
+        <label class="inline-check"><input type="checkbox" class="cb" id="pw-show"> Show passwords</label>
+        <div class="panel-actions">
+          <button type="submit" class="btn btn-primary">Update password</button>
+          <button type="button" class="btn" id="pw-cancel">Cancel</button>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="row-main">
+          <div class="row-title">Two-step verification <span class="badge ok" id="tfa-badge">On</span></div>
+          <p class="row-desc" id="tfa-desc">Authenticator app, added 3 Mar 2026</p>
+        </div>
+        <button type="button" class="btn" id="tfa-btn">Turn off</button>
+      </div>
+      </div>
+
+      <div class="sub">
+        <h3 id="h-sessions" tabindex="-1">Where you’re signed in</h3>
+        <ul class="list" id="sessions" aria-labelledby="h-sessions">
+          <li class="row">
+            <div class="row-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg></div>
+            <div class="row-main">
+              <div class="row-title">MacBook Pro · Chrome <span class="badge ok">This device</span></div>
+              <p class="row-desc">Lisbon, Portugal · Active now</p>
+            </div>
+          </li>
+          <li class="row" data-session="iPhone 15">
+            <div class="row-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></div>
+            <div class="row-main">
+              <div class="row-title">iPhone 15 · Quorum for iOS</div>
+              <p class="row-desc">Lisbon, Portugal · Active 2 hours ago</p>
+            </div>
+            <button type="button" class="btn" data-signout>Sign out<span class="sr-only"> of iPhone 15</span></button>
+          </li>
+          <li class="row" data-session="Windows PC">
+            <div class="row-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M9 20h6M12 16v4"/></svg></div>
+            <div class="row-main">
+              <div class="row-title">Windows PC · Edge</div>
+              <p class="row-desc">Porto, Portugal · Active 9 Nov</p>
+            </div>
+            <button type="button" class="btn" data-signout>Sign out<span class="sr-only"> of Windows PC</span></button>
+          </li>
+        </ul>
+        <div class="sub-foot" id="sessions-foot">
+          <button type="button" class="btn btn-danger" id="signout-all">Sign out everywhere else</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section class="card" id="notifications" aria-labelledby="h-notifications">
+      <div class="card-head">
+        <h2 id="h-notifications">Notifications</h2>
+        <p>Choose what reaches your inbox and what pings your devices.</p>
+      </div>
+
+      <table class="matrix">
+        <colgroup><col><col class="c"><col class="c"></colgroup>
+        <thead>
+          <tr><th scope="col">Notify me about</th><th scope="col">Email</th><th scope="col">Push</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row"><span class="row-title">Mentions and replies</span><span class="row-desc">Someone @mentions you or replies in your thread</span></th>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_mentions_email" aria-label="Mentions and replies by email"></label></td>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_mentions_push" aria-label="Mentions and replies by push"></label></td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="row-title">Direct messages</span><span class="row-desc">New messages sent only to you</span></th>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_dm_email" aria-label="Direct messages by email"></label></td>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_dm_push" aria-label="Direct messages by push"></label></td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="row-title">Assigned to you</span><span class="row-desc">Tasks and reviews that land on your plate</span></th>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_assigned_email" aria-label="Assigned to you by email"></label></td>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_assigned_push" aria-label="Assigned to you by push"></label></td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="row-title">Workspace announcements</span><span class="row-desc">Posts from admins to everyone</span></th>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_announce_email" aria-label="Workspace announcements by email"></label></td>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_announce_push" aria-label="Workspace announcements by push"></label></td>
+          </tr>
+          <tr>
+            <th scope="row"><span class="row-title">Weekly summary</span><span class="row-desc">A Monday digest of what your teams shipped</span></th>
+            <td><label class="check"><input type="checkbox" class="cb" data-key="n_digest_email" aria-label="Weekly summary by email"></label></td>
+            <td><span class="na" aria-hidden="true">–</span><span class="sr-only">Push isn’t available for the weekly summary</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sub">
+        <label class="switch-row" for="quietOn">
+          <span class="row-main">
+            <span class="row-title">Quiet hours</span>
+            <span class="row-desc">Hold push notifications until morning. Email isn’t affected.</span>
+          </span>
+          <input type="checkbox" role="switch" class="switch" id="quietOn" data-key="quietOn">
+        </label>
+        <div class="quiet-times" id="quiet-times">
+          <div class="field">
+            <label class="lbl" for="quietFrom">From</label>
+            <div class="select"><select id="quietFrom" data-key="quietFrom"></select></div>
+          </div>
+          <div class="field">
+            <label class="lbl" for="quietTo">Until</label>
+            <div class="select"><select id="quietTo" data-key="quietTo"></select></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preferences -->
+    <section class="card" id="preferences" aria-labelledby="h-preferences">
+      <div class="card-head">
+        <h2 id="h-preferences">Preferences</h2>
+        <p>How Quorum looks and reads for you. Teammates don’t see these.</p>
+      </div>
+
+      <div class="pref">
+        <div>
+          <div class="row-title" id="lbl-theme">Theme</div>
+          <p class="row-desc">System follows your device setting.</p>
+        </div>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-theme">
+          <label><input type="radio" name="theme" value="system" data-key="theme"><span>System</span></label>
+          <label><input type="radio" name="theme" value="light" data-key="theme"><span>Light</span></label>
+          <label><input type="radio" name="theme" value="dark" data-key="theme"><span>Dark</span></label>
+        </div>
+      </div>
+
+      <div class="pref">
+        <div>
+          <label class="row-title" for="language">Language</label>
+        </div>
+        <div class="select">
+          <select id="language" data-key="language">
+            <option value="en-US">English (US)</option>
+            <option value="en-GB">English (UK)</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="pt">Português</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="pref">
+        <div>
+          <label class="row-title" for="timezone">Time zone</label>
+          <p class="row-desc">For timestamps, due dates and quiet hours. <span id="tz-now"></span></p>
+        </div>
+        <div class="select">
+          <select id="timezone" data-key="timezone">
+            <optgroup label="Americas">
+              <option value="Pacific/Honolulu">Honolulu</option>
+              <option value="America/Los_Angeles">Los Angeles</option>
+              <option value="America/Denver">Denver</option>
+              <option value="America/Chicago">Chicago</option>
+              <option value="America/New_York">New York</option>
+              <option value="America/Sao_Paulo">São Paulo</option>
+            </optgroup>
+            <optgroup label="Europe and Africa">
+              <option value="Europe/Lisbon">Lisbon</option>
+              <option value="Europe/London">London</option>
+              <option value="Europe/Berlin">Berlin</option>
+              <option value="Africa/Lagos">Lagos</option>
+              <option value="Africa/Nairobi">Nairobi</option>
+            </optgroup>
+            <optgroup label="Asia and Pacific">
+              <option value="Asia/Dubai">Dubai</option>
+              <option value="Asia/Kolkata">Kolkata</option>
+              <option value="Asia/Singapore">Singapore</option>
+              <option value="Asia/Tokyo">Tokyo</option>
+              <option value="Australia/Sydney">Sydney</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="pref">
+        <div>
+          <div class="row-title" id="lbl-timeFormat">Time format</div>
+        </div>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-timeFormat">
+          <label><input type="radio" name="timeFormat" value="12" data-key="timeFormat"><span>12-hour</span></label>
+          <label><input type="radio" name="timeFormat" value="24" data-key="timeFormat"><span>24-hour</span></label>
+        </div>
+      </div>
+
+      <div class="pref">
+        <div>
+          <div class="row-title" id="lbl-weekStart">Week starts on</div>
+        </div>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-weekStart">
+          <label><input type="radio" name="weekStart" value="mon" data-key="weekStart"><span>Monday</span></label>
+          <label><input type="radio" name="weekStart" value="sun" data-key="weekStart"><span>Sunday</span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workspaces -->
+    <section class="card" id="workspaces" aria-labelledby="h-workspaces">
+      <div class="card-head">
+        <h2 id="h-workspaces" tabindex="-1">Workspaces</h2>
+        <p>Teams you belong to with this account.</p>
+      </div>
+
+      <ul class="list" id="ws-list">
+        <li class="row" data-ws="northwind">
+          <div class="row-icon ws-mark" aria-hidden="true">NS</div>
+          <div class="row-main">
+            <div class="row-title">Northwind Studio <span class="badge">Owner</span></div>
+            <p class="row-desc">24 members · To leave, transfer ownership first</p>
+          </div>
+        </li>
+        <li class="row" data-ws="harbor" data-ws-name="Harbor Collective">
+          <div class="row-icon ws-mark" aria-hidden="true">HC</div>
+          <div class="row-main">
+            <div class="row-title">Harbor Collective <span class="badge">Member</span></div>
+            <p class="row-desc">8 members · Joined 2 Feb 2026</p>
+          </div>
+          <button type="button" class="btn" data-leave>Leave<span class="sr-only"> Harbor Collective</span></button>
+        </li>
+      </ul>
+
+      <div class="sub">
+        <div class="pref">
+          <div>
+            <label class="row-title" for="defaultWorkspace">Open Quorum in</label>
+            <p class="row-desc">Where you land when you sign in.</p>
+          </div>
+          <div class="select">
+            <select id="defaultWorkspace" data-key="defaultWorkspace">
+              <option value="last">The workspace I used last</option>
+              <option value="northwind">Northwind Studio</option>
+              <option value="harbor">Harbor Collective</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data & account -->
+    <section class="card" id="data" aria-labelledby="h-data">
+      <div class="card-head">
+        <h2 id="h-data">Data &amp; account</h2>
+        <p>Take your data with you, or close your account for good.</p>
+      </div>
+
+      <div class="rows">
+      <div class="row">
+        <div class="row-main">
+          <div class="row-title">Export your data</div>
+          <p class="row-desc" id="export-desc">Your profile, messages and files as a ZIP archive, sent by email.</p>
+        </div>
+        <button type="button" class="btn" id="export-btn">Request export</button>
+      </div>
+      <div class="row">
+        <div class="row-main">
+          <div class="row-title">Delete account</div>
+          <p class="row-desc">Removes your profile and signs you out everywhere. This can’t be undone.</p>
+        </div>
+        <button type="button" class="btn btn-danger" id="delete-btn">Delete account</button>
+      </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="savebar" id="savebar" role="region" aria-label="Unsaved changes" hidden>
+  <p class="savebar-error" id="save-error" role="alert" hidden></p>
+  <div class="savebar-row">
+    <span class="savebar-text" id="save-count" role="status">1 unsaved change</span>
+    <div class="savebar-actions">
+      <button type="button" class="btn btn-inv-ghost" id="discard">Discard</button>
+      <button type="button" class="btn btn-inv" id="save">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="dlg" aria-labelledby="dlg-title" aria-describedby="dlg-body">
+  <form class="dlg" id="dlg-form" method="dialog" novalidate>
+    <h2 id="dlg-title">Confirm</h2>
+    <p id="dlg-body"></p>
+    <div class="field" id="dlg-field" hidden>
+      <label class="lbl" for="dlg-input" id="dlg-input-label"></label>
+      <input class="input" id="dlg-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="dlg-cancel">Cancel</button>
+      <button type="submit" class="btn btn-danger-solid" id="dlg-ok">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- Synthetic account data ---------- */
+  var STORE = 'quorum.account.v1';
+  var DEFAULTS = {
+    fullName: 'Dana Okafor',
+    displayName: 'Dana',
+    title: 'Product Designer',
+    email: 'dana.okafor@northwind.example',
+    verifiedEmail: 'dana.okafor@northwind.example',
+    photo: null,
+    n_mentions_email: true, n_mentions_push: true,
+    n_dm_email: false, n_dm_push: true,
+    n_assigned_email: true, n_assigned_push: true,
+    n_announce_email: true, n_announce_push: false,
+    n_digest_email: true,
+    quietOn: true, quietFrom: '22', quietTo: '7',
+    theme: 'system',
+    language: 'en-GB',
+    timezone: 'Europe/Lisbon',
+    timeFormat: '24',
+    weekStart: 'mon',
+    defaultWorkspace: 'northwind'
+  };
+
+  function load() {
+    var s = {};
+    try { s = JSON.parse(localStorage.getItem(STORE) || '{}') || {}; } catch (e) { s = {}; }
+    var out = {};
+    Object.keys(DEFAULTS).forEach(function (k) {
+      out[k] = Object.prototype.hasOwnProperty.call(s, k) ? s[k] : DEFAULTS[k];
+    });
+    return out;
+  }
+  /* Writes the state and reads it back. Returns false if it did not stick. */
+  function persist(state) {
+    try {
+      var json = JSON.stringify(state);
+      localStorage.setItem(STORE, json);
+      return localStorage.getItem(STORE) === json;
+    } catch (e) { return false; }
+  }
+
+  var saved = load();
+  var draftPhoto = saved.photo;
+  var draft = saved;
+  var saving = false;
+
+  var controls = $$('[data-key]');
+  var FORM_KEYS = ['photo'];
+  controls.forEach(function (el) {
+    if (FORM_KEYS.indexOf(el.dataset.key) === -1) FORM_KEYS.push(el.dataset.key);
+  });
+
+  /* ---------- Form <-> state ---------- */
+  function readForm() {
+    var s = { photo: draftPhoto };
+    controls.forEach(function (el) {
+      var k = el.dataset.key;
+      if (el.type === 'checkbox') s[k] = el.checked;
+      else if (el.type === 'radio') { if (el.checked) s[k] = el.value; }
+      else if (el.tagName === 'SELECT') s[k] = el.value;
+      else s[k] = el.value.trim();
+    });
+    return s;
+  }
+  function writeForm(s) {
+    controls.forEach(function (el) {
+      var k = el.dataset.key;
+      if (el.type === 'checkbox') el.checked = !!s[k];
+      else if (el.type === 'radio') el.checked = el.value === s[k];
+      else el.value = s[k] == null ? '' : s[k];
+    });
+  }
+  function changedKeys(a, b) {
+    return FORM_KEYS.filter(function (k) { return a[k] !== b[k]; });
+  }
+
+  /* ---------- Small helpers ---------- */
+  function initials(name) {
+    var p = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!p.length) return '?';
+    return (p[0].charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : '')).toUpperCase();
+  }
+  function paintAvatar(el, name, photo) {
+    var sig = photo ? 'p:' + photo.length + ':' + photo.slice(-24) : 'i:' + initials(name);
+    if (el.getAttribute('data-sig') === sig) return;
+    el.setAttribute('data-sig', sig);
+    el.textContent = '';
+    if (photo) {
+      var img = new Image();
+      img.alt = '';
+      img.src = photo;
+      el.appendChild(img);
+    } else {
+      el.textContent = initials(name);
+    }
+  }
+  function setError(id, msg) {
+    var input = document.getElementById(id);
+    var err = document.getElementById('err-' + id);
+    if (!input || !err) return;
+    if (msg) {
+      err.textContent = msg; err.hidden = false; input.setAttribute('aria-invalid', 'true');
+    } else {
+      err.textContent = ''; err.hidden = true; input.removeAttribute('aria-invalid');
+    }
+  }
+  function hasError(id) {
+    var el = document.getElementById(id);
+    return !!el && el.getAttribute('aria-invalid') === 'true';
+  }
+
+  var toastEl = $('#toast');
+  var toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 3800);
+  }
+  function hideToast() {
+    clearTimeout(toastTimer);
+    toastEl.classList.remove('show');
+    toastEl.textContent = '';
+  }
+
+  /* ---------- Theme ---------- */
+  var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  function applyTheme(t) {
+    var dark = t === 'dark' || (t === 'system' && mq && mq.matches);
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  }
+  if (mq) {
+    var onScheme = function () { applyTheme(draft.theme); };
+    if (mq.addEventListener) mq.addEventListener('change', onScheme);
+    else if (mq.addListener) mq.addListener(onScheme);
+  }
+
+  /* ---------- Time helpers ---------- */
+  function hourLabel(h, fmt) {
+    if (fmt === '12') return (h % 12 || 12) + ':00 ' + (h < 12 ? 'AM' : 'PM');
+    return (h < 10 ? '0' : '') + h + ':00';
+  }
+  var hoursFmt = null;
+  function fillHours(fmt) {
+    if (hoursFmt === fmt) return;
+    hoursFmt = fmt;
+    ['quietFrom', 'quietTo'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el.options.length) {
+        for (var h = 0; h < 24; h++) el.add(new Option(hourLabel(h, fmt), String(h)));
+      } else {
+        for (var i = 0; i < el.options.length; i++) el.options[i].text = hourLabel(i, fmt);
+      }
+    });
+  }
+  function timeIn(tz, fmt) {
+    try {
+      var opts = fmt === '12'
+        ? { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: tz }
+        : { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: tz };
+      return new Intl.DateTimeFormat(fmt === '12' ? 'en-US' : 'en-GB', opts).format(new Date());
+    } catch (e) { return ''; }
+  }
+  function paintClock() {
+    var t = timeIn(draft.timezone, draft.timeFormat);
+    $('#tz-now').textContent = t ? 'It’s ' + t + ' there now.' : '';
+  }
+
+  /* ---------- Refresh derived UI ---------- */
+  var savebar = $('#savebar');
+  var saveCount = $('#save-count');
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function paintEmail() {
+    var badge = $('#email-badge');
+    var hint = $('#hint-email');
+    if (draft.email !== saved.email) {
+      badge.hidden = true;
+      hint.textContent = 'We’ll send a confirmation link to this address when you save. Until you confirm, keep signing in with ' + saved.verifiedEmail + '.';
+    } else if (saved.email !== saved.verifiedEmail) {
+      badge.hidden = false; badge.className = 'badge warn'; badge.textContent = 'Awaiting confirmation';
+      hint.textContent = 'Confirmation link sent. Until you confirm, keep signing in with ' + saved.verifiedEmail + '.';
+    } else {
+      badge.hidden = false; badge.className = 'badge ok'; badge.textContent = 'Verified';
+      hint.textContent = 'Used for sign-in and account notices.';
+    }
+  }
+  function paintTopbar() {
+    $('#top-name').textContent = saved.displayName || saved.fullName;
+    paintAvatar($('#top-avatar'), saved.fullName, saved.photo);
+  }
+
+  function refresh() {
+    draft = readForm();
+
+    /* Clear field errors as soon as they are fixed. */
+    if (hasError('fullName') && draft.fullName) setError('fullName', '');
+    if (hasError('email') && emailRe.test(draft.email)) setError('email', '');
+
+    paintAvatar($('#profile-avatar'), draft.fullName, draft.photo);
+    $('#photo-remove').hidden = !draft.photo;
+    $('#photo-upload').textContent = draft.photo ? 'Change photo' : 'Upload photo';
+    paintEmail();
+
+    fillHours(draft.timeFormat);
+    $('#quietFrom').disabled = !draft.quietOn;
+    $('#quietTo').disabled = !draft.quietOn;
+    $('#quiet-times').classList.toggle('is-off', !draft.quietOn);
+
+    applyTheme(draft.theme);
+    paintClock();
+
+    var n = changedKeys(draft, saved).length;
+    var dirty = n > 0;
+    if (!saving) saveCount.textContent = n === 1 ? '1 unsaved change' : n + ' unsaved changes';
+    if (!dirty) showSaveError('');
+    if (savebar.hidden === dirty) savebar.hidden = !dirty;
+    document.body.classList.toggle('is-dirty', dirty);
+    return dirty;
+  }
+
+  /* ---------- Save / discard ---------- */
+  function validate(s) {
+    var first = null;
+    if (!s.fullName) { setError('fullName', 'Enter your name so teammates know who you are.'); first = first || 'fullName'; }
+    else setError('fullName', '');
+    if (!s.email) { setError('email', 'Enter an email address. You need one to sign in.'); first = first || 'email'; }
+    else if (!emailRe.test(s.email)) { setError('email', 'That doesn’t look like an email address. Check for a missing @ or domain.'); first = first || 'email'; }
+    else setError('email', '');
+    return first;
+  }
+
+  var saveBtn = $('#save');
+  var discardBtn = $('#discard');
+  var saveError = $('#save-error');
+
+  function showSaveError(msg) {
+    if (saveError.textContent !== msg) saveError.textContent = msg;
+    saveError.hidden = !msg;
+  }
+
+  function save() {
+    if (saving) return;
+    var snap = readForm();
+    if (!changedKeys(snap, saved).length) return;
+    showSaveError('');
+    var bad = validate(snap);
+    if (bad) {
+      document.getElementById(bad).focus();
+      toast('Fix the highlighted field, then save again.');
+      return;
+    }
+    saving = true;
+    saveBtn.disabled = true; discardBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+    setTimeout(function () {
+      var next = Object.assign({}, snap, { verifiedEmail: saved.verifiedEmail });
+      var ok = persist(next);
+      saving = false;
+      saveBtn.disabled = false; discardBtn.disabled = false;
+      saveBtn.textContent = 'Save';
+      if (!ok) {
+        /* Nothing was written: keep the draft on screen and say so. */
+        hideToast();
+        showSaveError(snap.photo && snap.photo !== saved.photo
+          ? 'Couldn’t save your changes. Nothing is lost. Save again, or try a smaller photo.'
+          : 'Couldn’t save your changes. Nothing is lost. Save again in a moment.');
+        refresh();
+        return;
+      }
+      var emailChanged = next.email !== saved.email && next.email !== next.verifiedEmail;
+      saved = next;
+      paintTopbar();
+      refresh();
+      toast(emailChanged ? 'Saved. Check ' + saved.email + ' to confirm your new address.' : 'Changes saved');
+    }, 450);
+  }
+
+  function discard() {
+    if (saving) return;
+    draftPhoto = saved.photo;
+    hoursFmt = null;
+    fillHours(saved.timeFormat);
+    writeForm(saved);
+    setError('fullName', ''); setError('email', '');
+    $('#photo-err').hidden = true;
+    showSaveError('');
+    refresh();
+    toast('Changes discarded');
+  }
+
+  saveBtn.addEventListener('click', save);
+  discardBtn.addEventListener('click', discard);
+  $('#profile-form').addEventListener('submit', function (e) { e.preventDefault(); save(); });
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && String(e.key).toLowerCase() === 's') {
+      e.preventDefault();
+      save();
+    }
+  });
+  document.addEventListener('input', refresh);
+  document.addEventListener('change', refresh);
+
+  /* ---------- Profile photo ---------- */
+  var photoInput = $('#photo-input');
+  var photoErr = $('#photo-err');
+  $('#photo-upload').addEventListener('click', function () { photoInput.click(); });
+  $('#photo-remove').addEventListener('click', function () {
+    draftPhoto = null;
+    photoErr.hidden = true;
+    refresh();
+    $('#photo-upload').focus();
+  });
+  photoInput.addEventListener('change', function () {
+    var f = photoInput.files && photoInput.files[0];
+    photoInput.value = '';
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) {
+      photoErr.textContent = 'That file isn’t a PNG or JPG. Choose a different image.';
+      photoErr.hidden = false; return;
+    }
+    if (f.size > 2 * 1024 * 1024) {
+      photoErr.textContent = 'That image is over 2 MB. Choose a smaller one.';
+      photoErr.hidden = false; return;
+    }
+    photoErr.hidden = true;
+    var reader = new FileReader();
+    reader.onload = function () { draftPhoto = String(reader.result); refresh(); };
+    reader.onerror = function () {
+      photoErr.textContent = 'We couldn’t read that image. Try another file.';
+      photoErr.hidden = false;
+    };
+    reader.readAsDataURL(f);
+  });
+
+  /* ---------- Confirm dialog ---------- */
+  var dlg = $('#dlg');
+  var dlgInput = $('#dlg-input');
+  var dlgOk = $('#dlg-ok');
+  var dlgNeed = null;
+  var dlgResolve = null;
+
+  function confirmDialog(o) {
+    return new Promise(function (resolve) {
+      if (typeof dlg.showModal !== 'function') {
+        if (o.requireText) {
+          var typed = window.prompt(o.title + '\n\n' + o.body + '\n\nType ' + o.requireText + ' to confirm.');
+          resolve(typed !== null && typed.trim().toLowerCase() === o.requireText.toLowerCase());
+        } else {
+          resolve(window.confirm(o.title + '\n\n' + o.body));
+        }
+        return;
+      }
+      $('#dlg-title').textContent = o.title;
+      $('#dlg-body').textContent = o.body;
+      dlgOk.textContent = o.okLabel;
+      dlgNeed = o.requireText || null;
+      $('#dlg-field').hidden = !dlgNeed;
+      dlgInput.value = '';
+      if (dlgNeed) $('#dlg-input-label').textContent = 'Type ' + dlgNeed + ' to confirm';
+      dlgOk.disabled = !!dlgNeed;
+      dlg.returnValue = '';
+      dlgResolve = resolve;
+      dlg.showModal();
+      if (dlgNeed) dlgInput.focus(); else $('#dlg-cancel').focus();
+    });
+  }
+  function dlgMatches() {
+    return !dlgNeed || dlgInput.value.trim().toLowerCase() === dlgNeed.toLowerCase();
+  }
+  dlgInput.addEventListener('input', function () { dlgOk.disabled = !dlgMatches(); });
+  $('#dlg-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (dlgMatches()) dlg.close('ok');
+  });
+  $('#dlg-cancel').addEventListener('click', function () { dlg.close('cancel'); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close('cancel'); });
+  dlg.addEventListener('close', function () {
+    var r = dlgResolve; dlgResolve = null;
+    if (r) r(dlg.returnValue === 'ok');
+  });
+
+  /* ---------- Password ---------- */
+  var pwForm = $('#pw-form');
+  var pwToggle = $('#pw-toggle');
+  var pwIds = ['pw-current', 'pw-new', 'pw-confirm'];
+
+  function closePw() {
+    pwForm.reset();
+    pwIds.forEach(function (id) { setError(id, ''); document.getElementById(id).type = 'password'; });
+    pwForm.hidden = true;
+    pwToggle.setAttribute('aria-expanded', 'false');
+    pwToggle.hidden = false;
+  }
+  pwToggle.addEventListener('click', function () {
+    pwForm.hidden = false;
+    pwToggle.setAttribute('aria-expanded', 'true');
+    pwToggle.hidden = true;
+    $('#pw-current').focus();
+  });
+  $('#pw-cancel').addEventListener('click', function () { closePw(); pwToggle.focus(); });
+  $('#pw-show').addEventListener('change', function (e) {
+    pwIds.forEach(function (id) { document.getElementById(id).type = e.target.checked ? 'text' : 'password'; });
+  });
+  pwIds.forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () { if (hasError(id)) setError(id, ''); });
+  });
+  pwForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var cur = $('#pw-current').value, nw = $('#pw-new').value, cf = $('#pw-confirm').value;
+    var first = null;
+    if (!cur) { setError('pw-current', 'Enter your current password.'); first = first || 'pw-current'; } else setError('pw-current', '');
+    if (nw.length < 12) { setError('pw-new', 'Use at least 12 characters. You have ' + nw.length + '.'); first = first || 'pw-new'; }
+    else if (nw === cur) { setError('pw-new', 'Choose a password you aren’t already using.'); first = first || 'pw-new'; }
+    else setError('pw-new', '');
+    if (cf !== nw) { setError('pw-confirm', 'The two new passwords don’t match.'); first = first || 'pw-confirm'; } else setError('pw-confirm', '');
+    if (first) { document.getElementById(first).focus(); return; }
+    closePw();
+    $('#pw-meta').textContent = 'Last changed today';
+    pwToggle.focus();
+    toast('Password updated');
+  });
+
+  /* ---------- Two-step verification ---------- */
+  var tfaOn = true;
+  var tfaBtn = $('#tfa-btn');
+  function paintTfa() {
+    var badge = $('#tfa-badge');
+    badge.textContent = tfaOn ? 'On' : 'Off';
+    badge.className = tfaOn ? 'badge ok' : 'badge warn';
+    tfaBtn.textContent = tfaOn ? 'Turn off' : 'Turn on';
+  }
+  tfaBtn.addEventListener('click', function () {
+    if (!tfaOn) {
+      tfaOn = true; paintTfa();
+      $('#tfa-desc').textContent = 'Authenticator app, added today';
+      toast('Two-step verification is on');
+      return;
+    }
+    confirmDialog({
+      title: 'Turn off two-step verification?',
+      body: 'Your account will be protected by your password alone. You can turn this back on at any time.',
+      okLabel: 'Turn off'
+    }).then(function (ok) {
+      if (!ok) return;
+      tfaOn = false; paintTfa();
+      $('#tfa-desc').textContent = 'Your password is the only thing protecting this account.';
+      toast('Two-step verification is off');
+    });
+  });
+
+  /* ---------- Sessions ---------- */
+  var sessions = $('#sessions');
+  function otherSessions() { return $$('[data-session]', sessions); }
+  function paintSessionsFoot() {
+    if (!otherSessions().length) {
+      $('#sessions-foot').textContent = 'You’re only signed in on this device.';
+    }
+  }
+  sessions.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-signout]') : null;
+    if (!btn) return;
+    var li = btn.closest('[data-session]');
+    var name = li.getAttribute('data-session');
+    li.parentNode.removeChild(li);
+    paintSessionsFoot();
+    $('#h-sessions').focus();
+    toast('Signed out of ' + name);
+  });
+  $('#signout-all').addEventListener('click', function () {
+    var others = otherSessions();
+    var n = others.length;
+    others.forEach(function (li) { li.parentNode.removeChild(li); });
+    paintSessionsFoot();
+    $('#h-sessions').focus();
+    toast(n === 1 ? 'Signed out of 1 other device' : 'Signed out of ' + n + ' other devices');
+  });
+
+  /* ---------- Workspaces ---------- */
+  $('#ws-list').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-leave]') : null;
+    if (!btn) return;
+    var li = btn.closest('[data-ws]');
+    var id = li.getAttribute('data-ws');
+    var name = li.getAttribute('data-ws-name');
+    confirmDialog({
+      title: 'Leave ' + name + '?',
+      body: 'You’ll lose access to its channels, tasks and files. An admin will need to invite you back.',
+      okLabel: 'Leave workspace'
+    }).then(function (ok) {
+      if (!ok) return;
+      li.parentNode.removeChild(li);
+      var sel = $('#defaultWorkspace');
+      var opt = $('option[value="' + id + '"]', sel);
+      if (opt) {
+        if (sel.value === id) sel.value = 'northwind';
+        sel.removeChild(opt);
+      }
+      if (saved.defaultWorkspace === id) { saved.defaultWorkspace = 'northwind'; persist(saved); }
+      refresh();
+      $('#h-workspaces').focus();
+      toast('You left ' + name);
+    });
+  });
+
+  /* ---------- Data & account ---------- */
+  $('#export-btn').addEventListener('click', function () {
+    var btn = $('#export-btn');
+    btn.disabled = true;
+    btn.textContent = 'Export requested';
+    $('#export-desc').textContent = 'We’re preparing your archive. A download link will arrive at ' + saved.verifiedEmail + ' within 24 hours.';
+    toast('Export requested');
+  });
+  $('#delete-btn').addEventListener('click', function () {
+    confirmDialog({
+      title: 'Delete your account?',
+      body: 'Your profile is removed and you’re signed out everywhere. Messages and files you shared stay in their workspaces, shown as from a deleted user. This can’t be undone.',
+      okLabel: 'Delete account',
+      requireText: saved.verifiedEmail
+    }).then(function (ok) {
+      if (ok) toast('This is a prototype, so nothing was deleted.');
+    });
+  });
+
+  /* ---------- Section nav: highlight where you are ---------- */
+  var navList = $('#section-nav');
+  var links = $$('a', navList);
+  var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+  var current = -1;
+  var lockUntil = 0;
+  var ticking = false;
+
+  function setCurrent(i) {
+    if (i === current) return;
+    current = i;
+    links.forEach(function (a, j) {
+      if (j === i) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+    if (navList.scrollWidth > navList.clientWidth + 1) {
+      var a = links[i];
+      var left = Math.max(0, a.offsetLeft - (navList.clientWidth - a.offsetWidth) / 2);
+      try { navList.scrollTo({ left: left, behavior: 'smooth' }); } catch (e) { navList.scrollLeft = left; }
+    }
+  }
+  function spy() {
+    ticking = false;
+    if (Date.now() < lockUntil) return;
+    var i = 0;
+    for (var j = 0; j < secs.length; j++) {
+      if (secs[j].getBoundingClientRect().top <= 140) i = j;
+    }
+    var doc = document.documentElement;
+    if (window.innerHeight + window.pageYOffset >= doc.scrollHeight - 2) i = secs.length - 1;
+    setCurrent(i);
+  }
+  function queueSpy() {
+    if (ticking) return;
+    ticking = true;
+    if (window.requestAnimationFrame) window.requestAnimationFrame(spy); else window.setTimeout(spy, 16);
+  }
+  links.forEach(function (a, i) {
+    a.addEventListener('click', function () { lockUntil = Date.now() + 900; setCurrent(i); });
+  });
+  window.addEventListener('scroll', queueSpy, { passive: true });
+  window.addEventListener('resize', queueSpy);
+
+  /* ---------- Start ---------- */
+  fillHours(saved.timeFormat);
+  writeForm(saved);
+  paintTopbar();
+  paintTfa();
+  refresh();
+  spy();
+  setInterval(paintClock, 30000);
+})();
+</script>
+</body>
+</html>
