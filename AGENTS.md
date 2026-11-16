@@ -38,8 +38,10 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
   --states default,loading,empty,error --out evidence/<slug>
 ```
 
-Choose task-relevant states and breakpoints. Block a ready verdict on confirmed Foundation v2
-never rules or failed required accessibility, layout, semantic, interaction, or modal evidence.
+Choose task-relevant states and breakpoints. In default mode, block a ready verdict on confirmed
+Foundation v2 never rules. The explicitly selected experimental review-and-preserve mode follows
+the entrypoint’s scoped aesthetic exception; required accessibility, layout, semantic, interaction
+and modal failures remain blocking in either mode. Never bypass an external release gate.
 
 ## Specialist suite
 

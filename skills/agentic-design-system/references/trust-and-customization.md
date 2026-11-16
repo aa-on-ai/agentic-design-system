@@ -88,6 +88,14 @@ otherwise choose one suitable open-source family. A taste override does not waiv
 or turn an unverified interaction into a pass. Surface conflicts instead of silently replacing the
 product language or weakening the relevant checks.
 
+## Experimental task-scoped mode
+
+The entrypoint offers an explicitly selected [review-and-preserve mode](../workflows/review-and-preserve.md).
+Selection is per task, not a change to installed files or project defaults. It defers generic aesthetic
+prescription and treats generic style findings as advisory while retaining explicit project/user
+constraints and required usability checks. It does not change the Foundation JSON or suppress
+scanner results, override external release gates, authorize installs or claim improved model output.
+
 ## Credits and provenance
 
 See the repository's [influences record](https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/influences.md)
