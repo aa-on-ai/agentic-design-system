@@ -19,6 +19,15 @@ no `create-design-workflow.md`. Optional source-maintenance workflows require a 
 For installation review or project-default changes, read [trust and customization](references/trust-and-customization.md):
 execution effects, optional telemetry, taste overrides, and provenance. This is not an extra per-task stage.
 
+## Experimental mode: review and preserve
+
+Only when the user or task brief explicitly selects **review and preserve**, use
+[the experimental mode](workflows/review-and-preserve.md) within this same five-step loop.
+It changes when generic aesthetic guidance is applied and how aesthetic findings are treated;
+it does not remove product requirements, accessibility, behavior checks or approval boundaries.
+Do not infer activation from an ordinary build, review or polish request. No quality advantage has
+been established for this mode. Without explicit selection, the existing workflow below applies.
+
 ## Understand
 
 For substantial work, recover a short internal brief from the request and current product sources:
@@ -40,13 +49,16 @@ writes, deployment, installation, spending, and destructive actions retain their
 
 Read relevant `DESIGN.md`, guidelines, tokens, components and accepted/rejected decisions. Preserve
 unknown `DESIGN.md` sections; frontmatter tokens govern conflicting prose unless the current user
-or primary source corrects them. Resolve a material conflict, not a nearby substitute. Use a
-[preset](presets/README.md) only when no established product language answers the need.
+or primary source corrects them. Resolve a material conflict, not a nearby substitute. Outside the
+experimental mode, use a [preset](presets/README.md) only when no established product language
+answers the need.
 
 For generation or substantial review, read [Foundation v2](contracts/visual-foundation.v2.json):
 `utility` is the default for product/operations work; `expressive` requires marketing, editorial,
 launch, or explicit brand-expression scope. Do not turn a plain utility surface into creative work.
-Confirmed `never` violations block a ready verdict; report-only candidates need actual confirmation.
+In the default mode, confirmed `never` violations block a ready verdict; report-only candidates
+need actual confirmation. The explicitly selected experimental mode defines its narrower distinction
+between generic aesthetic findings and required product/usability failures.
 The contract's numeric rubric is optional diagnostic context, not a taste or release certificate.
 
 ## Choose
@@ -96,7 +108,9 @@ Review in this order, fixing an earlier failure before polishing a later one:
 4. Craft and component consistency.
 5. Behavior, applicable states, target surfaces and usable delivery.
 
-Preserve what already works. A technical implementation summary is not the product's answer to
+Preserve what already works. In the experimental mode, record the rendered candidate’s strengths
+before repairs and compare the whole result after them, as its mode reference specifies.
+A technical implementation summary is not the product's answer to
 the user. For Review, report findings without edits unless repair is already authorized.
 
 ## Prove

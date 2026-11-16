@@ -16,7 +16,12 @@ budget and authorization established by [ADS](../agentic-design-system/SKILL.md)
 
 For substantial work, use the Foundation profile locked by ADS at
 `../agentic-design-system/contracts/visual-foundation.v2.json`.
-Confirmed `never` rules block a ready verdict, not an honest handoff of unresolved findings.
+In default mode, confirmed `never` rules block a ready verdict, not an honest handoff of unresolved
+findings. When the task explicitly selects ADS review and preserve, follow its
+[experimental mode](../agentic-design-system/workflows/review-and-preserve.md): generic aesthetic
+findings below are advisory, while explicit project/user and required usability constraints remain
+binding. Preserve raw findings and do not bypass external gates. Do not activate this exception
+merely because the task is a review.
 
 - Never put a border on only one edge of a rounded rectangle. A complete perimeter remains valid.
 - Never recreate that one-edge treatment with a zero-blur or inset shadow.

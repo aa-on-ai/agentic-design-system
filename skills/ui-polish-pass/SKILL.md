@@ -12,6 +12,11 @@ build/review pass, after task fit and information structure are sound. A tiny ch
 check. Do not redesign a chosen direction, make prototypes production-grade, or exempt utility
 work from basic usability. New direction needs a real unresolved decision, not a polish ritual.
 
+When the task explicitly selects ADS review and preserve, its
+[experimental mode](../agentic-design-system/workflows/review-and-preserve.md) governs aesthetic
+judgment: preserve useful composition and repair observed problems rather than imposing the
+default stylistic preferences below. Required usability and explicit product constraints still apply.
+
 ## Core Lens
 - Distill before decorating.
 - Strip the screen to its essential structure, then add back only what earns its place.
