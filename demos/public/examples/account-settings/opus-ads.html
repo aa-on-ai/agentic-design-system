@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Account settings · Relay</title>
+<style>
+  :root {
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --bg: #f5f5f2;
+    --raised: #ffffff;
+    --raised-sunk: #f8f8f6;
+    --border: #e1e1dc;
+    --control-border: #858a93;
+    --text: #1b1e23;
+    --text-2: #555b65;
+    --accent: #3448c5;
+    --accent-hover: #2a3ba6;
+    --accent-press: #22318c;
+    --accent-soft: #e9ecfb;
+    --danger: #b42318;
+    --danger-hover: #961c13;
+    --danger-soft: #fdf0ee;
+    --success: #18733a;
+    --success-soft: #eaf5ee;
+    --warn: #8a5300;
+    --warn-soft: #fdf4e3;
+    --focus: 0 0 0 2px #fff, 0 0 0 4px var(--accent);
+
+    --r-control: 8px;
+    --r-panel: 12px;
+    --h-control: 40px;
+
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+
+    --z-sticky: 10;
+    --z-toast: 50;
+  }
+  @media (max-width: 760px) { :root { --h-control: 48px; } }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { margin: 0; font-family: var(--font); font-size: 15px; line-height: 1.5; color: var(--text); background: var(--bg); }
+  h1, h2, h3, p { margin: 0; }
+  button, input, select { font: inherit; color: inherit; }
+  [hidden] { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* Icon primitive */
+  .icon { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-sm { width: 16px; height: 16px; }
+  .inline-icon { display: inline-flex; align-items: baseline; gap: 6px; }
+  .inline-icon .icon { align-self: center; position: relative; top: -0.5px; }
+
+  /* App header */
+  .appbar { background: var(--raised); border-bottom: 1px solid var(--border); }
+  .appbar-inner { max-width: 1120px; margin: 0 auto; padding: 0 var(--s6); height: 56px; display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; }
+  .brand-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); color: #fff; display: grid; place-items: center; }
+  .brand-mark .icon { width: 18px; height: 18px; stroke-width: 2; }
+  .brand-sep { color: var(--text-2); font-weight: 400; }
+  .appbar-user { display: flex; align-items: center; gap: 10px; color: var(--text-2); font-size: 14px; }
+  .avatar { border-radius: 50%; background: var(--accent-soft); color: var(--accent-press); display: grid; place-items: center; font-weight: 600; overflow: hidden; flex: none; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .avatar-sm { width: 32px; height: 32px; font-size: 13px; }
+  .avatar-lg { width: 72px; height: 72px; font-size: 24px; }
+
+  /* Layout */
+  .shell { max-width: 1120px; margin: 0 auto; padding: var(--s6) var(--s6) 96px; display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: var(--s7); }
+  .page-head { grid-column: 1 / -1; margin-bottom: var(--s6); }
+  .page-head h1 { font-size: 26px; line-height: 1.25; font-weight: 650; }
+  .page-head p { color: var(--text-2); margin-top: 6px; max-width: 62ch; }
+
+  .section-nav { position: sticky; top: var(--s5); align-self: start; }
+  .section-nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .section-nav a { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px 12px; border-radius: var(--r-control); color: var(--text-2); text-decoration: none; font-size: 14px; transition: background-color .15s ease, color .15s ease; }
+  .section-nav a:hover { background: #ebebe6; color: var(--text); }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .section-nav a[aria-current="true"] { background: var(--raised); color: var(--text); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
+  .section-nav .nav-flag { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--warn); }
+  .section-nav a.nav-danger { color: var(--danger); }
+
+  .content { display: grid; gap: var(--s5); min-width: 0; }
+
+  /* Panel (raised surface) */
+  .panel { background: var(--raised); border: 1px solid var(--border); border-radius: var(--r-panel); scroll-margin-top: var(--s5); overflow: hidden; }
+  .panel-head { padding: var(--s5) var(--s5) var(--s4); display: flex; gap: var(--s3); align-items: flex-start; }
+  .panel-head .icon { color: var(--text-2); margin-top: 3px; }
+  .panel-head h2 { font-size: 18px; line-height: 1.35; font-weight: 650; }
+  .panel-head h2:focus { outline: none; }
+  .panel-head p { color: var(--text-2); font-size: 14px; margin-top: 2px; max-width: 64ch; }
+  .panel-body { padding: 0 var(--s5) var(--s5); }
+  .panel-foot { background: var(--raised-sunk); padding: var(--s3) var(--s5); display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; }
+  .panel-foot .form-status { margin-right: auto; font-size: 14px; color: var(--text-2); min-width: 0; }
+  .form-status.is-dirty { color: var(--warn); font-weight: 550; }
+  .form-status.is-saved { color: var(--success); }
+  .form-status.is-error { color: var(--danger); font-weight: 550; }
+  .form-status .icon { width: 16px; height: 16px; vertical-align: -3px; margin-right: 4px; }
+  .panel-danger { border-color: #efc5bf; }
+  .panel-danger .panel-head .icon { color: var(--danger); }
+
+  .subhead { font-size: 15px; font-weight: 650; margin-bottom: var(--s1); }
+  .block + .block { margin-top: var(--s6); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--h-control); padding: 0 16px; border-radius: var(--r-control); border: 1px solid transparent; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn:disabled { cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+  .btn-primary:active:not(:disabled) { background: var(--accent-press); }
+  .btn-primary:disabled { background: #c9cbd3; color: #4a4f58; }
+  .btn-secondary { background: var(--raised); border-color: #c7c9ce; color: var(--text); }
+  .btn-secondary:hover:not(:disabled) { background: #f1f1ee; border-color: #a9acb3; }
+  .btn-secondary:active:not(:disabled) { background: #e7e7e3; }
+  .btn-secondary:disabled { color: #6b7079; background: #f3f3f1; border-color: #dcdcd8; }
+  .btn-ghost { background: transparent; color: var(--text); }
+  .btn-ghost:hover:not(:disabled) { background: #efefeb; }
+  .btn-ghost:disabled { color: #6b7079; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
+  .btn-danger:disabled { background: #e4c9c6; color: #5e2a25; }
+  .btn-danger-outline { background: var(--raised); border-color: #e0a59d; color: var(--danger); }
+  .btn-danger-outline:hover:not(:disabled) { background: var(--danger-soft); }
+  .btn-danger-outline:disabled { color: #6b7079; border-color: #dcdcd8; background: #f3f3f1; }
+  .btn[aria-busy="true"] { cursor: progress; }
+  .btn-row { display: flex; gap: var(--s2); flex-wrap: wrap; }
+
+  /* Fields */
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s5) var(--s4); max-width: 680px; }
+  .field { display: grid; gap: 6px; min-width: 0; align-content: start; }
+  .field-wide { grid-column: 1 / -1; }
+  .field label, .label { font-size: 14px; font-weight: 600; }
+  .req { color: var(--text-2); font-weight: 400; }
+  .help { font-size: 13px; color: var(--text-2); min-height: 1.5em; }
+  .field.invalid .help { color: var(--danger); }
+  .help .icon { width: 15px; height: 15px; margin-right: 4px; vertical-align: -3px; }
+  .input, .select { width: 100%; height: var(--h-control); padding: 0 12px; border: 1px solid var(--control-border); border-radius: var(--r-control); background: var(--raised); font-size: 15px; transition: border-color .15s ease, box-shadow .15s ease; }
+  @media (max-width: 760px) { .input, .select { font-size: 16px; } }
+  .input:hover, .select:hover { border-color: #5f646d; }
+  .input:focus, .select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .field.invalid .input { border-color: var(--danger); }
+  .field.invalid .input:focus { outline-color: var(--danger); }
+  .input[readonly] { background: var(--raised-sunk); }
+  .select { appearance: none; -webkit-appearance: none; padding-right: 44px; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555b65' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; background-size: 16px; }
+
+  /* Profile photo */
+  .photo-row { display: flex; align-items: center; gap: var(--s4); margin-bottom: var(--s5); flex-wrap: wrap; }
+  .photo-row .photo-meta { display: grid; gap: var(--s2); min-width: 0; }
+
+  /* Notices */
+  .notice { display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s3) var(--s4); border-radius: var(--r-control); border: 1px solid; font-size: 14px; }
+  .notice .icon { margin-top: 1px; }
+  .notice-info { background: var(--accent-soft); border-color: #c8cff4; color: #1f2c7a; }
+  .notice-warn { background: var(--warn-soft); border-color: #efd6a6; color: #5e3900; }
+  .notice-danger { background: var(--danger-soft); border-color: #efc5bf; color: #7a1a12; }
+  .notice .notice-body { display: grid; gap: var(--s2); min-width: 0; }
+  .notice .btn-row { margin-top: 2px; }
+  .notice-wrap { margin-bottom: var(--s5); max-width: 680px; }
+  .page-banner { grid-column: 1 / -1; margin-bottom: var(--s5); }
+
+  /* Setting rows (security) */
+  .setting-row { display: flex; gap: var(--s4); align-items: flex-start; justify-content: space-between; flex-wrap: wrap; }
+  .setting-row .setting-text { min-width: 0; flex: 1 1 280px; }
+  .setting-row .setting-text p { color: var(--text-2); font-size: 14px; }
+  .status-label { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 8px; vertical-align: 1px; }
+  .status-on { background: var(--success-soft); color: var(--success); }
+  .status-off { background: var(--warn-soft); color: var(--warn); }
+  .status-label .icon { width: 14px; height: 14px; stroke-width: 2.25; }
+  .inline-result { font-size: 14px; color: var(--success); margin-top: var(--s2); }
+  .subform { margin-top: var(--s4); padding: var(--s5); background: var(--raised-sunk); border: 1px solid var(--border); border-radius: 10px; max-width: 680px; }
+  .subform .fields { grid-template-columns: minmax(0, 1fr); max-width: 360px; }
+  .subform .btn-row { margin-top: var(--s5); }
+  .codes { margin-top: var(--s4); padding: var(--s4); background: var(--raised-sunk); border: 1px solid var(--border); border-radius: 10px; max-width: 680px; }
+  .codes ul { list-style: none; margin: var(--s3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, max-content); gap: var(--s2) var(--s5); font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .codes p { font-size: 14px; color: var(--text-2); }
+
+  /* Lists: sessions, teams */
+  .list { list-style: none; margin: var(--s3) 0 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .list-row { display: flex; align-items: center; gap: var(--s3); padding: var(--s3) var(--s4); min-height: 64px; flex-wrap: wrap; }
+  .list-row + .list-row { border-top: 1px solid var(--border); }
+  .list-row .row-icon { width: 36px; height: 36px; border-radius: 8px; background: #f0f0ec; color: var(--text-2); display: grid; place-items: center; flex: none; }
+  .list-row .row-main { flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
+  .row-title { font-weight: 600; font-size: 14px; }
+  .row-meta { font-size: 13px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .row-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-press); margin-left: 6px; vertical-align: 1px; }
+  .row-actions { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .row-note { font-size: 13px; color: var(--text-2); max-width: 30ch; text-align: right; }
+  .row-done { font-size: 13px; color: var(--text-2); font-weight: 600; }
+  .row-done:focus { outline: none; }
+  .list-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin-top: var(--s3); flex-wrap: wrap; }
+  .list-foot p { font-size: 13px; color: var(--text-2); }
+
+  /* Notification matrix */
+  .matrix { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .matrix th, .matrix td { text-align: left; padding: 10px 0; vertical-align: middle; }
+  .matrix thead th { font-size: 13px; font-weight: 600; color: var(--text-2); padding-top: 0; }
+  .matrix .col-check { width: 88px; text-align: center; }
+  .matrix tbody tr { border-top: 1px solid var(--border); }
+  .matrix tbody th { font-weight: 600; padding-right: var(--s4); }
+  .matrix tbody th span { display: block; font-weight: 400; color: var(--text-2); font-size: 13px; }
+  .check-cell { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: var(--r-control); cursor: pointer; }
+  .check-cell:hover { background: #f1f1ee; }
+  .check-cell input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .check-cell input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  /* Dialogs */
+  dialog { border: 1px solid var(--border); border-radius: 14px; padding: 0; width: min(480px, calc(100vw - 32px)); background: var(--raised); color: var(--text); box-shadow: 0 24px 64px rgba(20,24,40,.22), 0 2px 8px rgba(20,24,40,.08); }
+  dialog::backdrop { background: rgba(22,25,33,.45); }
+  .dialog-inner { padding: var(--s5); display: grid; gap: var(--s4); }
+  .dialog-inner h2 { font-size: 18px; line-height: 1.35; font-weight: 650; }
+  .dialog-inner p, .dialog-inner li { color: var(--text-2); font-size: 14px; }
+  .dialog-inner ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+  .dialog-actions { display: flex; justify-content: flex-end; gap: var(--s2); flex-wrap: wrap; margin-top: var(--s2); }
+
+  /* Toast (secondary confirmation) */
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: var(--z-toast); background: #23262d; color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.2); display: flex; gap: 8px; align-items: center; max-width: calc(100vw - 32px); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+  .toast.show { opacity: 1; }
+
+  /* Mobile composition */
+  @media (max-width: 760px) {
+    .appbar-inner { padding: 0 var(--s4); }
+    .appbar-user .user-name { display: none; }
+    .shell { grid-template-columns: minmax(0, 1fr); padding: var(--s5) 0 96px; }
+    .page-head { padding: 0 var(--s4); margin-bottom: var(--s4); }
+    .page-head h1 { font-size: 24px; }
+    .page-banner { margin: 0 var(--s4) var(--s4); }
+    .section-nav { top: 0; z-index: var(--z-sticky); background: var(--bg); padding: var(--s2) 0; margin-bottom: var(--s3); box-shadow: 0 1px 0 var(--border); }
+    .section-nav ul { display: flex; gap: var(--s2); overflow-x: auto; padding: 2px var(--s4); scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-padding-inline: var(--s4); }
+    .section-nav ul::-webkit-scrollbar { display: none; }
+    .section-nav li { flex: none; }
+    .section-nav a { min-height: 44px; padding: 8px 14px; white-space: nowrap; }
+    .section-nav a .icon { display: none; }
+    .content { padding: 0 var(--s4); gap: var(--s4); }
+    .panel { scroll-margin-top: 76px; }
+    .panel-head { padding: var(--s4) var(--s4) var(--s3); }
+    .panel-body { padding: 0 var(--s4) var(--s4); }
+    .panel-foot { padding: var(--s3) var(--s4); }
+    .panel-foot .form-status { flex: 1 1 100%; }
+    .panel-foot .btn { flex: 1 1 0; }
+    .fields { grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+    .subform { padding: var(--s4); }
+    .subform .fields { max-width: none; }
+    .btn-row .btn { flex: 1 1 auto; }
+    .codes ul { grid-template-columns: repeat(2, max-content); }
+    .list-row { padding: var(--s3); align-items: flex-start; }
+    .list-row .row-main { flex-basis: calc(100% - 52px); }
+    .row-actions { flex: 1 1 100%; justify-content: flex-start; padding-left: 48px; }
+    .row-actions .btn { flex: 1 1 auto; }
+    .row-note { text-align: left; max-width: none; }
+    .list-foot .btn { flex: 1 1 100%; }
+    .matrix .col-check { width: 56px; }
+    .dialog-actions .btn { flex: 1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 19c1-3 3.5-4.5 6.5-4.5s5.5 1.5 6.5 4.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.8c1.7.6 2.9 2 3.5 4.2"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24"><path d="M12 4l9 16H3L12 4z"/><path d="M12 10v4M12 17.2v.1"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/></symbol>
+    <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-relay" viewBox="0 0 24 24"><path d="M5 17l5-5-5-5M12 17h7"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 7l2 2"/></symbol>
+  </defs>
+</svg>
+
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-relay"/></svg></span>
+      <span>Relay</span>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <span class="brand-sep">Northwind Studio</span>
+    </div>
+    <div class="appbar-user">
+      <span class="user-name" data-bind="name">Maya Okafor</span>
+      <span class="avatar avatar-sm" data-avatar aria-hidden="true">MO</span>
+    </div>
+  </div>
+</header>
+
+<div class="shell" id="top">
+  <div class="page-head">
+    <h1>Account settings</h1>
+    <p>Your profile, sign-in, and notification choices. These follow you across every team you belong to. Team billing and member management live in each team’s settings.</p>
+  </div>
+
+  <div class="page-banner" id="deletion-banner" hidden>
+    <div class="notice notice-danger" role="status">
+      <svg class="icon" aria-hidden="true"><use href="#i-warning"/></svg>
+      <div class="notice-body">
+        <p><strong>Your account will be deleted on December 16, 2026.</strong> You can keep using Relay and cancel any time before then.</p>
+        <div class="btn-row"><button type="button" class="btn btn-secondary" id="cancel-deletion">Cancel deletion</button></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="section-nav" aria-label="Settings sections">
+    <ul>
+      <li><a href="#profile" data-nav="profile"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Profile<span class="nav-flag" hidden>Unsaved</span></a></li>
+      <li><a href="#security" data-nav="security"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Sign-in and security</a></li>
+      <li><a href="#notifications" data-nav="notifications"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>Notifications<span class="nav-flag" hidden>Unsaved</span></a></li>
+      <li><a href="#preferences" data-nav="preferences"><svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>Preferences<span class="nav-flag" hidden>Unsaved</span></a></li>
+      <li><a href="#teams" data-nav="teams"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>Teams</a></li>
+      <li><a href="#delete" data-nav="delete" class="nav-danger"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Delete account</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+
+    <!-- Profile -->
+    <section class="panel" id="profile" aria-labelledby="profile-h">
+      <form data-section="profile" novalidate>
+        <div class="panel-head">
+          <svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>
+          <div>
+            <h2 id="profile-h" tabindex="-1">Profile</h2>
+            <p>How teammates see you in comments, assignments, and mentions.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="photo-row">
+            <span class="avatar avatar-lg" data-avatar data-avatar-main aria-hidden="true">MO</span>
+            <div class="photo-meta">
+              <div class="btn-row">
+                <button type="button" class="btn btn-secondary" id="photo-upload"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-camera"/></svg>Upload photo</button>
+                <button type="button" class="btn btn-ghost" id="photo-remove" hidden>Remove photo</button>
+              </div>
+              <p class="help" id="photo-help">PNG or JPG, up to 5 MB. Square images look best.</p>
+              <input type="file" id="photo-input" accept="image/png,image/jpeg" class="sr-only" tabindex="-1" aria-hidden="true">
+              <input type="hidden" name="photo" value="">
+            </div>
+          </div>
+
+          <div class="notice-wrap" id="email-pending" hidden>
+            <div class="notice notice-info" role="status">
+              <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+              <div class="notice-body">
+                <p>We sent a confirmation link to <strong data-pending-email></strong>. Until you confirm it, you’ll keep signing in with <strong data-current-email></strong>.</p>
+                <div class="btn-row">
+                  <button type="button" class="btn btn-secondary" id="email-resend">Resend link</button>
+                  <button type="button" class="btn btn-ghost" id="email-cancel">Cancel change</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="f-name">Full name <span class="req">(required)</span></label>
+              <input class="input" id="f-name" name="name" autocomplete="name" required value="Maya Okafor" aria-describedby="f-name-help" data-required-msg="Enter your full name.">
+              <p class="help" id="f-name-help">Shown on your profile and in team directories.</p>
+            </div>
+            <div class="field">
+              <label for="f-display">Display name</label>
+              <input class="input" id="f-display" name="display" autocomplete="nickname" value="Maya" aria-describedby="f-display-help">
+              <p class="help" id="f-display-help">Used in mentions, like @Maya.</p>
+            </div>
+            <div class="field">
+              <label for="f-title">Job title</label>
+              <input class="input" id="f-title" name="title" autocomplete="organization-title" value="Senior product designer" aria-describedby="f-title-help">
+              <p class="help" id="f-title-help">Optional.</p>
+            </div>
+            <div class="field">
+              <label for="f-pronouns">Pronouns</label>
+              <input class="input" id="f-pronouns" name="pronouns" value="" placeholder="For example, she/her" aria-describedby="f-pronouns-help">
+              <p class="help" id="f-pronouns-help">Optional. Shown next to your name.</p>
+            </div>
+            <div class="field field-wide">
+              <label for="f-email">Email <span class="req">(required)</span></label>
+              <input class="input" id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required value="maya.okafor@northwind.example" aria-describedby="f-email-help" data-required-msg="Enter your email address." style="max-width: 420px">
+              <p class="help" id="f-email-help">Used to sign in. Changing it sends a confirmation link to the new address.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-foot">
+          <p class="form-status" aria-live="polite">No unsaved changes</p>
+          <button type="button" class="btn btn-ghost" data-discard disabled>Discard</button>
+          <button type="submit" class="btn btn-primary" data-save disabled>Save profile</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Security -->
+    <section class="panel" id="security" aria-labelledby="security-h">
+      <div class="panel-head">
+        <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+        <div>
+          <h2 id="security-h" tabindex="-1">Sign-in and security</h2>
+          <p>Protect your account and review where you’re signed in.</p>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="block">
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3 class="subhead">Password</h3>
+              <p id="pw-meta">Last changed July 8, 2026</p>
+              <p class="inline-result" id="pw-result" role="status" hidden><span class="inline-icon"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-check"/></svg>Password updated. Other sessions stay signed in.</span></p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="pw-toggle" aria-expanded="false" aria-controls="pw-form"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-key"/></svg>Change password</button>
+          </div>
+          <form class="subform" id="pw-form" novalidate hidden>
+            <div class="fields">
+              <div class="field">
+                <label for="pw-current">Current password</label>
+                <input class="input" id="pw-current" name="current" type="password" autocomplete="current-password" required data-required-msg="Enter your current password." aria-describedby="pw-current-help">
+                <p class="help" id="pw-current-help"></p>
+              </div>
+              <div class="field">
+                <label for="pw-new">New password</label>
+                <input class="input" id="pw-new" name="new" type="password" autocomplete="new-password" required data-minlength="12" data-required-msg="Enter a new password." aria-describedby="pw-new-help">
+                <p class="help" id="pw-new-help">At least 12 characters. A short phrase works well.</p>
+              </div>
+              <div class="field">
+                <label for="pw-confirm">Confirm new password</label>
+                <input class="input" id="pw-confirm" name="confirm" type="password" autocomplete="new-password" required data-match="new" data-required-msg="Enter the new password again." aria-describedby="pw-confirm-help">
+                <p class="help" id="pw-confirm-help"></p>
+              </div>
+            </div>
+            <div class="btn-row">
+              <button type="submit" class="btn btn-primary" id="pw-submit">Update password</button>
+              <button type="button" class="btn btn-ghost" id="pw-cancel">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="block">
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3 class="subhead">Two-step verification
+                <span class="status-label status-on" id="tfa-on"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>On</span>
+                <span class="status-label status-off" id="tfa-off" hidden><svg class="icon" aria-hidden="true"><use href="#i-warning"/></svg>Off</span>
+              </h3>
+              <p id="tfa-desc">Authenticator app, added March 3, 2026. You’ll enter a code when signing in on a new device.</p>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn btn-secondary" id="codes-toggle" aria-expanded="false" aria-controls="codes">Recovery codes</button>
+              <button type="button" class="btn btn-secondary" id="tfa-action">Turn off</button>
+            </div>
+          </div>
+          <div class="codes" id="codes" hidden>
+            <p>Each code works once. Store them somewhere safe, like a password manager.</p>
+            <ul aria-label="Recovery codes">
+              <li>k4f9-2mzq</li><li>p8vt-71ra</li><li>w3cx-9dhe</li><li>b6nj-4kuy</li>
+              <li>t2gm-58sf</li><li>h7qd-3xwe</li><li>z9ra-6lcp</li><li>m5ek-0vbt</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="block">
+          <h3 class="subhead" id="sessions-h" tabindex="-1">Where you’re signed in</h3>
+          <ul class="list" aria-labelledby="sessions-h" id="sessions">
+            <li class="list-row" data-session="this">
+              <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-laptop"/></svg></span>
+              <div class="row-main">
+                <div class="row-title">Chrome on macOS <span class="row-tag">This device</span></div>
+                <div class="row-meta">San Francisco, United States · Active now</div>
+              </div>
+            </li>
+            <li class="list-row" data-session="ios">
+              <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-phone"/></svg></span>
+              <div class="row-main">
+                <div class="row-title">Relay for iOS, iPhone 15</div>
+                <div class="row-meta">Oakland, United States · Active 2 hours ago</div>
+              </div>
+              <div class="row-actions"><button type="button" class="btn btn-secondary" data-signout aria-label="Sign out of Relay for iOS, iPhone 15">Sign out</button></div>
+            </li>
+            <li class="list-row" data-session="win">
+              <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-laptop"/></svg></span>
+              <div class="row-main">
+                <div class="row-title">Firefox on Windows</div>
+                <div class="row-meta">Berlin, Germany · Active Nov 2, 2026</div>
+              </div>
+              <div class="row-actions"><button type="button" class="btn btn-secondary" data-signout aria-label="Sign out of Firefox on Windows">Sign out</button></div>
+            </li>
+          </ul>
+          <div class="list-foot">
+            <p id="sessions-note">Don’t recognize a session? Sign it out and change your password.</p>
+            <button type="button" class="btn btn-secondary" id="signout-all">Sign out of all other sessions</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section class="panel" id="notifications" aria-labelledby="notifications-h">
+      <form data-section="notifications" novalidate>
+        <div class="panel-head">
+          <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>
+          <div>
+            <h2 id="notifications-h" tabindex="-1">Notifications</h2>
+            <p>Choose what reaches you and where. Teams can’t override these choices.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <table class="matrix">
+            <caption class="sr-only">Notification delivery by activity</caption>
+            <thead>
+              <tr><th scope="col">Activity</th><th scope="col" class="col-check">Email</th><th scope="col" class="col-check">Mobile</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Mentions and replies<span>When someone @mentions you or replies to your comment</span></th>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="mention-email" checked aria-label="Email for mentions and replies"></label></td>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="mention-push" checked aria-label="Mobile for mentions and replies"></label></td>
+              </tr>
+              <tr>
+                <th scope="row">Assigned to you<span>New tasks, reviews, and changed due dates</span></th>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="assign-email" checked aria-label="Email for assigned to you"></label></td>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="assign-push" checked aria-label="Mobile for assigned to you"></label></td>
+              </tr>
+              <tr>
+                <th scope="row">Project updates<span>Status changes on projects you follow</span></th>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="project-email" aria-label="Email for project updates"></label></td>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="project-push" checked aria-label="Mobile for project updates"></label></td>
+              </tr>
+              <tr>
+                <th scope="row">Weekly summary<span>Monday recap of activity across your teams</span></th>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="digest-email" checked aria-label="Email for weekly summary"></label></td>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="digest-push" aria-label="Mobile for weekly summary"></label></td>
+              </tr>
+              <tr>
+                <th scope="row">Product news<span>New Relay features, at most once a month</span></th>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="news-email" aria-label="Email for product news"></label></td>
+                <td class="col-check"><label class="check-cell"><input type="checkbox" name="news-push" aria-label="Mobile for product news"></label></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot">
+          <p class="form-status" aria-live="polite">No unsaved changes</p>
+          <button type="button" class="btn btn-ghost" data-discard disabled>Discard</button>
+          <button type="submit" class="btn btn-primary" data-save disabled>Save notifications</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Preferences -->
+    <section class="panel" id="preferences" aria-labelledby="preferences-h">
+      <form data-section="preferences" novalidate>
+        <div class="panel-head">
+          <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
+          <div>
+            <h2 id="preferences-h" tabindex="-1">Preferences</h2>
+            <p>Language, time, and date display. Due dates and reminders use your time zone.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="fields">
+            <div class="field">
+              <label for="p-lang">Language</label>
+              <select class="select" id="p-lang" name="lang" aria-describedby="p-lang-help">
+                <option selected>English (United States)</option>
+                <option>English (United Kingdom)</option>
+                <option>Deutsch</option>
+                <option>Español</option>
+                <option>Français</option>
+                <option>日本語</option>
+              </select>
+              <p class="help" id="p-lang-help"></p>
+            </div>
+            <div class="field">
+              <label for="p-tz">Time zone</label>
+              <select class="select" id="p-tz" name="tz" aria-describedby="p-tz-help">
+                <option value="America/Los_Angeles" selected>Pacific Time (Los Angeles)</option>
+                <option value="America/Denver">Mountain Time (Denver)</option>
+                <option value="America/Chicago">Central Time (Chicago)</option>
+                <option value="America/New_York">Eastern Time (New York)</option>
+                <option value="Europe/London">London</option>
+                <option value="Europe/Berlin">Central European Time (Berlin)</option>
+                <option value="Asia/Kolkata">India Standard Time (Kolkata)</option>
+                <option value="Asia/Tokyo">Japan Standard Time (Tokyo)</option>
+              </select>
+              <p class="help" id="p-tz-help">Detected from this device.</p>
+            </div>
+            <div class="field">
+              <label for="p-date">Date format</label>
+              <select class="select" id="p-date" name="date" aria-describedby="p-date-help">
+                <option value="mdy" selected>Nov 16, 2026</option>
+                <option value="dmy">16 Nov 2026</option>
+                <option value="iso">2026-11-16</option>
+              </select>
+              <p class="help" id="p-date-help"></p>
+            </div>
+            <div class="field">
+              <label for="p-week">Week starts on</label>
+              <select class="select" id="p-week" name="week" aria-describedby="p-week-help">
+                <option selected>Sunday</option>
+                <option>Monday</option>
+              </select>
+              <p class="help" id="p-week-help"></p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-foot">
+          <p class="form-status" aria-live="polite">No unsaved changes</p>
+          <button type="button" class="btn btn-ghost" data-discard disabled>Discard</button>
+          <button type="submit" class="btn btn-primary" data-save disabled>Save preferences</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Teams -->
+    <section class="panel" id="teams" aria-labelledby="teams-h">
+      <div class="panel-head">
+        <svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>
+        <div>
+          <h2 id="teams-h" tabindex="-1">Teams</h2>
+          <p>Teams you belong to. Leaving a team removes your access to its projects and files.</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <ul class="list" aria-labelledby="teams-h" id="team-list">
+          <li class="list-row">
+            <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></span>
+            <div class="row-main">
+              <div class="row-title">Northwind Studio <span class="row-tag">Current team</span></div>
+              <div class="row-meta">Admin · 24 members · Joined Feb 12, 2024</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn btn-secondary" data-leave="Northwind Studio">Leave</button></div>
+          </li>
+          <li class="list-row">
+            <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></span>
+            <div class="row-main">
+              <div class="row-title">Brand Guild</div>
+              <div class="row-meta">Owner · 6 members · Joined Sep 30, 2025</div>
+            </div>
+            <div class="row-actions">
+              <p class="row-note" id="owner-note">You’re the owner. Transfer ownership in Brand Guild’s team settings before leaving.</p>
+              <button type="button" class="btn btn-secondary" disabled aria-describedby="owner-note">Leave</button>
+            </div>
+          </li>
+          <li class="list-row">
+            <span class="row-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></span>
+            <div class="row-main">
+              <div class="row-title">Customer Research and Insights Working Group (EMEA and North America)</div>
+              <div class="row-meta">Member · 41 members · Joined Jun 4, 2026</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn btn-secondary" data-leave="Customer Research and Insights Working Group (EMEA and North America)">Leave</button></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Delete -->
+    <section class="panel panel-danger" id="delete" aria-labelledby="delete-h">
+      <div class="panel-head">
+        <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+        <div>
+          <h2 id="delete-h" tabindex="-1">Delete account</h2>
+          <p>Removes your profile and personal data after a 30-day grace period. Work you created stays with your teams, credited to a former member.</p>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="setting-row">
+          <p class="help" id="delete-help" style="flex: 1 1 280px">Brand Guild ownership will pass to its longest-serving admin, Priya Raman.</p>
+          <button type="button" class="btn btn-danger-outline" id="delete-open" aria-describedby="delete-help">Delete account</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Generic confirm dialog -->
+<dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-body">
+  <form method="dialog" class="dialog-inner">
+    <h2 id="confirm-title"></h2>
+    <p id="confirm-body"></p>
+    <div class="dialog-actions">
+      <button value="cancel" class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+      <button value="confirm" class="btn btn-primary" id="confirm-ok"></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Delete account dialog -->
+<dialog id="delete-dialog" aria-labelledby="del-title">
+  <form class="dialog-inner" id="delete-form" novalidate>
+    <h2 id="del-title">Delete your Relay account?</h2>
+    <ul>
+      <li>You’ll be signed out everywhere after 30 days.</li>
+      <li>Your profile, preferences, and notification history are erased.</li>
+      <li>Brand Guild ownership passes to Priya Raman.</li>
+    </ul>
+    <div class="field">
+      <label for="del-confirm">Type your email to confirm</label>
+      <input class="input" id="del-confirm" type="email" autocomplete="off" inputmode="email" aria-describedby="del-help">
+      <p class="help" id="del-help">Enter <strong data-current-email></strong> to enable deletion.</p>
+    </div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" id="del-cancel">Keep account</button>
+      <button type="submit" class="btn btn-danger" id="del-submit" disabled>Delete account</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-check"/></svg><span></span></div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const timeNow = () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  const ICON = id => `<svg class="icon" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+
+  const state = { email: 'maya.okafor@northwind.example', pendingEmail: null, photo: '', savedPhoto: '' };
+
+  /* Local persistence (prototype stand-in for the account API) */
+  const STORE = 'relay.account-settings.v1';
+  function loadStore() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch { return {}; } }
+  function writeStore(patch) { localStorage.setItem(STORE, JSON.stringify(Object.assign(loadStore(), patch))); }
+  const stored = loadStore();
+  if (stored.pendingEmail) state.pendingEmail = stored.pendingEmail;
+
+  /* Toast: secondary confirmation only */
+  const toast = $('#toast');
+  let toastTimer;
+  function showToast(msg) {
+    toast.querySelector('span').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+
+  /* Field validation (shared) */
+  function helpFor(el) { return document.getElementById(el.getAttribute('aria-describedby')); }
+  function setError(el, msg) {
+    const field = el.closest('.field');
+    const help = helpFor(el);
+    if (help && help.dataset.def === undefined) help.dataset.def = help.innerHTML;
+    if (help) help.innerHTML = msg ? ICON('warning') + msg : help.dataset.def;
+    field.classList.toggle('invalid', !!msg);
+    el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  }
+  function validate(el) {
+    const form = el.form;
+    const raw = el.value; const v = el.type === 'password' ? raw : raw.trim();
+    let msg = '';
+    if (el.required && !v) msg = el.dataset.requiredMsg || 'Enter a value.';
+    else if (el.type === 'email' && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = 'Enter an email address like name@company.com.';
+    else if (el.dataset.minlength && v.length < +el.dataset.minlength) msg = `Use at least ${el.dataset.minlength} characters.`;
+    else if (el.dataset.match && v !== form.elements[el.dataset.match].value) msg = 'This doesn’t match the new password.';
+    setError(el, msg);
+    return !msg;
+  }
+  function wireValidation(form) {
+    $$('input[required], input[data-minlength]', form).forEach(el => {
+      el.addEventListener('blur', () => { if (el.value || el.dataset.touched) { el.dataset.touched = '1'; validate(el); } });
+      el.addEventListener('input', () => { if (el.getAttribute('aria-invalid') === 'true') validate(el); });
+    });
+  }
+  function validateForm(form) {
+    const els = $$('input[required], input[data-minlength], input[data-match]', form);
+    let first = null;
+    els.forEach(el => { el.dataset.touched = '1'; if (!validate(el) && !first) first = el; });
+    if (first) first.focus();
+    return !first;
+  }
+
+  /* Section forms with dirty tracking */
+  const sections = {};
+  function serialize(form) {
+    const o = {};
+    for (const el of form.elements) { if (el.name) o[el.name] = el.type === 'checkbox' ? el.checked : el.value; }
+    return o;
+  }
+  function restore(form, snap) {
+    for (const el of form.elements) {
+      if (!el.name || !(el.name in snap)) continue;
+      if (el.type === 'checkbox') el.checked = snap[el.name]; else el.value = snap[el.name];
+      if (el.closest('.field')) setError(el, '');
+    }
+  }
+
+  $$('form[data-section]').forEach(form => {
+    const key = form.dataset.section;
+    const status = $('.form-status', form);
+    const save = $('[data-save]', form);
+    const discard = $('[data-discard]', form);
+    const flag = $(`[data-nav="${key}"] .nav-flag`);
+    if (stored[key]) restore(form, stored[key]);
+    if (key === 'profile') {
+      state.savedPhoto = stored.photo || '';
+      applyPhoto(state.savedPhoto);
+      $$('[data-bind="name"]').forEach(n => n.textContent = form.elements.name.value.trim());
+    }
+    const s = sections[key] = { form, snap: serialize(form), dirty: false, savedAt: null, error: false };
+
+    s.refresh = () => {
+      const now = JSON.stringify(serialize(form));
+      s.dirty = now !== JSON.stringify(s.snap);
+      if (!s.dirty) s.error = false;
+      save.disabled = !s.dirty; discard.disabled = !s.dirty;
+      status.classList.toggle('is-error', s.error);
+      status.classList.toggle('is-dirty', s.dirty && !s.error);
+      status.classList.toggle('is-saved', !s.dirty && !!s.savedAt);
+      status.innerHTML = s.error ? `${ICON('warning')}Couldn’t save. Your changes are still here. Check your connection and try again.`
+        : s.dirty ? 'Unsaved changes'
+        : s.savedAt ? `<span class="inline-icon">${ICON('check').replace('class="icon"', 'class="icon icon-sm"')}Saved at ${s.savedAt}</span>`
+        : 'No unsaved changes';
+      if (flag) flag.hidden = !s.dirty;
+    };
+    form.addEventListener('input', s.refresh);
+    form.addEventListener('change', s.refresh);
+    wireValidation(form);
+
+    discard.addEventListener('click', () => {
+      restore(form, s.snap);
+      if (key === 'profile') applyPhoto(state.savedPhoto);
+      s.error = false;
+      s.refresh();
+      save.focus();
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!s.dirty || save.getAttribute('aria-busy') === 'true') return;
+      if (!validateForm(form)) { status.textContent = 'Fix the highlighted field to save.'; status.classList.add('is-dirty'); return; }
+      const label = save.textContent;
+      save.setAttribute('aria-busy', 'true'); save.textContent = 'Saving…'; discard.disabled = true;
+      $$('input, select', form).forEach(el => el.readOnly = true);
+      await wait(700);
+      $$('input, select', form).forEach(el => el.readOnly = false);
+      save.removeAttribute('aria-busy'); save.textContent = label;
+
+      const next = serialize(form);
+      let pending = state.pendingEmail;
+      if (key === 'profile') {
+        const newEmail = form.elements.email.value.trim();
+        if (newEmail.toLowerCase() !== state.email.toLowerCase()) { pending = newEmail; next.email = state.email; }
+      }
+      const patch = { [key]: next };
+      if (key === 'profile') { patch.photo = state.photo; patch.pendingEmail = pending; }
+      let ok = navigator.onLine !== false;
+      if (ok) { try { writeStore(patch); } catch { ok = false; } }
+      if (!ok) {
+        // Keep the draft exactly as typed; nothing is marked saved.
+        s.error = true;
+        s.refresh();
+        save.focus();
+        return;
+      }
+      s.error = false;
+      if (key === 'profile') {
+        if (pending !== state.pendingEmail) {
+          state.pendingEmail = pending;
+          form.elements.email.value = state.email;
+          renderEmail();
+        }
+        $$('[data-bind="name"]').forEach(n => n.textContent = form.elements.name.value.trim());
+        state.savedPhoto = state.photo;
+        if (!state.photo) applyPhoto('');
+      }
+      s.snap = serialize(form);
+      s.savedAt = timeNow();
+      s.refresh();
+      showToast(`${label.replace('Save ', '').replace(/^./, c => c.toUpperCase())} saved`);
+    });
+  });
+
+  window.addEventListener('beforeunload', e => {
+    if (Object.values(sections).some(s => s.dirty)) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* Profile photo */
+  const photoInput = $('#photo-input');
+  const photoHelp = $('#photo-help');
+  const photoDefault = photoHelp.textContent;
+  function initials() {
+    const n = $('#f-name').value.trim() || 'Maya Okafor';
+    return n.split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+  }
+  function applyPhoto(src) {
+    state.photo = src;
+    $('input[name="photo"]').value = src ? 'custom' : '';
+    $$('[data-avatar]').forEach(a => { a.innerHTML = src ? `<img src="${src}" alt="">` : initials(); });
+    $('#photo-remove').hidden = !src;
+  }
+  $('#photo-upload').addEventListener('click', () => photoInput.click());
+  photoInput.addEventListener('change', () => {
+    const f = photoInput.files[0];
+    photoInput.value = '';
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { photoHelp.innerHTML = ICON('warning') + 'Choose a PNG or JPG file.'; photoHelp.style.color = 'var(--danger)'; return; }
+    if (f.size > 5 * 1024 * 1024) { photoHelp.innerHTML = ICON('warning') + 'That file is over 5 MB. Choose a smaller image.'; photoHelp.style.color = 'var(--danger)'; return; }
+    photoHelp.textContent = photoDefault; photoHelp.style.color = '';
+    const r = new FileReader();
+    r.onload = () => {
+      // Downscale to a 256px square so the saved photo stays small.
+      const img = new Image();
+      img.onload = () => {
+        let src = r.result;
+        try {
+          const size = 256, c = document.createElement('canvas');
+          c.width = c.height = size;
+          const side = Math.min(img.naturalWidth, img.naturalHeight);
+          const ctx = c.getContext('2d');
+          ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size);
+          ctx.drawImage(img, (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side, 0, 0, size, size);
+          src = c.toDataURL('image/jpeg', 0.85);
+        } catch {}
+        applyPhoto(src); sections.profile.refresh();
+      };
+      img.onerror = () => { photoHelp.innerHTML = ICON('warning') + 'That image couldn’t be read. Try another file.'; photoHelp.style.color = 'var(--danger)'; };
+      img.src = r.result;
+    };
+    r.readAsDataURL(f);
+  });
+  $('#photo-remove').addEventListener('click', () => { applyPhoto(''); sections.profile.refresh(); $('#photo-upload').focus(); });
+
+  /* Email pending state */
+  function renderEmail() {
+    $$('[data-current-email]').forEach(n => n.textContent = state.email);
+    $$('[data-pending-email]').forEach(n => n.textContent = state.pendingEmail || '');
+    $('#email-pending').hidden = !state.pendingEmail;
+  }
+  $('#email-resend').addEventListener('click', async e => {
+    const b = e.currentTarget; b.disabled = true; b.textContent = 'Sending…';
+    await wait(600);
+    b.textContent = 'Link sent'; showToast(`Confirmation link sent to ${state.pendingEmail}`);
+    setTimeout(() => { b.disabled = false; b.textContent = 'Resend link'; }, 4000);
+  });
+  $('#email-cancel').addEventListener('click', () => {
+    state.pendingEmail = null; try { writeStore({ pendingEmail: null }); } catch {}
+    renderEmail(); showToast('Email change canceled'); $('#f-email').focus();
+  });
+  renderEmail();
+
+  /* Confirm dialog (shared) */
+  const cDlg = $('#confirm-dialog');
+  function confirmAction({ title, body, ok, danger }) {
+    const opener = document.activeElement;
+    $('#confirm-title').textContent = title;
+    $('#confirm-body').textContent = body;
+    const okBtn = $('#confirm-ok');
+    okBtn.textContent = ok;
+    okBtn.className = 'btn ' + (danger ? 'btn-danger' : 'btn-primary');
+    cDlg.returnValue = '';
+    cDlg.showModal();
+    $('#confirm-cancel').focus();
+    return new Promise(res => {
+      cDlg.addEventListener('close', () => {
+        const yes = cDlg.returnValue === 'confirm';
+        if (!yes && opener && opener.isConnected) opener.focus();
+        res(yes);
+      }, { once: true });
+    });
+  }
+
+  /* Password */
+  const pwForm = $('#pw-form'), pwToggle = $('#pw-toggle');
+  wireValidation(pwForm);
+  function closePw(focus = true) {
+    pwForm.hidden = true; pwToggle.setAttribute('aria-expanded', 'false'); pwToggle.hidden = false;
+    pwForm.reset(); $$('input', pwForm).forEach(el => { setError(el, ''); delete el.dataset.touched; });
+    if (focus) pwToggle.focus();
+  }
+  pwToggle.addEventListener('click', () => {
+    pwForm.hidden = false; pwToggle.setAttribute('aria-expanded', 'true'); pwToggle.hidden = true;
+    $('#pw-result').hidden = true; $('#pw-current').focus();
+  });
+  $('#pw-cancel').addEventListener('click', () => closePw());
+  pwForm.addEventListener('keydown', e => { if (e.key === 'Escape') closePw(); });
+  pwForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validateForm(pwForm)) return;
+    const b = $('#pw-submit'); b.disabled = true; b.setAttribute('aria-busy', 'true'); b.textContent = 'Updating…';
+    await wait(800);
+    b.disabled = false; b.removeAttribute('aria-busy'); b.textContent = 'Update password';
+    closePw();
+    $('#pw-meta').textContent = 'Last changed today';
+    $('#pw-result').hidden = false;
+  });
+
+  /* Two-step verification */
+  let tfaOn = true;
+  const tfaAction = $('#tfa-action'), codesToggle = $('#codes-toggle'), codes = $('#codes');
+  function renderTfa() {
+    $('#tfa-on').hidden = !tfaOn; $('#tfa-off').hidden = tfaOn;
+    $('#tfa-desc').textContent = tfaOn
+      ? 'Authenticator app, added March 3, 2026. You’ll enter a code when signing in on a new device.'
+      : 'Add a second step so a stolen password isn’t enough to get into your account.';
+    tfaAction.textContent = tfaOn ? 'Turn off' : 'Set up';
+    tfaAction.className = 'btn ' + (tfaOn ? 'btn-secondary' : 'btn-primary');
+    codesToggle.hidden = !tfaOn;
+    if (!tfaOn) { codes.hidden = true; codesToggle.setAttribute('aria-expanded', 'false'); }
+  }
+  codesToggle.addEventListener('click', () => {
+    const open = codes.hidden; codes.hidden = !open; codesToggle.setAttribute('aria-expanded', String(open));
+  });
+  tfaAction.addEventListener('click', async () => {
+    if (tfaOn) {
+      const yes = await confirmAction({ title: 'Turn off two-step verification?', body: 'Anyone with your password could sign in from a new device. Your recovery codes will stop working.', ok: 'Turn off', danger: true });
+      if (!yes) return;
+      tfaOn = false; renderTfa(); tfaAction.focus(); showToast('Two-step verification is off');
+    } else {
+      tfaAction.disabled = true; tfaAction.textContent = 'Setting up…';
+      await wait(700);
+      tfaAction.disabled = false; tfaOn = true; renderTfa(); tfaAction.focus(); showToast('Two-step verification is on');
+    }
+  });
+
+  /* Sessions */
+  function otherSessions() { return $$('#sessions [data-signout]'); }
+  function renderSessionsFoot() {
+    const none = otherSessions().length === 0;
+    const all = $('#signout-all');
+    all.disabled = none;
+    $('#sessions-note').textContent = none ? 'You’re only signed in on this device.' : 'Don’t recognize a session? Sign it out and change your password.';
+    if (none) all.setAttribute('aria-describedby', 'sessions-note'); else all.removeAttribute('aria-describedby');
+  }
+  function signOutRow(btn) {
+    const row = btn.closest('.list-row');
+    const done = document.createElement('span');
+    done.className = 'row-done'; done.tabIndex = -1; done.textContent = 'Signed out';
+    btn.parentElement.replaceChildren(done);
+    const meta = $('.row-meta', row); meta.textContent = meta.textContent.replace(/ · Active.*$/, ' · Signed out just now');
+    return done;
+  }
+  $('#sessions').addEventListener('click', e => {
+    const b = e.target.closest('[data-signout]'); if (!b) return;
+    const name = $('.row-title', b.closest('.list-row')).textContent.trim();
+    const done = signOutRow(b); renderSessionsFoot(); done.focus();
+    showToast(`Signed out of ${name}`);
+  });
+  $('#signout-all').addEventListener('click', async () => {
+    const n = otherSessions().length;
+    const yes = await confirmAction({ title: `Sign out of ${n} other session${n > 1 ? 's' : ''}?`, body: 'Those devices will need your password and a verification code to sign in again. This device stays signed in.', ok: 'Sign out', danger: false });
+    if (!yes) return;
+    otherSessions().forEach(signOutRow); renderSessionsFoot();
+    $('#sessions-h').focus(); showToast('Signed out of all other sessions');
+  });
+  renderSessionsFoot();
+
+  /* Teams */
+  $('#team-list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-leave]'); if (!b) return;
+    const team = b.dataset.leave;
+    const yes = await confirmAction({ title: `Leave ${team}?`, body: 'You’ll lose access to its projects, files, and conversations. An admin will need to invite you to rejoin.', ok: 'Leave team', danger: true });
+    if (!yes) return;
+    b.closest('.list-row').remove();
+    $('#teams-h').focus(); showToast(`You left ${team}`);
+  });
+
+  /* Delete account */
+  const dDlg = $('#delete-dialog'), dInput = $('#del-confirm'), dSubmit = $('#del-submit'), dOpen = $('#delete-open');
+  dOpen.addEventListener('click', () => { dInput.value = ''; dSubmit.disabled = true; renderEmail(); dDlg.showModal(); dInput.focus(); });
+  dInput.addEventListener('input', () => { dSubmit.disabled = dInput.value.trim().toLowerCase() !== state.email.toLowerCase(); });
+  $('#del-cancel').addEventListener('click', () => dDlg.close());
+  dDlg.addEventListener('close', () => { if (!dDlg.dataset.done) dOpen.focus(); delete dDlg.dataset.done; });
+  $('#delete-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (dSubmit.disabled) return;
+    dSubmit.disabled = true; dSubmit.setAttribute('aria-busy', 'true'); dSubmit.textContent = 'Scheduling…';
+    await wait(800);
+    dSubmit.removeAttribute('aria-busy'); dSubmit.textContent = 'Delete account';
+    dDlg.dataset.done = '1'; dDlg.close();
+    $('#deletion-banner').hidden = false;
+    dOpen.disabled = true; dOpen.textContent = 'Deletion scheduled';
+    $('#delete-help').textContent = 'Deletion is scheduled for December 16, 2026. Cancel it from the notice at the top of the page.';
+    $('#cancel-deletion').focus();
+    window.scrollTo({ top: 0 });
+  });
+  $('#cancel-deletion').addEventListener('click', () => {
+    $('#deletion-banner').hidden = true;
+    dOpen.disabled = false; dOpen.textContent = 'Delete account';
+    $('#delete-help').textContent = 'Brand Guild ownership will pass to its longest-serving admin, Priya Raman.';
+    showToast('Account deletion canceled'); dOpen.focus();
+  });
+
+  /* Section nav: current section */
+  const links = $$('.section-nav a');
+  const navList = $('.section-nav ul');
+  function setCurrent(id) {
+    links.forEach(a => {
+      const on = a.dataset.nav === id;
+      if (on) {
+        a.setAttribute('aria-current', 'true');
+        if (navList.scrollWidth > navList.clientWidth) {
+          const l = a.offsetLeft - 16, r = a.offsetLeft + a.offsetWidth + 16;
+          if (l < navList.scrollLeft || r > navList.scrollLeft + navList.clientWidth) navList.scrollTo({ left: l, behavior: 'smooth' });
+        }
+      } else a.removeAttribute('aria-current');
+    });
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) setCurrent(en.target.id); });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  $$('.content > .panel').forEach(p => io.observe(p));
+  setCurrent('profile');
+  links.forEach(a => a.addEventListener('click', () => {
+    setCurrent(a.dataset.nav);
+    const h = document.getElementById(a.dataset.nav + '-h');
+    if (h) setTimeout(() => h.focus({ preventScroll: true }), 0);
+  }));
+})();
+</script>
+</body>
+</html>

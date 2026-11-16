@@ -12,7 +12,7 @@ export function SiteShell({
   initialTheme: "light" | "dark";
 }) {
   const pathname = usePathname();
-  if (pathname === "/") return <>{children}</>;
+  if (pathname === "/" || pathname.startsWith("/examples/")) return <>{children}</>;
   return (
     <div className="site-shell">
       <SystemNav initialTheme={initialTheme} />

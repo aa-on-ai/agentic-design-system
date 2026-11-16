@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account settings · Harbor</title>
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#fff; --surface-2:#f2f4f7; --border:#e3e6eb; --border-strong:#cdd2da;
+  --text:#161a21; --muted:#5b6472; --subtle:#677080;
+  --accent:#3656d4; --accent-hover:#2a47bb; --accent-soft:#ebeffd; --on-accent:#fff;
+  --danger:#c2352b; --danger-hover:#a82a21; --danger-soft:#fdf0ee; --danger-border:#f2c9c4;
+  --success:#1d7548; --success-soft:#e5f4eb; --warn:#7f5600; --warn-soft:#fff5dd;
+  --radius:12px; --radius-sm:8px;
+  --shadow:0 1px 2px rgba(16,24,40,.04);
+  --shadow-lg:0 12px 32px rgba(16,24,40,.16), 0 2px 6px rgba(16,24,40,.08);
+  --ring:0 0 0 3px rgba(54,86,212,.32);
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --bg:#0f1116; --surface:#171a21; --surface-2:#1e222a; --border:#2a2f39; --border-strong:#3b414d;
+  --text:#e8eaef; --muted:#a5adba; --subtle:#959dac;
+  --accent:#8099ff; --accent-hover:#97abff; --accent-soft:#1f2748; --on-accent:#0c1022;
+  --danger:#ff7d71; --danger-hover:#ff958b; --danger-soft:#2f1a19; --danger-border:#5a2b27;
+  --success:#62d39c; --success-soft:#132c1f; --warn:#f1c463; --warn-soft:#30270f;
+  --shadow:none; --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+  --ring:0 0 0 3px rgba(128,153,255,.4);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: dark){
+  html[data-theme="system"]{
+    --bg:#0f1116; --surface:#171a21; --surface-2:#1e222a; --border:#2a2f39; --border-strong:#3b414d;
+    --text:#e8eaef; --muted:#a5adba; --subtle:#959dac;
+    --accent:#8099ff; --accent-hover:#97abff; --accent-soft:#1f2748; --on-accent:#0c1022;
+    --danger:#ff7d71; --danger-hover:#ff958b; --danger-soft:#2f1a19; --danger-border:#5a2b27;
+    --success:#62d39c; --success-soft:#132c1f; --warn:#f1c463; --warn-soft:#30270f;
+    --shadow:none; --shadow-lg:0 12px 32px rgba(0,0,0,.5);
+    --ring:0 0 0 3px rgba(128,153,255,.4);
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--accent)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-48px;background:var(--surface);padding:8px 12px;border-radius:8px;z-index:50;box-shadow:var(--shadow-lg)}
+.skip:focus{top:12px}
+
+/* Top bar */
+.topbar{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:650;letter-spacing:-.01em;min-width:0}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--accent);display:grid;place-items:center;flex:none}
+.brand-sep{color:var(--border-strong);font-weight:400}
+.brand-ws{color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-right{display:flex;align-items:center;gap:12px}
+.top-link{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 8px;border-radius:6px}
+.top-link:hover{color:var(--text);background:var(--surface-2)}
+
+/* Avatar */
+.avatar{border-radius:50%;background:linear-gradient(135deg,#6b83e8,#3656d4);color:#fff;display:grid;place-items:center;font-weight:600;overflow:hidden;flex:none;user-select:none}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar.sm{width:30px;height:30px;font-size:12px}
+.avatar.lg{width:72px;height:72px;font-size:24px}
+
+/* Layout */
+.page{max-width:1080px;margin:0 auto;padding:36px 24px 140px}
+.page-head{margin:0 0 28px 240px}
+.page-head h1{font-size:26px;line-height:1.25;letter-spacing:-.02em;font-weight:680}
+.page-head p{color:var(--muted);margin-top:6px}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;align-items:start}
+.side{position:sticky;top:24px}
+.side ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.side a{display:block;padding:7px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;white-space:nowrap}
+.side a:hover{background:var(--surface-2);color:var(--text)}
+.side a[aria-current="true"]{background:var(--accent-soft);color:var(--accent)}
+.side a.danger-link[aria-current="true"]{background:var(--danger-soft);color:var(--danger)}
+.content{display:flex;flex-direction:column;gap:44px;min-width:0}
+.section{scroll-margin-top:24px}
+.section-head{margin-bottom:14px}
+.section-head h2{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.section-head p{color:var(--muted);font-size:14px;margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-body{padding:22px}
+.card.danger{border-color:var(--danger-border)}
+
+/* Rows */
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px 24px;padding:18px 22px;flex-wrap:wrap}
+.row + .row,.row + .sub,.sub + .row{border-top:1px solid var(--border)}
+.row-text{min-width:0;flex:1 1 220px}
+main:focus{outline:none}
+.row-title{font-weight:600;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row-desc{color:var(--muted);font-size:14px;margin-top:2px;overflow-wrap:anywhere}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sub{padding:18px 22px;background:var(--surface-2)}
+.sub:last-child{border-radius:0 0 var(--radius) var(--radius)}
+
+/* Form fields */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 20px}
+.full{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.label{font-size:14px;font-weight:600}
+.label .opt{color:var(--subtle);font-weight:400}
+.hint{font-size:13px;color:var(--muted)}
+.error{font-size:13px;color:var(--danger);display:flex;gap:6px;align-items:flex-start}
+.error:empty{display:none}
+.input,.select{width:100%;min-width:0;height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);transition:border-color .12s,box-shadow .12s}
+.select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%23848c9a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.input:hover,.select:hover{border-color:var(--subtle)}
+.input:focus,.select:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.input[aria-invalid="true"]{border-color:var(--danger)}
+.input[aria-invalid="true"]:focus{box-shadow:0 0 0 3px rgba(194,53,43,.25)}
+.input[readonly]{background:var(--surface-2);color:var(--muted)}
+.input-group{display:flex;align-items:stretch;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--surface);transition:border-color .12s,box-shadow .12s}
+.input-group:focus-within{border-color:var(--accent);box-shadow:var(--ring)}
+.input-group.invalid{border-color:var(--danger)}
+.input-group .prefix{display:grid;place-items:center;padding:0 0 0 12px;color:var(--subtle)}
+.input-group .input{border:0;box-shadow:none!important;padding-left:2px;height:38px;background:transparent}
+.counter{font-size:12px;color:var(--subtle);font-variant-numeric:tabular-nums}
+.field-foot{display:flex;justify-content:space-between;gap:12px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:36px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid var(--border-strong);background:var(--surface);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .12s,border-color .12s,color .12s}
+.btn:hover{background:var(--surface-2)}
+.btn:focus-visible,.side a:focus-visible,.top-link:focus-visible,.seg input:focus-visible + span,.switch:focus-visible,.check:focus-visible,.link-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.input:focus-visible,.select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.input-group .input:focus-visible{outline:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.danger{color:var(--danger);border-color:var(--danger-border)}
+.btn.danger:hover{background:var(--danger-soft)}
+.btn.danger-solid{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.danger-solid:hover{background:var(--danger-hover)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{background:var(--surface-2);color:var(--text)}
+.link-btn{background:none;border:0;padding:2px 4px;margin:-2px -4px;border-radius:4px;color:var(--accent);font-weight:600;font-size:14px;cursor:pointer}
+.link-btn:hover{text-decoration:underline}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge.ok{background:var(--success-soft);color:var(--success)}
+.badge.warn{background:var(--warn-soft);color:var(--warn)}
+.badge.neutral{background:var(--surface-2);color:var(--muted);border:1px solid var(--border)}
+.badge.info{background:var(--accent-soft);color:var(--accent)}
+
+/* Avatar block */
+.avatar-row{display:flex;align-items:center;gap:18px;padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.avatar-meta{display:flex;flex-direction:column;gap:8px;min-width:0}
+.avatar-meta .row-actions{gap:6px}
+
+/* Segmented control */
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);gap:2px;flex-wrap:wrap}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;top:0;left:0;width:100%;height:100%;margin:0;cursor:pointer;-webkit-appearance:none;appearance:none}
+.seg span{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;font-size:14px;font-weight:500;color:var(--muted)}
+.seg input:checked + span{background:var(--seg-on,#fff);color:var(--text);box-shadow:0 1px 2px rgba(16,24,40,.1);font-weight:600}
+html[data-theme="dark"]{--seg-on:#3b414d}
+@media (prefers-color-scheme: dark){html[data-theme="system"]{--seg-on:#3b414d}}
+
+/* Switch & checkbox */
+.switch{appearance:none;-webkit-appearance:none;width:40px;height:24px;border-radius:999px;background:var(--border-strong);position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.switch:checked{background:var(--accent)}
+.switch:checked::after{transform:translateX(16px)}
+.check{appearance:none;-webkit-appearance:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border-strong);background:var(--surface);cursor:pointer;margin:0;display:inline-grid;place-items:center;transition:background .12s,border-color .12s}
+.check:hover{border-color:var(--accent)}
+.check:checked{background:var(--accent);border-color:var(--accent)}
+.check:checked::after{content:"";width:10px;height:6px;border-left:2px solid var(--on-accent);border-bottom:2px solid var(--on-accent);transform:translateY(-1px) rotate(-45deg)}
+
+/* Notifications table */
+.notif{width:100%;border-collapse:collapse}
+.notif th,.notif td{padding:14px 22px;text-align:left;vertical-align:middle}
+.notif thead th{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--subtle);padding-top:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.notif .col{width:84px;text-align:center}
+.notif tbody tr + tr th,.notif tbody tr + tr td{border-top:1px solid var(--border)}
+.notif tbody th{font-weight:400}
+.notif .n-title{font-weight:600;font-size:15px}
+.notif .n-desc{color:var(--muted);font-size:13px;margin-top:1px}
+.notif td{text-align:center}
+.quiet-times{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.quiet-times .input{width:auto;min-width:120px}
+.quiet-times[hidden]{display:none}
+
+/* Sessions */
+.sessions{list-style:none;margin:0;padding:0}
+.session{display:flex;align-items:center;gap:14px;padding:14px 22px;flex-wrap:wrap}
+.session + .session{border-top:1px solid var(--border)}
+.session-icon{width:36px;height:36px;border-radius:9px;background:var(--surface-2);border:1px solid var(--border);display:grid;place-items:center;color:var(--muted);flex:none}
+.session-text{flex:1 1 200px;min-width:0}
+.session-title{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.session-meta{color:var(--muted);font-size:13px}
+.sessions-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px 6px;flex-wrap:wrap}
+
+/* Inline panels */
+.panel{display:flex;flex-direction:column;gap:14px;max-width:520px}
+.panel[hidden]{display:none}
+.panel-actions{display:flex;gap:8px;flex-wrap:wrap}
+.strength{display:flex;gap:4px;margin-top:2px}
+.strength i{flex:1;height:4px;border-radius:2px;background:var(--border)}
+.strength[data-score="1"] i:nth-child(-n+1){background:var(--danger)}
+.strength[data-score="2"] i:nth-child(-n+2){background:#d98a1c}
+.strength[data-score="3"] i:nth-child(-n+3){background:var(--success)}
+.strength[data-score="4"] i{background:var(--success)}
+.code-box{font:600 15px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em;background:var(--surface);border:1px dashed var(--border-strong);border-radius:8px;padding:10px 12px;overflow-wrap:anywhere}
+.recovery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px;font:500 14px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+.notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:12px 14px;border-radius:10px;font-size:14px;flex-wrap:wrap}
+.notice.warn{background:var(--warn-soft);color:var(--warn)}
+.notice.info{background:var(--accent-soft);color:var(--text)}
+.notice.danger{background:var(--danger-soft);color:var(--danger)}
+.notice strong{font-weight:650}
+.notice[hidden]{display:none}
+
+/* Save bar */
+.savebar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:min(620px,calc(100% - 32px));display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 18px;border-radius:12px;background:#161a21;color:#f2f4f7;box-shadow:var(--shadow-lg);z-index:30;animation:rise .18s ease-out}
+html[data-theme="dark"] .savebar{background:#262b35;border:1px solid var(--border-strong)}
+.savebar[hidden]{display:none}
+.savebar-text{font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;min-width:0}
+.savebar-text .dot{width:8px;height:8px;border-radius:50%;background:#f1b84b;flex:none}
+.savebar .btn.ghost{color:#c9ced8}
+.savebar .btn.ghost:hover{background:rgba(255,255,255,.08);color:#fff}
+.savebar .btn.primary{background:#fff;color:#161a21;border-color:#fff}
+.savebar .btn.primary:hover{background:#e6e9ef}
+.savebar .btns{display:flex;gap:6px;flex:none}
+@keyframes rise{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* Toasts */
+.toasts{position:fixed;top:16px;right:16px;display:flex;flex-direction:column;gap:8px;z-index:60;pointer-events:none;max-width:calc(100% - 32px)}
+.toast{background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:var(--shadow-lg);border-radius:10px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:center;pointer-events:auto;animation:drop .18s ease-out}
+.toast svg{color:var(--success);flex:none}
+.toast.err{border-color:var(--danger-border)}
+.toast.err svg{color:var(--danger)}
+.savebar.err .dot{background:#ff7d71}
+@keyframes drop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* Dialog */
+dialog{border:1px solid var(--border);border-radius:14px;padding:0;width:min(440px,calc(100% - 32px));background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg)}
+dialog::backdrop{background:rgba(10,12,18,.45)}
+.dlg{padding:22px;display:flex;flex-direction:column;gap:14px}
+.dlg h2{font-size:17px;font-weight:650}
+.dlg p{color:var(--muted);font-size:14px}
+.dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px;flex-wrap:wrap}
+
+/* Responsive */
+@media (max-width:820px){
+  .topbar{padding:0 16px}
+  .top-link{display:none}
+  .page{padding:20px 0 130px}
+  .page-head{margin:0 16px 14px}
+  .page-head h1{font-size:23px}
+  .layout{grid-template-columns:minmax(0,1fr);gap:0}
+  .side{min-width:0;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--border);padding:8px 0;margin-bottom:20px}
+  .side ul{flex-direction:row;overflow-x:auto;padding:0 16px;gap:6px;scrollbar-width:none}
+  .side ul::-webkit-scrollbar{display:none}
+  .side a{padding:6px 12px;border:1px solid var(--border);background:var(--surface);border-radius:999px;font-size:13.5px}
+  .side a[aria-current="true"]{border-color:transparent}
+  .content{padding:0 16px;gap:36px}
+  .section{scroll-margin-top:68px}
+  .grid{grid-template-columns:1fr}
+  .card-body{padding:18px}
+  .row,.sub,.session,.sessions-head{padding-left:18px;padding-right:18px}
+  .notif th,.notif td{padding-left:18px;padding-right:18px}
+  .notif .col{width:56px;padding-left:4px;padding-right:4px}
+  .notif td{padding-left:4px;padding-right:4px}
+  .notif tbody td:last-child,.notif thead th:last-child{padding-right:14px}
+  .savebar{bottom:12px;padding-left:14px}
+  .savebar .btn{padding:0 12px}
+  .recovery{grid-template-columns:1fr 1fr;font-size:13px}
+}
+@media (max-width:400px){
+  .brand-sep,.brand-ws{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to settings</a>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2v10M12 2v10M2 7h10" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+    <span>Harbor</span>
+    <span class="brand-sep" aria-hidden="true">/</span>
+    <span class="brand-ws">Northwind Studio</span>
+  </div>
+  <div class="top-right">
+    <a class="top-link" href="#content">Help</a>
+    <span class="avatar sm" id="top-avatar" role="img" aria-label="Maya Okafor">MO</span>
+  </div>
+</header>
+
+<div class="page">
+  <div class="page-head">
+    <h1>Account settings</h1>
+    <p>Manage your profile, sign-in, and how Harbor keeps you in the loop.</p>
+  </div>
+
+  <div class="layout">
+    <nav class="side" aria-label="Settings sections">
+      <ul>
+        <li><a href="#profile" aria-current="true">Profile</a></li>
+        <li><a href="#security">Sign-in &amp; security</a></li>
+        <li><a href="#notifications">Notifications</a></li>
+        <li><a href="#preferences">Preferences</a></li>
+        <li><a href="#danger" class="danger-link">Danger zone</a></li>
+      </ul>
+    </nav>
+
+    <main class="content" id="content" tabindex="-1">
+
+      <!-- PROFILE -->
+      <section class="section" id="profile" aria-labelledby="profile-h">
+        <div class="section-head">
+          <h2 id="profile-h">Profile</h2>
+          <p>How teammates see you across Northwind Studio.</p>
+        </div>
+        <div class="card"><div class="card-body">
+          <div class="avatar-row">
+            <span class="avatar lg" id="avatar-preview" role="img" aria-label="Your profile photo">MO</span>
+            <div class="avatar-meta">
+              <div class="row-actions">
+                <button type="button" class="btn" id="avatar-upload">Upload photo</button>
+                <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+                <button type="button" class="btn ghost" id="avatar-remove" hidden>Remove</button>
+              </div>
+              <span class="hint" id="avatar-hint">PNG, JPG or GIF, up to 2 MB. Square works best.</span>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label class="label" for="f-name">Full name</label>
+              <input class="input" id="f-name" name="name" data-track autocomplete="name" maxlength="60" value="Maya Okafor" aria-describedby="e-name">
+              <span class="error" id="e-name" role="alert"></span>
+            </div>
+            <div class="field">
+              <label class="label" for="f-handle">Username</label>
+              <div class="input-group" id="g-handle">
+                <span class="prefix" aria-hidden="true">@</span>
+                <input class="input" id="f-handle" name="handle" data-track autocomplete="username" spellcheck="false" autocapitalize="off" maxlength="30" value="maya.okafor" aria-describedby="h-handle e-handle">
+              </div>
+              <span class="hint" id="h-handle">Used for @mentions. Letters, numbers, dots, dashes.</span>
+              <span class="error" id="e-handle" role="alert"></span>
+            </div>
+            <div class="field">
+              <label class="label" for="f-title">Job title <span class="opt">(optional)</span></label>
+              <input class="input" id="f-title" name="title" data-track maxlength="60" value="Product Designer">
+            </div>
+            <div class="field">
+              <label class="label" for="f-pronouns">Pronouns <span class="opt">(optional)</span></label>
+              <select class="select" id="f-pronouns" name="pronouns" data-track>
+                <option value="">Don't show</option>
+                <option value="she/her" selected>she/her</option>
+                <option value="he/him">he/him</option>
+                <option value="they/them">they/them</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label class="label" for="f-status">Status <span class="opt">(optional)</span></label>
+              <input class="input" id="f-status" name="status" data-track maxlength="80" value="Heads-down on onboarding v2 until Thursday" aria-describedby="c-status">
+              <div class="field-foot"><span class="hint">Shown next to your name in chats and on your profile card.</span><span class="counter" id="c-status" aria-live="off"></span></div>
+            </div>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- SECURITY -->
+      <section class="section" id="security" aria-labelledby="security-h">
+        <div class="section-head">
+          <h2 id="security-h">Sign-in &amp; security</h2>
+          <p>Changes in this section take effect right away.</p>
+        </div>
+        <div class="card">
+          <!-- Email -->
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title">Email <span class="badge ok" id="email-badge">Verified</span></div>
+              <div class="row-desc" id="email-current">maya.okafor@northwind.example</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn" id="email-change" aria-expanded="false" aria-controls="email-panel">Change email</button></div>
+          </div>
+          <div class="sub" id="email-panel" hidden>
+            <form class="panel" id="email-form" novalidate>
+              <div class="field">
+                <label class="label" for="f-new-email">New email address</label>
+                <input class="input" id="f-new-email" type="email" autocomplete="email" spellcheck="false" aria-describedby="e-new-email">
+                <span class="error" id="e-new-email" role="alert"></span>
+              </div>
+              <span class="hint">We'll send a confirmation link. Your current address keeps working until you confirm.</span>
+              <div class="panel-actions">
+                <button class="btn primary" type="submit">Send confirmation</button>
+                <button class="btn ghost" type="button" id="email-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div class="sub" id="email-pending" hidden>
+            <div class="notice info" style="padding:0;background:none">
+              <span id="email-pending-text"></span>
+              <span class="row-actions"><button type="button" class="link-btn" id="email-resend">Resend</button><button type="button" class="link-btn" id="email-pending-cancel">Cancel change</button></span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title">Password</div>
+              <div class="row-desc" id="pw-desc">Last changed July 2, 2026</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn" id="pw-change" aria-expanded="false" aria-controls="pw-panel">Change password</button></div>
+          </div>
+          <div class="sub" id="pw-panel" hidden>
+            <form class="panel" id="pw-form" novalidate>
+              <input type="text" autocomplete="username" value="maya.okafor@northwind.example" hidden>
+              <div class="field">
+                <label class="label" for="f-pw-current">Current password</label>
+                <input class="input" id="f-pw-current" type="password" autocomplete="current-password" aria-describedby="e-pw-current">
+                <span class="error" id="e-pw-current" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="label" for="f-pw-new">New password</label>
+                <input class="input" id="f-pw-new" type="password" autocomplete="new-password" aria-describedby="h-pw-new e-pw-new">
+                <div class="strength" id="pw-strength" data-score="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                <span class="hint" id="h-pw-new">At least 12 characters. <span id="pw-strength-label"></span></span>
+                <span class="error" id="e-pw-new" role="alert"></span>
+              </div>
+              <div class="field">
+                <label class="label" for="f-pw-confirm">Confirm new password</label>
+                <input class="input" id="f-pw-confirm" type="password" autocomplete="new-password" aria-describedby="e-pw-confirm">
+                <span class="error" id="e-pw-confirm" role="alert"></span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn primary" type="submit">Update password</button>
+                <button class="btn ghost" type="button" id="pw-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2FA -->
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title">Two-step verification <span class="badge warn" id="tfa-badge">Off</span></div>
+              <div class="row-desc" id="tfa-desc">Admins in Northwind Studio are encouraged to require a code from an authenticator app at sign-in.</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn primary" id="tfa-btn" aria-expanded="false" aria-controls="tfa-panel">Set up</button></div>
+          </div>
+          <div class="sub" id="tfa-panel" hidden>
+            <form class="panel" id="tfa-form" novalidate>
+              <div>
+                <div class="label">1. Add Harbor to your authenticator app</div>
+                <p class="hint" style="margin:4px 0 8px">Enter this setup key manually in 1Password, Authy, Google Authenticator or similar.</p>
+                <div class="code-box">HRBR 7Q2M KX4D P9VT</div>
+              </div>
+              <div class="field">
+                <label class="label" for="f-tfa-code">2. Enter the 6-digit code from the app</label>
+                <input class="input" id="f-tfa-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" style="max-width:180px;letter-spacing:.2em" aria-describedby="e-tfa-code">
+                <span class="error" id="e-tfa-code" role="alert"></span>
+              </div>
+              <div class="panel-actions">
+                <button class="btn primary" type="submit">Verify and turn on</button>
+                <button class="btn ghost" type="button" id="tfa-cancel">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div class="sub" id="tfa-codes" hidden>
+            <div class="panel">
+              <div>
+                <div class="label">Recovery codes</div>
+                <p class="hint" style="margin-top:2px">Each code works once if you lose your phone. Store them somewhere safe.</p>
+              </div>
+              <div class="recovery code-box" style="letter-spacing:.04em">
+                <span>8KQ2-M4TX</span><span>3RZP-7HWD</span><span>V6NC-2YJB</span><span>Q9LF-5EUA</span><span>T2GM-8KSX</span><span>H7WD-4PZN</span>
+              </div>
+              <div class="panel-actions"><button type="button" class="btn" id="tfa-codes-hide">Done</button></div>
+            </div>
+          </div>
+
+          <!-- Sessions -->
+          <div class="row" style="padding-bottom:6px">
+            <div class="row-text">
+              <div class="row-title">Active sessions</div>
+              <div class="row-desc">Devices currently signed in to your account.</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn danger" id="sessions-revoke-all">Sign out other sessions</button></div>
+          </div>
+          <ul class="sessions" id="sessions" aria-label="Active sessions"></ul>
+        </div>
+      </section>
+
+      <!-- NOTIFICATIONS -->
+      <section class="section" id="notifications" aria-labelledby="notifications-h">
+        <div class="section-head">
+          <h2 id="notifications-h">Notifications</h2>
+          <p>Choose where Harbor reaches you for each kind of activity.</p>
+        </div>
+        <div class="card">
+          <table class="notif">
+            <caption class="sr-only">Notification channels by activity</caption>
+            <thead><tr><th scope="col">Activity</th><th scope="col" class="col">Email</th><th scope="col" class="col">Push</th></tr></thead>
+            <tbody id="notif-body"></tbody>
+          </table>
+          <div class="row" style="border-top:1px solid var(--border)">
+            <div class="row-text">
+              <div class="row-title"><label for="f-quiet">Quiet hours</label></div>
+              <div class="row-desc" id="d-quiet">Pause push notifications overnight. Mentions from admins still come through.</div>
+              <div class="quiet-times" id="quiet-times">
+                <label class="sr-only" for="f-quiet-from">Quiet hours start</label>
+                <input class="input" type="time" id="f-quiet-from" name="quietFrom" data-track value="19:00">
+                <span class="hint">to</span>
+                <label class="sr-only" for="f-quiet-to">Quiet hours end</label>
+                <input class="input" type="time" id="f-quiet-to" name="quietTo" data-track value="08:00">
+              </div>
+            </div>
+            <input type="checkbox" class="switch" role="switch" id="f-quiet" name="quiet" data-track checked aria-describedby="d-quiet">
+          </div>
+        </div>
+      </section>
+
+      <!-- PREFERENCES -->
+      <section class="section" id="preferences" aria-labelledby="preferences-h">
+        <div class="section-head">
+          <h2 id="preferences-h">Preferences</h2>
+          <p>Appearance, language and time settings for your account.</p>
+        </div>
+        <div class="card"><div class="card-body">
+          <div class="grid">
+            <fieldset class="field full" style="border:0;margin:0;padding:0">
+              <legend class="label" style="margin-bottom:6px;padding:0">Theme</legend>
+              <div class="seg">
+                <label><input type="radio" name="theme" value="system" data-track checked><span>System</span></label>
+                <label><input type="radio" name="theme" value="light" data-track><span>Light</span></label>
+                <label><input type="radio" name="theme" value="dark" data-track><span>Dark</span></label>
+              </div>
+            </fieldset>
+            <div class="field">
+              <label class="label" for="f-lang">Language</label>
+              <select class="select" id="f-lang" name="lang" data-track>
+                <option value="en-US" selected>English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="de">Deutsch</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="ja">日本語</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="f-tz">Time zone</label>
+              <select class="select" id="f-tz" name="tz" data-track aria-describedby="h-tz">
+                <option value="America/Los_Angeles">(UTC−08:00) Pacific Time</option>
+                <option value="America/Chicago">(UTC−06:00) Central Time</option>
+                <option value="America/New_York">(UTC−05:00) Eastern Time</option>
+                <option value="Europe/London">(UTC+00:00) London</option>
+                <option value="Europe/Lisbon" selected>(UTC+00:00) Lisbon</option>
+                <option value="Europe/Berlin">(UTC+01:00) Berlin</option>
+                <option value="Africa/Lagos">(UTC+01:00) Lagos</option>
+                <option value="Asia/Kolkata">(UTC+05:30) Kolkata</option>
+                <option value="Asia/Tokyo">(UTC+09:00) Tokyo</option>
+                <option value="Australia/Sydney">(UTC+11:00) Sydney</option>
+              </select>
+              <span class="hint" id="h-tz">Used for due dates, reminders and quiet hours.</span>
+            </div>
+            <div class="field">
+              <label class="label" for="f-week">Week starts on</label>
+              <select class="select" id="f-week" name="week" data-track>
+                <option value="mon" selected>Monday</option>
+                <option value="sun">Sunday</option>
+                <option value="sat">Saturday</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="label" for="f-date">Date format</label>
+              <select class="select" id="f-date" name="dateFmt" data-track>
+                <option value="mdy">11/16/2026</option>
+                <option value="dmy" selected>16/11/2026</option>
+                <option value="ymd">2026-11-16</option>
+                <option value="long">Nov 16, 2026</option>
+              </select>
+            </div>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- DANGER -->
+      <section class="section" id="danger" aria-labelledby="danger-h">
+        <div class="section-head">
+          <h2 id="danger-h">Danger zone</h2>
+          <p>These actions affect your access and data. You'll be asked to confirm.</p>
+        </div>
+        <div class="card danger">
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title">Leave Northwind Studio</div>
+              <div class="row-desc" id="leave-desc">You'll lose access to its projects and chats. You're one of 3 admins, so the workspace stays managed.</div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn danger" id="leave-btn">Leave workspace</button></div>
+          </div>
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title">Delete account</div>
+              <div class="row-desc">Permanently removes your profile and personal data from every Harbor workspace after a 14-day grace period.</div>
+              <div class="notice danger" id="delete-notice" style="margin-top:12px" hidden>
+                <span><strong>Deletion scheduled for Nov 30, 2026.</strong> Sign in before then to keep your account.</span>
+                <button type="button" class="link-btn" id="delete-undo" style="color:inherit">Cancel deletion</button>
+              </div>
+            </div>
+            <div class="row-actions"><button type="button" class="btn danger-solid" id="delete-btn">Delete account</button></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" role="region" aria-label="Unsaved changes" hidden>
+  <div class="savebar-text"><span class="dot" aria-hidden="true"></span><span id="savebar-count">Unsaved changes</span></div>
+  <div class="btns">
+    <button type="button" class="btn ghost" id="discard">Discard</button>
+    <button type="button" class="btn primary" id="save">Save changes</button>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<dialog id="confirm" aria-labelledby="cf-title" aria-describedby="cf-body">
+  <form method="dialog" class="dlg" id="cf-form">
+    <h2 id="cf-title"></h2>
+    <p id="cf-body"></p>
+    <div class="field" id="cf-type-wrap" hidden>
+      <label class="label" for="cf-type" id="cf-type-label"></label>
+      <input class="input" id="cf-type" autocomplete="off" spellcheck="false" autocapitalize="off">
+    </div>
+    <div class="dlg-actions">
+      <button class="btn" type="button" id="cf-cancel">Cancel</button>
+      <button class="btn danger-solid" value="ok" type="submit" id="cf-ok"></button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const EMAIL = 'maya.okafor@northwind.example';
+
+  /* ---------- Toasts ---------- */
+  const toasts = $('#toasts');
+  function toast(msg, isErr) {
+    const t = document.createElement('div');
+    t.className = 'toast' + (isErr ? ' err' : '');
+    if (isErr) t.setAttribute('role', 'alert');
+    t.innerHTML = isErr
+      ? '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".15"/><path d="M8 4.5v4.2M8 11.2v.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".15"/><path d="M5 8.2 7 10l4-4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const s = document.createElement('span'); s.textContent = msg; t.append(s);
+    toasts.append(t);
+    setTimeout(() => t.remove(), 3600);
+  }
+
+  /* ---------- Confirm dialog ---------- */
+  const dlg = $('#confirm');
+  function confirmDialog({ title, body, ok, typeLabel, typeValue }) {
+    $('#cf-title').textContent = title;
+    $('#cf-body').textContent = body;
+    const okBtn = $('#cf-ok'); okBtn.textContent = ok;
+    const wrap = $('#cf-type-wrap'), inp = $('#cf-type');
+    wrap.hidden = !typeValue; inp.value = '';
+    okBtn.disabled = !!typeValue;
+    if (typeValue) {
+      $('#cf-type-label').textContent = typeLabel;
+      inp.oninput = () => { okBtn.disabled = inp.value.trim().toLowerCase() !== typeValue.toLowerCase(); };
+    }
+    return new Promise(res => {
+      dlg.returnValue = '';
+      dlg.addEventListener('close', () => res(dlg.returnValue === 'ok'), { once: true });
+      dlg.showModal();
+      (typeValue ? inp : $('#cf-cancel')).focus();
+    });
+  }
+  $('#cf-cancel').addEventListener('click', () => dlg.close('cancel'));
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close('cancel'); });
+
+  /* ---------- Notifications rows ---------- */
+  const NOTIFS = [
+    ['mentions', 'Mentions and replies', 'Someone @mentions you or replies in your thread', true, true],
+    ['dms', 'Direct messages', 'New messages sent only to you', false, true],
+    ['assigned', 'Assigned to you', 'Tasks and reviews where you are the owner', true, true],
+    ['due', 'Due date reminders', 'The day before something you own is due', true, false],
+    ['digest', 'Weekly digest', 'Monday summary of activity in your projects', true, false],
+    ['product', 'Product updates', 'New features and improvements to Harbor', false, false],
+  ];
+  $('#notif-body').innerHTML = NOTIFS.map(([k, t, d, e, p]) => `
+    <tr>
+      <th scope="row"><div class="n-title" id="n-${k}">${t}</div><div class="n-desc">${d}</div></th>
+      <td><input type="checkbox" class="check" name="n_${k}_email" data-track ${e ? 'checked' : ''} aria-label="Email: ${t}"></td>
+      <td><input type="checkbox" class="check" name="n_${k}_push" data-track ${p ? 'checked' : ''} aria-label="Push: ${t}"></td>
+    </tr>`).join('');
+
+  /* ---------- Dirty tracking ---------- */
+  const tracked = () => $$('[data-track]');
+  let avatar = null;            // current data URL or null
+  let snapshot = null;
+  function read() {
+    const v = { avatar };
+    tracked().forEach(el => {
+      if (el.type === 'radio') { if (el.checked) v[el.name] = el.value; }
+      else v[el.name] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+    return v;
+  }
+  function write(v) {
+    tracked().forEach(el => {
+      if (el.type === 'radio') el.checked = v[el.name] === el.value;
+      else if (el.type === 'checkbox') el.checked = v[el.name];
+      else el.value = v[el.name];
+    });
+    setAvatar(v.avatar);
+    applyTheme(v.theme);
+    syncDerived();
+  }
+  function diffCount() {
+    const cur = read(); let n = 0;
+    for (const k in snapshot) if (cur[k] !== snapshot[k]) n++;
+    return n;
+  }
+  const savebar = $('#savebar');
+  function updateDirty() {
+    const n = diffCount();
+    savebar.hidden = n === 0;
+    savebar.classList.remove('err');
+    $('#savebar-count').textContent = n === 1 ? '1 unsaved change' : `${n} unsaved changes`;
+  }
+
+  /* ---------- Local persistence (synthetic prototype storage) ---------- */
+  const STORE_KEY = 'harbor.accountSettings.v1';
+  function loadStored() {
+    try { const raw = localStorage.getItem(STORE_KEY); return raw ? JSON.parse(raw) : null; }
+    catch { return null; }
+  }
+  function persist(v) {
+    // Throws if storage is unavailable, full, or blocked; caller handles it.
+    localStorage.setItem(STORE_KEY, JSON.stringify(v));
+    const check = localStorage.getItem(STORE_KEY);
+    if (check !== JSON.stringify(v)) throw new Error('Storage verification failed');
+  }
+  function paintTop() {
+    paintAvatar($('#top-avatar'), $('#f-name').value, avatar);
+    $('#top-avatar').setAttribute('aria-label', $('#f-name').value.trim());
+  }
+
+  /* ---------- Derived UI ---------- */
+  function initials(name) {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    return ((parts[0][0] || '') + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+  }
+  function paintAvatar(el, name, src) {
+    el.textContent = '';
+    if (src) { const img = document.createElement('img'); img.src = src; img.alt = ''; el.append(img); }
+    else el.textContent = initials(name);
+  }
+  function setAvatar(src) {
+    avatar = src;
+    paintAvatar($('#avatar-preview'), $('#f-name').value, src);
+    $('#avatar-remove').hidden = !src;
+  }
+  function syncDerived() {
+    paintAvatar($('#avatar-preview'), $('#f-name').value, avatar);
+    const s = $('#f-status'); $('#c-status').textContent = `${s.value.length}/80`;
+    $('#quiet-times').hidden = !$('#f-quiet').checked;
+  }
+  function applyTheme(t) { document.documentElement.dataset.theme = t || 'system'; }
+
+  document.addEventListener('input', e => {
+    if (!e.target.matches('[data-track]')) return;
+    if (e.target.name === 'theme') applyTheme(e.target.value);
+    if (e.target.name === 'name' || e.target.name === 'handle') clearErr(e.target);
+    syncDerived(); updateDirty();
+  });
+  document.addEventListener('change', e => {
+    if (!e.target.matches('[data-track]')) return;
+    if (e.target.name === 'theme') applyTheme(e.target.value);
+    syncDerived(); updateDirty();
+  });
+
+  /* Avatar upload (local preview only) */
+  $('#avatar-file').addEventListener('change', e => {
+    const f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    const hint = $('#avatar-hint');
+    if (!f.type.startsWith('image/') || f.size > 2 * 1024 * 1024) {
+      hint.textContent = 'That file is too large or not an image. Use PNG, JPG or GIF up to 2 MB.';
+      hint.style.color = 'var(--danger)'; return;
+    }
+    hint.textContent = 'PNG, JPG or GIF, up to 2 MB. Square works best.'; hint.style.color = '';
+    const r = new FileReader();
+    r.onload = () => { setAvatar(r.result); updateDirty(); };
+    r.readAsDataURL(f);
+  });
+  $('#avatar-upload').addEventListener('click', () => $('#avatar-file').click());
+  $('#avatar-remove').addEventListener('click', () => { setAvatar(null); updateDirty(); $('#avatar-upload').focus(); });
+
+  /* ---------- Validation ---------- */
+  function setErr(input, msg, groupEl) {
+    const err = document.getElementById(input.getAttribute('aria-describedby').split(' ').pop());
+    err.textContent = msg;
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    if (groupEl) groupEl.classList.toggle('invalid', !!msg);
+  }
+  function clearErr(input) { setErr(input, '', input.id === 'f-handle' ? $('#g-handle') : null); }
+  function validateProfile() {
+    const name = $('#f-name'), handle = $('#f-handle');
+    let first = null;
+    if (!name.value.trim()) { setErr(name, 'Enter your name so teammates can recognise you.'); first = first || name; }
+    else setErr(name, '');
+    const h = handle.value.trim();
+    if (!/^[a-z0-9][a-z0-9._-]{1,29}$/i.test(h)) {
+      setErr(handle, 'Use 2–30 characters: letters, numbers, dots or dashes.', $('#g-handle')); first = first || handle;
+    } else if (['admin', 'harbor', 'everyone', 'channel'].includes(h.toLowerCase())) {
+      setErr(handle, `@${h} is reserved. Try another username.`, $('#g-handle')); first = first || handle;
+    } else setErr(handle, '', $('#g-handle'));
+    return first;
+  }
+
+  /* ---------- Save / discard ---------- */
+  function save() {
+    const bad = validateProfile();
+    if (bad) { bad.scrollIntoView({ block: 'center' }); bad.focus({ preventScroll: true }); return; }
+    const next = read();
+    try { persist(next); }
+    catch (err) {
+      // Keep the draft and the save bar; tell the user nothing was saved.
+      savebar.hidden = false;
+      savebar.classList.add('err');
+      $('#savebar-count').textContent = 'Couldn’t save. Your changes are still here.';
+      toast('Couldn’t save your settings. Nothing was lost — try again.', true);
+      $('#save').focus();
+      return;
+    }
+    snapshot = next;
+    paintTop();
+    updateDirty();
+    toast('Settings saved');
+  }
+  $('#save').addEventListener('click', save);
+  $('#discard').addEventListener('click', () => {
+    write(snapshot);
+    [$('#f-name'), $('#f-handle')].forEach(clearErr);
+    updateDirty();
+    toast('Changes discarded');
+  });
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's' && !savebar.hidden) { e.preventDefault(); save(); }
+  });
+  window.addEventListener('beforeunload', e => { if (diffCount()) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------- Inline panels helper ---------- */
+  function toggle(btn, panel, open, focusEl) {
+    panel.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    if (open && focusEl) focusEl.focus(); else if (!open) btn.focus();
+  }
+
+  /* ---------- Email change ---------- */
+  const emailBtn = $('#email-change'), emailPanel = $('#email-panel'), newEmail = $('#f-new-email');
+  emailBtn.addEventListener('click', () => toggle(emailBtn, emailPanel, emailPanel.hidden, newEmail));
+  $('#email-cancel').addEventListener('click', () => { newEmail.value = ''; setErr(newEmail, ''); toggle(emailBtn, emailPanel, false); });
+  $('#email-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = newEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { setErr(newEmail, 'Enter a valid email address, like name@company.com.'); newEmail.focus(); return; }
+    if (v.toLowerCase() === EMAIL) { setErr(newEmail, 'That is already your email address.'); newEmail.focus(); return; }
+    setErr(newEmail, '');
+    emailPanel.hidden = true; emailBtn.setAttribute('aria-expanded', 'false'); emailBtn.disabled = true;
+    const t = $('#email-pending-text'); t.textContent = '';
+    t.append('Confirmation sent to ', Object.assign(document.createElement('strong'), { textContent: v }), '. Check your inbox to finish the change.');
+    $('#email-pending').hidden = false;
+    $('#email-badge').className = 'badge info'; $('#email-badge').textContent = 'Change pending';
+    toast('Confirmation email sent');
+    $('#email-resend').focus();
+  });
+  $('#email-resend').addEventListener('click', () => toast('Confirmation email resent'));
+  $('#email-pending-cancel').addEventListener('click', () => {
+    $('#email-pending').hidden = true; newEmail.value = '';
+    emailBtn.disabled = false; emailBtn.focus();
+    $('#email-badge').className = 'badge ok'; $('#email-badge').textContent = 'Verified';
+    toast('Email change cancelled');
+  });
+
+  /* ---------- Password ---------- */
+  const pwBtn = $('#pw-change'), pwPanel = $('#pw-panel');
+  const pwCur = $('#f-pw-current'), pwNew = $('#f-pw-new'), pwConf = $('#f-pw-confirm');
+  function resetPw() { [pwCur, pwNew, pwConf].forEach(i => { i.value = ''; setErr(i, ''); }); scorePw(); }
+  pwBtn.addEventListener('click', () => { if (pwPanel.hidden) resetPw(); toggle(pwBtn, pwPanel, pwPanel.hidden, pwCur); });
+  $('#pw-cancel').addEventListener('click', () => { resetPw(); toggle(pwBtn, pwPanel, false); });
+  function scorePw() {
+    const v = pwNew.value; let s = 0;
+    if (v.length) s = 1;
+    if (v.length >= 12) s++;
+    if (/[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v)) s++;
+    if (v.length >= 16 || /[^A-Za-z0-9]/.test(v)) s += v.length >= 12 ? 1 : 0;
+    s = Math.min(s, 4);
+    $('#pw-strength').dataset.score = s;
+    $('#pw-strength-label').textContent = v ? `Strength: ${['', 'Weak', 'Fair', 'Good', 'Strong'][s]}.` : '';
+  }
+  pwNew.addEventListener('input', () => { scorePw(); setErr(pwNew, ''); });
+  pwCur.addEventListener('input', () => setErr(pwCur, ''));
+  pwConf.addEventListener('input', () => setErr(pwConf, ''));
+  $('#pw-form').addEventListener('submit', e => {
+    e.preventDefault();
+    let first = null;
+    if (!pwCur.value) { setErr(pwCur, 'Enter your current password.'); first = first || pwCur; }
+    if (pwNew.value.length < 12) { setErr(pwNew, 'Use at least 12 characters.'); first = first || pwNew; }
+    else if (pwNew.value === pwCur.value) { setErr(pwNew, 'Choose a password different from your current one.'); first = first || pwNew; }
+    if (!pwConf.value || pwConf.value !== pwNew.value) { setErr(pwConf, 'Passwords don’t match.'); first = first || pwConf; }
+    if (first) { first.focus(); return; }
+    resetPw(); toggle(pwBtn, pwPanel, false);
+    $('#pw-desc').textContent = 'Last changed just now';
+    toast('Password updated');
+  });
+
+  /* ---------- Two-step verification ---------- */
+  const tfaBtn = $('#tfa-btn'), tfaPanel = $('#tfa-panel'), tfaCode = $('#f-tfa-code');
+  let tfaOn = false;
+  function renderTfa() {
+    $('#tfa-badge').className = 'badge ' + (tfaOn ? 'ok' : 'warn');
+    $('#tfa-badge').textContent = tfaOn ? 'On' : 'Off';
+    $('#tfa-desc').textContent = tfaOn
+      ? 'You’ll enter a code from your authenticator app when signing in on a new device.'
+      : 'Admins in Northwind Studio are encouraged to require a code from an authenticator app at sign-in.';
+    tfaBtn.textContent = tfaOn ? 'Turn off' : 'Set up';
+    tfaBtn.className = 'btn ' + (tfaOn ? '' : 'primary');
+    if (tfaOn) tfaBtn.removeAttribute('aria-controls'); else tfaBtn.setAttribute('aria-controls', 'tfa-panel');
+  }
+  tfaBtn.addEventListener('click', async () => {
+    if (!tfaOn) {
+      tfaCode.value = ''; setErr(tfaCode, '');
+      toggle(tfaBtn, tfaPanel, tfaPanel.hidden, tfaCode); return;
+    }
+    const ok = await confirmDialog({ title: 'Turn off two-step verification?', body: 'Your account will be protected by your password only. You can turn it back on any time.', ok: 'Turn off' });
+    if (!ok) { tfaBtn.focus(); return; }
+    tfaOn = false; $('#tfa-codes').hidden = true; renderTfa(); tfaBtn.focus();
+    toast('Two-step verification turned off');
+  });
+  $('#tfa-cancel').addEventListener('click', () => toggle(tfaBtn, tfaPanel, false));
+  tfaCode.addEventListener('input', () => { tfaCode.value = tfaCode.value.replace(/\D/g, '').slice(0, 6); setErr(tfaCode, ''); });
+  $('#tfa-form').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!/^\d{6}$/.test(tfaCode.value)) { setErr(tfaCode, 'Enter the 6-digit code shown in your authenticator app.'); tfaCode.focus(); return; }
+    tfaOn = true; tfaPanel.hidden = true; tfaBtn.setAttribute('aria-expanded', 'false');
+    renderTfa(); $('#tfa-codes').hidden = false; $('#tfa-codes-hide').focus();
+    toast('Two-step verification is on');
+  });
+  $('#tfa-codes-hide').addEventListener('click', () => { $('#tfa-codes').hidden = true; tfaBtn.focus(); });
+
+  /* ---------- Sessions ---------- */
+  const ICONS = {
+    laptop: '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="14" height="9" rx="1.5"/><path d="M1.5 16h17" stroke-linecap="round"/></svg>',
+    phone: '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="5.5" y="2" width="9" height="16" rx="2"/><path d="M9 15h2" stroke-linecap="round"/></svg>',
+    desktop: '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="3" width="16" height="11" rx="1.5"/><path d="M7 17.5h6M10 14v3.5" stroke-linecap="round"/></svg>',
+  };
+  let sessions = [
+    { id: 1, icon: 'laptop', name: 'MacBook Pro · Chrome', where: 'Lisbon, Portugal', when: 'Active now', current: true },
+    { id: 2, icon: 'phone', name: 'iPhone 15 · Harbor app', where: 'Lisbon, Portugal', when: 'Active 2 hours ago' },
+    { id: 3, icon: 'desktop', name: 'Windows · Edge', where: 'Porto, Portugal', when: 'Last active Nov 9, 2026' },
+  ];
+  function renderSessions() {
+    const ul = $('#sessions'); ul.innerHTML = '';
+    sessions.forEach(s => {
+      const li = document.createElement('li'); li.className = 'session';
+      li.innerHTML = `<span class="session-icon">${ICONS[s.icon]}</span>
+        <div class="session-text"><div class="session-title"></div><div class="session-meta"></div></div>`;
+      const title = li.querySelector('.session-title');
+      title.append(s.name);
+      if (s.current) { const b = document.createElement('span'); b.className = 'badge ok'; b.textContent = 'This device'; title.append(b); }
+      li.querySelector('.session-meta').textContent = `${s.where} · ${s.when}`;
+      if (!s.current) {
+        const btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'btn ghost'; btn.textContent = 'Sign out';
+        btn.setAttribute('aria-label', `Sign out ${s.name}`);
+        btn.addEventListener('click', async () => {
+          const ok = await confirmDialog({ title: 'Sign out this device?', body: `${s.name} in ${s.where} will need to sign in again.`, ok: 'Sign out' });
+          if (!ok) { btn.focus(); return; }
+          sessions = sessions.filter(x => x.id !== s.id); renderSessions();
+          $('#sessions-revoke-all').disabled ? $('#pw-change').focus() : $('#sessions-revoke-all').focus();
+          toast(`Signed out ${s.name}`);
+        });
+        li.append(btn);
+      }
+      ul.append(li);
+    });
+    $('#sessions-revoke-all').disabled = sessions.length <= 1;
+  }
+  $('#sessions-revoke-all').addEventListener('click', async () => {
+    const n = sessions.length - 1;
+    const ok = await confirmDialog({ title: 'Sign out other sessions?', body: `${n} other ${n === 1 ? 'device' : 'devices'} will be signed out. This device stays signed in.`, ok: 'Sign out all' });
+    if (!ok) { $('#sessions-revoke-all').focus(); return; }
+    sessions = sessions.filter(s => s.current); renderSessions();
+    toast('Other sessions signed out');
+  });
+
+  /* ---------- Danger zone ---------- */
+  const leaveBtn = $('#leave-btn');
+  let left = false;
+  leaveBtn.addEventListener('click', async () => {
+    if (left) {
+      left = false; leaveBtn.textContent = 'Leave workspace'; leaveBtn.className = 'btn danger';
+      $('#leave-desc').textContent = 'You’ll lose access to its projects and chats. You’re one of 3 admins, so the workspace stays managed.';
+      toast('You’re back in Northwind Studio'); return;
+    }
+    const ok = await confirmDialog({ title: 'Leave Northwind Studio?', body: 'You’ll lose access to its projects, files and chats. An admin will need to invite you again to rejoin.', ok: 'Leave workspace' });
+    if (!ok) { leaveBtn.focus(); return; }
+    left = true; leaveBtn.textContent = 'Undo'; leaveBtn.className = 'btn';
+    $('#leave-desc').textContent = 'You’ve left Northwind Studio. You’ll be signed out of it when you close this page.';
+    leaveBtn.focus();
+    toast('You left Northwind Studio');
+  });
+  const delBtn = $('#delete-btn');
+  delBtn.addEventListener('click', async () => {
+    const ok = await confirmDialog({
+      title: 'Delete your Harbor account?',
+      body: 'Your profile, messages you authored and personal data will be removed from all workspaces after 14 days. Files you shared stay with their workspace.',
+      ok: 'Delete account', typeLabel: `Type your email (${EMAIL}) to confirm`, typeValue: EMAIL,
+    });
+    if (!ok) { delBtn.focus(); return; }
+    $('#delete-notice').hidden = false; delBtn.disabled = true;
+    $('#delete-undo').focus();
+    toast('Account deletion scheduled');
+  });
+  $('#delete-undo').addEventListener('click', () => {
+    $('#delete-notice').hidden = true; delBtn.disabled = false; delBtn.focus();
+    toast('Account deletion cancelled');
+  });
+
+  /* ---------- Scroll spy ---------- */
+  const links = $$('.side a');
+  const navList = $('.side ul');
+  function setActive(id) {
+    links.forEach(a => {
+      const on = a.getAttribute('href') === '#' + id;
+      a.setAttribute('aria-current', on ? 'true' : 'false');
+      if (on && navList.scrollWidth > navList.clientWidth) {
+        navList.scrollTo({ left: a.offsetLeft - navList.clientWidth / 2 + a.offsetWidth / 2, behavior: 'smooth' });
+      }
+    });
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) setActive(en.target.id); });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  $$('.section').forEach(s => io.observe(s));
+  links.forEach(a => a.addEventListener('click', () => setActive(a.getAttribute('href').slice(1))));
+  window.addEventListener('scroll', () => {
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive('danger');
+  }, { passive: true });
+
+  /* ---------- Init ---------- */
+  renderSessions();
+  renderTfa();
+  syncDerived();
+  const stored = loadStored();
+  if (stored && typeof stored === 'object') {
+    const defaults = read();
+    const merged = { ...defaults };
+    for (const k in defaults) {
+      if (!(k in stored)) continue;
+      const ok = k === 'avatar'
+        ? (stored.avatar === null || (typeof stored.avatar === 'string' && stored.avatar.startsWith('data:image/')))
+        : typeof stored[k] === typeof defaults[k];
+      if (ok) merged[k] = stored[k];
+    }
+    write(merged);
+    // Guard against stale values no longer offered by a select
+    $$('select[data-track]').forEach(s => { if (s.selectedIndex < 0) s.value = defaults[s.name]; });
+    paintTop();
+  }
+  snapshot = read();
+  updateDirty();
+})();
+</script>
+</body>
+</html>

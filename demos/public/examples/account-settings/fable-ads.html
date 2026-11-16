@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Account settings | Portside</title>
+<style>
+  :root {
+    --bg: #f6f4ef;
+    --surface: #fffefb;
+    --text: #1f1c18;
+    --muted: #5a544b;
+    --line: #dcd6ca;
+    --control-line: #857e72;
+    --accent: #1d5a48;
+    --accent-hover: #174a3b;
+    --danger: #9f2d1d;
+    --danger-hover: #852416;
+    --danger-bg: #fbeeea;
+    --disabled-bg: #e6e1d6;
+    --disabled-text: #6b655b;
+    --radius: 6px;
+    --control-h: 40px;
+    --gutter: 32px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  h1, h2, h3, p, dl, dd, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h1 { font-size: 26px; line-height: 1.25; font-weight: 600; }
+  h2 { font-size: 17px; line-height: 1.4; font-weight: 600; }
+  h3 { font-size: 15px; line-height: 1.5; font-weight: 600; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 var(--gutter); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: 0 0 0 2px var(--surface); }
+  [tabindex="-1"]:focus { outline: none; box-shadow: none; }
+
+  .skip {
+    position: absolute; left: 16px; top: -64px;
+    background: var(--surface); color: var(--text); padding: 12px 16px;
+    border: 1px solid var(--control-line); border-radius: var(--radius);
+  }
+  .skip:focus { top: 8px; }
+
+  /* App bar */
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .topbar .wrap { display: flex; align-items: center; gap: 12px; min-height: 56px; }
+  .brand { font-weight: 700; font-size: 16px; }
+  .topbar .team { color: var(--muted); min-width: 0; }
+  .me { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+  .avatar {
+    flex: none; display: grid; place-items: center; overflow: hidden;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: #dfe8e2; color: #173f33; font-weight: 600; font-size: 22px;
+  }
+  .avatar.sm { width: 32px; height: 32px; font-size: 13px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* Page */
+  .page-head { padding: 40px 0 32px; }
+  .page-head p { margin-top: 4px; color: var(--muted); max-width: 60ch; }
+  .sec {
+    display: grid; grid-template-columns: 260px minmax(0, 1fr); column-gap: 56px; row-gap: 16px;
+    padding: 40px 0; border-top: 1px solid var(--line);
+  }
+  .sec-head p { margin-top: 4px; color: var(--muted); }
+  .sec-body { max-width: 600px; min-width: 0; }
+  .block + .block { margin-top: 32px; }
+
+  /* Icons */
+  .icon {
+    width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
+    stroke-width: 18; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .icon.lg { width: 24px; height: 24px; stroke-width: 14; }
+
+  /* Controls */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: var(--control-h); padding: 0 16px;
+    font: inherit; font-weight: 600; color: var(--text); white-space: nowrap;
+    background: var(--surface); border: 1px solid var(--control-line); border-radius: var(--radius);
+    cursor: pointer; transition: background-color 120ms ease, border-color 120ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active { background: #ebe7dd; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:active { background: #123c30; }
+  .btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .btn.danger:active { background: #6f1d11; }
+  .btn.danger-quiet { color: var(--danger); border-color: var(--danger); }
+  .btn.danger-quiet:active { background: var(--danger-bg); }
+  .btn:disabled, .btn[aria-busy="true"] {
+    background: var(--disabled-bg); border-color: var(--disabled-bg); color: var(--disabled-text); cursor: default;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn:not(:disabled):not([aria-busy="true"]):hover { background: #f1ede4; }
+    .btn.primary:not(:disabled):not([aria-busy="true"]):hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn.danger:not(:disabled):not([aria-busy="true"]):hover { background: var(--danger-hover); border-color: var(--danger-hover); }
+    .btn.danger-quiet:not(:disabled):hover { background: var(--danger-bg); }
+  }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+
+  .field { max-width: 400px; }
+  .field + .field { margin-top: 16px; }
+  /* Empty message lines stay in the accessibility tree but take no room. */
+  .hint:empty, .status:empty { min-height: 0; margin-top: 0 !important; }
+  .foot {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px;
+    padding: 24px 0 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px;
+  }
+  .foot p { flex: 1 1 240px; }
+  .field label, .label { display: block; font-weight: 600; margin-bottom: 4px; }
+  .optional { font-weight: 400; color: var(--muted); }
+  .input {
+    display: block; width: 100%; height: var(--control-h); padding: 0 12px;
+    font: inherit; color: var(--text);
+    background: var(--surface); border: 1px solid var(--control-line); border-radius: var(--radius);
+  }
+  select.input {
+    appearance: none; -webkit-appearance: none; padding-right: 44px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='none' stroke='%231f1c18' stroke-width='20' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='208 96 128 176 48 96'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; background-size: 16px 16px;
+  }
+  .input[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; padding-left: 11px; }
+  .hint { margin-top: 4px; min-height: 1.5em; font-size: 13px; color: var(--muted); }
+  .hint.error, .status.error { color: var(--danger); font-weight: 600; }
+  .hint .icon, .status .icon { display: inline-block; vertical-align: -2px; margin-right: 6px; }
+  .status { min-height: 1.5em; font-size: 13px; color: var(--muted); }
+  .status.ok, .hint.ok { color: var(--accent); font-weight: 600; }
+
+  .check { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; cursor: pointer; }
+  input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
+
+  /* Rows */
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .row > .row-text { flex: 1 1 220px; min-width: 0; }
+  .photo { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .photo > div { min-width: 0; }
+
+  .panel {
+    margin-top: 16px; padding: 20px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px;
+  }
+  .panel.warn { border-color: var(--danger); }
+  .panel > h3 + p { margin-top: 4px; }
+  .panel .actions { margin-top: 16px; }
+
+  .sessions { margin-top: 12px; display: grid; gap: 16px; }
+  .session { display: flex; align-items: center; gap: 12px; }
+  .session .row-text { flex: 1 1 0; min-width: 0; }
+  .tag {
+    display: inline-block; margin-left: 8px; padding: 0 6px; font-size: 12px; font-weight: 600; line-height: 1.5;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; vertical-align: 1px;
+  }
+
+  /* Notifications */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 4px 0; text-align: left; vertical-align: middle; border-bottom: 1px solid var(--line); }
+  thead th { font-size: 13px; font-weight: 600; color: var(--muted); padding: 8px 0; }
+  tbody th { font-weight: 400; padding: 10px 12px 10px 0; }
+  tbody th strong { display: block; font-weight: 600; }
+  .ch { width: 72px; text-align: center; }
+  .tick { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto; cursor: pointer; }
+
+  dl.facts { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 16px; }
+  dl.facts dt { color: var(--muted); }
+
+  @media (max-width: 860px) {
+    :root { --gutter: 24px; }
+    .sec { grid-template-columns: minmax(0, 1fr); padding: 32px 0; }
+  }
+  @media (max-width: 640px), (pointer: coarse) {
+    :root { --control-h: 48px; }
+    .input { font-size: 16px; }
+  }
+  @media (max-width: 640px) {
+    :root { --gutter: 16px; }
+    .page-head { padding: 28px 0 24px; }
+    h1 { font-size: 24px; }
+    .me .me-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .ch { width: 60px; }
+    .panel { padding: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 256 256"><polyline points="40 144 96 200 224 72"/></symbol>
+  <symbol id="i-warning" viewBox="0 0 256 256"><circle cx="128" cy="128" r="96"/><line x1="128" y1="80" x2="128" y2="136"/><line x1="128" y1="172" x2="128" y2="174"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 256 256"><rect x="40" y="56" width="176" height="120" rx="16"/><line x1="16" y1="208" x2="240" y2="208"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 256 256"><rect x="64" y="24" width="128" height="208" rx="20"/><line x1="112" y1="196" x2="144" y2="196"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 256 256"><rect x="32" y="48" width="192" height="128" rx="16"/><line x1="128" y1="176" x2="128" y2="216"/><line x1="88" y1="216" x2="168" y2="216"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to settings</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="brand">Portside</span>
+    <span class="team" id="hdr-team">Kiln Studio</span>
+    <span class="me">
+      <span class="avatar sm" id="hdr-avatar" aria-hidden="true">MO</span>
+      <span class="me-name" id="hdr-name">Mara Okafor</span>
+    </span>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <div class="page-head">
+    <h1>Account settings</h1>
+    <p>Your profile, sign-in, and notifications on Portside.</p>
+  </div>
+
+  <!-- Profile -->
+  <section class="sec" aria-labelledby="h-profile">
+    <div class="sec-head">
+      <h2 id="h-profile">Profile</h2>
+      <p>How you appear to teammates in projects, comments, and the schedule.</p>
+    </div>
+    <div class="sec-body">
+      <div class="photo">
+        <span class="avatar" id="avatar" aria-hidden="true">MO</span>
+        <div role="group" aria-labelledby="photo-label">
+          <span class="label" id="photo-label">Profile photo</span>
+          <div class="actions">
+            <button type="button" class="btn" id="photo-upload" aria-describedby="photo-hint">Upload photo</button>
+            <button type="button" class="btn" id="photo-remove" hidden>Remove photo</button>
+            <input type="file" id="photo-file" accept="image/png,image/jpeg" hidden>
+          </div>
+          <p class="hint" id="photo-hint" role="status" data-default="PNG or JPG, up to 2 MB.">PNG or JPG, up to 2 MB.</p>
+        </div>
+      </div>
+
+      <form id="profile-form" novalidate>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input class="input" id="name" name="name" type="text" autocomplete="name" required value="Mara Okafor" aria-describedby="name-hint">
+          <p class="hint" id="name-hint" data-default=""></p>
+        </div>
+        <div class="field">
+          <label for="title">Job title <span class="optional">(optional)</span></label>
+          <input class="input" id="title" name="title" type="text" autocomplete="organization-title" value="Design lead" aria-describedby="title-hint">
+          <p class="hint" id="title-hint" data-default="Shown under your name in the team directory.">Shown under your name in the team directory.</p>
+        </div>
+        <div class="field">
+          <label for="email">Work email</label>
+          <input class="input" id="email" name="email" type="email" inputmode="email" autocomplete="email" required value="mara.okafor@kilnstudio.example" aria-describedby="email-hint">
+          <p class="hint" id="email-hint" data-default="You sign in with this. A new address needs confirming before it takes over.">You sign in with this. A new address needs confirming before it takes over.</p>
+        </div>
+        <div class="field">
+          <label for="tz">Time zone</label>
+          <select class="input" id="tz" name="tz" aria-describedby="tz-hint">
+            <option value="America/Los_Angeles">Los Angeles, UTC-8</option>
+            <option value="America/Denver">Denver, UTC-7</option>
+            <option value="America/Chicago">Chicago, UTC-6</option>
+            <option value="America/New_York">New York, UTC-5</option>
+            <option value="Europe/Lisbon" selected>Lisbon, UTC+0</option>
+            <option value="Europe/London">London, UTC+0</option>
+            <option value="Europe/Berlin">Berlin, UTC+1</option>
+            <option value="Africa/Lagos">Lagos, UTC+1</option>
+            <option value="Africa/Nairobi">Nairobi, UTC+3</option>
+            <option value="Asia/Kolkata">Mumbai, UTC+5:30</option>
+            <option value="Asia/Singapore">Singapore, UTC+8</option>
+            <option value="Australia/Sydney">Sydney, UTC+11</option>
+          </select>
+          <p class="hint" id="tz-hint" data-default="Teammates see your local time on the schedule.">Teammates see your local time on the schedule.</p>
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button type="submit" class="btn primary" id="profile-save" disabled>Save changes</button>
+          <button type="button" class="btn" id="profile-discard" hidden>Discard changes</button>
+          <p class="status" id="profile-status" role="status">No unsaved changes.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Sign-in -->
+  <section class="sec" aria-labelledby="h-security">
+    <div class="sec-head">
+      <h2 id="h-security">Sign-in and security</h2>
+      <p>Your password, two-step verification, and the devices signed in to your account.</p>
+    </div>
+    <div class="sec-body">
+      <div class="block">
+        <div class="row">
+          <div class="row-text">
+            <h3>Password</h3>
+            <p class="muted" id="pw-meta">Last changed 14 March 2026</p>
+          </div>
+          <button type="button" class="btn" id="pw-toggle" aria-expanded="false" aria-controls="pw-form">Change password</button>
+        </div>
+        <p class="status" id="pw-status" role="status"></p>
+        <form class="panel" id="pw-form" novalidate hidden aria-label="Change password">
+          <div class="field">
+            <label for="pw-current">Current password</label>
+            <input class="input" id="pw-current" type="password" autocomplete="current-password" required aria-describedby="pw-current-hint">
+            <p class="hint" id="pw-current-hint" data-default=""></p>
+          </div>
+          <div class="field">
+            <label for="pw-new">New password</label>
+            <input class="input" id="pw-new" type="password" autocomplete="new-password" required aria-describedby="pw-new-hint">
+            <p class="hint" id="pw-new-hint" data-default="At least 12 characters.">At least 12 characters.</p>
+          </div>
+          <div class="field">
+            <label for="pw-confirm">Confirm new password</label>
+            <input class="input" id="pw-confirm" type="password" autocomplete="new-password" required aria-describedby="pw-confirm-hint">
+            <p class="hint" id="pw-confirm-hint" data-default=""></p>
+          </div>
+          <label class="check"><input type="checkbox" id="pw-show"> Show passwords</label>
+          <div class="actions">
+            <button type="submit" class="btn primary" id="pw-save">Update password</button>
+            <button type="button" class="btn" id="pw-cancel">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="block">
+        <div class="row">
+          <div class="row-text">
+            <h3>Two-step verification</h3>
+            <p class="muted" id="tsv-meta" role="status">On. Sign-in asks for a code from your authenticator app.</p>
+          </div>
+          <button type="button" class="btn" id="tsv-toggle">Turn off</button>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 id="h-sessions">Signed-in devices</h3>
+        <ul class="sessions" id="sessions" aria-labelledby="h-sessions"></ul>
+        <button type="button" class="btn" id="sessions-all" style="margin-top:16px">Sign out of all other devices</button>
+        <p class="status" id="sessions-status" role="status" tabindex="-1" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Notifications -->
+  <section class="sec" aria-labelledby="h-notify">
+    <div class="sec-head">
+      <h2 id="h-notify">Notifications</h2>
+      <p>Choose what reaches you by email and as push notifications on your phone. Changes save as you make them.</p>
+    </div>
+    <div class="sec-body">
+      <table>
+        <caption class="sr-only">Notification channels by activity</caption>
+        <thead>
+          <tr><th scope="col">Activity</th><th scope="col" class="ch">Email</th><th scope="col" class="ch">Push</th></tr>
+        </thead>
+        <tbody id="notify-body"></tbody>
+      </table>
+      <p class="status" id="notify-status" role="status" style="margin-top:12px"></p>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="sec" aria-labelledby="h-team">
+    <div class="sec-head">
+      <h2 id="h-team">Team membership</h2>
+      <p>The team this account belongs to and your role in it.</p>
+    </div>
+    <div class="sec-body">
+      <div id="team-current">
+        <dl class="facts">
+          <dt>Team</dt><dd>Kiln Studio</dd>
+          <dt>Your role</dt><dd>Member</dd>
+          <dt>Joined</dt><dd>2 February 2025</dd>
+          <dt>Team admin</dt><dd>Idris Vance</dd>
+        </dl>
+        <p class="muted small" style="margin-top:12px">Admins set roles. Ask Idris Vance if yours needs to change.</p>
+        <div class="actions" style="margin-top:16px">
+          <button type="button" class="btn" id="team-leave" aria-expanded="false" aria-controls="team-confirm">Leave team</button>
+        </div>
+        <div class="panel warn" id="team-confirm" role="group" aria-labelledby="team-confirm-h" tabindex="-1" hidden>
+          <h3 id="team-confirm-h">Leave Kiln Studio?</h3>
+          <p>You lose access to its projects and schedule right away. To come back, an admin has to invite you again.</p>
+          <div class="actions">
+            <button type="button" class="btn danger" id="team-leave-yes">Leave Kiln Studio</button>
+            <button type="button" class="btn" id="team-leave-no">Stay on team</button>
+          </div>
+          <p class="status" id="team-status" role="status" style="margin-top:8px"></p>
+        </div>
+      </div>
+      <div id="team-none" tabindex="-1" hidden>
+        <h3>You are not on a team</h3>
+        <p class="muted">You left Kiln Studio. To join a team, ask one of its admins to send an invite to your work email.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Delete -->
+  <section class="sec" aria-labelledby="h-delete">
+    <div class="sec-head">
+      <h2 id="h-delete">Delete account</h2>
+      <p>Removes your profile, sign-in, and personal settings. Work you added to team projects stays with the team.</p>
+    </div>
+    <div class="sec-body">
+      <div id="del-idle">
+        <p class="muted">Deletion happens 14 days after you ask for it, so you have time to change your mind.</p>
+        <div class="actions" style="margin-top:16px">
+          <button type="button" class="btn danger-quiet" id="del-open" aria-expanded="false" aria-controls="del-form">Delete account</button>
+        </div>
+        <p class="status" id="del-status" role="status" style="margin-top:8px"></p>
+      </div>
+      <form class="panel warn" id="del-form" novalidate hidden aria-labelledby="del-form-h" style="margin-top:0">
+        <h3 id="del-form-h">Confirm account deletion</h3>
+        <p>Your account will be deleted on <span class="num" id="del-date-a"></span>. You can cancel any time before then.</p>
+        <div class="field" style="margin-top:16px">
+          <label for="del-email">Type your work email to confirm</label>
+          <input class="input" id="del-email" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="del-email-hint">
+          <p class="hint" id="del-email-hint" data-default=""></p>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn danger">Schedule deletion</button>
+          <button type="button" class="btn" id="del-cancel">Keep account</button>
+        </div>
+      </form>
+      <div class="panel warn" id="del-scheduled" tabindex="-1" hidden style="margin-top:0">
+        <h3>Deletion scheduled for <span class="num" id="del-date-b"></span></h3>
+        <p>You can keep using Portside until then. After that date your account cannot be restored.</p>
+        <div class="actions">
+          <button type="button" class="btn" id="del-undo">Cancel deletion</button>
+        </div>
+        <p class="status" id="del-undo-status" role="status" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+  <div class="foot">
+    <p>Prototype with sample data. Your changes are kept in this browser only.</p>
+    <button type="button" class="btn" id="reset-data">Reset sample data</button>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var fmtDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  /* ---------- Local store: saved settings survive a reload ---------- */
+  var STORE_KEY = 'portside.account.v1';
+  var store = (function () {
+    try {
+      var data = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+      return data && typeof data === 'object' ? data : {};
+    } catch (e) { return {}; }
+  })();
+  // Returns false when offline or when the browser refuses the write. Nothing changes in that case.
+  function persist(patch) {
+    if (navigator.onLine === false) return false;
+    var next = {}, k;
+    for (k in store) next[k] = store[k];
+    for (k in patch) next[k] = patch[k];
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(next)); } catch (e) { return false; }
+    store = next;
+    return true;
+  }
+  function failText(tail) {
+    return (navigator.onLine === false ? 'You are offline, so this was not saved. ' : 'This could not be saved. ') + tail;
+  }
+  function storedDate(v) {
+    var d = typeof v === 'string' ? new Date(v) : null;
+    return d && !isNaN(d.getTime()) ? d : null;
+  }
+
+  function icon(name, cls) {
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'icon' + (cls ? ' ' + cls : ''));
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    var use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', '#i-' + name);
+    svg.appendChild(use);
+    return svg;
+  }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  // Status line: kind is '', 'ok' or 'error'. Icon plus text, never color alone.
+  function say(node, text, kind) {
+    var key = (kind || '') + '|' + text;
+    if (node.dataset.key === key) return;
+    node.dataset.key = key;
+    node.textContent = '';
+    node.classList.remove('ok', 'error');
+    if (kind) {
+      node.classList.add(kind);
+      node.appendChild(icon(kind === 'ok' ? 'check' : 'warning'));
+    }
+    if (text) node.appendChild(document.createTextNode(text));
+  }
+  // Same as say, but repeats an identical message so it is announced again.
+  function sayAgain(node, text, kind) { node.dataset.key = ''; say(node, text, kind); }
+  function hintFor(input) { return document.getElementById(input.getAttribute('aria-describedby')); }
+  function setError(input, msg) {
+    var h = hintFor(input);
+    if (msg) {
+      input.setAttribute('aria-invalid', 'true');
+      say(h, msg, 'error');
+    } else {
+      input.removeAttribute('aria-invalid');
+      say(h, h.dataset.default || '', '');
+    }
+    return !msg;
+  }
+  // Busy button: keeps its width so the label swap does not move the row.
+  function busy(btn, label, ms, done) {
+    var idle = btn.textContent;
+    btn.style.minWidth = btn.offsetWidth + 'px';
+    btn.setAttribute('aria-busy', 'true');
+    btn.textContent = label;
+    setTimeout(function () {
+      btn.removeAttribute('aria-busy');
+      btn.textContent = idle;
+      btn.style.minWidth = '';
+      done();
+    }, ms);
+  }
+  function isBusy(btn) { return btn.getAttribute('aria-busy') === 'true'; }
+  function initials(name) {
+    return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (w) { return w.charAt(0).toUpperCase(); }).join('') || '?';
+  }
+
+  /* ---------- Profile ---------- */
+  var f = { name: $('#name'), title: $('#title'), email: $('#email'), tz: $('#tz') };
+  $('#profile-form').reset();
+  (function (sp) {
+    if (!sp || typeof sp !== 'object') return;
+    ['name', 'title', 'email'].forEach(function (k) { if (typeof sp[k] === 'string') f[k].value = sp[k]; });
+    if (Array.prototype.some.call(f.tz.options, function (o) { return o.value === sp.tz; })) f.tz.value = sp.tz;
+  })(store.profile);
+  var saved = { name: f.name.value, title: f.title.value, email: f.email.value, tz: f.tz.value };
+  var photo = typeof store.photo === 'string' && store.photo.indexOf('data:image/') === 0 ? store.photo : null;
+  var saveBtn = $('#profile-save'), discardBtn = $('#profile-discard'), pStatus = $('#profile-status');
+
+  function current() {
+    return { name: f.name.value.trim(), title: f.title.value.trim(), email: f.email.value.trim(), tz: f.tz.value };
+  }
+  function dirty() {
+    var c = current();
+    return Object.keys(saved).some(function (k) { return c[k] !== saved[k]; });
+  }
+  function refreshProfile() {
+    if (isBusy(saveBtn)) return;
+    var d = dirty();
+    saveBtn.disabled = !d;
+    discardBtn.hidden = !d;
+    say(pStatus, d ? 'You have unsaved changes.' : 'No unsaved changes.', '');
+  }
+  var checks = {
+    name: function () { return f.name.value.trim() ? '' : 'Enter your name so teammates can find you.'; },
+    email: function () { return EMAIL_RE.test(f.email.value.trim()) ? '' : 'That does not look like an email address.'; }
+  };
+  function paintAvatars() {
+    var text = initials(saved.name);
+    [$('#avatar'), $('#hdr-avatar')].forEach(function (a) {
+      a.textContent = '';
+      if (photo) { var img = new Image(); img.alt = ''; img.src = photo; a.appendChild(img); }
+      else a.textContent = text;
+    });
+    $('#hdr-name').textContent = saved.name;
+    $('#photo-remove').hidden = !photo;
+  }
+  Object.keys(f).forEach(function (k) {
+    f[k].addEventListener('input', function () {
+      if (f[k].getAttribute('aria-invalid') && checks[k]) setError(f[k], checks[k]());
+      refreshProfile();
+    });
+    f[k].addEventListener('change', refreshProfile);
+    if (checks[k]) f[k].addEventListener('blur', function () { if (dirty()) setError(f[k], checks[k]()); });
+  });
+  $('#profile-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (isBusy(saveBtn) || saveBtn.disabled) return;
+    var okName = setError(f.name, checks.name());
+    var okEmail = setError(f.email, checks.email());
+    if (!okName || !okEmail) {
+      (okName ? f.email : f.name).focus();
+      say(pStatus, 'Fix the highlighted fields to save.', 'error');
+      return;
+    }
+    discardBtn.hidden = true;
+    say(pStatus, '', '');
+    busy(saveBtn, 'Saving…', 700, function () {
+      var next = current();
+      var emailChanged = next.email !== saved.email;
+      if (!persist({ profile: next })) {
+        saveBtn.disabled = false;
+        discardBtn.hidden = false;
+        sayAgain(pStatus, failText('Your edits are still in the form. Try saving again.'), 'error');
+        return;
+      }
+      saved = next;
+      f.name.value = next.name; f.title.value = next.title; f.email.value = next.email;
+      paintAvatars();
+      saveBtn.disabled = true;
+      say(pStatus, emailChanged ? 'Changes saved. Check ' + next.email + ' for a confirmation link.' : 'Changes saved.', 'ok');
+    });
+  });
+  discardBtn.addEventListener('click', function () {
+    Object.keys(saved).forEach(function (k) { f[k].value = saved[k]; });
+    setError(f.name, ''); setError(f.email, '');
+    refreshProfile();
+    f.name.focus();
+  });
+
+  var fileInput = $('#photo-file'), photoHint = $('#photo-hint');
+  $('#photo-upload').addEventListener('click', function () { fileInput.click(); });
+  fileInput.addEventListener('change', function () {
+    var file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    fileInput.value = '';
+    if (!/^image\/(png|jpeg)$/.test(file.type)) return say(photoHint, 'That file is not a PNG or JPG. Choose a different one.', 'error');
+    if (file.size > 2 * 1024 * 1024) return say(photoHint, 'That photo is larger than 2 MB. Choose a smaller one.', 'error');
+    var reader = new FileReader();
+    var unreadable = function () { sayAgain(photoHint, 'We could not read that file. Try another photo.', 'error'); };
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        // Crop to a 256px square so the stored photo stays small.
+        var out = reader.result;
+        try {
+          var w = img.naturalWidth, h = img.naturalHeight, side = Math.min(w, h);
+          var c = document.createElement('canvas');
+          c.width = 256; c.height = 256;
+          var ctx = c.getContext('2d');
+          ctx.fillStyle = '#dfe8e2';
+          ctx.fillRect(0, 0, 256, 256);
+          ctx.drawImage(img, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 256, 256);
+          var small = c.toDataURL('image/jpeg', 0.86);
+          if (small.indexOf('data:image/') === 0) out = small;
+        } catch (e) { /* keep the original file */ }
+        if (!persist({ photo: out })) return sayAgain(photoHint, failText('Your photo has not changed.'), 'error');
+        photo = out; paintAvatars(); sayAgain(photoHint, 'Photo updated.', 'ok');
+      };
+      img.onerror = unreadable;
+      img.src = reader.result;
+    };
+    reader.onerror = unreadable;
+    reader.readAsDataURL(file);
+  });
+  $('#photo-remove').addEventListener('click', function () {
+    if (!persist({ photo: null })) return sayAgain(photoHint, failText('Your photo has not changed.'), 'error');
+    photo = null; paintAvatars();
+    sayAgain(photoHint, 'Photo removed.', 'ok');
+    $('#photo-upload').focus();
+  });
+  paintAvatars();
+
+  /* ---------- Password ---------- */
+  var pwToggle = $('#pw-toggle'), pwForm = $('#pw-form'), pwStatus = $('#pw-status');
+  var pw = { current: $('#pw-current'), next: $('#pw-new'), confirm: $('#pw-confirm') };
+  function closePw() {
+    pwForm.hidden = true; pwForm.reset();
+    Object.keys(pw).forEach(function (k) { pw[k].type = 'password'; setError(pw[k], ''); });
+    pwToggle.hidden = false; pwToggle.setAttribute('aria-expanded', 'false');
+  }
+  pwToggle.addEventListener('click', function () {
+    pwForm.hidden = false; pwToggle.setAttribute('aria-expanded', 'true'); pwToggle.hidden = true;
+    say(pwStatus, '', '');
+    pw.current.focus();
+  });
+  $('#pw-cancel').addEventListener('click', function () { closePw(); pwToggle.focus(); });
+  $('#pw-show').addEventListener('change', function (e) {
+    Object.keys(pw).forEach(function (k) { pw[k].type = e.target.checked ? 'text' : 'password'; });
+  });
+  pwForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = $('#pw-save');
+    if (isBusy(btn)) return;
+    var a = setError(pw.current, pw.current.value ? '' : 'Enter your current password.');
+    var b = setError(pw.next, pw.next.value.length >= 12 ? '' : 'Use at least 12 characters.');
+    var c = setError(pw.confirm, pw.confirm.value && pw.confirm.value === pw.next.value ? '' : 'This does not match the new password.');
+    if (!a) return pw.current.focus();
+    if (!b) return pw.next.focus();
+    if (!c) return pw.confirm.focus();
+    busy(btn, 'Updating…', 700, function () {
+      if (!persist({ pwChanged: new Date().toISOString() })) {
+        return sayAgain(pwStatus, failText('Your password has not changed. Try again.'), 'error');
+      }
+      closePw();
+      $('#pw-meta').textContent = 'Last changed today, ' + fmtDate.format(new Date());
+      say(pwStatus, 'Password updated.', 'ok');
+      pwToggle.focus();
+    });
+  });
+
+  /* ---------- Two-step verification ---------- */
+  if (storedDate(store.pwChanged)) $('#pw-meta').textContent = 'Last changed ' + fmtDate.format(storedDate(store.pwChanged));
+  var tsvOn = store.tsvOn !== false, tsvBtn = $('#tsv-toggle');
+  function paintTsv(note) {
+    $('#tsv-meta').textContent = (tsvOn
+      ? 'On. Sign-in asks for a code from your authenticator app.'
+      : 'Off. Your password is the only thing protecting this account.') + (note ? ' ' + note : '');
+    tsvBtn.textContent = tsvOn ? 'Turn off' : 'Turn on';
+  }
+  tsvBtn.addEventListener('click', function () {
+    if (!persist({ tsvOn: !tsvOn })) return paintTsv(failText('Try again.'));
+    tsvOn = !tsvOn;
+    paintTsv('');
+  });
+  tsvBtn.setAttribute('aria-describedby', 'tsv-meta');
+  paintTsv('');
+
+  /* ---------- Sessions ---------- */
+  var sessions = [
+    { id: 'mac', icon: 'laptop', name: 'MacBook Pro', detail: 'Chrome on macOS, Lisbon, Portugal', when: 'Active now', current: true },
+    { id: 'iphone', icon: 'phone', name: 'iPhone 15', detail: 'Portside app on iOS, Lisbon, Portugal', when: 'Last active 2 hours ago' },
+    { id: 'pc', icon: 'monitor', name: 'Windows PC', detail: 'Edge on Windows, Porto, Portugal', when: 'Last active 9 November 2026' }
+  ];
+  var sList = $('#sessions'), sStatus = $('#sessions-status'), sAll = $('#sessions-all');
+  var SESSION_IDS = sessions.map(function (s) { return s.id; });
+  if (Array.isArray(store.signedOut)) {
+    sessions = sessions.filter(function (s) { return s.current || store.signedOut.indexOf(s.id) === -1; });
+  }
+  function dropSessions(keep, msg) {
+    var next = sessions.filter(keep);
+    var gone = SESSION_IDS.filter(function (id) { return !next.some(function (x) { return x.id === id; }); });
+    if (!persist({ signedOut: gone })) {
+      sayAgain(sStatus, failText('No device was signed out. Try again.'), 'error');
+    } else {
+      sessions = next;
+      paintSessions();
+      sayAgain(sStatus, msg, 'ok');
+    }
+    sStatus.focus();
+  }
+  function paintSessions() {
+    sList.textContent = '';
+    sessions.forEach(function (s) {
+      var li = el('li', 'session');
+      li.appendChild(icon(s.icon, 'lg'));
+      var text = el('div', 'row-text');
+      var name = el('p', '', s.name);
+      name.style.fontWeight = '600';
+      if (s.current) name.appendChild(el('span', 'tag', 'This device'));
+      text.appendChild(name);
+      text.appendChild(el('p', 'muted small', s.detail));
+      text.appendChild(el('p', 'muted small num', s.when));
+      li.appendChild(text);
+      if (!s.current) {
+        var b = el('button', 'btn', 'Sign out');
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Sign out of ' + s.name);
+        b.addEventListener('click', function () {
+          dropSessions(function (x) { return x.id !== s.id; }, 'Signed out of ' + s.name + '.');
+        });
+        li.appendChild(b);
+      }
+      sList.appendChild(li);
+    });
+    var others = sessions.length > 1;
+    sAll.hidden = !others;
+    if (!others && !sStatus.textContent) say(sStatus, 'You are signed in on this device only.', '');
+  }
+  sAll.addEventListener('click', function () {
+    dropSessions(function (x) { return x.current; }, 'Signed out of all other devices. You are signed in on this device only.');
+  });
+  paintSessions();
+
+  /* ---------- Notifications ---------- */
+  var notify = [
+    { id: 'mentions', label: 'Mentions and replies', note: 'Someone mentions you or replies in a thread you are in.', email: true, push: true },
+    { id: 'assigned', label: 'Tasks assigned to you', note: 'A teammate assigns you a task or changes its due date.', email: true, push: true },
+    { id: 'reviews', label: 'Review requests', note: 'Someone asks you to review their work.', email: true, push: false },
+    { id: 'schedule', label: 'Schedule changes', note: 'A meeting or deadline you are part of moves.', email: false, push: true },
+    { id: 'summary', label: 'Weekly summary', note: 'A Monday recap of your team’s progress.', email: true, push: null }
+  ];
+  var nBody = $('#notify-body'), nStatus = $('#notify-status');
+  function notifySnapshot() {
+    var out = {};
+    notify.forEach(function (n) { out[n.id] = { email: n.email, push: n.push }; });
+    return out;
+  }
+  notify.forEach(function (n) {
+    var sn = store.notify && typeof store.notify === 'object' ? store.notify[n.id] : null;
+    if (sn && typeof sn === 'object') {
+      ['email', 'push'].forEach(function (ch) { if (n[ch] !== null && typeof sn[ch] === 'boolean') n[ch] = sn[ch]; });
+    }
+  });
+  notify.forEach(function (n) {
+    var tr = el('tr');
+    var th = el('th'); th.scope = 'row';
+    th.appendChild(el('strong', '', n.label));
+    th.appendChild(el('span', 'muted small', n.note));
+    tr.appendChild(th);
+    ['email', 'push'].forEach(function (ch) {
+      var td = el('td', 'ch');
+      if (n[ch] === null) {
+        td.appendChild(el('span', 'muted small', 'Email only'));
+      } else {
+        var label = el('label', 'tick');
+        var box = el('input');
+        box.type = 'checkbox'; box.checked = n[ch];
+        box.setAttribute('aria-label', (ch === 'email' ? 'Email' : 'Push') + ' for ' + n.label.toLowerCase());
+        box.addEventListener('change', function () {
+          var before = n[ch];
+          n[ch] = box.checked;
+          if (!persist({ notify: notifySnapshot() })) {
+            n[ch] = before;
+            box.checked = before;
+            return sayAgain(nStatus, failText('Your notification choices are unchanged.'), 'error');
+          }
+          sayAgain(nStatus,(ch === 'email' ? 'Email' : 'Push') + ' for ' + n.label.toLowerCase() + ' turned ' + (box.checked ? 'on' : 'off') + '. Saved.', 'ok');
+        });
+        label.appendChild(box);
+        td.appendChild(label);
+      }
+      tr.appendChild(td);
+    });
+    nBody.appendChild(tr);
+  });
+
+  /* ---------- Team ---------- */
+  var leaveBtn = $('#team-leave'), teamConfirm = $('#team-confirm');
+  leaveBtn.addEventListener('click', function () {
+    teamConfirm.hidden = false; leaveBtn.setAttribute('aria-expanded', 'true'); leaveBtn.hidden = true;
+    teamConfirm.focus();
+  });
+  $('#team-leave-no').addEventListener('click', function () {
+    teamConfirm.hidden = true; leaveBtn.hidden = false; leaveBtn.setAttribute('aria-expanded', 'false');
+    leaveBtn.focus();
+  });
+  function showNoTeam() {
+    $('#team-current').hidden = true;
+    $('#team-none').hidden = false;
+    $('#hdr-team').textContent = 'No team';
+  }
+  $('#team-leave-yes').addEventListener('click', function () {
+    if (!persist({ leftTeam: true })) return sayAgain($('#team-status'), failText('You are still on the team.'), 'error');
+    showNoTeam();
+    $('#team-none').focus();
+  });
+  if (store.leftTeam === true) showNoTeam();
+
+  /* ---------- Delete account ---------- */
+  var delIdle = $('#del-idle'), delForm = $('#del-form'), delDone = $('#del-scheduled');
+  var delOpen = $('#del-open'), delEmail = $('#del-email'), delStatus = $('#del-status');
+  var scheduled = storedDate(store.deleteOn);
+  var when = scheduled || new Date();
+  if (!scheduled) when.setDate(when.getDate() + 14);
+  $('#del-date-a').textContent = fmtDate.format(when);
+  $('#del-date-b').textContent = fmtDate.format(when);
+  function delShow(view) {
+    delIdle.hidden = view !== 'idle'; delForm.hidden = view !== 'form'; delDone.hidden = view !== 'done';
+    delOpen.setAttribute('aria-expanded', String(view === 'form'));
+  }
+  delOpen.addEventListener('click', function () {
+    say(delStatus, '', '');
+    delShow('form');
+    delEmail.focus();
+  });
+  $('#del-cancel').addEventListener('click', function () {
+    delForm.reset(); setError(delEmail, '');
+    delShow('idle'); delOpen.focus();
+  });
+  delForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var match = delEmail.value.trim().toLowerCase() === saved.email.toLowerCase();
+    if (!setError(delEmail, match ? '' : 'That does not match your work email, ' + saved.email + '.')) return delEmail.focus();
+    if (!persist({ deleteOn: when.toISOString() })) {
+      return sayAgain(hintFor(delEmail), failText('Deletion is not scheduled. Try again.'), 'error');
+    }
+    delForm.reset();
+    say($('#del-undo-status'), '', '');
+    delShow('done'); delDone.focus();
+  });
+  if (scheduled) delShow('done');
+  $('#del-undo').addEventListener('click', function () {
+    if (!persist({ deleteOn: null })) {
+      return sayAgain($('#del-undo-status'), failText('Deletion is still scheduled. Try again.'), 'error');
+    }
+    when = new Date(); when.setDate(when.getDate() + 14);
+    $('#del-date-a').textContent = fmtDate.format(when);
+    $('#del-date-b').textContent = fmtDate.format(when);
+    delShow('idle');
+    sayAgain(delStatus, 'Deletion cancelled. Your account stays active.', 'ok');
+    delOpen.focus();
+  });
+
+  /* ---------- Prototype reset ---------- */
+  $('#reset-data').addEventListener('click', function () {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) { /* nothing stored */ }
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "task": "Build me an account settings page for a team app. Keep it to one page.",
+  "date": "2026-11-16",
+  "method": "One assisted build and one observation-informed revision per condition. Frozen final artifacts.",
+  "models": {
+    "astra": "gpt-6-astra",
+    "fable": "claude-fable-5-2",
+    "opus": "claude-opus-5-5"
+  },
+  "effort": "high for all six; provider labels are not equivalent compute",
+  "limits": {
+    "buildSeconds": 600,
+    "revisionSeconds": 300,
+    "buildTools": 90,
+    "revisionTools": 30
+  },
+  "order": {
+    "astra": [
+      "baseline",
+      "ads"
+    ],
+    "fable": [
+      "baseline",
+      "ads"
+    ],
+    "opus": [
+      "ads",
+      "baseline"
+    ]
+  },
+  "runtime": "Astra Codex shell tools and resumed context; Claude file tools and fresh revision context. Parent-run Chromium1280x800/WebKit390x844 observations; no autonomous builder browsing.",
+  "coverage": "Selected initial axe A/AA, form/save/reload/validation/photo/dropdown/notification/storage-error/dialog checks; not comprehensive. Reports were revision feedback, not held-out tests.",
+  "limitations": [
+    "One pair per model; no reliable ADS effect or model ranking established.",
+    "Synthetic fresh builds, not a test of preserving an existing product.",
+    "Fable review came before human preference; model family overlap.",
+    "Unknown dollar cost for Astra is not zero. Claude cost is reported usage, not invoice verification."
+  ],
+  "artifacts": [
+    {
+      "model": "astra",
+      "condition": "baseline",
+      "sha256": "2fa72bb04187e7137e428524116041ce4d41700c6987dfe47f92c5a8adad5f42",
+      "buildSeconds": 429.23,
+      "revisionSeconds": 106.45,
+      "reportedUsd": null
+    },
+    {
+      "model": "fable",
+      "condition": "baseline",
+      "sha256": "ebba189bafd290041785975d6b1cf0b826e10dfc37c8d6c46b7d1e2c104762e1",
+      "buildSeconds": 554.6,
+      "revisionSeconds": 114.66,
+      "reportedUsd": 2.5379958
+    },
+    {
+      "model": "astra",
+      "condition": "ads",
+      "sha256": "cab9738f34a0f60c3c001a3ca8e0d93744bf693cce747e72d52e818d421e2dbc",
+      "buildSeconds": 283.51,
+      "revisionSeconds": 83.38,
+      "reportedUsd": null
+    },
+    {
+      "model": "fable",
+      "condition": "ads",
+      "sha256": "93dcb3cc04148c19f948c041252d1959d9344f3350f5be566a3e78fc3b95331b",
+      "buildSeconds": 339.28,
+      "revisionSeconds": 166.31,
+      "reportedUsd": 2.0638172
+    },
+    {
+      "model": "opus",
+      "condition": "ads",
+      "sha256": "3bfb0463157890adfdbb5fff8a72878e70e9aca669ca9780400998b1342032b1",
+      "buildSeconds": 343.9,
+      "revisionSeconds": 92.78,
+      "reportedUsd": 2.0215978
+    },
+    {
+      "model": "opus",
+      "condition": "baseline",
+      "sha256": "614517045c73e704c061ebc0f27c7243a6754c01dddf81bb29b3b2bf637d3f30",
+      "buildSeconds": 311.38,
+      "revisionSeconds": 68.03,
+      "reportedUsd": 1.7556018
+    }
+  ],
+  "adsGuidance": {
+    "files": 681,
+    "snapshotSha256": "29346ba80f884902ad16a71022a76d144ffc29597e389e5f8a05bc0011e92d80",
+    "hashMethod": "SHA-256 of newline-joined sorted relative-path + space + file SHA-256 records"
+  }
+}
