@@ -1320,7 +1320,7 @@ code {
 .station-copy h2 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(2.2rem, 3.35vw, 3.65rem);
+  font-size: clamp(2.2rem, 3.35vw, 3rem);
   font-weight: 620;
   letter-spacing: -0.045em;
   line-height: var(--leading-heading);
@@ -1332,7 +1332,7 @@ code {
 }
 
 .station--release .station-copy h2 {
-  font-size: clamp(1.95rem, 2.65vw, 2.8rem);
+  font-size: clamp(1.95rem, 2.65vw, 2.5rem);
   font-weight: 560;
   letter-spacing: -0.03em;
   line-height: var(--leading-heading);
