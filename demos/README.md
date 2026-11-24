@@ -1,6 +1,6 @@
 # ADS workshop
 
-The Next.js app behind the [Agentic Design System workshop](https://agentic-design-system-lovat.vercel.app).
+The Next.js app behind the [Agentic Design System workshop](https://agentic-design-system.vercel.app).
 
 It presents the public product story and supporting ADS examples. The app is a private workspace package; install ADS from the [repository install guide](../docs/INSTALL.md), not from this directory.
 

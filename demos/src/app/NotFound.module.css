@@ -1,0 +1,121 @@
+/* 404: one calm card that routes people back to pages that exist. */
+.page {
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+  padding: 48px 16px 64px;
+  background: var(--page);
+  color: var(--text);
+}
+
+.card {
+  width: 100%;
+  max-width: 640px;
+}
+
+.ember {
+  display: block;
+  width: 120px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.label {
+  margin: 0 0 12px;
+  color: var(--orange-ink);
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: var(--leading-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-family: var(--font-display), serif;
+  font-size: clamp(36px, 7vw, 56px);
+  font-weight: 500;
+  line-height: var(--leading-heading);
+  text-wrap: balance;
+}
+
+.body {
+  max-width: 52ch;
+  margin: 0 0 32px;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+.body code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--line-soft) 60%, transparent);
+  color: var(--text);
+  font-family: var(--font-label), ui-monospace, monospace;
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+
+.routes {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route {
+  display: grid;
+  gap: 2px;
+  min-height: 48px;
+  padding: 14px 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--page-deep) 55%, transparent);
+  color: var(--text);
+  text-decoration: none;
+  transition-property: background-color, border-color;
+  transition-duration: 160ms;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.routeLabel {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.routeDetail {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.footnote {
+  margin: 28px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: var(--leading-body);
+}
+
+.footnote a {
+  color: var(--orange-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .route:hover {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--line-soft));
+    background: color-mix(in srgb, var(--accent) 8%, var(--page-deep));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route {
+    transition-duration: 0s;
+  }
+}
