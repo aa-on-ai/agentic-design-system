@@ -1,0 +1,70 @@
+/* Layout only: type, color, buttons and header/footer come from DesignPractice.module.css. */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/*
+ * Auto margins from the homepage's .wrap would shrink flex children to their content width,
+ * and the copy column's inline-size containment gives it no content width. Keep full width.
+ */
+.page > * {
+  width: 100%;
+}
+
+.main {
+  flex: 1;
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 420px);
+  align-items: center;
+  gap: 64px;
+}
+
+.ember {
+  margin: 0;
+  justify-self: center;
+}
+
+.ember img {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
+.main code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1050px) {
+  .spread {
+    grid-template-columns: minmax(0, 1fr) minmax(140px, 220px);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 700px) {
+  .spread {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .ember {
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .ember img {
+    width: 160px;
+  }
+}

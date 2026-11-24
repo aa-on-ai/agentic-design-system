@@ -7,14 +7,14 @@
 <p align="center"><strong>A design practice for coding agents.</strong></p>
 
 <p align="center">
-  <a href="https://agentic-design-system-lovat.vercel.app">Live workshop</a>
+  <a href="https://agentic-design-system.vercel.app">Live workshop</a>
   | <a href="./docs/INSTALL.md">Install ADS</a>
   | <a href="./PHILOSOPHY.md">How it works</a>
   | <a href="./docs/README.md">Documentation</a>
 </p>
 
 <p align="center">
-  <a href="https://agentic-design-system-lovat.vercel.app">
+  <a href="https://agentic-design-system.vercel.app">
     <img src="./demos/public/hero/graphite-rose-atelier.webp" alt="Three Ember characters working together at a design workbench">
   </a>
 </p>
