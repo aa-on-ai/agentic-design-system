@@ -12,9 +12,12 @@
 //   node capture.mjs <url> [options]
 //
 // Options:
-//   --states a,b,c        states to capture; each sets `#state=<name>` before snapshot
-//                         (default: "default")
+//   --states a,b,c        states to capture (default: "default"). Each non-default state loads
+//                         `<url>#state=<name>`, so it renders only if the page handles that hash;
+//                         check "states rendered" in the output for any state that did not
 //   --breakpoints WxH,... viewport sizes (default: "390x844,1280x800")
+//   --allow-error-status  capture an HTTP 4xx/5xx page on purpose (e.g. reviewing a 404 design);
+//                         without it, an error response stops the run with exit 2
 //   --selectors "a,b"     extra CSS selectors to probe for computed styles
 //   --out <dir>           evidence output directory (default: ./evidence/<host>)
 //   --wait <selector>     wait for this selector before snapshot (optional)
@@ -25,7 +28,8 @@
 //   evidence.json         structured facts: axe, semantics, CLS, overflow + computed styles
 //   <state>-<WxH>.png     one screenshot per state per breakpoint
 //
-// Exit codes: 0 = captured (read evidence.json for gate verdicts), 2 = could not run.
+// Exit codes: 0 = captured (read evidence.json for gate verdicts), 2 = could not run, including a
+// target that failed to load (connection error or HTTP 4xx/5xx).
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
@@ -62,6 +66,7 @@ function parseArgs(argv) {
     waitFor: get('--wait', null),
     settle: Number(get('--settle', '250')),
     maxCls,
+    allowErrorStatus: args.includes('--allow-error-status'),
     out: get('--out', null),
   };
 }
@@ -774,7 +779,26 @@ async function main() {
         const page = await context.newPage();
         await installLayoutShiftObserver(page);
         const target = state === 'default' ? opts.url : `${opts.url.split('#')[0]}#state=${state}`;
-        await page.goto(target, { waitUntil: 'networkidle' }).catch(() => {});
+        // A page that never loaded must not pass as evidence. Connection errors and HTTP 4xx/5xx stop the
+        // run (exit 2, "could not run"). A network-idle timeout is recorded but tolerated, because pages
+        // that keep polling never go idle and were captured this way before.
+        const navigation = { status: null, timedOut: false };
+        try {
+          const response = await page.goto(target, { waitUntil: 'networkidle' });
+          navigation.status = response ? response.status() : null;
+        } catch (error) {
+          if (error?.name !== 'TimeoutError') {
+            await context.close();
+            throw new Error(`could not load ${target}: ${String(error?.message || error).split('\n')[0]}`);
+          }
+          navigation.timedOut = true;
+        }
+        if (navigation.status !== null && navigation.status >= 400 && !opts.allowErrorStatus) {
+          await context.close();
+          throw new Error(
+            `could not load ${target}: HTTP ${navigation.status} (pass --allow-error-status to review an error page on purpose)`,
+          );
+        }
         if (opts.waitFor) await page.waitForSelector(opts.waitFor, { timeout: 5000 }).catch(() => {});
         if (opts.settle) await page.waitForTimeout(opts.settle);
 
@@ -819,6 +843,7 @@ async function main() {
         evidence.snapshots.push({
           state,
           breakpoint: bp.label,
+          navigation,
           screenshot: shotName,
           horizontalOverflow: overflow,
           cumulativeLayoutShift: layoutShift,

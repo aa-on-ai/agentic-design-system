@@ -17,6 +17,10 @@ budget and authorization established by [ADS](../agentic-design-system/SKILL.md)
 For substantial work, use the Foundation profile locked by ADS at
 `../agentic-design-system/contracts/visual-foundation.v2.json`.
 Confirmed `never` rules block a ready verdict, not an honest handoff of unresolved findings.
+They are fallback taste. When the project's established language (its `DESIGN.md`, tokens,
+components or brand guide) or an explicit current user decision chooses otherwise, keep the
+project's choice and report the conflict instead of blocking. That precedence never waives
+accessibility or turns unverified behavior into a pass.
 
 - Never put a border on only one edge of a rounded rectangle. A complete perimeter remains valid.
 - Never recreate that one-edge treatment with a zero-blur or inset shadow.
@@ -28,7 +32,8 @@ Confirmed `never` rules block a ready verdict, not an honest handoff of unresolv
 - Apply the current no-decorative-dots preference to authored text separators and list markers too,
   not only circular status elements. Preserve literal data and mathematical notation.
 - Use a real icon when a control has an icon equivalent. Preserve one coherent project family;
-  otherwise use licensed Nucleo or one open family, never a mix.
+  otherwise use one appropriately licensed family (open source unless the project chose another),
+  never a mix.
 - Utility work starts with the product font, a system sans, or another conventional general-purpose
   family. Expressive typography requires an eligible surface or an explicit outcome.
 - Custom letter spacing and line height come from a declared type role, not decorative improvisation.
@@ -164,6 +169,17 @@ MCP evidence. Select the states the task requires;
 node <skills-root>/agentic-design-system/scripts/run-capture.mjs "<running-route-url>" \
   --states default,loading,empty,error --out evidence/<slug>
 ```
+
+Each non-default state loads `<url>#state=<name>`, so `loading`, `empty` and `error` render only
+when the page handles that hash. Most client apps do not. Request a state through `--states` only
+when the page or a local preview supports the hash; otherwise reach the state through a real
+interaction, fixture or test account and capture that URL as `default`. A state reported as not
+rendered is unverified evidence, not proof the interface lacks it; name it as a gap instead of
+adding `#state=` handling to production code just to satisfy capture.
+
+Capture stops with exit 2 when the target cannot load (connection error or HTTP 4xx/5xx), so a
+stopped dev server cannot pass as evidence. Pass `--allow-error-status` only when reviewing an
+error page on purpose.
 
 Inspect the capture and exercise required interactions; an automatic capture may not reach all
 site-specific states. Gate mechanics on established rendered fields, not taste. Evidence format 2 also records rounded one-edge

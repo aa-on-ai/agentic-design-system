@@ -46,7 +46,9 @@ or primary source corrects them. Resolve a material conflict, not a nearby subst
 For generation or substantial review, read [Foundation v2](contracts/visual-foundation.v2.json):
 `utility` is the default for product/operations work; `expressive` requires marketing, editorial,
 launch, or explicit brand-expression scope. Do not turn a plain utility surface into creative work.
-Confirmed `never` violations block a ready verdict; report-only candidates need actual confirmation.
+Confirmed `never` violations block a ready verdict unless the project's established language or an
+explicit current user decision sets that rule aside; then report the conflict instead. Report-only
+candidates need actual confirmation.
 The contract's numeric rubric is optional diagnostic context, not a taste or release certificate.
 
 ## Choose

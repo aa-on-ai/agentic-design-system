@@ -48,6 +48,7 @@ Reuse readable matched MCP evidence instead of running the CLI example below aga
 node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
   --states default,empty,loading,error --breakpoints 390x844,768x1024 --out evidence/<slug>
 ```
+Non-default states render only when the page handles `#state=<name>`; see design-review's capture notes before treating a missing state as a failure.
 
 Read `evidence/<slug>/evidence.json` (or the returned MCP evidence resource) → `gates`
 and map them to platform defects:

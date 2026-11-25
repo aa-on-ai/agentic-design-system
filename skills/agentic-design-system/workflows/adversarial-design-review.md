@@ -32,6 +32,7 @@ retain the actual human judgment needed.
    node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
      --states default,empty,loading,error --out evidence/<slug>
    ```
+   Non-default states render only when the page handles `#state=<name>`; see design-review's capture notes before treating a missing state as a failure.
 
    Select only applicable required states. Read `evidence/<slug>/evidence.json` and the actual
    interaction evidence. Required dialog behavior needs focus, containment, Escape, focus-return

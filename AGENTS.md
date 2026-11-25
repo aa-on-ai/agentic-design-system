@@ -39,7 +39,8 @@ node skills/design-review/scripts/capture.mjs "<running-route-url>" \
 ```
 
 Choose task-relevant states and breakpoints. Block a ready verdict on confirmed Foundation v2
-never rules or failed required accessibility, layout, semantic, interaction, or modal evidence.
+never rules (unless an established project decision sets one aside; report that conflict) or failed
+required accessibility, layout, semantic, interaction, or modal evidence.
 
 ## Specialist suite
 
