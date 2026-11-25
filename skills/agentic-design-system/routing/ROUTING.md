@@ -15,7 +15,9 @@ Every route, including specialist routes, preserves these invariants:
 - use the ADS Foundation profile for generation or substantial review; tiny changes preserve the existing direction;
 - utility remains the default for product and operations work; expressive requires an eligible
   surface or explicit brief;
-- confirmed Foundation v2 `policy: "never"` violations block completion;
+- confirmed Foundation v2 `policy: "never"` violations block completion unless a documented project
+  decision or explicit current user choice sets one aside (cite it and report the conflict;
+  `status-readable-without-color` cannot be set aside);
 - load cited, editable project context from `DESIGN.md`, local product sources, and named references;
 - continue already-authorized reversible local implementation without duplicate approval; retain separate authority for external/destructive actions;
 - route intent as Explore, Build, or Review;

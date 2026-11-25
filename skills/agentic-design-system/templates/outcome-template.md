@@ -61,7 +61,7 @@ diagnostic and cannot offset a failed task, missing evidence or an unresolved ma
 
 ## Hard stops
 
-- Wrong surface/task, confirmed Foundation `never` violation, or missing required behavior prevents a satisfied verdict.
+- Wrong surface/task, a confirmed Foundation `never` violation not set aside by a cited project decision or explicit user choice, or missing required behavior prevents a satisfied verdict.
 - Investigate source warnings against actual behavior; heuristics do not establish or clear a defect.
 - Unavailable required evidence stays unverified, not passed.
 - Vague intent words need observable meaning in the product, not merely a claim in the report.

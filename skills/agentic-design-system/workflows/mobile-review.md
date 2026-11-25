@@ -46,8 +46,9 @@ Reuse readable matched MCP evidence instead of running the CLI example below aga
 
 ```bash
 node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
-  --states default,empty,loading,error --breakpoints 390x844,768x1024 --out evidence/<slug>
+  --states default --breakpoints 390x844,768x1024 --out evidence/<slug>
 ```
+Add `loading,empty,error` to `--states` only when the page handles `#state=<name>`; otherwise capture each state with `--as <state>`. See design-review's capture notes.
 
 Read `evidence/<slug>/evidence.json` (or the returned MCP evidence resource) → `gates`
 and map them to platform defects:

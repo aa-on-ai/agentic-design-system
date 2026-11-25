@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "ads-adjacent-actions-v1.3.1",
+  "runId": "2026-11-25-showtime-capture-replay",
+  "createdAt": "2026-11-25T01:06:12.714Z",
+  "baselineRelease": {
+    "tag": "v1.3.1",
+    "sha": "f7d9037012f4c730150b37fbcf86b510aedd6ecb"
+  },
+  "behaviorCommit": "9059c9ad111e87635183ebdfeff82a51a3d13c68",
+  "behaviorDigest": "2982c3d1d82fa67101428452afeb31cefb35178e5fd02707338d59e6123324e2",
+  "behaviorFileCount": 84,
+  "cases": [
+    {
+      "slug": "pawprint",
+      "builderContext": "claude-code-cloud-replay:2026-11-25:unchanged-artifact:recaptured-linux-chromium",
+      "graderContext": "reused-independent-grade:2026-11-11-capture-routing-replay:equal-render-signatures-text-and-gates:not-regraded"
+    },
+    {
+      "slug": "greenhouse-irrigation",
+      "builderContext": "claude-code-cloud-replay:2026-11-25:unchanged-artifact:recaptured-linux-chromium",
+      "graderContext": "reused-independent-grade:2026-11-11-capture-routing-replay:equal-render-signatures-text-and-gates:not-regraded"
+    },
+    {
+      "slug": "museum-loans",
+      "builderContext": "claude-code-cloud-replay:2026-11-25:unchanged-artifact:recaptured-linux-chromium",
+      "graderContext": "reused-independent-grade:2026-11-11-capture-routing-replay:equal-render-signatures-text-and-gates:not-regraded"
+    },
+    {
+      "slug": "kitchen-pass",
+      "builderContext": "claude-code-cloud-replay:2026-11-25:unchanged-artifact:recaptured-linux-chromium",
+      "graderContext": "reused-independent-grade:2026-11-11-capture-routing-replay:equal-render-signatures-text-and-gates:not-regraded"
+    },
+    {
+      "slug": "radio-rundown",
+      "builderContext": "claude-code-cloud-replay:2026-11-25:unchanged-artifact:recaptured-linux-chromium",
+      "graderContext": "reused-independent-grade:2026-11-11-capture-routing-replay:equal-render-signatures-text-and-gates:not-regraded"
+    }
+  ],
+  "verificationScope": "CLI replay on unchanged independently graded artifacts, recaptured on Linux Chromium with revised capture; render signatures, text and gates match the prior run, screenshots differ by system font only; not fresh agent generation, independent route selection, or a new grade"
+}

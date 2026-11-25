@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "ads.modal-interaction-receipt",
+  "sourceEvidence": "evidence.json",
+  "url": "file:///home/user/agentic-design-system/testing/regression/adjacent-actions-v1.3.1/runs/2026-11-25-showtime-capture-replay/kitchen-pass/artifact/index.html",
+  "required": false,
+  "requiredDialogs": [],
+  "breakpoints": [
+    "390x844",
+    "1280x800"
+  ],
+  "checks": [],
+  "failures": [],
+  "passed": true
+}

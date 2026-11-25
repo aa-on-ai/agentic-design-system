@@ -45,7 +45,8 @@ lists what the packet names but does not contain. Typical contents:
    risk for Next, not a failure. Done when every snapshot has a row and every `gates` failure list
    is reflected in a row.
 3. **Check that the states are real.** Compare `renderSignature` and `renderedTextSample` across
-   states at the same breakpoint. The signature hashes visible text plus body HTML, not computed
+   states at the same breakpoint. When `stateSource` is `labelled-url`, the state came from its own
+   URL in a separate packet; compare it with the default packet for the same screen instead. The signature hashes visible text plus body HTML, not computed
    styles or pixels. Identical values flag a state to inspect, not proof it failed: focus or hover
    can change the rendered appearance without changing that signature. Cross-check screenshots,
    state-specific interaction receipts and `gates.stateRendered`; resolve conflicts before a
@@ -56,7 +57,11 @@ lists what the packet names but does not contain. Typical contents:
 5. **Read the never rules.** Check `visualFoundation` candidates in each snapshot when present. When
    the packet predates that field, inspect rendered text and pixels for the `policy: "never"` rules
    in `contracts/visual-foundation.v2.json`. A rule is **confirmed** only when its own `measurement`
-   was performed on rendered evidence and no `allowed` exception applies. Rules whose
+   was performed on rendered evidence and no `allowed` exception applies. A rule is also not
+   confirmed when a documented project decision (a `DESIGN.md` entry, brand guide, or declared
+   token) or an explicit current user choice, cited in the packet, sets it aside; list it under
+   "For a human" as a conflict with that citation. A pattern that merely exists in the code is not a
+   decision, and `status-readable-without-color` protects accessibility and cannot be set aside. Rules whose
    `automaticEnforcement` is `human-review`, and rules whose measurement the packet cannot support,
    stay candidates: list them under "For a human" and say what would confirm them.
 6. **Pick the verdict** with the precedence below.
