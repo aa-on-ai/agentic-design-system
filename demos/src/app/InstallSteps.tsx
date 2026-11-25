@@ -60,16 +60,16 @@ export function InstallSteps() {
           {command.split(" ").map((token, index) => (
             <Fragment key={index}>
               {index > 0 ? " " : null}
-              <span className={styles["command-token"]}>
-                {token.includes("/") ? (
-                  <>
-                    {token.split("/")[0]}/<wbr />
-                    {token.split("/").slice(1).join("/")}
-                  </>
-                ) : (
-                  token
-                )}
-              </span>
+              {/* Break opportunities sit between no-wrap pieces: WebKit ignores <wbr> inside white-space: nowrap. */}
+              {token.includes("/") ? (
+                <>
+                  <span className={styles["command-token"]}>{token.slice(0, token.indexOf("/") + 1)}</span>
+                  <wbr />
+                  <span className={styles["command-token"]}>{token.slice(token.indexOf("/") + 1)}</span>
+                </>
+              ) : (
+                <span className={styles["command-token"]}>{token}</span>
+              )}
             </Fragment>
           ))}
         </code>
