@@ -141,3 +141,20 @@
 .homepage .mcp-setup .mcp-link{margin-top:8px}
 .homepage .mcp-setup p{font-size:14px;color:var(--muted);max-width:38ch;margin:0;line-height:1.6}
 @media(hover:hover) and (pointer:fine){.homepage .mcp-link:hover{color:var(--ink)}}
+
+/* Homepage install block: pick an agent, copy one command, follow three steps. */
+.homepage .agent-picker{border:0;margin:0 0 14px;padding:0;min-width:0}
+.homepage .agent-picker legend{font-size:13px;color:var(--muted);margin-bottom:10px;padding:0}
+.homepage .agent-options{display:flex;flex-wrap:wrap;gap:8px}
+.homepage .agent-option{position:relative;display:inline-flex}
+.homepage .agent-option input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.homepage .agent-option span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid var(--soft-line);border-radius:22px;font-size:14px;font-weight:600;color:var(--muted)}
+.homepage .agent-option input:checked+span{border-color:var(--accent);color:var(--ink);background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.homepage .agent-option input:focus-visible+span{outline:3px solid var(--accent);outline-offset:3px}
+.homepage .command{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:16px 18px;border:1px solid var(--soft-line);border-radius:16px;background:var(--surface)}
+.homepage .command code{font-family:var(--font-label-face,ui-monospace),ui-monospace,monospace;font-size:13px;line-height:1.55;color:var(--ink);word-break:normal;overflow-wrap:break-word;user-select:all}
+.homepage .command-token{white-space:nowrap}
+.homepage .start-panel>*{min-width:0}
+.homepage .install .copy-state{min-height:19px;font-size:12px}
+.homepage .install-steps{margin:6px 0 10px;padding-left:20px;list-style:decimal;display:grid;gap:6px;font-size:14px;line-height:1.5;color:var(--muted)}
+.homepage .install-steps li::marker{color:var(--accent)}

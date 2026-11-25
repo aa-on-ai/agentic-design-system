@@ -10,7 +10,7 @@ if (!url) {
   process.exit(2);
 }
 
-const expectedInstallUrl = "https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md";
+const expectedInstallUrl = "https://github.com/aa-on-ai/agentic-design-system/blob/main/docs/INSTALL.md#quick-start";
 const viewports = [
   { name: "narrow", width: 320, height: 568 },
   { name: "mobile", width: 390, height: 844 },
@@ -83,6 +83,21 @@ async function inspectStaticPage(page, scope, viewport, theme) {
       ember: Boolean(document.querySelector("[data-ember-step]")),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       installLinks: [...document.querySelectorAll('a[href*="docs/INSTALL.md"]')].map((link) => link.href),
+      heroInstallHref: document.querySelector('#top a[class*="primary"]')?.getAttribute("href") ?? null,
+      // html/body clip horizontal overflow, so scrollWidth can't see content pushed past the panel.
+      startEscapes: (() => {
+        const panel = document.querySelector("#start > div");
+        if (!panel) return ["missing start panel"];
+        const edge = panel.getBoundingClientRect();
+        return [...panel.querySelectorAll("*")]
+          .filter((node) => {
+            const box = node.getBoundingClientRect();
+            return box.width > 0 && (box.right > edge.right + 1 || box.left < edge.left - 1);
+          })
+          .slice(0, 5)
+          .map((node) => `${node.tagName.toLowerCase()}.${String(node.className).split(" ")[0]}`);
+      })(),
+      installCommand: document.querySelector("#install-command")?.textContent ?? "",
       controls,
       images,
       heroRatio: heroRect ? heroRect.width / heroRect.height : null,
@@ -97,8 +112,13 @@ async function inspectStaticPage(page, scope, viewport, theme) {
   if (state.h1Count !== 1) fail(scope, `found ${state.h1Count} h1 elements`);
   if (!state.practice || !state.start || !state.ember) fail(scope, "practice, start, or Ember section is missing");
   if (state.overflow > 1) fail(scope, `horizontal overflow is ${state.overflow}px`);
-  if (state.installLinks.length !== 2 || state.installLinks.some((href) => href !== expectedInstallUrl)) {
+  if (state.installLinks.length !== 1 || state.installLinks.some((href) => href !== expectedInstallUrl)) {
     fail(scope, `install links are ${JSON.stringify(state.installLinks)}`);
+  }
+  if (state.heroInstallHref !== "#start") fail(scope, `hero install CTA points to ${state.heroInstallHref}`);
+  if (state.startEscapes.length) fail(scope, `content escapes the start panel: ${state.startEscapes.join(", ")}`);
+  if (!state.installCommand.includes("--agent claude-code")) {
+    fail(scope, `default install command is ${JSON.stringify(state.installCommand)}`);
   }
   for (const control of state.controls) {
     if (control.width < 44 || control.height < 44) {
@@ -146,6 +166,12 @@ async function inspectInteractions(browser, browserName) {
     }
     const emberStatus = await page.getByRole("status").first().innerText();
     if (!emberStatus.startsWith("1 of 4.")) fail(scope, `Ember status is ${JSON.stringify(emberStatus)}`);
+
+    await page.getByLabel("Codex").check();
+    if (!(await page.locator("#install-command").innerText()).includes("--agent codex")) {
+      fail(scope, "choosing Codex did not change the install command");
+    }
+    await page.getByLabel("Claude Code").check();
 
     const request = await page.locator("#example-request").innerText();
     await page.getByRole("button", { name: "Copy example request" }).click();

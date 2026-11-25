@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image?v=2",
         width: 1200,
         height: 630,
         alt: SOCIAL_IMAGE_ALT,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/opengraph-image",
+        url: "/opengraph-image?v=2",
         alt: SOCIAL_IMAGE_ALT,
       },
     ],

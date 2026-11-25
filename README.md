@@ -27,15 +27,13 @@ ADS is a repo-local skill pack. Your agent does the work; you keep the final say
 
 ### 1. Install ADS
 
-First read [Before you install](./docs/INSTALL.md#before-you-install) for execution effects, credits, and project overrides.
-
-Install the complete eleven-skill pack from the project where your agent works:
+From the project where your agent works (needs Node.js 22.20 or newer):
 
 ```bash
-npx skills add aa-on-ai/agentic-design-system --agent codex --copy --yes
+npx skills add aa-on-ai/agentic-design-system --agent claude-code --copy --yes
 ```
 
-Replace `codex` with the installer ID for your agent:
+Using another agent? Swap `claude-code` for its installer ID:
 
 | Agent | Installer ID | Project destination |
 |---|---|---|
@@ -45,23 +43,39 @@ Replace `codex` with the installer ID for your agent:
 | OpenClaw | `openclaw` | `skills/` |
 | Hermes | `hermes-agent` | `.hermes/skills/` |
 
-The installer copies the skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. See the [installation guide](./docs/INSTALL.md) for verification, activation, updates, and a no-CLI fallback.
+The installer copies the eleven skills and writes `skills-lock.json`. It does not edit `AGENTS.md`, `CLAUDE.md`, Cursor rules, or other project instructions. Check it worked with `npx skills list --agent claude-code --json` (same installer ID), which should list eleven skills. The [installation guide](./docs/INSTALL.md) covers verification, activation, updates, a no-CLI fallback, and a [review checklist](./docs/INSTALL.md#before-you-install-for-reviewers) for teams that vet tools first.
 
 Hermes requires one additional native activation step from a Git checkout: run
 `hermes skills trust`, then start a fresh Hermes session inside that repository. The
 `hermes-agent` value above is the skills installer ID; `hermes` is the native runtime command.
 
-### 2. Give your agent a real product task
+### 2. Set up screenshots once
 
-```text
-Improve our account settings page. Keep our components and visual identity.
-Make saving and validation clear. Show me the working result, checked on
-desktop and mobile.
+ADS proves its work with real browser captures. From the same project:
+
+```bash
+node .claude/skills/design-review/scripts/setup-capture.mjs --check
 ```
 
-The orchestrator preserves the requested product, routes only the relevant guidance, and requires
-evidence that supports the actual completion claim. For substantial design handoffs, Ember reads
-that evidence and presents the scoped verdict by default.
+If anything is missing, run it again without `--check`. It adds `playwright` and
+`@axe-core/playwright` as dev dependencies with npm and downloads Chromium (about 700 MB of disk). Use your agent's skill folder from the table above.
+
+### 3. Give your agent a real product task
+
+Start a new agent session so it picks up the skills, then say who the screen is for:
+
+```text
+Use the agentic-design-system skill. Our account settings page is for
+small-business owners who need to update billing and add teammates without calling support. Make saving and validation
+clear for them. Keep our components and visual identity, and show me the
+working result on desktop and mobile.
+```
+
+The orchestrator starts from that user and job, preserves the requested product, routes only the
+relevant guidance, and requires evidence that supports the actual completion claim. You get back
+the working change, screenshots of what was checked, and a verdict of `ready`, `needs repair`, or
+`blocked`. For substantial design handoffs, Ember reads that evidence and presents the scoped
+verdict by default, including what still needs your judgment.
 
 ## The practice
 
@@ -111,13 +125,17 @@ installing ADS, follow the [browser runtime setup](./docs/INSTALL.md#prepare-ren
 Then capture from the consumer project:
 
 ```bash
-node .agents/skills/design-review/scripts/capture.mjs "<running-route-url>" \
-  --states default,loading,empty,error \
+node .claude/skills/design-review/scripts/capture.mjs "<running-route-url>" \
+  --states default \
   --out evidence/<task>
 ```
 
-That path matches the Codex and Cursor example above. Use `.claude/skills/`, `skills/`, or
+That path matches the Claude Code example above. Use `.agents/skills/`, `skills/`, or
 `.hermes/skills/` for the other installer targets.
+
+`--states loading,empty,error` works only when the page shows each state at `<url>#state=<name>`.
+Most apps don't, so capture `default` and reach other states through real interactions or fixtures,
+or add `#state=` handling to a local preview. Capture reports any state it could not render.
 
 The rendered gate checks serious accessibility violations, overflow, missing landmarks, state semantics, layout shift, undersized touch targets, and whether requested states actually rendered. Structural checks do not decide taste; unresolved visual judgment remains human judgment.
 
