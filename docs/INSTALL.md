@@ -1,19 +1,60 @@
 # Install Agentic Design System
 
-Install ADS from the consumer project where your coding agent will use it. The release contains
-eleven skills, including Ember, the evidence-reading voice used by default for substantial design
-handoffs. Skill installation does not edit project instructions or install browser dependencies.
+ADS is a skill pack your coding agent reads from your project. The release contains eleven skills,
+including Ember, the evidence-reading voice used by default for substantial design handoffs.
+Installing the skills does not edit your project instructions or install browser dependencies.
 
-## Before you install
+## Quick start
 
-Read the [orchestrator](../skills/agentic-design-system/SKILL.md) and the specialist instructions
-relevant to your task before letting an agent use them. Follow their linked scripts and references;
-a skill is instructions plus supporting files, not a sandbox or a guarantee of safe execution.
+These steps use Claude Code. For Codex, Cursor, OpenClaw or Hermes, swap the `--agent` value and
+skill folder using [Choose your agent](#choose-your-agent).
+
+1. **Install** from your project folder (needs Node.js 22 or newer with `npx`):
+
+   ```bash
+   npx skills add aa-on-ai/agentic-design-system --agent claude-code --copy --yes
+   ```
+
+2. **Check it worked.** This should list eleven skills:
+
+   ```bash
+   npx skills list --agent claude-code --json
+   ```
+
+   The installer's summary may print an `.agents/skills/` path before it finishes. For Claude Code
+   the files land in `.claude/skills/`.
+
+3. **Set up screenshots once per project.** ADS proves its work with real browser captures, which
+   need Playwright and Chromium:
+
+   ```bash
+   node .claude/skills/design-review/scripts/setup-capture.mjs --check
+   ```
+
+   If it reports something missing, run the same command without `--check`. It adds `playwright`
+   and `@axe-core/playwright` as dev dependencies and downloads Chromium (about 700 MB). Captures
+   are written to `evidence/`; add that folder to `.gitignore` unless you want to keep them.
+
+4. **Start a new Claude Code session** so it picks up the skills, then ask for one real change.
+   Say who the screen is for:
+
+   ```text
+   Use the agentic-design-system skill. Our account settings page is for small-business owners
+   who need to update billing and add teammates without calling support. Make saving and
+   validation clear for them. Keep our components and visual identity, and show me the working
+   result on desktop and mobile.
+   ```
+
+## Before you install (for reviewers)
+
+Skills are instructions plus supporting files, not a sandbox or a guarantee of safe execution. If
+you review tools before adopting them, read the [orchestrator](../skills/agentic-design-system/SKILL.md)
+and the specialist instructions relevant to your task, and follow their linked scripts and references.
 
 - Review [what runs and what it changes](../skills/agentic-design-system/references/trust-and-customization.md#execution-inventory), including optional telemetry and browser interactions.
 - Check [documented influences and attribution](influences.md). Conceptual inspiration is not the same as copied source.
-- Try a disposable consumer project or an isolated checkout first, using the [exact-checkout route](#install-an-exact-checkout). A branch alone does not isolate dependency installs, browser actions, or external services. Use local fixtures/test accounts.
-- Set your [project taste and overrides](../skills/agentic-design-system/references/trust-and-customization.md#customize-the-design-direction) before the first task. Existing components and tokens remain the starting point.
+- Try a scratch project first. To test an unmerged branch or pinned revision, use the [exact-checkout route](#install-an-exact-checkout). A branch alone does not isolate dependency installs, browser actions, or external services. Use local fixtures/test accounts.
+- Set your [project taste and overrides](../skills/agentic-design-system/references/trust-and-customization.md#customize-the-design-direction) when you want ADS to follow house rules. Existing components and tokens remain the starting point either way.
 - Inspect the resulting file and dependency diff before adopting it. Installation does not authorize deployment, external writes, or paid model calls.
 
 A useful review-only request:
@@ -26,7 +67,7 @@ with our design system. Do not install packages or change files yet.
 
 ## Requirements
 
-- Node.js 20 or newer with `npx`
+- Node.js 22 or newer with `npx`
 - A project directory where the agent can read local skills
 - Python 3 only when using the optional source-check scripts
 - For Hermes project discovery, a Git checkout and the native `hermes` executable
@@ -79,10 +120,14 @@ running session.
 
 ## Verify the files
 
-Use the installer ID you chose above:
+Use the installer ID you chose above. Each command should list eleven skills:
 
 ```bash
+npx skills list --agent claude-code --json
 npx skills list --agent codex --json
+npx skills list --agent cursor --json
+npx skills list --agent openclaw --json
+npx skills list --agent hermes-agent --json
 ```
 
 The result should contain these eleven skills:
@@ -104,11 +149,8 @@ For a direct filesystem check, confirm `agentic-design-system/SKILL.md`, `ember/
 skill directory. Keep all eleven sibling skill directories together because Ember uses the ADS
 orchestrator and Foundation contract.
 
-The release matrix executes the agent-specific file verification commands in
-[`integrations/`](../integrations/) for all five targets. File verification proves the skill
-payload is installed; it does not prove native runtime discovery or that a browser can launch.
-When Hermes is installed locally, run `npm run install:hermes-discovery` to exercise its trust gate
-and native skill listing in an isolated temporary profile.
+File verification proves the skill payload is installed; it does not prove native runtime
+discovery or that a browser can launch. Agent-specific checks live in [`integrations/`](../integrations/).
 
 ## Prepare rendered review once per consumer project
 
@@ -203,3 +245,10 @@ Use `.claude/skills/`, `.agents/skills/`, `skills/`, or `.hermes/skills/` from t
 Verify all eleven skill directories, Ember's references, and the browser runtime before relying on
 rendered capture. A no-CLI Hermes copy still requires a Git checkout, `hermes skills trust`, and a
 fresh session from inside the repository.
+
+## For maintainers
+
+The release matrix executes the agent-specific file verification commands in
+[`integrations/`](../integrations/) for all five targets. When Hermes is installed locally, run
+`npm run install:hermes-discovery` to exercise its trust gate and native skill listing in an
+isolated temporary profile.

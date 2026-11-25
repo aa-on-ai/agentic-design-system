@@ -1,129 +1,95 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
-import { SITE_URL, SOCIAL_IMAGE_ALT } from "./site";
+import { SOCIAL_IMAGE_ALT } from "./site";
 
 export const alt = SOCIAL_IMAGE_ALT;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+// Mirrors the homepage hero: gray paper, ink type, one rose line, and the Ember workbench art.
+const PAPER = "#f1f1f0";
+const INK = "#232426";
+const MUTED = "#5c5d64";
+const ROSE = "#b52e46";
+
+const publicFile = (relativePath: string) => path.join(process.cwd(), "public", relativePath);
+
+async function dataUrl(relativePath: string, mime: string) {
+  const bytes = await readFile(publicFile(relativePath));
+  return `data:${mime};base64,${bytes.toString("base64")}`;
+}
+
+// DM Sans matches the homepage. If the font cannot be fetched at build time, fall back to the default face.
+async function loadDmSans(weight: 500 | 600) {
+  try {
+    const css = await fetch(`https://fonts.googleapis.com/css2?family=DM+Sans:wght@${weight}`).then((res) => res.text());
+    const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
+    if (!url) return null;
+    return { name: "DM Sans", data: await fetch(url).then((res) => res.arrayBuffer()), weight, style: "normal" as const };
+  } catch {
+    return null;
+  }
+}
+
+export default async function OpenGraphImage() {
+  const [art, mark, medium, semibold] = await Promise.all([
+    dataUrl("og/graphite-rose-atelier.jpg", "image/jpeg"),
+    dataUrl("brand/peek.svg", "image/svg+xml"),
+    loadDmSans(500),
+    loadDmSans(600),
+  ]);
+  const fonts = [medium, semibold].filter((font) => font !== null);
+  const line = { fontSize: 76, fontWeight: 600, letterSpacing: "-0.045em", lineHeight: 1.04 } as const;
+
   return new ImageResponse(
     (
       <div
         style={{
-          position: "relative",
           display: "flex",
           width: "100%",
           height: "100%",
-          overflow: "hidden",
-          background: "#071524",
-          color: "#f9ecd2",
+          background: PAPER,
+          color: INK,
+          fontFamily: fonts.length ? "DM Sans" : undefined,
         }}
       >
-        <img
-          alt=""
-          src={`${SITE_URL}/hero/creative-pipeline-dark.png`}
-          width="1200"
-          height="800"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center",
-          }}
-        />
         <div
           style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
             display: "flex",
-            width: 700,
-            borderRight: "1px solid rgba(249,236,210,0.16)",
-            backgroundColor: "rgba(7,21,36,0.97)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            width: "100%",
-            padding: "54px 60px 48px",
             flexDirection: "column",
             justifyContent: "space-between",
+            width: 560,
+            padding: "56px 0 52px 64px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <img
-              alt=""
-              src={`${SITE_URL}/brand/ads-mark.png`}
-              width="68"
-              height="68"
-              style={{ width: 68, height: 68, borderRadius: 34 }}
-            />
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <span style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.04em" }}>
-                Agentic Design
-              </span>
-              <span
-                style={{
-                  color: "#c5b595",
-                  fontSize: 14,
-                  fontWeight: 700,
-                  letterSpacing: "0.18em",
-                }}
-              >
-                System
-              </span>
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <img alt="" src={mark} width="52" height="48" style={{ width: 52, height: 48 }} />
+            <span style={{ fontSize: 26, fontWeight: 600, letterSpacing: "-0.02em" }}>Agentic Design System</span>
           </div>
 
-          <div style={{ display: "flex", width: 650, flexDirection: "column", lineHeight: 0.95 }}>
-            <span style={{ fontSize: 72, fontWeight: 720, letterSpacing: "-0.055em" }}>
-              A design system
-            </span>
-            <span style={{ fontSize: 72, fontWeight: 720, letterSpacing: "-0.055em" }}>
-              for agents.
-            </span>
-            <span
-              style={{
-                marginTop: 12,
-                color: "#ff8b43",
-                fontFamily: "serif",
-                fontSize: 66,
-                fontStyle: "italic",
-                fontWeight: 600,
-                letterSpacing: "-0.04em",
-              }}
-            >
-              Proof for humans.
-            </span>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <span style={line}>Your agent.</span>
+            <span style={line}>Your product.</span>
+            <span style={{ ...line, color: ROSE }}>A design practice.</span>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-            <span
-              style={{
-                display: "flex",
-                padding: "8px 11px",
-                background: "#c94518",
-                color: "#fff8e9",
-                fontSize: 13,
-                fontWeight: 800,
-                letterSpacing: "0.08em",
-              }}
-            >
-              Open source
-            </span>
-            <span style={{ color: "#f9ecd2", fontSize: 14, fontWeight: 700, letterSpacing: "0.055em" }}>
-              Brief, browser-tested repair, evidence, and verdict
-            </span>
-          </div>
+          <span style={{ color: MUTED, fontSize: 22, fontWeight: 500, letterSpacing: "-0.01em" }}>
+            A skill pack for Claude Code, Codex and Cursor
+          </span>
+        </div>
+
+        <div style={{ display: "flex", flex: 1, padding: "48px 48px 48px 8px" }}>
+          <img
+            alt=""
+            src={art}
+            width="1536"
+            height="864"
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "58% 50%", borderRadius: 28 }}
+          />
         </div>
       </div>
     ),
-    size,
+    { ...size, fonts },
   );
 }

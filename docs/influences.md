@@ -17,7 +17,7 @@ Useful starting points in the current pack:
 - Motion vocabulary: `skills/design-review/references/motion.md`, which also names Emil Kowalski locally.
 - Structured failure annotations: `skills/design-review/references/structured-findings.md`.
 
-The [pre-install checklist](INSTALL.md#before-you-install) was prompted by
+The [pre-install checklist](INSTALL.md#before-you-install-for-reviewers) was prompted by
 [Tommy Geoco’s skill-review checklist](https://x.com/designertom/status/2114786186250379759).
 ADS applies it to its own files and runtime behavior; no third-party skill implementation was
 imported for this update.
