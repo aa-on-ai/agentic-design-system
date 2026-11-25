@@ -1,0 +1,457 @@
+{
+  "sourceRun": "2026-11-11-capture-routing-replay",
+  "comparison": "render signatures, rendered text, and gate results; screenshot bytes recorded but not required to match (different Chromium build)",
+  "cases": [
+    {
+      "case": "pawprint",
+      "artifactBytesMatchPrior": true,
+      "gateDifferences": [
+        {
+          "gate": "renderedFonts",
+          "prior": [
+            "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+          ],
+          "current": [
+            "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "default",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "8c58e657eb18ddf239ce0356e88d9a93c361915c5ee5a4070ede060bb26069f6",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "default",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "ef0af20a2dc85e2e2317730f788a43f0a6fe48d4e204125ba1e76b90242791fa",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "f81eb77a521231884375676d5d1a9aee3e567e8ff3263c16798144d34195207e",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "fd24590495c6952618608ba2cb289016a53c526f3b0d4e9153dd29623b066ae3",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "c2b9db2f7d633ab48bdde2a2f480ab30d813ff0a491c7beced5fb3bc96567809",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "2aeee4f1ae2d3c79412f8cf6ae5bd688d75f9f1447ccf685ba1df3af2d9a29be",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "c62c265e980b13197f186ef1beab4f805d5edfed145eec30f635caf32a8b470e",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "449fa39d68361d053198cf153eea5ef1772ef3f63999a5d2713f596b62c9f932",
+          "screenshotBytesMatchPrior": false
+        }
+      ],
+      "equivalent": true
+    },
+    {
+      "case": "greenhouse-irrigation",
+      "artifactBytesMatchPrior": true,
+      "gateDifferences": [
+        {
+          "gate": "renderedFonts",
+          "prior": [
+            "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+          ],
+          "current": [
+            "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "default",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "5f84033fd9a1e8b284a5108a247607833631c0c02cae5e896baa10d623486a7f",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "default",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "6aa482dc3d195486f037646df5bb18884b3741be5b8f6e4578ff8f447a1d678c",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "d817a91268d41a7c772bb0288519742f59675ad97854c034f6d3018248be5252",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "fac1d72eb209b09fdaab319010abc251f7eec1ad3161c5292895014a2cd670ff",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "85a2ca4ce5efb19ea1b7626a36d5b2552e69d4041a6471de81299c24d19ee271",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "822341f8236bd0c0e0379ad91f227b24cb066126844e607a8bf8bc02794ae167",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "0e905335cbc576582e0973da9df58ed55c3e5ef9314be59d46cc723c4e0b0a14",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "090250c32c34511d6e97b9b7105dcdd6d612d7d75c7469da6a311230dffc1638",
+          "screenshotBytesMatchPrior": false
+        }
+      ],
+      "equivalent": true
+    },
+    {
+      "case": "museum-loans",
+      "artifactBytesMatchPrior": true,
+      "gateDifferences": [
+        {
+          "gate": "renderedFonts",
+          "prior": [
+            "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+          ],
+          "current": [
+            "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "default",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "cac2b8bf97f2ee46ddfebacc39eca18cd42a5c99d8beabc645ab43ae04a4f23a",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "default",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "f53d883fb3f3b688c1840ba328517562d1063dbeb83b6a77fd1a4a1a405488ed",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "ce505c300c87e5e6767a33a42681adb9c73a48a6f1dd1e813e9d39564b9f6a48",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "9e31114de38814346c63b98ed548ad02223f810fb1ffeaf9134aad380bfb0135",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "127f66c653c352abfd3a19688bb0a34636f434f48449c529dc05b971733e1d2b",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "925afbd0b2b15fd9e3798bb27195fe432b1c143c36e40eef31791930a4229e45",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "1f014b67fffba2b45c9cd36abda8321be84c43140ceb12f78833a86956fc37ac",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "ea990a4edfeab31abfb8a95c8acef0903671507dd91d32511a291e5c96d74c16",
+          "screenshotBytesMatchPrior": false
+        }
+      ],
+      "equivalent": true
+    },
+    {
+      "case": "kitchen-pass",
+      "artifactBytesMatchPrior": true,
+      "gateDifferences": [
+        {
+          "gate": "renderedFonts",
+          "prior": [
+            "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+          ],
+          "current": [
+            "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "default",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "2a91235a7b0b91c75461ee91da58d568cb71aa8a731abf0578342ddb0c41b753",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "default",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "0ba2e1898de33238e1b6cb26998a719a549ed7789110ab802885330d1f153c9d",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "fdb0c0d34a21ae69e2352089f651a67136950b77359f0c8ee8b9dbe5d7dbdb4a",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "50d34ac230b4164ef73cffc3ca0583b92ee5164790cc77bc2a0089cad8995d21",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "8592592db7647b28dcd1c22d975c279cb235d143f574f1e4f7e505d109c4041b",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "06faba7d357cdab6b921228f39d5873c3ac46667ce2251d183804eeb052c8d02",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "44692d2daae082443f0e47b6b7cce60a0e009315b940936563ec26883e40a158",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "0fad603bb92384aa92bcd84c234494eee6bcce677e850f4ea87d3d21d3a5f4e4",
+          "screenshotBytesMatchPrior": false
+        }
+      ],
+      "equivalent": true
+    },
+    {
+      "case": "radio-rundown",
+      "artifactBytesMatchPrior": true,
+      "gateDifferences": [
+        {
+          "gate": "renderedFonts",
+          "prior": [
+            "-apple-system, \"system-ui\", \"Segoe UI\", sans-serif"
+          ],
+          "current": [
+            "-apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+          ]
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "default",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "c8be4966da868fb596be368ec512c51f100758520aebd9e17b0323dfe1057f77",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "default",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "a5070ffba3b56e2988db5b4a925ad0a94638f1e815fef828417ece60d7bb1ca2",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "7fcfdc28b0c383a3493ac210ce7f4fb85a0f8b6e176dc09d01c569279796db5c",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "loading",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "eed3a43c36fa4ea881d30a1b7a477e951605b5e07c4196eebb8bb542261cc03d",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "61a1cb0243c9b19839c948bf7651346a94e2a89e55bb7e98e6f65f5923aa4680",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "empty",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "41a562a72c3341d94ea3cadff7eb5cc4f4d2e93c0aba49d8cb2d6e8aaf3801d8",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "390x844",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "a85ea500e587cfec6cc2f90dbdf673febec0aae1dbdaf60fe56f66a3f2118f4a",
+          "screenshotBytesMatchPrior": false
+        },
+        {
+          "state": "error",
+          "breakpoint": "1280x800",
+          "renderSignatureMatchesPrior": true,
+          "renderedTextMatchesPrior": true,
+          "httpStatus": 200,
+          "screenshotSha256": "6e2552fac88511a00a310121126bea93ed28216e42598e90e113d2f2ad382c46",
+          "screenshotBytesMatchPrior": false
+        }
+      ],
+      "equivalent": true
+    }
+  ],
+  "passed": true
+}
