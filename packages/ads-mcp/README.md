@@ -81,8 +81,9 @@ or URLs.
 Registry name: `io.github.aa-on-ai/agentic-design-system`.
 
 For URL targets, the default state uses the original URL. Every requested non-default state is
-loaded as `#state=<name>`, so the application should read the `state` parameter from
-`location.hash`.
+loaded as `#state=<name>`, so those states render only when the page reads the `state` parameter
+from `location.hash`. Most apps don't. For them, capture each state from a real URL, fixture or test
+account with the CLI's `--as <state>` option instead of adding hash handling to production code.
 
 ## Protocol and extension posture
 

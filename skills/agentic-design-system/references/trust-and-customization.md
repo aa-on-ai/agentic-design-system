@@ -85,8 +85,10 @@ Example project direction (adapt it, do not treat these values as universal defa
 Public ADS does not require a particular commercial icon vendor or personal brand style. Keep a
 coherent existing family first, then an explicitly selected and appropriately licensed family;
 otherwise choose one suitable open-source family. The same precedence applies to Foundation v2
-`never` rules: an established project decision or explicit current user choice keeps the product's
-language, and ADS reports the conflict instead of blocking. A taste override does not waive accessibility
+`never` rules: a documented project decision (a `DESIGN.md` entry, brand guide, or declared token)
+or an explicit current user choice keeps the product's language, and ADS cites it and reports the
+conflict instead of blocking. A pattern that merely exists in the code does not count, and
+`status-readable-without-color` cannot be set aside. A taste override does not waive accessibility
 or turn an unverified interaction into a pass. Surface conflicts instead of silently replacing the
 product language or weakening the relevant checks.
 

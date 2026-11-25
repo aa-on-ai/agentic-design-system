@@ -70,7 +70,7 @@ not support a judgment. every row needs evidence. there is no minimum finding co
 ## hard stops reviewed
 
 - the selected profile was locked before generation and meets its eligibility rule
-- every confirmed visual-foundation `never` rule is resolved
+- every confirmed visual-foundation `never` rule is resolved, or set aside by a cited project decision or explicit user choice and reported as a conflict
 - vague intent words like "delight", "empower", or "confidence" fail unless tied to observable UI evidence
 - adjacent-action consistency: status and instructional copy agree with every visible nearby
   primary, secondary, toolbar, and inline action in each state and breakpoint; a contradictory

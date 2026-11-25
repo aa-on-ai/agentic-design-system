@@ -43,7 +43,8 @@ decide nothing.
 - The judge scored 25 (`receipt.json` `judge.scoreTotal`; `../render-report.md` shows it as 25/50). A score does not lift a block.
 
 ## Next
-What lifts the block: implement loading, empty, and error so each hash renders different UI, with a
+What lifts the block: implement loading, empty, and error so each renders different UI (this fixture
+reads `#state=`; a real app can reach each state through a fixture and capture it with `--as`), with a
 status live region on loading and an alert live region on error. Recapture all four states at
 390x844 and 1280x800. The new packet must show four distinct `renderSignature` values per width,
 `gates.stateRendered` all true, and `gates.liveRegionFailures` empty. Then Ember reads it again.

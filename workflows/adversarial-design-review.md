@@ -30,9 +30,9 @@ retain the actual human judgment needed.
 
    ```bash
    node <orchestrator-skill>/scripts/run-capture.mjs "<running-route-url>" \
-     --states default,empty,loading,error --out evidence/<slug>
+     --states default --out evidence/<slug>
    ```
-   Non-default states render only when the page handles `#state=<name>`; see design-review's capture notes before treating a missing state as a failure.
+   Add `loading,empty,error` to `--states` only when the page handles `#state=<name>`; otherwise capture each state with `--as <state>`. See design-review's capture notes.
 
    Select only applicable required states. Read `evidence/<slug>/evidence.json` and the actual
    interaction evidence. Required dialog behavior needs focus, containment, Escape, focus-return

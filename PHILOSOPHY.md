@@ -40,7 +40,7 @@ good creative work comes from constraint plus permission. ADS works in three lay
 
 the old model: designer has vision, hands spec to engineers, engineers build it exactly.
 
-the new model: a human sets intent and constraints, the agent does the work, and the human steers. when a direction is genuinely unresolved, the agent brings a recommendation and one real alternative, not a pile of variations. when it isn't, it just builds. not every button needs options. "this could go a couple of ways, want to see both or should I pick?" is a cheap question that saves expensive rework.
+the new model: a human sets intent and constraints, the agent does the work, and the human steers. when a direction is genuinely unresolved, the agent brings a recommendation and the fewest real alternatives that settle it, often just one more, not a pile of variations (unless you ask for a specific number). when it isn't, it just builds. not every button needs options. "this could go a couple of ways, want to see both or should I pick?" is a cheap question that saves expensive rework.
 
 ## agents are the primary reader
 
@@ -52,7 +52,7 @@ humans set the direction. agents follow the practice. like installing an OS vs r
 
 static design systems decay. so do systems that rewrite themselves after every build.
 
-ADS keeps lessons deliberate: when a review surfaces something worth keeping, it goes into your project's `DESIGN.md` or a decision note with the evidence behind it, and a person agrees it's worth keeping. mistakes become documented anti-patterns. good decisions become patterns. nothing becomes a universal rule just because it happened once.
+ADS keeps lessons deliberate. a repeated, measurable defect gets fixed where it lives, in a shared component or a test. a preference goes to whoever owns it, usually your project's `DESIGN.md`, with the evidence behind it and a person agreeing it's worth keeping. nothing becomes a universal rule just because it happened once.
 
 ## the human is in the loop
 
