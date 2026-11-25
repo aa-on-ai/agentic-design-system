@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import styles from "./DesignPractice.module.css";
 
@@ -58,17 +58,19 @@ export function InstallSteps() {
       <div className={styles["command"]}>
         <code id="install-command">
           {command.split(" ").map((token, index) => (
-            <span key={index} className={styles["command-token"]}>
-              {index > 0 ? " " : ""}
-              {token.includes("/") ? (
-                <>
-                  {token.split("/")[0]}/<wbr />
-                  {token.split("/").slice(1).join("/")}
-                </>
-              ) : (
-                token
-              )}
-            </span>
+            <Fragment key={index}>
+              {index > 0 ? " " : null}
+              <span className={styles["command-token"]}>
+                {token.includes("/") ? (
+                  <>
+                    {token.split("/")[0]}/<wbr />
+                    {token.split("/").slice(1).join("/")}
+                  </>
+                ) : (
+                  token
+                )}
+              </span>
+            </Fragment>
           ))}
         </code>
         <button className={styles["copy"]} type="button" onClick={copyCommand} aria-describedby="install-command">
@@ -79,9 +81,9 @@ export function InstallSteps() {
       <p className={styles["copy-state"]} role="status" aria-live="polite">{status}</p>
 
       <ol className={styles["install-steps"]}>
-        <li>Run it from your project folder. It needs Node 22 or newer.</li>
+        <li>Run it from your project folder. It needs Node 22.20 or newer.</li>
         <li>Start a new {agentLabel} session so it picks up the skills.</li>
-        <li>Ask for one real change, like the example request.</li>
+        <li>Ask for one real change, like the example request. The first run may ask to set up a browser for screenshots.</li>
       </ol>
 
       <a className={styles["mcp-link"]} href={INSTALL_GUIDE_URL}>

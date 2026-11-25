@@ -84,6 +84,19 @@ async function inspectStaticPage(page, scope, viewport, theme) {
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       installLinks: [...document.querySelectorAll('a[href*="docs/INSTALL.md"]')].map((link) => link.href),
       heroInstallHref: document.querySelector('#top a[class*="primary"]')?.getAttribute("href") ?? null,
+      // html/body clip horizontal overflow, so scrollWidth can't see content pushed past the panel.
+      startEscapes: (() => {
+        const panel = document.querySelector("#start > div");
+        if (!panel) return ["missing start panel"];
+        const edge = panel.getBoundingClientRect();
+        return [...panel.querySelectorAll("*")]
+          .filter((node) => {
+            const box = node.getBoundingClientRect();
+            return box.width > 0 && (box.right > edge.right + 1 || box.left < edge.left - 1);
+          })
+          .slice(0, 5)
+          .map((node) => `${node.tagName.toLowerCase()}.${String(node.className).split(" ")[0]}`);
+      })(),
       installCommand: document.querySelector("#install-command")?.textContent ?? "",
       controls,
       images,
@@ -103,6 +116,7 @@ async function inspectStaticPage(page, scope, viewport, theme) {
     fail(scope, `install links are ${JSON.stringify(state.installLinks)}`);
   }
   if (state.heroInstallHref !== "#start") fail(scope, `hero install CTA points to ${state.heroInstallHref}`);
+  if (state.startEscapes.length) fail(scope, `content escapes the start panel: ${state.startEscapes.join(", ")}`);
   if (!state.installCommand.includes("--agent claude-code")) {
     fail(scope, `default install command is ${JSON.stringify(state.installCommand)}`);
   }

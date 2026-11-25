@@ -8,8 +8,8 @@ import styles from "./EmberIntroduction.module.css";
 
 const messages = [
   { title: "I’m Ember, your evidence-reading companion.", text: "I help you read what was checked, what the evidence shows, and what still needs your judgment. I don’t make the taste call for you." },
-  { title: "Ask who it’s for.", text: "Before your agent builds, I look for who will use the screen and what they need to get done. If that’s missing, I say so." },
-  { title: "Look past the screenshot.", text: "A screen can look finished and still fail. I check the evidence for empty, loading and error states, phone sizes, and keyboard use." },
+  { title: "Ask who it’s for.", text: "When I read what came back, I check it against who the brief says the screen is for. If nobody wrote that down, I say so." },
+  { title: "Look past the screenshot.", text: "A screen can look finished and still fail. I check the evidence for empty, loading and error states and phone sizes, not just one good-looking screenshot." },
   { title: "A check isn’t a verdict.", text: "A working button doesn’t tell us whether this page feels right. That’s still a human judgment. Yours." },
 ];
 

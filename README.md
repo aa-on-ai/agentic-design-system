@@ -27,7 +27,7 @@ ADS is a repo-local skill pack. Your agent does the work; you keep the final say
 
 ### 1. Install ADS
 
-From the project where your agent works (needs Node.js 22 or newer):
+From the project where your agent works (needs Node.js 22.20 or newer):
 
 ```bash
 npx skills add aa-on-ai/agentic-design-system --agent claude-code --copy --yes
@@ -57,16 +57,16 @@ ADS proves its work with real browser captures. From the same project:
 node .claude/skills/design-review/scripts/setup-capture.mjs --check
 ```
 
-If anything is missing, run it again without `--check`. It adds Playwright as a dev dependency and
-downloads Chromium (about 700 MB). Use your agent's skill folder from the table above.
+If anything is missing, run it again without `--check`. It adds `playwright` and
+`@axe-core/playwright` as dev dependencies with npm and downloads Chromium (about 700 MB of disk). Use your agent's skill folder from the table above.
 
 ### 3. Give your agent a real product task
 
 Start a new agent session so it picks up the skills, then say who the screen is for:
 
 ```text
-Our account settings page is for small-business owners who need to update
-billing and add teammates without calling support. Make saving and validation
+Use the agentic-design-system skill. Our account settings page is for
+small-business owners who need to update billing and add teammates without calling support. Make saving and validation
 clear for them. Keep our components and visual identity, and show me the
 working result on desktop and mobile.
 ```

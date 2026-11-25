@@ -23,10 +23,13 @@ async function dataUrl(relativePath: string, mime: string) {
 // DM Sans matches the homepage. If the font cannot be fetched at build time, fall back to the default face.
 async function loadDmSans(weight: 500 | 600) {
   try {
-    const css = await fetch(`https://fonts.googleapis.com/css2?family=DM+Sans:wght@${weight}`).then((res) => res.text());
+    const signal = AbortSignal.timeout(8000);
+    const css = await fetch(`https://fonts.googleapis.com/css2?family=DM+Sans:wght@${weight}`, { signal }).then((res) => res.text());
     const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
     if (!url) return null;
-    return { name: "DM Sans", data: await fetch(url).then((res) => res.arrayBuffer()), weight, style: "normal" as const };
+    const font = await fetch(url, { signal });
+    if (!font.ok || !/font|octet-stream/.test(font.headers.get("content-type") ?? "")) return null;
+    return { name: "DM Sans", data: await font.arrayBuffer(), weight, style: "normal" as const };
   } catch {
     return null;
   }
@@ -40,7 +43,7 @@ export default async function OpenGraphImage() {
     loadDmSans(600),
   ]);
   const fonts = [medium, semibold].filter((font) => font !== null);
-  const line = { fontSize: 76, fontWeight: 600, letterSpacing: "-0.045em", lineHeight: 1.04 } as const;
+  const line = { fontSize: 62, fontWeight: 600, letterSpacing: "-0.045em", lineHeight: 1.06 } as const;
 
   return new ImageResponse(
     (
@@ -59,7 +62,7 @@ export default async function OpenGraphImage() {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            width: 560,
+            width: 640,
             padding: "56px 0 52px 64px",
           }}
         >
@@ -85,7 +88,7 @@ export default async function OpenGraphImage() {
             src={art}
             width="1536"
             height="864"
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "58% 50%", borderRadius: 28 }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 50%", borderRadius: 28 }}
           />
         </div>
       </div>

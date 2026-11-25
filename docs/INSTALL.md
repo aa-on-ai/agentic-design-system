@@ -9,7 +9,7 @@ Installing the skills does not edit your project instructions or install browser
 These steps use Claude Code. For Codex, Cursor, OpenClaw or Hermes, swap the `--agent` value and
 skill folder using [Choose your agent](#choose-your-agent).
 
-1. **Install** from your project folder (needs Node.js 22 or newer with `npx`):
+1. **Install** from your project folder (needs Node.js 22.20 or newer with `npx`):
 
    ```bash
    npx skills add aa-on-ai/agentic-design-system --agent claude-code --copy --yes
@@ -31,9 +31,11 @@ skill folder using [Choose your agent](#choose-your-agent).
    node .claude/skills/design-review/scripts/setup-capture.mjs --check
    ```
 
-   If it reports something missing, run the same command without `--check`. It adds `playwright`
-   and `@axe-core/playwright` as dev dependencies and downloads Chromium (about 700 MB). Captures
-   are written to `evidence/`; add that folder to `.gitignore` unless you want to keep them.
+   If it reports something missing, run the same command without `--check`. It runs
+   `npm install -D playwright @axe-core/playwright` and downloads Chromium (about 700 MB of disk).
+   On pnpm or Yarn projects, add those two dev dependencies with your package manager and run
+   `npx playwright install chromium` instead. Captures are written to `evidence/`; add that folder
+   to `.gitignore` unless you want to keep them.
 
 4. **Start a new Claude Code session** so it picks up the skills, then ask for one real change.
    Say who the screen is for:
@@ -67,7 +69,7 @@ with our design system. Do not install packages or change files yet.
 
 ## Requirements
 
-- Node.js 22 or newer with `npx`
+- Node.js 22.20 or newer with `npx`
 - A project directory where the agent can read local skills
 - Python 3 only when using the optional source-check scripts
 - For Hermes project discovery, a Git checkout and the native `hermes` executable
@@ -120,14 +122,15 @@ running session.
 
 ## Verify the files
 
-Use the installer ID you chose above. Each command should list eleven skills:
+Run the line for the installer ID you chose. It should list eleven skills; the other lines return
+an empty list for that install.
 
 ```bash
-npx skills list --agent claude-code --json
-npx skills list --agent codex --json
-npx skills list --agent cursor --json
-npx skills list --agent openclaw --json
-npx skills list --agent hermes-agent --json
+npx skills list --agent claude-code --json   # Claude Code
+npx skills list --agent codex --json         # Codex
+npx skills list --agent cursor --json        # Cursor
+npx skills list --agent openclaw --json      # OpenClaw
+npx skills list --agent hermes-agent --json  # Hermes
 ```
 
 The result should contain these eleven skills:
