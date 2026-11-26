@@ -5,7 +5,10 @@ import suite from "../../../../../testing/regression/adjacent-actions-v1.3.1/sui
 const releaseSha = suite.baselineRelease.sha;
 const rerunSha = "7644d39ac371320b8f8ca712ce08c1396ff06f53";
 const repo = "https://github.com/aa-on-ai/agentic-design-system";
-const frozenRoot = `${repo}/blob/${releaseSha}/testing/regression/adjacent-actions-v1.3.1/baseline/pawprint`;
+// The frozen v1.3.1 baseline was committed to the repo after the release, so its files are linked
+// at the commit that added them. The release tag alone does not contain them.
+const baselineSha = "254eaca9fbc464db8b7bef62febb6d9eb68ed794";
+const frozenRoot = `${repo}/blob/${baselineSha}/testing/regression/adjacent-actions-v1.3.1/baseline/pawprint`;
 const rerunRoot = `${repo}/blob/${rerunSha}/testing/regression/adjacent-actions-v1.3.1/runs/2026-07-20-public-hardening`;
 
 export const TRACE = {
@@ -71,7 +74,7 @@ export const TRACE = {
     graderReport: `${frozenRoot}/grader-report.md`,
     grade: `${frozenRoot}/grade.json`,
     evidence: `${frozenRoot}/rendered/evidence.json`,
-    frozenContract: `${repo}/blob/${releaseSha}/testing/regression/adjacent-actions-v1.3.1/contract.md`,
+    frozenContract: `${repo}/blob/${baselineSha}/testing/regression/adjacent-actions-v1.3.1/contract.md`,
     rerunPacket: `${rerunRoot}/run.json`,
     rerunEvidence: `${rerunRoot}/pawprint/rendered/evidence.json`,
     traceOne: "/trace",
