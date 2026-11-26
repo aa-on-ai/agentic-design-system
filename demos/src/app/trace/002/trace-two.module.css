@@ -75,7 +75,26 @@
 }
 
 :global(:root[data-theme="dark"]) .secondaryAction {
+  background: transparent;
+  color: var(--ink);
+}
+
+/* Dark mode keeps the orange result panel, so its copy stays dark ink. */
+:global(:root[data-theme="dark"]) .resultCopy {
+  --ink: #1c1711;
+  --text: #1c1711;
   color: #1c1711;
+}
+
+/* The light-mode eyebrow rust is too dark on navy. */
+:global(:root[data-theme="dark"]) .eyebrow,
+:global(:root[data-theme="dark"]) .proofPacket .eyebrow,
+:global(:root[data-theme="dark"]) .packetOpen {
+  color: #ff9e61 !important;
+}
+
+:global(:root[data-theme="dark"]) .resultCopy .eyebrow {
+  color: #371208 !important;
 }
 
 .eyebrow {

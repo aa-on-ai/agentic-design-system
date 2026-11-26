@@ -41,6 +41,7 @@ export default function TraceTwoPage() {
         stage="Decide"
         title="Rendered proof case"
         description="This is the outcome view. It shows the failed state, exact repair, preserved behavior, and proof packet a human can inspect before accepting the change."
+        link={{ href: "/#practice", label: "See how ADS works" }}
       />
       <article>
         <ProofGallery />

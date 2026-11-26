@@ -2,6 +2,35 @@
 
 All notable changes to Agentic Design System are recorded here.
 
+## [Unreleased]
+
+### Added
+
+- Variations keep runnable alternatives, persist chosen values, and promote real components
+  without shipping experimental controls.
+- Design review prefers suitable ADS MCP tools when they are available and falls back to the CLI
+  capture wrapper; judges can receive labelled baseline and reference images plus hash-checked
+  source text.
+- `capture.mjs --as <state>` records a page reached through its own URL as a named state.
+
+### Changed
+
+- Foundation v2 never rules yield to a cited project decision or explicit user choice, which is
+  reported as a conflict. Accessibility rules, including status readable without color, cannot be
+  set aside.
+- The homepage leads with who the work is for, offers one install command per agent, and links to a
+  Claude Code-first quick start in `docs/INSTALL.md`.
+- Ember's introduction and `PHILOSOPHY.md` describe the current
+  `understand → choose → work → prove → decide` loop.
+
+### Fixed
+
+- `capture.mjs` exits on connection failures and HTTP error pages instead of capturing them as
+  evidence, and clears stale evidence from its output folder.
+- Judge receipts keep unknown usage unknown instead of reporting zero.
+- The site uses its canonical domain, has a homepage-style 404, a rebuilt link preview, working
+  proof-packet links on `/trace/002`, and readable dark-mode contrast on the proof case.
+
 ## [1.4.0] - 2026-09-21
 
 ### Added

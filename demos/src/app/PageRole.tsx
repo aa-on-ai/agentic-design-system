@@ -4,10 +4,12 @@ export function PageRole({
   stage,
   title,
   description,
+  link = { href: "/trace/002", label: "See a real run" },
 }: {
   stage: string;
   title: string;
   description: string;
+  link?: { href: string; label: string };
 }) {
   return (
     <aside className="ads-page-role" aria-label={`${title} role in Agentic Design System`}>
@@ -16,7 +18,7 @@ export function PageRole({
         <strong>{title}</strong>
       </div>
       <p>{description}</p>
-      <Link className="focus-ring" href="/#assembly-line">See an interface run</Link>
+      <Link className="focus-ring" href={link.href}>{link.label}</Link>
     </aside>
   );
 }

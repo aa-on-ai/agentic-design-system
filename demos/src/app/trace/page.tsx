@@ -145,7 +145,7 @@ export default function TracePage() {
               <dd>Passed</dd>
             </div>
             <div>
-              <dt>Release</dt>
+              <dt>Rules from</dt>
               <dd>v1.2.0</dd>
             </div>
           </dl>
@@ -201,8 +201,8 @@ export default function TracePage() {
               Historical mapping, labeled honestly
             </strong>
             <p>
-              This example maps a preserved June 2026 run using current v1.2.0
-              rule hashes. Its rows are <b>reviewed</b>, not prospective proof
+              This example maps a preserved June 2026 run using the v1.2.0
+              rule hashes that were current when it was mapped. Its rows are <b>reviewed</b>, not prospective proof
               that the original builder loaded those files.
             </p>
           </div>
@@ -310,9 +310,9 @@ export default function TracePage() {
             </a>
             <a
               className={`${styles.secondaryAction} focus-ring`}
-              href={`${repo}/releases/tag/v1.2.0`}
+              href={`${repo}/releases`}
             >
-              View the v1.2.0 release
+              See all releases
             </a>
           </div>
         </section>
